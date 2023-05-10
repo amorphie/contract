@@ -1,0 +1,213 @@
+[
+  {
+    "_id": "4d5bbe10-dec4-4da4-b7a1-8124aaaa3827",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Transition User-Register",
+    "url": "http://localhost:4201/workflow/consumer/{entity}/record/{recordid}/transition/user-register",
+    "method": "POST",
+    "sortNum": 40000,
+    "created": "2023-02-16T16:28:36.026Z",
+    "modified": "2023-02-18T18:58:08.960Z",
+    "headers": [
+      {
+        "name": "User",
+        "value": "{{user}}"
+      },
+      {
+        "name": "Behalf-Of-User",
+        "value": "{{behalfOfUser}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "entity",
+        "value": "user",
+        "isPath": true
+      },
+      {
+        "name": "recordid",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"entityData\": {\n    \"reference\": 38538734554,\n    \"gsmNumber\": {\n      \"countryCode\": 90,\n      \"prefix\": 530,\n      \"number\": 2342342\n    }\n  },\n  \"formData\": \"\",\n  \"additionalData\": {\n    \"application\": \"amorphie-backoffice\"\n  },\n  \"getSignalRHub\": true\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "e9165ae6-e2a7-4285-b2e4-aff9b7907531",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Get Transitions",
+    "url": "http://localhost:4201/workflow/consumer/user/record/{recordId}/transition",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2023-02-17T06:23:58.168Z",
+    "modified": "2023-02-18T19:21:00.214Z",
+    "headers": [
+      {
+        "name": "Accept-Language",
+        "value": "{{language}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "recordId",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "tests": [],
+    "preReq": {
+      "runFilters": [
+        "generateNewRecordId"
+      ]
+    }
+  },
+  {
+    "_id": "9aa0e329-770e-4f2e-ba6c-2e4eb437e998",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Transition User-Deactivate",
+    "url": "http://localhost:4201/workflow/consumer/{entity}/record/{recordid}/transition/user-deactive",
+    "method": "POST",
+    "sortNum": 50000,
+    "created": "2023-02-17T07:12:16.146Z",
+    "modified": "2023-02-18T18:59:07.478Z",
+    "headers": [
+      {
+        "name": "User",
+        "value": "{{user}}"
+      },
+      {
+        "name": "Behalf-Of-User",
+        "value": "{{behalfOfUser}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "entity",
+        "value": "user",
+        "isPath": true
+      },
+      {
+        "name": "recordid",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"entityData\": {\n    \"reference\": 38538734554,\n    \"gsmNumber\": {\n      \"countryCode\": 90,\n      \"prefix\": 530,\n      \"number\": 2342342\n    }\n  },\n  \"formData\": \"\",\n  \"additionalData\": {\n    \"application\": \"amorphie-backoffice\"\n  },\n  \"getSignalRHub\": true\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "dc854e56-d00f-41e5-b765-440a05d1db09",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Get Transitions After Register",
+    "url": "http://localhost:4201/workflow/consumer/user/record/{recordId}/transition",
+    "method": "GET",
+    "sortNum": 41250,
+    "created": "2023-02-17T07:38:34.898Z",
+    "modified": "2023-02-24T14:49:05.995Z",
+    "headers": [
+      {
+        "name": "Accept-Language",
+        "value": "{{language}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "recordId",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "5cebf655-c8e5-417d-915b-73a38d17fd7f",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Transition User-Approve",
+    "url": "http://localhost:4201/workflow/consumer/{entity}/record/{recordid}/transition/user-registration-approve",
+    "method": "POST",
+    "sortNum": 42500,
+    "created": "2023-02-24T14:47:42.800Z",
+    "modified": "2023-02-24T14:51:11.452Z",
+    "headers": [
+      {
+        "name": "User",
+        "value": "{{user}}"
+      },
+      {
+        "name": "Behalf-Of-User",
+        "value": "{{behalfOfUser}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "entity",
+        "value": "user",
+        "isPath": true
+      },
+      {
+        "name": "recordid",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"entityData\": {\n    \"reference\": 38538734554,\n    \"gsmNumber\": {\n      \"countryCode\": 90,\n      \"prefix\": 530,\n      \"number\": 2342342\n    }\n  },\n  \"formData\": \"\",\n  \"additionalData\": {\n    \"application\": \"amorphie-backoffice\"\n  },\n  \"getSignalRHub\": true\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "27989536-abb3-499f-8ddf-f34ea835c523",
+    "colId": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "containerId": "",
+    "name": "Transition User-AML-Approve",
+    "url": "http://localhost:4201/workflow/consumer/{entity}/record/{recordid}/transition/user-registration-aml-approve",
+    "method": "POST",
+    "sortNum": 43750,
+    "created": "2023-02-24T14:48:20.534Z",
+    "modified": "2023-02-24T14:51:45.287Z",
+    "headers": [
+      {
+        "name": "User",
+        "value": "{{user}}"
+      },
+      {
+        "name": "Behalf-Of-User",
+        "value": "{{behalfOfUser}}"
+      }
+    ],
+    "params": [
+      {
+        "name": "entity",
+        "value": "user",
+        "isPath": true
+      },
+      {
+        "name": "recordid",
+        "value": "{{newRecordId}}",
+        "isPath": true
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"entityData\": {\n    \"reference\": 38538734554,\n    \"gsmNumber\": {\n      \"countryCode\": 90,\n      \"prefix\": 530,\n      \"number\": 2342342\n    }\n  },\n  \"formData\": \"\",\n  \"additionalData\": {\n    \"application\": \"amorphie-backoffice\"\n  },\n  \"getSignalRHub\": true\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "CM6BE6y1EfNaHVfa0rjZ1KPeUTm+NiyleO9l1t8jlSk=",
+  "Source": "amorphie.contract.zeebe",
+  "BasePath": "_content/amorphie.contract.zeebe",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

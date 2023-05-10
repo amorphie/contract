@@ -1,0 +1,14 @@
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\bin\Debug\net7.0\amorphie.contract.data.deps.json
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\bin\Debug\net7.0\amorphie.contract.data.runtimeconfig.json
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\bin\Debug\net7.0\amorphie.contract.data.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\bin\Debug\net7.0\amorphie.contract.data.pdb
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.csproj.AssemblyReference.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.AssemblyInfoInputs.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.AssemblyInfo.cs
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.csproj.CoreCompileInputs.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\refint\amorphie.contract.data.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.pdb
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\amorphie.contract.data.genruntimeconfig.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.data\obj\Debug\net7.0\ref\amorphie.contract.data.dll

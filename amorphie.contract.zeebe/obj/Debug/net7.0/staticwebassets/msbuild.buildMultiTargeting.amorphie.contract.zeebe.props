@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\amorphie.contract.zeebe.props" />
+</Project>

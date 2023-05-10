@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1q9lzc8" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.7.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0">
+  <bpmn:process id="User_Register" name="User Register" isExecutable="true">
+    <bpmn:endEvent id="Event_END" name="finish">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;NEWSTATE&#34;" target="OutputVariable_STATE" />
+        </zeebe:ioMapping>
+        <zeebe:properties>
+          <zeebe:property name="EXT_STATE" value="NEW_NEW_STATE" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bnak6z</bpmn:incoming>
+      <bpmn:incoming>Flow_1wfmlog</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_034szy9" sourceRef="user-register" targetRef="amorphie-workflow-set-register" />
+    <bpmn:sequenceFlow id="Flow_0bnak6z" sourceRef="amorphie-workflow-set-state-approve" targetRef="Event_END" />
+    <bpmn:serviceTask id="amorphie-workflow-set-state-approve" name="amorphie-workflow-set-state">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="amorphie-workflow-set-state" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="TARGET_STATE" value="default" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_18v4ao3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bnak6z</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="user-register" name="user-register">
+      <bpmn:outgoing>Flow_034szy9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0vizzry" messageRef="Message_0cu52jf" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="amorphie-workflow-set-register" name="amorphie-workflow-set-state">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="amorphie-workflow-set-state" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="TARGET_STATE" value="default" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_034szy9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pmdmn7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:eventBasedGateway id="user-aml-approval" name="user-aml-approval">
+      <bpmn:incoming>Flow_19feqjj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ivg8gj</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0lln9hd</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="user-registration-aml-approve" name="user-registration-aml-approve">
+      <bpmn:incoming>Flow_1ivg8gj</bpmn:incoming>
+      <bpmn:outgoing>Flow_18v4ao3</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1bt4aq4" messageRef="Message_30gn1u1" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1ivg8gj" sourceRef="user-aml-approval" targetRef="user-registration-aml-approve" />
+    <bpmn:intermediateCatchEvent id="user-registration-aml-reject" name="user-registration-aml-reject">
+      <bpmn:incoming>Flow_0lln9hd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tojokg</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1gjwhg5" messageRef="Message_2n1hdhs" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0lln9hd" sourceRef="user-aml-approval" targetRef="user-registration-aml-reject" />
+    <bpmn:sequenceFlow id="Flow_18v4ao3" sourceRef="user-registration-aml-approve" targetRef="amorphie-workflow-set-state-approve" />
+    <bpmn:serviceTask id="Activity_1sm7qol" name="amorphie-workflow-set-state">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="amorphie-workflow-set-state" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="TARGET_STATE" value="user-deactive" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0tojokg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wfmlog</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1wfmlog" sourceRef="Activity_1sm7qol" targetRef="Event_END" />
+    <bpmn:sequenceFlow id="Flow_0tojokg" sourceRef="user-registration-aml-reject" targetRef="Activity_1sm7qol" />
+    <bpmn:serviceTask id="Activity_199bnk6" name="amorphie-workflow-set-state">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="amorphie-workflow-set-state" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="TARGET_STATE" value="default" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0xv95vv</bpmn:incoming>
+      <bpmn:outgoing>Flow_19feqjj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_19feqjj" sourceRef="Activity_199bnk6" targetRef="user-aml-approval" />
+    <bpmn:intermediateCatchEvent id="user-registration-approve" name="user-registration-approve">
+      <bpmn:incoming>Flow_1pmdmn7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xv95vv</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0g0rngy" messageRef="Message_108q0gh" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1pmdmn7" sourceRef="amorphie-workflow-set-register" targetRef="user-registration-approve" />
+    <bpmn:sequenceFlow id="Flow_0xv95vv" sourceRef="user-registration-approve" targetRef="Activity_199bnk6" />
+    <bpmn:textAnnotation id="TextAnnotation_0qtwc87">
+      <bpmn:text>Starter message, triggered by transition</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1kpgv6p" sourceRef="user-register" targetRef="TextAnnotation_0qtwc87" />
+    <bpmn:textAnnotation id="TextAnnotation_1x74rm2">
+      <bpmn:text>Moving flow to next state. Target state is defined as "default". Target state set to target state on transition record.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1purtae" sourceRef="amorphie-workflow-set-register" targetRef="TextAnnotation_1x74rm2" />
+  </bpmn:process>
+  <bpmn:message id="Message_0cu52jf" name="user-register" />
+  <bpmn:message id="Message_108q0gh" name="user-registration-approve">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_30gn1u1" name="user-registration-aml-approve">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_2n1hdhs" name="user-registration-aml-reject">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="User_Register">
+      <bpmndi:BPMNShape id="Event_0pxh52q_di" bpmnElement="Event_END">
+        <dc:Bounds x="1372" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1377" y="375" width="26" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ac3txi_di" bpmnElement="amorphie-workflow-set-state-approve">
+        <dc:Bounds x="1080" y="180" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0fbhqo7_di" bpmnElement="user-register">
+        <dc:Bounds x="172" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="365" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t9m1r5_di" bpmnElement="amorphie-workflow-set-register">
+        <dc:Bounds x="460" y="300" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_17oeyna_di" bpmnElement="user-aml-approval">
+        <dc:Bounds x="865" y="315" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="927" y="330" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0f8utgf_di" bpmnElement="user-registration-aml-approve">
+        <dc:Bounds x="972" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="948" y="245" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xntfkv_di" bpmnElement="user-registration-aml-reject">
+        <dc:Bounds x="982" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="958" y="495" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1w04pwb" bpmnElement="Activity_1sm7qol">
+        <dc:Bounds x="1080" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0jkw1ed" bpmnElement="Activity_199bnk6">
+        <dc:Bounds x="730" y="300" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_062i55d_di" bpmnElement="user-registration-approve">
+        <dc:Bounds x="622" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="598" y="365" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0qtwc87_di" bpmnElement="TextAnnotation_0qtwc87">
+        <dc:Bounds x="340" y="110" width="100" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1x74rm2_di" bpmnElement="TextAnnotation_1x74rm2">
+        <dc:Bounds x="650" y="80" width="100" height="142" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_034szy9_di" bpmnElement="Flow_034szy9">
+        <di:waypoint x="208" y="340" />
+        <di:waypoint x="460" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bnak6z_di" bpmnElement="Flow_0bnak6z">
+        <di:waypoint x="1180" y="220" />
+        <di:waypoint x="1236" y="220" />
+        <di:waypoint x="1236" y="350" />
+        <di:waypoint x="1372" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ivg8gj_di" bpmnElement="Flow_1ivg8gj">
+        <di:waypoint x="890" y="315" />
+        <di:waypoint x="890" y="220" />
+        <di:waypoint x="972" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lln9hd_di" bpmnElement="Flow_0lln9hd">
+        <di:waypoint x="890" y="365" />
+        <di:waypoint x="890" y="470" />
+        <di:waypoint x="982" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18v4ao3_di" bpmnElement="Flow_18v4ao3">
+        <di:waypoint x="1008" y="220" />
+        <di:waypoint x="1080" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wfmlog_di" bpmnElement="Flow_1wfmlog">
+        <di:waypoint x="1180" y="470" />
+        <di:waypoint x="1236" y="470" />
+        <di:waypoint x="1236" y="350" />
+        <di:waypoint x="1372" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tojokg_di" bpmnElement="Flow_0tojokg">
+        <di:waypoint x="1018" y="470" />
+        <di:waypoint x="1080" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19feqjj_di" bpmnElement="Flow_19feqjj">
+        <di:waypoint x="830" y="340" />
+        <di:waypoint x="865" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pmdmn7_di" bpmnElement="Flow_1pmdmn7">
+        <di:waypoint x="560" y="340" />
+        <di:waypoint x="622" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xv95vv_di" bpmnElement="Flow_0xv95vv">
+        <di:waypoint x="658" y="340" />
+        <di:waypoint x="730" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1kpgv6p_di" bpmnElement="Association_1kpgv6p">
+        <di:waypoint x="202" y="327" />
+        <di:waypoint x="340" y="179" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1purtae_di" bpmnElement="Association_1purtae">
+        <di:waypoint x="541" y="300" />
+        <di:waypoint x="650" y="159" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

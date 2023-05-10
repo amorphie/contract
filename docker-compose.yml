@@ -1,0 +1,140 @@
+version: "3.9"
+services:
+
+  redis:
+    container_name: bbt-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/data
+    networks:
+      - bbt-development
+
+  redisinsight:
+    container_name: bbt-red-insight
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5501:8001'
+    volumes:
+      - redisinsight:/db
+    restart: unless-stopped
+    networks:
+      - bbt-development
+      
+  zeebe:
+    container_name: bbt_zeebe
+    image: camunda/zeebe:8.1.8
+    environment:
+      - ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_CLASSNAME=io.camunda.zeebe.exporter.ElasticsearchExporter
+      - ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_URL=http://elastic:9200
+      - ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_BULK_SIZE=1
+      - ZEEBE_LOG_LEVEL=debug
+      - ZEEBE_REDIS_REMOTE_ADDRESS=redis://redis:6379
+      - ZEEBE_REDIS_TIME_TO_LIVE_IN_SECONDS=900
+    ports:
+      - "26500:26500"
+      - "9600:9600"
+    volumes:
+      - ./application.yaml:/usr/local/zeebe/config/application.yaml
+      - ./zeebe-exporters/zeebe-redis-exporter-0.9.2-jar-with-dependencie.jar:/usr/local/zeebe/exporters/zeebe-redis-exporter-jar-with-dependencies.jar
+    networks:
+      - bbt-development
+
+
+  operate: 
+    container_name: bbt_zeebe_operate
+    image: camunda/operate:8.1.8
+    platform: linux/amd64
+    ports:
+      - "8081:8080"
+    environment: 
+      - CAMUNDA_OPERATE_ZEEBE_GATEWAYADDRESS=zeebe:26500
+      - CAMUNDA_OPERATE_ELASTICSEARCH_URL=http://elastic:9200
+      - CAMUNDA_OPERATE_ZEEBEELASTICSEARCH_URL=http://elastic:9200
+    networks:
+      - bbt-development
+    depends_on:
+      - zeebe
+      - elastic
+
+  postgres:
+    container_name: bbt-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - bbt-development
+
+  elastic:
+    container_name: bbt_elastic
+    image: elasticsearch:7.17.9
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    networks:
+      - bbt-development
+    ports:
+      - 9200:9200
+    depends_on:
+      - zeebe
+
+  kibana:
+    container_name: bbt_kibana
+    image: docker.elastic.co/kibana/kibana:7.17.9
+    environment:
+      - ELASTICSEARCH_HOSTS=http://bbt_elastic:9200
+    networks:
+      - bbt-development
+    depends_on:
+      - elastic
+    ports:
+      - 5601:5601
+  vault:
+    image: vault:latest
+    container_name: vault
+    restart: on-failure:10
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: 'https://0.0.0.0:8200'
+      VAULT_API_ADDR: 'https://0.0.0.0:8200'
+      VAULT_DEV_ROOT_TOKEN_ID: 'admin'
+      VAULT_TOKEN: 'admin'
+    volumes:
+      - ./file:/vault/file
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      retries: 5
+    command: server -dev -dev-root-token-id="admin"
+    networks:
+      - bbt-development
+
+  vault-prepopulate:
+    image: alpine/curl
+    depends_on:
+      - vault
+    volumes:
+      - ./vault.sh:/usr/local/bin/prepopulate_vault.sh
+    command: ["sh", "-c", "/usr/local/bin/prepopulate_vault.sh"]
+    networks:
+       - bbt-development
+
+networks:
+  bbt-development:
+    external: true
+
+volumes:
+  redis:
+  postgres:
+  redisinsight:

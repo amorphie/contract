@@ -1,0 +1,17 @@
+[
+  {
+    "_id": "6cbcc834-1771-49f8-b0d4-a73b921f537d",
+    "colName": "Full User Cycle",
+    "created": "2023-02-16T16:21:21.335Z",
+    "sortNum": 10000,
+    "folders": [],
+    "settings": {
+      "headers": [],
+      "tests": [],
+      "scripts": [
+        "custom-filter.js"
+      ],
+      "envId": "9956a153-09e3-4674-90a4-738ff3fc1ad1"
+    }
+  }
+]
