@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using amorphie.contract.data.Entity.Base;
-namespace amorphie.contract.data.Entity.Definition
+using amorphie.contract.core.Entity.Base;
+using amorphie.contract.core.Entity.Common;
+using Microsoft.EntityFrameworkCore;
+namespace amorphie.contract.core.Entity.Definition
 {
     [Index(nameof(Code))]
     [Table("Document", Schema = "Definition")]

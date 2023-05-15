@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace amorphie.contract.data.Entity.Base
+namespace amorphie.contract.core.Entity.Base
 {
-    public interface IHasKey
+    public interface IEntity
     {
-
-        Guid Id { get; set; }
     }
 }

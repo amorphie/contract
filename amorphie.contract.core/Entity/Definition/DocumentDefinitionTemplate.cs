@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using amorphie.contract.data.Entity.Base;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using amorphie.contract.core.Entity.Base;
 
-namespace amorphie.contract.data.Entity.Definition
+namespace amorphie.contract.core.Entity.Definition
 {
     [Table("DocumentTemplate", Schema = "Definition")]
 
