@@ -12,9 +12,6 @@ namespace amorphie.contract.data.Configurations.Definition
         public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
         {
             builder.HasKey(x => new { x.LanguageId });
-            
         }
-
-
     }
 }
