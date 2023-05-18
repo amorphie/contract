@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using amorphie.contract.core.Entity.Document.DocumentLanguage;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,5 +12,7 @@ namespace amorphie.contract.core.Entity.Common
     {
         public string Name { get; set; }
         public string Code { get; set; }
+        public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails { get; set; }
+
     }
 }

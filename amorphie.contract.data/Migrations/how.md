@@ -1,6 +1,6 @@
 
 
- dotnet ef --startup-project "../amorphie.contract.data/amorphie.contract.data.csproj" migrations add MyMigration --context ProjectDbContext --output-dir Migrations/Pg
+ dotnet ef --startup-project "../amorphie.contract.data/amorphie.contract.data.csproj" migrations add ContractMigrations --context ProjectDbContext --output-dir Migrations/Pg
 
  
 dotnet ef database update --startup-project "../amorphie.contract.data/amorphie.contract.data.csproj"  --context ProjectDbContext
