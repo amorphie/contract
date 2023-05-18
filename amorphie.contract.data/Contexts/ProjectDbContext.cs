@@ -2,7 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using amorphie.contract.core.Entity.Definition;
+using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore.Design;
 namespace amorphie.contract.data.Contexts;
@@ -48,9 +48,14 @@ public class ProjectDbContext : DbContext
 
 
     public DbSet<Language> Language { get; set; }
+    public DbSet<Document> Document { get; set; }
+    public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
-    public DbSet<DocumentDefinitionTemplate> DocumentDefinitionTemplate { get; set; }
-    public DbSet<DocumentDefinitionType> DocumentDefinitionType { get; set; }
+    public DbSet<DocumentGroup> DocumentGroup { get; set; }
+    public DbSet<DocumentGroupDetail> DocumentGroupDetail { get; set; }
+    public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
+    public DbSet<DocumentType> DocumentType { get; set; }
+    public DbSet<DocumentVersions> DocumentVersions { get; set; }
 
     protected IConfiguration Configuration { get; }
 

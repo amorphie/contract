@@ -1,19 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using amorphie.contract.core.Entity.Base;
+using amorphie.core.Base;
 
-namespace amorphie.contract.core.Entity.Definition
+
+namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentType", Schema = "Definition")]
-    public class DocumentDefinitionType : BaseEntity
+    public class DocumentType : EntityBase
     {
-        [Key]
-        [MaxLength(36)]
-        public Guid DocumentDefinitionId { get; set; }
-
         public string Name { get; set; }
         public string ContentType { get; set; }
-
-
     }
 }
