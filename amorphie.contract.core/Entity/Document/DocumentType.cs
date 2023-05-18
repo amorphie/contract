@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.core.Base;
 
 
-namespace amorphie.contract.core.Entity.Definition
+namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentType", Schema = "Definition")]
     public class DocumentType : EntityBase

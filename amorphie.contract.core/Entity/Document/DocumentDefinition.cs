@@ -9,10 +9,10 @@ using amorphie.core.Base;
 
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
-namespace amorphie.contract.core.Entity.Definition
+namespace amorphie.contract.core.Entity.Document
 {
     [Index(nameof(Code))]
-    [Table("Document", Schema = "Definition")]
+    [Table("DocumentDefinition", Schema = "Definition")]
     public class DocumentDefinition : EntityBase
     {
         [MaxLength(500)]
@@ -20,9 +20,9 @@ namespace amorphie.contract.core.Entity.Definition
         [Required]
         public string Code { get; set; }
 
-        [ForeignKey("LanguageId")]
+        public Guid LanguageId{ get; set; }
+
         public virtual Language Language { get; set; }
-        public virtual Document Document { get; set; }
         public virtual ICollection<DocumentGroup> DocumentGroups {get;set;}
         public virtual ICollection<DocumentGroupDetail> DocumentGroupDetails {get;set;}
         public virtual ICollection<DocumentType> DocumentTypes { get; set; }

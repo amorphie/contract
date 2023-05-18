@@ -2,7 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using amorphie.contract.core.Entity.Definition;
+using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore.Design;
 namespace amorphie.contract.data.Contexts;

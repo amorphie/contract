@@ -5,15 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using amorphie.core.Base;
 
-namespace amorphie.contract.core.Entity.Definition
+namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentGroupDetail", Schema = "Definition")]
 
     public class DocumentGroupDetail : EntityBase
     {
-        [ForeignKey("DocumentDefinitionId")]
+        public Guid DocumentDefinitionId { get; set; }
+
         public DocumentDefinition DocumentDefinition { get; set; }
-        [ForeignKey("DocumentGroupId")]
+        public Guid DocumentGroupId { get; set; }
+
         public DocumentGroup DocumentGroup { get; set; }
 
     }
