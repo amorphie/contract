@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Definition;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentDefinitionEntityConfiguration : IEntityTypeConfiguration<DocumentDefinition>
+     public class DocumentGroupDetailConfiguration : IEntityTypeConfiguration<DocumentGroupDetail>
     {
-        public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
+        public void Configure(EntityTypeBuilder<DocumentGroupDetail> builder)
         {
-            builder.HasKey(x => new { x.LanguageId });
+            // builder.HasKey(x => new { x.LanguageId,x.Id});
         }
     }
 }

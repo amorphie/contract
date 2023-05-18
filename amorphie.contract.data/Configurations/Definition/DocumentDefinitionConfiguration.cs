@@ -7,12 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentDefinitionTypeEntityConfiguration : IEntityTypeConfiguration<DocumentDefinitionType>
+    public class DocumentDefinitionConfiguration : IEntityTypeConfiguration<DocumentDefinition>
     {
-        public void Configure(EntityTypeBuilder<DocumentDefinitionType> builder)
+        public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
         {
-            builder.HasKey(x => new { x.DocumentDefinitionId});
-
+            // builder.HasKey(x => new { x.Id,x.Document.Id});
         }
     }
 }
