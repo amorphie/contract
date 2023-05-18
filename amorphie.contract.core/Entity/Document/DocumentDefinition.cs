@@ -9,6 +9,8 @@ using amorphie.core.Base;
 
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Entity.Document.DocumentLanguage;
+
 namespace amorphie.contract.core.Entity.Document
 {
     [Index(nameof(Code))]
@@ -20,12 +22,13 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public string Code { get; set; }
 
-        public Guid LanguageId{ get; set; }
+        // public Guid LanguageId{ get; set; }
 
-        public virtual Language Language { get; set; }
-        public virtual ICollection<DocumentGroup> DocumentGroups {get;set;}
-        public virtual ICollection<DocumentGroupDetail> DocumentGroupDetails {get;set;}
-        public virtual ICollection<DocumentType> DocumentTypes { get; set; }
+        // public virtual Language Language { get; set; }
+        public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails { get; set; }
+
+        public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
+        public virtual ICollection<DocumentFormat> DocumentFormats { get; set; }
         public virtual ICollection<DocumentTemplate> DocumentTemplates { get; set; }
     }
 }

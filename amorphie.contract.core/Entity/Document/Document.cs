@@ -10,7 +10,8 @@ namespace amorphie.contract.core.Entity.Document
     [Table("Document", Schema = "Definition")]
     public class Document : EntityBase
     {
-        public Guid DocumentDefinitionId{ get; set; }
+        
+        public Guid DocumentDefinitionId { get; set; }
         public DocumentDefinition DocumentDefinition { get; set; }
         public Guid DocumentContentId{ get; set; }
 

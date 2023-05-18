@@ -8,6 +8,7 @@ namespace amorphie.contract.core.Entity.Document
 
     public class DocumentTemplate : EntityBase
     {
+        //Render edilecekler
         public string Name { get; set; }
     }
 }

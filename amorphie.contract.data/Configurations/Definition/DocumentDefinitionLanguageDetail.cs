@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.Document.DocumentLanguage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.Definition
 {
-     public class DocumentGroupDetailConfiguration : IEntityTypeConfiguration<DocumentDefinitionGroupDetail>
+     public class DocumentDefinitionLanguageDetailConfiguration : IEntityTypeConfiguration<DocumentDefinitionLanguageDetail>
     {
-        public void Configure(EntityTypeBuilder<DocumentDefinitionGroupDetail> builder)
+        public void Configure(EntityTypeBuilder<DocumentDefinitionLanguageDetail> builder)
         {
             // builder.HasKey(x => new { x.LanguageId,x.Id});
         }
