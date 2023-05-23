@@ -1,0 +1,113 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "update-database",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "ef",
+                "database",
+                "update",
+                "--project", "${workspaceFolder}/amorphie.contract.data/amorphie.contract.data.csproj"
+            ],
+            "problemMatcher": "$tsc",
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+//        {
+//            "label": "init-mocks",
+//            "type": "shell",
+//            "command": "docker run --name amorphie-contract-mocks -d -v ${workspaceFolder}/tests/mocks/mocks.json:/data  -p 3000:3000 mockoon/cli:latest -d data -p 3000"
+//        },
+//        {
+//            "label": "stop-mocks",
+//            "type": "shell",
+//            "command": "docker rm -f amorphie-contract-mocks"
+//        },
+        {
+            "label": "build-amorphie-contract",
+//            "dependsOn": "init-mocks",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/amorphie.contract/amorphie.contract.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-amorphie-contract-hub",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/amorphie.contract.hub/amorphie.contract.hub.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-amorphie-contract-zeebe",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/amorphie.contract.zeebe/amorphie.contract.zeebe.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "amorphie-contract",
+            "appPort": 4200,
+            "httpPort": 42010,
+            "grpcPort": 42011,
+            "label": "dapr-debug-amorphie-contract",
+            "type": "dapr",
+            "dependsOn": "build-amorphie-contract",
+            "componentsPath": "Dapr/Components"
+        },
+        {
+            "appId": "amorphie-contract-hub",
+            "appPort": 4201,
+            "httpPort": 42020,
+            "grpcPort": 42021,
+            "label": "dapr-debug-amorphie-contract-hub",
+            "type": "dapr",
+            "dependsOn": "build-amorphie-contract-hub",
+            "componentsPath": "Dapr/Components",
+        },
+        {
+            "appId": "amorphie-contract-zeebe",
+            "appPort": 4202,
+            "httpPort": 42030,
+            "grpcPort": 42031,
+            "label": "dapr-debug-amorphie-contract-zeebe",
+            "type": "dapr",
+            "dependsOn": "build-amorphie-contract-zeebe",
+            "componentsPath": "Dapr/Components"
+        },
+        {
+            "appId": "amorphie-contract",
+            "label": "daprd-down-amorphie-contract",
+            "type": "daprd-down",
+            "dependsOn": "stop-mocks",
+        },
+        {
+            "appId": "amorphie-contract-hub",
+            "label": "daprd-down-amorphie-contract-hub",
+            "type": "daprd-down"
+        },
+        {
+            "appId": "amorphie-contract-zeebe",
+            "label": "daprd-down-amorphie-contract-zeebe",
+            "type": "daprd-down"
+        }
+    ]
+}

@@ -7,16 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.Client" Version="1.10.0"/>
-    <PackageReference Include="Dapr.AspNetCore" Version="1.10.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3"/>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3"/>
-    <PackageReference Include="amorphie.core" Version="1.0.1"/>
-    <PackageReference Include="amorphie.core.security" Version="1.0.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.4"/>
-    <PackageReference Include="StackExchange.Redis" Version="2.6.104"/>
+    <PackageReference Include="Dapr.Client" Version="1.10.0" />
+    <PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="amorphie.core" Version="1.0.5" />
+    <PackageReference Include="amorphie.core.security" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.111" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
+    <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,8 +5,12 @@ using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore.Design;
+using amorphie.core.Repository;
+using amorphie.core.Identity;
+
 namespace amorphie.contract.data.Contexts;
 
+/*
 class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
 {
     public ProjectDbContext CreateDbContext(string[] args)
@@ -18,7 +22,8 @@ class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
         return new ProjectDbContext(builder.Options);
     }
 }
-public class ProjectDbContext : DbContext
+*/
+public class ProjectDbContext : BBTDbContext
 {
     /// <summary>
     /// in constructor we get IConfiguration, parallel to more than one db
@@ -26,19 +31,14 @@ public class ProjectDbContext : DbContext
     /// </summary>
     /// <param name="options"></param>
     /// <param name="configuration"></param>
-    public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IConfiguration configuration)
-        : base(options)
+    public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IConfiguration configuration, IBBTIdentity _bbtIdentity)
+        : base(options,_bbtIdentity)
     {
         Configuration = configuration;
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
     }
 
-    public ProjectDbContext(DbContextOptions options) : base(options)
-    {
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
-    }
 
     /// <summary>
     /// Let's also implement the general version.
