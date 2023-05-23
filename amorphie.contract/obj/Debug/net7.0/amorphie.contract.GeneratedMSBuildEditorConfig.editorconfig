@@ -1,4 +1,5 @@
 is_global = true
+build_property.RefitInternalNamespace = amorphie.contract
 build_property.TargetFramework = net7.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
@@ -9,9 +10,9 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = amorphie.contract
 build_property.RootNamespace = amorphie.contract
-build_property.ProjectDir = c:\Projects\Burgan\amorphie\contract\amorphie.contract\
+build_property.ProjectDir = C:\Projects\Burgan\amorphie\contract\amorphie.contract\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = c:\Projects\Burgan\amorphie\contract\amorphie.contract
+build_property.MSBuildProjectDirectory = C:\Projects\Burgan\amorphie\contract\amorphie.contract
 build_property._RazorSourceGeneratorDebug = 

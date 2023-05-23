@@ -57,3 +57,13 @@ C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Micr
 C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Npgsql.dll
 C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\AutoMapper.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\FluentValidation.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\FluentValidation.AspNetCore.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Microsoft.Extensions.Http.Polly.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Polly.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Polly.Extensions.Http.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Refit.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.hub\bin\Debug\net7.0\Refit.HttpClientFactory.dll
