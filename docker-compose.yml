@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     networks:
       - bbt-development
-      
+
   zeebe:
     container_name: bbt_zeebe
     image: camunda/zeebe:8.1.8
@@ -44,13 +44,13 @@ services:
       - bbt-development
 
 
-  operate: 
+  operate:
     container_name: bbt_zeebe_operate
     image: camunda/operate:8.1.8
     platform: linux/amd64
     ports:
       - "8081:8080"
-    environment: 
+    environment:
       - CAMUNDA_OPERATE_ZEEBE_GATEWAYADDRESS=zeebe:26500
       - CAMUNDA_OPERATE_ELASTICSEARCH_URL=http://elastic:9200
       - CAMUNDA_OPERATE_ZEEBEELASTICSEARCH_URL=http://elastic:9200
@@ -74,6 +74,21 @@ services:
     restart: unless-stopped
     networks:
       - bbt-development
+
+  pgadmin:
+    container_name: bbt-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-123456}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-82}:80"
+    networks:
+      - bbt-development
+    restart: unless-stopped
 
   elastic:
     container_name: bbt_elastic
@@ -99,7 +114,7 @@ services:
       - elastic
     ports:
       - 5601:5601
-      
+
   vault:
     image: vault:latest
     container_name: vault
@@ -127,9 +142,9 @@ services:
       - vault
     volumes:
       - ./vault.sh:/usr/local/bin/prepopulate_vault.sh
-    command: ["sh", "-c", "/usr/local/bin/prepopulate_vault.sh"]
+    command: [ "sh", "-c", "/usr/local/bin/prepopulate_vault.sh" ]
     networks:
-       - bbt-development
+      - bbt-development
 
 networks:
   bbt-development:
@@ -139,3 +154,4 @@ volumes:
   redis:
   postgres:
   redisinsight:
+  pgadmin:
