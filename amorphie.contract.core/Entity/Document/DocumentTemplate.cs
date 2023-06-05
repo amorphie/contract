@@ -4,7 +4,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentTemplate", Schema = "Definition")]
+    [Table("DocumentTemplate", Schema = "Doc")]
 
     public class DocumentTemplate : EntityBase
     {

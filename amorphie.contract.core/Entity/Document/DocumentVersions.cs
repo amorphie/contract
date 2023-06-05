@@ -7,7 +7,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentVersions", Schema = "Definition")]
+    [Table("DocumentVersions", Schema = "Doc")]
     public class DocumentVersions:EntityBase
     {
         public string Name {get;set;}

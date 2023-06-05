@@ -7,7 +7,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentOptimize", Schema = "Definition")]
+    [Table("DocumentOptimize", Schema = "Doc")]
     public class DocumentOptimize : EntityBase
     {
         public bool Size {get;set;}

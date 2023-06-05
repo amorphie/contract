@@ -66,8 +66,8 @@
         {
             "appId": "amorphie-contract",
             "appPort": 4200,
-            "httpPort": 42010,
-            "grpcPort": 42011,
+            "httpPort": 4201,
+            "grpcPort": 4202,
             "label": "dapr-debug-amorphie-contract",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract",

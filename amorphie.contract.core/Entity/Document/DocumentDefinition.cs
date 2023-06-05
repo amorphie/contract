@@ -7,14 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using amorphie.core.Base;
 
-using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
-using amorphie.contract.core.Entity.Document.DocumentLanguage;
 
 namespace amorphie.contract.core.Entity.Document
 {
     [Index(nameof(Code))]
-    [Table("DocumentDefinition", Schema = "Definition")]
+    [Table("DocumentDefinition", Schema = "Doc")]
     public class DocumentDefinition : EntityBase
     {
         [MaxLength(500)]
@@ -30,5 +28,6 @@ namespace amorphie.contract.core.Entity.Document
         public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
         public virtual ICollection<DocumentFormat> DocumentFormats { get; set; }
         public virtual ICollection<DocumentTemplate> DocumentTemplates { get; set; }
+        public virtual ICollection<DocumentEntityProperty> DocumentEntityPropertys { get; set; }
     }
 }

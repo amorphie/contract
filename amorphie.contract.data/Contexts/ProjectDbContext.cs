@@ -65,15 +65,5 @@ public class ProjectDbContext : BBTDbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        var connStr = "Host=localhost;Port=5432;Database=TestDb;Username=postgres;Password=123321";
-        if (!optionsBuilder.IsConfigured)
-        {
-            base.OnConfiguring(optionsBuilder.UseNpgsql(connStr)
-                .EnableSensitiveDataLogging());
-        }
-    }
+    
 }
