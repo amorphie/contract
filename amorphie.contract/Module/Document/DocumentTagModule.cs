@@ -30,6 +30,7 @@ namespace amorphie.contract;
             
                 return repository.GetAll();
             });
+            
         }
         // You can override any method in basemodule
         protected override ValueTask<IResult> GetAll(
@@ -38,6 +39,7 @@ namespace amorphie.contract;
             [FromQuery, Range(5, 100)] int pageSize)
         {
             return base.GetAll(repository, page, pageSize);
-        }
+        } 
+       
     }
 

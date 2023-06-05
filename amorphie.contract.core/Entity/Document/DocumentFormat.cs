@@ -7,12 +7,12 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentFormat", Schema = "Definition")]
+    [Table("DocumentFormat", Schema = "Doc")]
     public class DocumentFormat : EntityBase
     {
         public Guid DocumentTypeId { get; set; }
 
-        public DocumentSize DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }
         public Guid DocumentSizeId { get; set; }
 
         public DocumentSize DocumentSize { get; set; }

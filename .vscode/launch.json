@@ -13,8 +13,8 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "ASPNETCORE_URLS": "http://localhost:4200",
-                "DAPR_HTTP_PORT": "42010",
-                "DAPR_GRPC_PORT": "42011",
+                "DAPR_HTTP_PORT": "4201",
+                "DAPR_GRPC_PORT": "4202",
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
 

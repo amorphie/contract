@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using amorphie.contract.core.Entity.Document.DocumentLanguage;
+using amorphie.contract.core.Entity.Document;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
 

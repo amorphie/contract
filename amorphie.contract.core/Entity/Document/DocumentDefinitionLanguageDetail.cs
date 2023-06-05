@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Common;
 using amorphie.core.Base;
 
-namespace amorphie.contract.core.Entity.Document.DocumentLanguage
+namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentDefinitionLanguageDetail", Schema = "Definition")]
+    [Table("DocumentDefinitionLanguageDetail", Schema = "Doc")]
     public class DocumentDefinitionLanguageDetail : EntityBase
     {
         public Guid LanguageId { get; set; }

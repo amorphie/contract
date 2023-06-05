@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Index(nameof(Code))]
-    [Table("DocumentGroup", Schema = "Definition")]
+    [Table("DocumentGroup", Schema = "Doc")]
     public class DocumentGroup : EntityBase
     {
         public string Code { get; set; }

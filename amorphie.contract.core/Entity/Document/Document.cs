@@ -7,7 +7,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("Document", Schema = "Definition")]
+    [Table("Document", Schema = "Doc")]
     public class Document : EntityBase
     {
         
