@@ -10,9 +10,6 @@ namespace amorphie.contract.core.Entity.EAV
     [Table("EntityPropertyValue", Schema = "EAV")]
     public class EntityPropertyValue : EntityBase
     {
-        public Guid EntityPropertyId { get; set; }
-        public EntityProperty EntityProperty { get; set; }
-        public string Data { get; set; }
-
+        public string? Data { get; set; }
     }
 }

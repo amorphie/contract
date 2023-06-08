@@ -19,12 +19,7 @@ namespace amorphie.contract.core.Entity.Document
         [Description("Kode")]
         [Required]
         public string Code { get; set; }
-
-        // public Guid LanguageId{ get; set; }
-
-        // public virtual Language Language { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails { get; set; }
-
         public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
         public virtual ICollection<DocumentFormat> DocumentFormats { get; set; }
         public virtual ICollection<DocumentTemplate> DocumentTemplates { get; set; }

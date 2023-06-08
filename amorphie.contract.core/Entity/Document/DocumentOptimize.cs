@@ -11,6 +11,6 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentOptimize : EntityBase
     {
         public bool Size {get;set;}
-        public string Transform {get;set;}
+        public string Transform {get;set;}//degişcek
     }
 }
