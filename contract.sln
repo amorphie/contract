@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.001.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract", "amorphie.contract\amorphie.contract.csproj", "{6BF8FFDB-37D1-4811-8F03-7022289CF6C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.core", "amorphie.contract.core\amorphie.contract.core.csproj", "{872D1905-7EF9-4580-8D6B-FB82151BC98A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.data", "amorphie.contract.data\amorphie.contract.data.csproj", "{595C7C2E-BCE7-4242-880E-C1063CAB6148}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.hub", "amorphie.contract.hub\amorphie.contract.hub.csproj", "{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.test", "amorphie.contract.test\amorphie.contract.test.csproj", "{4442267A-9827-4D93-BC18-B1EB14913001}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.zeebe", "amorphie.contract.zeebe\amorphie.contract.zeebe.csproj", "{45A057E2-2089-4A29-A058-30D6B61B0733}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BF8FFDB-37D1-4811-8F03-7022289CF6C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BF8FFDB-37D1-4811-8F03-7022289CF6C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BF8FFDB-37D1-4811-8F03-7022289CF6C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BF8FFDB-37D1-4811-8F03-7022289CF6C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{872D1905-7EF9-4580-8D6B-FB82151BC98A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{872D1905-7EF9-4580-8D6B-FB82151BC98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{872D1905-7EF9-4580-8D6B-FB82151BC98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{872D1905-7EF9-4580-8D6B-FB82151BC98A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595C7C2E-BCE7-4242-880E-C1063CAB6148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595C7C2E-BCE7-4242-880E-C1063CAB6148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595C7C2E-BCE7-4242-880E-C1063CAB6148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595C7C2E-BCE7-4242-880E-C1063CAB6148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4442267A-9827-4D93-BC18-B1EB14913001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4442267A-9827-4D93-BC18-B1EB14913001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4442267A-9827-4D93-BC18-B1EB14913001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4442267A-9827-4D93-BC18-B1EB14913001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A057E2-2089-4A29-A058-30D6B61B0733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A057E2-2089-4A29-A058-30D6B61B0733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A057E2-2089-4A29-A058-30D6B61B0733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A057E2-2089-4A29-A058-30D6B61B0733}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED06F516-5066-4ABF-9CC7-6468B5425684}
+	EndGlobalSection
+EndGlobal

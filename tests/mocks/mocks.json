@@ -1,0 +1,240 @@
+{
+    "uuid": "d63f60ec-ab86-47d5-a21f-7d86f9db2f6c",
+    "lastMigration": 24,
+    "name": "tag",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3001,
+    "hostname": "0.0.0.0",
+    "routes": [
+      {
+        "uuid": "e0514197-ac3f-4a8c-af13-f633d72d3e31",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "",
+        "responses": [
+          {
+            "uuid": "7ed52517-14b3-48e9-aa14-61918e8f3e0f",
+            "body": "{}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "8807aa88-f2dd-45bb-b71f-652b64976383",
+        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+        "method": "get",
+        "endpoint": "cb.customers",
+        "responses": [
+          {
+            "uuid": "ed4a289a-85c0-4c92-8b17-7455760aae72",
+            "body": "{\n  \"reference\" : \"{{ queryParam 'reference' }}\",\n  \"citizenship-number\": \"{{ faker 'datatype.number' min=10000000001 max=90000000001 }}\",\n  \"firstname\": \"{{ faker 'name.firstName' }}\",\n  \"lastname\": \"{{ faker 'name.lastName' }}\",\n  \"adress\":\"{{faker 'address.city'}}\"\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Returns user info",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "2e18bfc5-37bf-4ac9-b967-bea1e28039bc",
+        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+        "method": "get",
+        "endpoint": "cb.partners/:reference",
+        "responses": [
+          {
+            "uuid": "b2be3e5e-0b5c-4e09-b2cd-f2b090fef874",
+            "body": "{\n  \"partner\": {\n    \"reference\": \"{{urlParam 'reference'}}\",\n    \"name\": \"{{ faker 'company.name' }}\"\n  }\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Returns user info",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "a904f99b-6bfb-4f16-8ca1-61fd774a9b16",
+        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+        "method": "get",
+        "endpoint": "cb.partners/:partner/staff/:reference",
+        "responses": [
+          {
+            "uuid": "2dd75815-a3c3-4fdf-9fdb-f4f8047c830f",
+            "body": "{\n  \"partner-staff\": {\n    \"reference\": \"{{urlParam 'partner'}}\",\n    \"name\": \"{{ faker 'company.name' }}\",\n    \"user\": \"{{urlParam 'reference'}}\",\n    \"fullname\": \"{{ faker 'name.fullName' }}\"\n    \"firstname\": \"{{ faker 'name.firstName' }}\"\n    \"lastname\": \"{{ faker 'name.lastName' }}\"\n  }\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Returns user info",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "fc2b93cb-8c10-457a-9890-5d3cf05f538e",
+        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+        "method": "get",
+        "endpoint": "cb.staff/:reference",
+        "responses": [
+          {
+            "uuid": "6d0ce47d-97c0-433b-bcea-b9bdb25b671d",
+            "body": "{\n  \"username\": \"{{urlParam 'reference'}}\",\n  \"firstname\": \"{{ faker 'name.firstName' }}\",\n  \"lastname\": \"{{ faker 'name.lastName' }}\"\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Returns user info",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "457f5407-1bb3-4d34-a305-e616eed84024",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "cb.template",
+        "responses": [
+          {
+            "uuid": "03fd6dbb-fcf8-4ace-b1b4-f879a13c0614",
+            "body": "{\n  \n<!DOCTYPE html>\n<html>\n<head>\n<title>test-html</title>\n</head>\n<body>\n\n<h1>\"test-html\"</h1>\n<p>This is a paragraph.</p>\n\n</body>\n</html>\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "templateName",
+                "value": "",
+                "invert": false,
+                "operator": "equals"
+              }
+            ],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      },
+      {
+        "uuid": "695d8c21-acbb-4683-94df-37c671e0ccec",
+        "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+        "method": "get",
+        "endpoint": "cb.bankinfo",
+        "responses": [
+          {
+            "uuid": "1ebac86f-7f13-4a58-9066-f6605e821302",
+            "body": "{\n  \"name\": \"Burgan Bank Turkey\",\n  \"city\": \"Istanbul\",\n  \"country\": \"Turkey\"\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Returns user info",
+            "headers": [],
+            "bodyType": "INLINE",
+            "filePath": "",
+            "databucketID": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false,
+            "fallbackTo404": false,
+            "default": true
+          }
+        ],
+        "enabled": true,
+        "responseMode": null
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "proxyRemovePrefix": false,
+    "tlsOptions": {
+      "enabled": false,
+      "type": "CERT",
+      "pfxPath": "",
+      "certPath": "",
+      "keyPath": "",
+      "caPath": "",
+      "passphrase": ""
+    },
+    "cors": true,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "proxyReqHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ],
+    "proxyResHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ],
+    "data": []
+  }
