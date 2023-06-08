@@ -10,18 +10,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-    public class DocumentDefinitionGroupDetailModule
-        : BaseContractModule<DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetailValidator>
+public class DocumentDefinitionGroupDetailModule
+    : BaseContractModule<DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetailValidator>
+{
+    public DocumentDefinitionGroupDetailModule(WebApplication app) : base(app)
     {
-        public DocumentDefinitionGroupDetailModule(WebApplication app) : base(app)
-        {
-        }
-
-        // public override string[]? PropertyCheckList => new string[] {"Code","Contact"};
-
-        public override string? UrlFragment => "document-definition-group-detail";
-
-
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentGroupId"};
+
+    public override string? UrlFragment => "document-definition-group-detail";
+
+
+
+}
 

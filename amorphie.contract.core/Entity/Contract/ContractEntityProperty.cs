@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.core.Base;
 
-namespace amorphie.contract.core.Entity.Document
+namespace amorphie.contract.core.Entity.Contract
 {
-    [Table("DocumentEntityProperty", Schema = "Doc")]
-    public class DocumentEntityProperty : EntityBase
+    [Table("ContractEntityProperty", Schema = "Cont")]
+    public class ContractEntityProperty : EntityBase
     {
         
-        public Guid DocumentDefinitionId { get; set; }
-        public DocumentDefinition DocumentDefinition { get; set; }
+        public Guid ContractDefinitionId { get; set; }
+        public ContractDefinition ContractDefinition { get; set; }
         public Guid EntityPropertyId { get; set; }
         public virtual EntityProperty EntityProperty { get; set; }
 
