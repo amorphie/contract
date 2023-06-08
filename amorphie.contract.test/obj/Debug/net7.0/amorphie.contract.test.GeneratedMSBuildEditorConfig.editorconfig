@@ -9,4 +9,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = amorphie.contract.test
-build_property.ProjectDir = /Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.test/
+build_property.ProjectDir = c:\Projects\Burgan\amorphie\contract\amorphie.contract.test\
