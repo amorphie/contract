@@ -21,8 +21,5 @@ namespace amorphie.contract;
 
         public override string? UrlFragment => "document-content";
 
-
-   
-       
     }
 
