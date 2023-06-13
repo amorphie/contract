@@ -14,6 +14,7 @@ namespace amorphie.contract.core.Entity.Contract
         public string Name { get; set; }
         public string Code { get; set; }
         public virtual ICollection<DocumentDefinition> DocumentDefinitions { get; set; }
+        public virtual ICollection<ContractEntityProperty> ContractEntityPropertys { get; set; }
 
     }
 }

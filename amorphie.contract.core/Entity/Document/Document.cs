@@ -16,5 +16,7 @@ namespace amorphie.contract.core.Entity.Document
         public Guid DocumentContentId{ get; set; }
 
         public DocumentContent DocumentContent { get; set; }
+        public string Note  { get; set; }
+        public bool ManuelControl  { get; set; }
     }
 }

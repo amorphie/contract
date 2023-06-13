@@ -568,6 +568,8 @@ namespace amorphie.contract.data.Migrations.Pg
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentContentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Note = table.Column<string>(type: "text", nullable: false),
+                    ManuelControl = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -590,6 +592,33 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.DocumentDefinitionId,
                         principalSchema: "Doc",
                         principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentNote",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Note = table.Column<string>(type: "text", nullable: false),
+                    DocumentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentNote", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentNote_Document_DocumentId",
+                        column: x => x.DocumentId,
+                        principalSchema: "Doc",
+                        principalTable: "Document",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -715,6 +744,12 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentNote_DocumentId",
+                schema: "Doc",
+                table: "DocumentNote",
+                column: "DocumentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentTemplate_DocumentDefinitionId",
                 schema: "Doc",
                 table: "DocumentTemplate",
@@ -757,10 +792,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Cont");
 
             migrationBuilder.DropTable(
-                name: "Document",
-                schema: "Doc");
-
-            migrationBuilder.DropTable(
                 name: "DocumentDefinitionGroupDetail",
                 schema: "Doc");
 
@@ -777,6 +808,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
+                name: "DocumentNote",
+                schema: "Doc");
+
+            migrationBuilder.DropTable(
                 name: "DocumentOptimize",
                 schema: "Doc");
 
@@ -786,10 +821,6 @@ namespace amorphie.contract.data.Migrations.Pg
 
             migrationBuilder.DropTable(
                 name: "DocumentTemplate",
-                schema: "Doc");
-
-            migrationBuilder.DropTable(
-                name: "DocumentContent",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
@@ -809,7 +840,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "DocumentVersions",
+                name: "Document",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
@@ -823,6 +854,14 @@ namespace amorphie.contract.data.Migrations.Pg
             migrationBuilder.DropTable(
                 name: "EntityPropertyValue",
                 schema: "EAV");
+
+            migrationBuilder.DropTable(
+                name: "DocumentContent",
+                schema: "Doc");
+
+            migrationBuilder.DropTable(
+                name: "DocumentVersions",
+                schema: "Doc");
 
             migrationBuilder.DropTable(
                 name: "DocumentDefinition",

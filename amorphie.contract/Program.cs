@@ -23,7 +23,7 @@ builder.Services.AddScoped(typeof(IBBTRepository <,>), typeof(BBTRepository <,>)
 
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
-
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
