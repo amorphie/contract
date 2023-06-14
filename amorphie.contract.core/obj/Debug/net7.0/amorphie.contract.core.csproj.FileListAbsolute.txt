@@ -26,3 +26,17 @@ c:/Projects/Burgan/amorphie/contract/amorphie.contract.core/obj/Debug/net7.0/amo
 /Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/obj/Debug/net7.0/amorphie.contract.core.pdb
 /Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/obj/Debug/net7.0/amorphie.contract.core.genruntimeconfig.cache
 /Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/obj/Debug/net7.0/ref/amorphie.contract.core.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\bin\Debug\net7.0\amorphie.contract.core.deps.json
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\bin\Debug\net7.0\amorphie.contract.core.runtimeconfig.json
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\bin\Debug\net7.0\amorphie.contract.core.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\bin\Debug\net7.0\amorphie.contract.core.pdb
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.csproj.AssemblyReference.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.AssemblyInfoInputs.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.AssemblyInfo.cs
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.csproj.CoreCompileInputs.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\refint\amorphie.contract.core.dll
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.pdb
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\amorphie.contract.core.genruntimeconfig.cache
+C:\Projects\Burgan\amorphie\contract\amorphie.contract.core\obj\Debug\net7.0\ref\amorphie.contract.core.dll

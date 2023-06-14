@@ -3,6 +3,8 @@ using amorphie.core.Repository;
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
+using FluentValidation;
+
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
 
@@ -17,8 +19,8 @@ IConfiguration Configuration;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
- builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
+ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 builder.Services.AddScoped(typeof(IBBTRepository <,>), typeof(BBTRepository <,>));

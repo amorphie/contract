@@ -1,26 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.data/amorphie.contract.data.csproj": {}
+    "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.data\\amorphie.contract.data.csproj": {}
   },
   "projects": {
-    "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/amorphie.contract.core.csproj": {
+    "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\amorphie.contract.core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/amorphie.contract.core.csproj",
+        "projectUniqueName": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\amorphie.contract.core.csproj",
         "projectName": "amorphie.contract.core",
-        "projectPath": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/amorphie.contract.core.csproj",
-        "packagesPath": "/Users/fatihozturk/.nuget/packages/",
-        "outputPath": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/obj/",
+        "projectPath": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\amorphie.contract.core.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/fatihozturk/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -88,35 +94,41 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.data/amorphie.contract.data.csproj": {
+    "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.data\\amorphie.contract.data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.data/amorphie.contract.data.csproj",
+        "projectUniqueName": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.data\\amorphie.contract.data.csproj",
         "projectName": "amorphie.contract.data",
-        "projectPath": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.data/amorphie.contract.data.csproj",
-        "packagesPath": "/Users/fatihozturk/.nuget/packages/",
-        "outputPath": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.data/obj/",
+        "projectPath": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.data\\amorphie.contract.data.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.data\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/fatihozturk/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/amorphie.contract.core.csproj": {
-                "projectPath": "/Users/fatihozturk/Documents/GitHub/contract/amorphie.contract.core/amorphie.contract.core.csproj"
+              "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\amorphie.contract.core.csproj": {
+                "projectPath": "C:\\Projects\\Burgan\\amorphie\\contract\\amorphie.contract.core\\amorphie.contract.core.csproj"
               }
             }
           }
@@ -178,7 +190,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
