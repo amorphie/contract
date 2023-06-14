@@ -7431,6 +7431,8 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "AutoMapper >= 12.0.1",
+      "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
       "Dapr.AspNetCore >= 1.10.0",
       "Dapr.Client >= 1.10.0",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 7.0.5",
@@ -7492,6 +7494,14 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
+          "AutoMapper": {
+            "target": "Package",
+            "version": "[12.0.1, )"
+          },
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+            "target": "Package",
+            "version": "[12.0.1, )"
+          },
           "Dapr.AspNetCore": {
             "target": "Package",
             "version": "[1.10.0, )"
