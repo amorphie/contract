@@ -69,6 +69,7 @@ public class ProjectDbContext : BBTDbContext
     public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
     public DbSet<DocumentType> DocumentType { get; set; }
     public DbSet<DocumentVersions> DocumentVersions { get; set; }
+    public DbSet<DocumentTag> DocumentTag { get; set; }
 
     protected IConfiguration Configuration { get; }
 
