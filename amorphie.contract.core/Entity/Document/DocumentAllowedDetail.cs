@@ -1,20 +1,19 @@
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentTag", Schema = "Doc")]
-    public class DocumentTag : EntityBase
+    [Table("DocumentAllowedDetail", Schema = "Doc")]
+
+    public class DocumentAllowedDetail : EntityBase
     {
         public Guid DocumentDefinitionId { get; set; }
 
         public DocumentDefinition DocumentDefinition { get; set; }
-        public string Code { get; set; }
-        public string Contact { get; set; }
+        public Guid DocumentAllowedId { get; set; }
 
+
+        public DocumentAllowed DocumentAllowed { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace amorphie.contract.core.Entity.Document
     {
         //Render edilecekler
         public string Name { get; set; }
-        public string URL { get; set; }
+        public string URL { get; set; }//kalkıcak heralde
     }
 }
