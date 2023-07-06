@@ -11,9 +11,9 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentDefinitionLanguageDetail", Schema = "Doc")]
     public class DocumentDefinitionLanguageDetail : EntityBase
     {
-        public Guid LanguageId { get; set; }
+        public Guid MultiLanguageId { get; set; }
 
-        public  Language Language { get; set; }
+        public  MultiLanguage MultiLanguage { get; set; }
         public Guid DocumentDefinitionId { get; set; }
 
         public DocumentDefinition DocumentDefinition { get; set; }

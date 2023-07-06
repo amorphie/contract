@@ -60,7 +60,9 @@ public class ProjectDbContext : BBTDbContext
     /// <param name="configuration"></param>
 
 
-    public DbSet<Language> Language { get; set; }
+    public DbSet<LanguageType> LanguageType { get; set; }
+    public DbSet<MultiLanguage> MultiLanguage { get; set; }
+    public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
@@ -70,6 +72,10 @@ public class ProjectDbContext : BBTDbContext
     public DbSet<DocumentType> DocumentType { get; set; }
     public DbSet<DocumentVersions> DocumentVersions { get; set; }
     public DbSet<DocumentTag> DocumentTag { get; set; }
+    public DbSet<DocumentSize> DocumentSize { get; set; }
+    public DbSet<DocumentOptimize> DocumentOptimize { get; set; }
+    public DbSet<DocumentTemplateDetail> DocumentTemplateDetail { get; set; }
+    public DbSet<DocumentFormIODetail> DocumentFormIODetail { get; set; }
 
     protected IConfiguration Configuration { get; }
 

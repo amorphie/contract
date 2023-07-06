@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  LanguageEntityConfiguration : IEntityTypeConfiguration<Language>
+    public class  LanguageTypeEntityConfiguration : IEntityTypeConfiguration<LanguageType>
     {
-        public void Configure(EntityTypeBuilder<Language> builder)
+        public void Configure(EntityTypeBuilder<LanguageType> builder)
         {
             
         }

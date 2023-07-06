@@ -4,13 +4,12 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentFormIO", Schema = "Doc")]
+    [Table("DocumentAllowed", Schema = "Doc")]
 
-    public class DocumentFormIO : EntityBase
+    public class DocumentAllowed : EntityBase
     {
         //Render edilecekler
-     
         public string Name { get; set; }
-        public string Data { get; set; }
+        public DocumentAllowedType DocumentAllowedType { get; set; }//client,
     }
 }

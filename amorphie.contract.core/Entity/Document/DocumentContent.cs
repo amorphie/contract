@@ -11,6 +11,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentContent : EntityBase
     {
         public string ContentData { get; set; }
+        public string KiloBytesSize {get;set;}
         public Guid DocumentVersionsId{ get; set; }
 
         public DocumentVersions DocumentVersions { get; set; }

@@ -9,7 +9,7 @@ namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOptimize", Schema = "Doc")]
     public class DocumentOptimize : EntityBase
-    {
+    {//Document Defination a baglı olmalı
         public bool Size {get;set;}
         public string Transform {get;set;}//degişcek
     }
