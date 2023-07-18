@@ -12,8 +12,8 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20230706140151_ContractMigrations")]
-    partial class ContractMigrations
+    [Migration("20230718123146_ContractMigrations4")]
+    partial class ContractMigrations4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("LanguageType", "Common");
                 });
 
@@ -95,7 +98,8 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code");
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.HasIndex("LanguageTypeId");
 
