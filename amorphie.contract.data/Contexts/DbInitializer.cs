@@ -20,6 +20,7 @@ namespace amorphie.contract.data.Contexts
                 context.DocumentSize.Add(new core.Entity.Document.DocumentSize { KiloBytes = 512 });
                 context.DocumentSize.Add(new core.Entity.Document.DocumentSize { KiloBytes = 1024 });
                 context.DocumentSize.Add(new core.Entity.Document.DocumentSize { KiloBytes = 2048 });
+                context.DocumentSize.Add(new core.Entity.Document.DocumentSize { KiloBytes = 4096 });
                 var b = context.SaveChanges();
             }
             if (!context.DocumentType.Any())
@@ -73,7 +74,6 @@ namespace amorphie.contract.data.Contexts
                               ,
                         Code = "identification-certificate-nc",
                         Name = "Nufus Cuzdani",
-
                     }
                           ,
                     DocumentDefinition = dd
