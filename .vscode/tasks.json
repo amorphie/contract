@@ -15,20 +15,23 @@
             "runOptions": {
                 "runOn": "folderOpen"
             }
-        },
-        {
-            "label": "init-mocks",
-            "type": "shell",
-            "command": "docker run --name amorphie-contract-mocks -d -v ${workspaceFolder}/tests/mocks/mocks.json:/data  -p 3000:3000 mockoon/cli:latest -d data -p 3000"
-        },
-        {
-           "label": "stop-mocks",
-            "type": "shell",
-            "command": "docker rm -f amorphie-contract-mocks"
-        },
+        }
+        //,
+        //{
+        //    "label": "init-mocks",
+        //    "type": "shell",
+        //    "command": "docker run --name amorphie-contract-mocks -d -v ${workspaceFolder}/tests/mocks/mocks.json:/data  -p 3000:3000 mockoon/cli:latest -d data -p 3000"
+        //}
+        //,
+        //{
+        //   "label": "stop-mocks",
+        //    "type": "shell",
+        //    "command": "docker rm -f amorphie-contract-mocks"
+        //},
+        ,
         {
             "label": "build-amorphie-contract",
-            "dependsOn": "init-mocks",
+        //    "dependsOn": "init-mocks",
             "command": "dotnet",
             "type": "process",
             "args": [

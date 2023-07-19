@@ -19,7 +19,12 @@
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
 
             },
-            "postDebugTask": "daprd-down-amorphie-contract"
+            "postDebugTask": "daprd-down-amorphie-contract",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
         },
         {
             "name": "amorphie-contract-hub",
@@ -38,7 +43,12 @@
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
             },
-            "postDebugTask": "daprd-down-amorphie-contract-hub"
+            "postDebugTask": "daprd-down-amorphie-contract-hub",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
         },
         {
             "name": "amorphie-contract-zeebe",
@@ -57,7 +67,12 @@
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
             },
-            "postDebugTask": "daprd-down-amorphie-contract-zeebe"
+            "postDebugTask": "daprd-down-amorphie-contract-zeebe",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
         }
     ],
     "compounds": [
