@@ -16,6 +16,7 @@ namespace amorphie.contract;
     {
         public ContractDefinitionModule(WebApplication app) : base(app)
         {
+            
         }
 
         public override string[]? PropertyCheckList => new string[] {"Name","Code"};

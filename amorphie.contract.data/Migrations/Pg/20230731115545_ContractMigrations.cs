@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace amorphie.contract.data.Migrations.Pg
 {
     /// <inheritdoc />
-    public partial class ContractMigrations4 : Migration
+    public partial class ContractMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -1025,8 +1025,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 name: "IX_MultiLanguage_Code",
                 schema: "Common",
                 table: "MultiLanguage",
-                column: "Code",
-                unique: true);
+                column: "Code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MultiLanguage_LanguageTypeId",

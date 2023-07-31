@@ -1257,7 +1257,7 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionGroupDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
-                        .WithMany("DocumentDefinitionGroupDetails")
+                        .WithMany()
                         .HasForeignKey("DocumentDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1452,8 +1452,6 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinition", b =>
                 {
                     b.Navigation("DocumentAllowedDetails");
-
-                    b.Navigation("DocumentDefinitionGroupDetails");
 
                     b.Navigation("DocumentDefinitionLanguageDetails");
 
