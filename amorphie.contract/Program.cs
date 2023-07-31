@@ -3,6 +3,9 @@ using amorphie.core.Repository;
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
+using amorphie.contract.core.Mapping;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
 
@@ -20,7 +23,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 builder.Services.AddScoped(typeof(IBBTRepository <,>), typeof(BBTRepository <,>));
-
+var assemblies = new Assembly[]
+                {
+                      typeof(DocumentTypeValidator).Assembly,
+                      typeof(MappingDocumentProfile).Assembly,
+                };
+                builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 
@@ -34,12 +42,13 @@ db.Database.Migrate();
 DbInitializer.Initialize(db);
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+app.UseSwagger();
+app.UseSwaggerUI();
 // app.UseHttpsRedirection();
 
 app.AddRoutes();

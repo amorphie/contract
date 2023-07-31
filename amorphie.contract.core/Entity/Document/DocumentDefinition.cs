@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public string Code { get; set; } //Unique olmali
         public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails{ get; } = new List<DocumentDefinitionLanguageDetail>();
-        public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
+        // public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
         public virtual ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; }
         public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; }
         public virtual ICollection<DocumentFormIODetail> DocumentFormIODetail { get; set; }

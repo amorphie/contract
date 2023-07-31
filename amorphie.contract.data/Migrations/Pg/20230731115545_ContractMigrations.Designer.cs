@@ -12,8 +12,8 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20230718123146_ContractMigrations4")]
-    partial class ContractMigrations4
+    [Migration("20230731115545_ContractMigrations")]
+    partial class ContractMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,8 +98,7 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
+                    b.HasIndex("Code");
 
                     b.HasIndex("LanguageTypeId");
 
@@ -1261,7 +1260,7 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionGroupDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
-                        .WithMany("DocumentDefinitionGroupDetails")
+                        .WithMany()
                         .HasForeignKey("DocumentDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1456,8 +1455,6 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinition", b =>
                 {
                     b.Navigation("DocumentAllowedDetails");
-
-                    b.Navigation("DocumentDefinitionGroupDetails");
 
                     b.Navigation("DocumentDefinitionLanguageDetails");
 
