@@ -22,7 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
-builder.Services.AddScoped(typeof(IBBTRepository <,>), typeof(BBTRepository <,>));
+
 var assemblies = new Assembly[]
                 {
                       typeof(DocumentTypeValidator).Assembly,

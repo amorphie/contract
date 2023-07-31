@@ -1,12 +1,12 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
 using FluentValidation;
 using amorphie.core.Base;
 
 namespace amorphie.contract;
 
+/*
     public abstract class BaseContractModule<TDTOModel, TDBModel, TValidator>
         : BaseBBTRouteRepository<TDTOModel, TDBModel, TValidator, ProjectDbContext, IBBTRepository<TDBModel, ProjectDbContext>>
         where TDTOModel : class, new()
@@ -23,3 +23,4 @@ namespace amorphie.contract;
 
     }
 
+*/

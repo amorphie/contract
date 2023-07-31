@@ -37,7 +37,7 @@ class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
     }
 }
 
-public class ProjectDbContext : BBTDbContext
+public class ProjectDbContext : DbContext
 {
     /// <summary>
     /// in constructor we get IConfiguration, parallel to more than one db
@@ -45,8 +45,8 @@ public class ProjectDbContext : BBTDbContext
     /// </summary>
     /// <param name="options"></param>
     /// <param name="configuration"></param>
-    public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IConfiguration configuration, IBBTIdentity _bbtIdentity)
-        : base(options,_bbtIdentity)
+    public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IConfiguration configuration)
+        : base(options)
     {
         Configuration = configuration;
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
