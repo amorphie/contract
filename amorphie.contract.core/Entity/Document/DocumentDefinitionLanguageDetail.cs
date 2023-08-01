@@ -13,9 +13,9 @@ namespace amorphie.contract.core.Entity.Document
     {
         public Guid MultiLanguageId { get; set; }
 
-        public  MultiLanguage MultiLanguage { get; set; }
+        public  MultiLanguage? MultiLanguage { get; set; }
         public Guid DocumentDefinitionId { get; set; }
 
-        public DocumentDefinition DocumentDefinition { get; set; }
+        public DocumentDefinition? DocumentDefinition { get; set; }
     }
 }

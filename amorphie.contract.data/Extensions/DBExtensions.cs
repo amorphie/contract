@@ -10,17 +10,17 @@ namespace amorphie.contract.data.Extensions
     public static class DBExtensions
     {
             
-        public static ProjectDbContext projectDbContext;
+        public static ProjectDbContext? projectDbContext;
         public static LanguageType LanguageTypeCreateOrGet(string value)
-        {
-            var firs = projectDbContext.LanguageType.FirstOrDefault(x=>x.Name == value);
+        { 
+            var firs = projectDbContext?.LanguageType.FirstOrDefault(x=>x.Name == value);
             if(firs == null)
             {
                 firs = new LanguageType{
                     Name = value
                 };
-                projectDbContext.LanguageType.Add(firs);
-                projectDbContext.SaveChanges();
+                projectDbContext?.LanguageType.Add(firs);
+                projectDbContext?.SaveChanges();
             }
             return firs;
         }

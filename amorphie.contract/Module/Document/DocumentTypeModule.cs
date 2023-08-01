@@ -7,11 +7,11 @@ using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Mapping;
-using AutoMapper;
+
 
 namespace amorphie.contract;
 
-public class DocumentTypeModule : BaseBBTRoute<DocumentType, DocumentType, ProjectDbContext>
+public class DocumentTypeModule : BaseBBTRoute<DocumentType, DocumentType , ProjectDbContext>
 {
     public DocumentTypeModule(WebApplication app) : base(app)
     {

@@ -10,6 +10,6 @@ namespace amorphie.contract.core.Entity.Document
     {
         //Render edilecekler
         public string Name { get; set; }
-        public DocumentAllowedType DocumentAllowedType { get; set; }//client,
+        public DocumentAllowedType? DocumentAllowedType { get; set; }//client,
     }
 }

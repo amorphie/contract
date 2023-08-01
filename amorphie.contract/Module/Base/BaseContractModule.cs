@@ -7,13 +7,13 @@ using amorphie.core.Base;
 namespace amorphie.contract;
 
 /*
-    public abstract class BaseContractModule<TDTOModel, TDBModel, TValidator>
+    public abstract class BaseBBTRoute<TDTOModel, TDBModel, TValidator, ProjectDbContext>
         : BaseBBTRouteRepository<TDTOModel, TDBModel, TValidator, ProjectDbContext, IBBTRepository<TDBModel, ProjectDbContext>>
         where TDTOModel : class, new()
         where TDBModel : EntityBase
         where TValidator : AbstractValidator<TDBModel>
     {
-        protected BaseContractModule(WebApplication app) : base(app)
+        protected BaseBBTRoute(WebApplication app) : base(app)
         {
         }
 

@@ -21,12 +21,12 @@ namespace amorphie.contract.core.Entity.Document
         public string Code { get; set; } //Unique olmali
         public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails{ get; } = new List<DocumentDefinitionLanguageDetail>();
         // public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails {get;set;}
-        public virtual ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; }
-        public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; }
-        public virtual ICollection<DocumentFormIODetail> DocumentFormIODetail { get; set; }
-        public virtual ICollection<DocumentEntityProperty> DocumentEntityPropertys { get; set; }
+        public virtual ICollection<DocumentFormatDetail>? DocumentFormatDetails { get; set; }
+        public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
+        public virtual ICollection<DocumentFormIODetail>? DocumentFormIODetail { get; set; }
+        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }
         public virtual ICollection<DocumentTag>  DocumentTags { get; } = new List<DocumentTag>();
-        public virtual ICollection<DocumentAllowedDetail>  DocumentAllowedDetails { get; set; }
+        public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; }
         
     }
 }

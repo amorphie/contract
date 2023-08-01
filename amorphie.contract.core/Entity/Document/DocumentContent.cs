@@ -14,6 +14,6 @@ namespace amorphie.contract.core.Entity.Document
         public string KiloBytesSize {get;set;}
         public Guid DocumentVersionsId{ get; set; }
 
-        public DocumentVersions DocumentVersions { get; set; }
+        public DocumentVersions? DocumentVersions { get; set; }
     }
 }

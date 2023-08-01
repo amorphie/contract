@@ -1,9 +1,9 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
+
 using FluentValidation;
-using amorphie.core.Base;
+using amorphie.core;
 using amorphie.contract.core.Entity.EAV;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class EntityPropertyModule
-        : BaseContractModule<EntityProperty, EntityProperty, EntityPropertyValidator>
+        : BaseBBTRoute<EntityProperty, EntityProperty, ProjectDbContext>
     {
         public EntityPropertyModule(WebApplication app) : base(app)
         {
@@ -21,8 +21,6 @@ namespace amorphie.contract;
 
         public override string? UrlFragment => "entity-property";
 
-
-   
-       
-    }
+    public override string[]? PropertyCheckList => throw new NotImplementedException();
+}
 

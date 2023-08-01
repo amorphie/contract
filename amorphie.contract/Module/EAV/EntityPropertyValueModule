@@ -1,7 +1,7 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
+
 using FluentValidation;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.EAV;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class EntityPropertyValueModule
-        : BaseContractModule<EntityPropertyValue, EntityPropertyValue, EntityPropertyValueValidator>
+        : BaseBBTRoute<EntityPropertyValue, EntityPropertyValue, ProjectDbContext>
     {
         public EntityPropertyValueModule(WebApplication app) : base(app)
         {

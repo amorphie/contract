@@ -1,7 +1,7 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
+
 using FluentValidation;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class DocumentTagModule
-        : BaseContractModule<DocumentTag, DocumentTag, DocumentTagValidator>
+        : BaseBBTRoute<DocumentTag, DocumentTag, ProjectDbContext>
     {
         public DocumentTagModule(WebApplication app) : base(app)
         {
@@ -24,22 +24,22 @@ namespace amorphie.contract;
 
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
-            base.AddRoutes(routeGroupBuilder);
+            // base.AddRoutes(routeGroupBuilder);
 
-            routeGroupBuilder.MapPost("custom", ([FromServices]IBBTRepository<DocumentTag, ProjectDbContext> repository) => { 
+            // routeGroupBuilder.MapPost("custom", ([FromServices]IBBTRepository<DocumentTag, ProjectDbContext> repository) => { 
             
-                return repository.GetAll();
-            });
+            //     return repository.GetAll();
+            // });
             
         }
         // You can override any method in basemodule
-        protected override ValueTask<IResult> GetAll(
-            [FromServices] IBBTRepository<DocumentTag, ProjectDbContext> repository, 
-            [FromQuery, Range(0, 100)] int page, 
-            [FromQuery, Range(5, 100)] int pageSize)
-        {
-            return base.GetAll(repository, page, pageSize);
-        } 
+        // protected override ValueTask<IResult> GetAll(
+        //     [FromServices] IBBTRepository<DocumentTag, ProjectDbContext> repository, 
+        //     [FromQuery, Range(0, 100)] int page, 
+        //     [FromQuery, Range(5, 100)] int pageSize)
+        // {
+        //     return base.GetAll(repository, page, pageSize);
+        // } 
        
     }
 

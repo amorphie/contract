@@ -1,7 +1,7 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
+
 using FluentValidation;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
@@ -12,7 +12,7 @@ using amorphie.contract.core.Entity.Contract;
 namespace amorphie.contract;
 
     public class ContractDocumentDetailModule
-        : BaseContractModule<ContractDocumentDetail, ContractDocumentDetail, ContractDocumentDetailValidator>
+        : BaseBBTRoute<ContractDocumentDetail, ContractDocumentDetail, ProjectDbContext>
     {
         public ContractDocumentDetailModule(WebApplication app) : base(app)
         {

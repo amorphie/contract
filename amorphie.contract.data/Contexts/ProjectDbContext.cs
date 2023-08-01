@@ -5,37 +5,36 @@ using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore.Design;
-using amorphie.core.Repository;
 using amorphie.core.Identity;
 
 namespace amorphie.contract.data.Contexts;
 
-class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
-{
-    //lazy loading true
-    //lazy loading false, eğer alt bileşenleri getirmek istiyorsak include kullanmamız lazım,eager loading
-    private readonly IConfiguration _configuration;
+// class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
+// {
+//     //lazy loading true
+//     //lazy loading false, eğer alt bileşenleri getirmek istiyorsak include kullanmamız lazım,eager loading
+//     private readonly IConfiguration _configuration;
 
-    public ProjectDbContextFactory() { }
+//     public ProjectDbContextFactory() { }
 
-    public ProjectDbContextFactory(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+//     public ProjectDbContextFactory(IConfiguration configuration)
+//     {
+//         _configuration = configuration;
+//     }
 
-    public ProjectDbContext CreateDbContext(string[] args)
-    {
-        var builder = new DbContextOptionsBuilder<ProjectDbContext>();
-        // var test = _configuration["STATE_STORE"];
-        // System.Console.WriteLine("Test: " + test);
+//     // public ProjectDbContext CreateDbContext(string[] args)
+//     // {
+//     //     var builder = new DbContextOptionsBuilder<ProjectDbContext>();
+//     //     // var test = _configuration["STATE_STORE"];
+//     //     // System.Console.WriteLine("Test: " + test);
 
 
-        var connStr = "Host=localhost:5432;Database=contract;Username=postgres;Password=123321";
-        builder.UseNpgsql(connStr);
-        builder.EnableSensitiveDataLogging();
-        return new ProjectDbContext(builder.Options,null,null);
-    }
-}
+//     //     var connStr = "Host=localhost:5432;Database=contract;Username=postgres;Password=123321";
+//     //     builder.UseNpgsql(connStr);
+//     //     builder.EnableSensitiveDataLogging();
+//     //     return new ProjectDbContext(builder.Options,null,null);
+//     // }
+// }
 
 public class ProjectDbContext : DbContext
 {

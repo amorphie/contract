@@ -1,7 +1,7 @@
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Repository;
+
 using FluentValidation;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class DocumentFormIODetailModule
-        : BaseContractModule<DocumentFormIODetail, DocumentFormIODetail, DocumentFormIODetailValidator>
+        : BaseBBTRoute<DocumentFormIODetail, DocumentFormIODetail, ProjectDbContext>
     {
         public DocumentFormIODetailModule(WebApplication app) : base(app)
         {

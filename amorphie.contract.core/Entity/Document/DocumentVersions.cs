@@ -13,6 +13,6 @@ namespace amorphie.contract.core.Entity.Document
         public string Name {get;set;}
         public Guid DocumentDefinitionId { get; set; }
 
-        public DocumentDefinition DocumentDefinition {get;set;}
+        public DocumentDefinition? DocumentDefinition {get;set;}
     }
 }

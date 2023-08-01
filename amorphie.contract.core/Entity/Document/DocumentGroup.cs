@@ -18,8 +18,8 @@ namespace amorphie.contract.core.Entity.Document
         public string Name { get; set; }
         public Guid LanguageId { get; set; }
 
-        public virtual MultiLanguage MultiLanguage { get; set; }
-        public virtual ICollection<DocumentDefinitionGroupDetail> DocumentDefinitionGroupDetails { get; set; }
+        public virtual MultiLanguage? MultiLanguage { get; set; }
+        public virtual ICollection<DocumentDefinitionGroupDetail>? DocumentDefinitionGroupDetails { get; set; }
 
     }
 }

@@ -12,9 +12,9 @@ namespace amorphie.contract.core.Entity.Document
     {
         public Guid DocumentTypeId { get; set; }
 
-        public DocumentType DocumentType { get; set; }
+        public DocumentType? DocumentType { get; set; }
         public Guid DocumentSizeId { get; set; }
 
-        public DocumentSize DocumentSize { get; set; }
+        public DocumentSize? DocumentSize { get; set; }
     }
 }
