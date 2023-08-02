@@ -24,26 +24,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 name: "Common");
 
             migrationBuilder.CreateTable(
-                name: "ContractDefinition",
-                schema: "Cont",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContractDefinition", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DocumentAllowedType",
                 schema: "Doc",
                 columns: table => new
@@ -219,13 +199,12 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentDefinition",
-                schema: "Doc",
+                name: "Statu",
+                schema: "Common",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -235,13 +214,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentDefinition", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinition_ContractDefinition_ContractDefinitionId",
-                        column: x => x.ContractDefinitionId,
-                        principalSchema: "Cont",
-                        principalTable: "ContractDefinition",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_Statu", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,7 +224,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    DocumentAllowedTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentAllowedTypeId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -267,8 +240,7 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.DocumentAllowedTypeId,
                         principalSchema: "Doc",
                         principalTable: "DocumentAllowedType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -364,6 +336,377 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.LanguageTypeId,
                         principalSchema: "Common",
                         principalTable: "LanguageType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContractDefinition",
+                schema: "Cont",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    StatusId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractDefinition", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContractDefinition_Statu_StatusId",
+                        column: x => x.StatusId,
+                        principalSchema: "Common",
+                        principalTable: "Statu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentGroup",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    MultiLanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StatusId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentGroup", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentGroup_Statu_StatusId",
+                        column: x => x.StatusId,
+                        principalSchema: "Common",
+                        principalTable: "Statu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContractEntityProperty",
+                schema: "Cont",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EntityPropertyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractEntityProperty", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContractEntityProperty_ContractDefinition_ContractDefinitio~",
+                        column: x => x.ContractDefinitionId,
+                        principalSchema: "Cont",
+                        principalTable: "ContractDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContractEntityProperty_EntityProperty_EntityPropertyId",
+                        column: x => x.EntityPropertyId,
+                        principalSchema: "EAV",
+                        principalTable: "EntityProperty",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentDefinition",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    StatusId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BaseStatusId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentDefinition", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinition_ContractDefinition_ContractDefinitionId",
+                        column: x => x.ContractDefinitionId,
+                        principalSchema: "Cont",
+                        principalTable: "ContractDefinition",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinition_Statu_BaseStatusId",
+                        column: x => x.BaseStatusId,
+                        principalSchema: "Common",
+                        principalTable: "Statu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinition_Statu_StatusId",
+                        column: x => x.StatusId,
+                        principalSchema: "Common",
+                        principalTable: "Statu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentDefinitionGroupLanguageDetail",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MultiLanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionGroupId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentDefinitionGroupLanguageDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionGroupLanguageDetail_DocumentGroup_Documen~",
+                        column: x => x.DocumentDefinitionGroupId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionGroupLanguageDetail_MultiLanguage_MultiLa~",
+                        column: x => x.MultiLanguageId,
+                        principalSchema: "Common",
+                        principalTable: "MultiLanguage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContractDefinitionDocumentDetail",
+                schema: "Cont",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractDefinitionDocumentDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContractDefinitionDocumentDetail_DocumentDefinition_Contrac~",
+                        column: x => x.ContractDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContractDefinitionDocumentDetail_DocumentGroup_DocumentDefi~",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentAllowedDetail",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentAllowedId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentAllowedDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentAllowedDetail_DocumentAllowed_DocumentAllowedId",
+                        column: x => x.DocumentAllowedId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentAllowed",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentAllowedDetail_DocumentDefinition_DocumentDefinition~",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentDefinitionGroupDetail",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionGroupID = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentDefinitionGroupDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionGroupDetail_DocumentDefinition_DocumentDe~",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionGroupDetail_DocumentGroup_DocumentDefinit~",
+                        column: x => x.DocumentDefinitionGroupID,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentDefinitionLanguageDetail",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MultiLanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentDefinitionLanguageDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionLanguageDetail_DocumentDefinition_Documen~",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentDefinitionLanguageDetail_MultiLanguage_MultiLanguag~",
+                        column: x => x.MultiLanguageId,
+                        principalSchema: "Common",
+                        principalTable: "MultiLanguage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentEntityProperty",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EntityPropertyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentEntityProperty", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentEntityProperty_DocumentDefinition_DocumentDefinitio~",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentEntityProperty_EntityProperty_EntityPropertyId",
+                        column: x => x.EntityPropertyId,
+                        principalSchema: "EAV",
+                        principalTable: "EntityProperty",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentFormatDetail",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentFormatId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentFormatDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentFormatDetail_DocumentDefinition_DocumentDefinitionId",
+                        column: x => x.DocumentDefinitionId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentFormatDetail_DocumentFormat_DocumentFormatId",
+                        column: x => x.DocumentFormatId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentFormat",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -492,205 +835,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentAllowedDetail",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentAllowedId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentAllowedDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentAllowed_DocumentAllowedId",
-                        column: x => x.DocumentAllowedId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentAllowed",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentDefinition_DocumentDefinition~",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentFormatDetail",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentFormatId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentFormatDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentFormatDetail_DocumentDefinition_DocumentDefinitionId",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentFormatDetail_DocumentFormat_DocumentFormatId",
-                        column: x => x.DocumentFormatId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentFormat",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ContractEntityProperty",
-                schema: "Cont",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EntityPropertyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContractEntityProperty", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ContractEntityProperty_ContractDefinition_ContractDefinitio~",
-                        column: x => x.ContractDefinitionId,
-                        principalSchema: "Cont",
-                        principalTable: "ContractDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContractEntityProperty_EntityProperty_EntityPropertyId",
-                        column: x => x.EntityPropertyId,
-                        principalSchema: "EAV",
-                        principalTable: "EntityProperty",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentEntityProperty",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EntityPropertyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentEntityProperty", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentEntityProperty_DocumentDefinition_DocumentDefinitio~",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentEntityProperty_EntityProperty_EntityPropertyId",
-                        column: x => x.EntityPropertyId,
-                        principalSchema: "EAV",
-                        principalTable: "EntityProperty",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentDefinitionLanguageDetail",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    MultiLanguageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentDefinitionLanguageDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinitionLanguageDetail_DocumentDefinition_Documen~",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinitionLanguageDetail_MultiLanguage_MultiLanguag~",
-                        column: x => x.MultiLanguageId,
-                        principalSchema: "Common",
-                        principalTable: "MultiLanguage",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentGroup",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    MultiLanguageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentGroup", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentGroup_MultiLanguage_MultiLanguageId",
-                        column: x => x.MultiLanguageId,
-                        principalSchema: "Common",
-                        principalTable: "MultiLanguage",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DocumentContent",
                 schema: "Doc",
                 columns: table => new
@@ -714,74 +858,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.DocumentVersionsId,
                         principalSchema: "Doc",
                         principalTable: "DocumentVersions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ContractDefinitionDocumentDetail",
-                schema: "Cont",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContractDefinitionDocumentDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ContractDefinitionDocumentDetail_DocumentDefinition_Contrac~",
-                        column: x => x.ContractDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContractDefinitionDocumentDetail_DocumentGroup_DocumentDefi~",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentGroup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentDefinitionGroupDetail",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentGroupId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentDefinitionGroupDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinitionGroupDetail_DocumentDefinition_DocumentDe~",
-                        column: x => x.DocumentDefinitionId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinitionGroupDetail_DocumentGroup_DocumentGroupId",
-                        column: x => x.DocumentGroupId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentGroup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -819,6 +895,12 @@ namespace amorphie.contract.data.Migrations.Pg
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractDefinition_StatusId",
+                schema: "Cont",
+                table: "ContractDefinition",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContractDefinitionDocumentDetail_ContractDefinitionId",
@@ -881,6 +963,12 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentVersionsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentDefinition_BaseStatusId",
+                schema: "Doc",
+                table: "DocumentDefinition",
+                column: "BaseStatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentDefinition_Code",
                 schema: "Doc",
                 table: "DocumentDefinition",
@@ -894,16 +982,34 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "ContractDefinitionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentDefinition_StatusId",
+                schema: "Doc",
+                table: "DocumentDefinition",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentDefinitionGroupDetail_DocumentDefinitionGroupID",
+                schema: "Doc",
+                table: "DocumentDefinitionGroupDetail",
+                column: "DocumentDefinitionGroupID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentDefinitionGroupDetail_DocumentDefinitionId",
                 schema: "Doc",
                 table: "DocumentDefinitionGroupDetail",
                 column: "DocumentDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentDefinitionGroupDetail_DocumentGroupId",
+                name: "IX_DocumentDefinitionGroupLanguageDetail_DocumentDefinitionGro~",
                 schema: "Doc",
-                table: "DocumentDefinitionGroupDetail",
-                column: "DocumentGroupId");
+                table: "DocumentDefinitionGroupLanguageDetail",
+                column: "DocumentDefinitionGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentDefinitionGroupLanguageDetail_MultiLanguageId",
+                schema: "Doc",
+                table: "DocumentDefinitionGroupLanguageDetail",
+                column: "MultiLanguageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentDefinitionLanguageDetail_DocumentDefinitionId",
@@ -973,10 +1079,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentGroup_MultiLanguageId",
+                name: "IX_DocumentGroup_StatusId",
                 schema: "Doc",
                 table: "DocumentGroup",
-                column: "MultiLanguageId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentTag_DocumentDefinitionId",
@@ -1032,6 +1138,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Common",
                 table: "MultiLanguage",
                 column: "LanguageTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Statu_Name",
+                schema: "Common",
+                table: "Statu",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -1055,6 +1168,10 @@ namespace amorphie.contract.data.Migrations.Pg
 
             migrationBuilder.DropTable(
                 name: "DocumentDefinitionGroupDetail",
+                schema: "Doc");
+
+            migrationBuilder.DropTable(
+                name: "DocumentDefinitionGroupLanguageDetail",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
@@ -1098,6 +1215,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
+                name: "MultiLanguage",
+                schema: "Common");
+
+            migrationBuilder.DropTable(
                 name: "EntityProperty",
                 schema: "EAV");
 
@@ -1122,7 +1243,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "MultiLanguage",
+                name: "LanguageType",
                 schema: "Common");
 
             migrationBuilder.DropTable(
@@ -1146,12 +1267,12 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "LanguageType",
-                schema: "Common");
-
-            migrationBuilder.DropTable(
                 name: "ContractDefinition",
                 schema: "Cont");
+
+            migrationBuilder.DropTable(
+                name: "Statu",
+                schema: "Common");
         }
     }
 }
