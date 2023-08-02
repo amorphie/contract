@@ -14,9 +14,8 @@ namespace amorphie.contract.core.Entity.Document
         public Guid DocumentDefinitionId { get; set; }
 
         public DocumentDefinition? DocumentDefinition { get; set; }
-        public Guid DocumentGroupId { get; set; }
-
-        public DocumentGroup? DocumentGroup { get; set; }
+        public Guid DocumentDefinitionGroupID { get; set; }
+        public DocumentDefinitionGroup? DocumentDefinitionGroup { get; set; }
 
     }
 }

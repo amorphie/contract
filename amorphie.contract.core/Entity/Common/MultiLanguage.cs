@@ -17,7 +17,6 @@ namespace amorphie.contract.core.Entity.Common
         public Guid  LanguageTypeId { get; set; } 
         public LanguageType  LanguageType { get; set; } 
         
-        public virtual ICollection<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetails { get; set; }
 
     }
 }

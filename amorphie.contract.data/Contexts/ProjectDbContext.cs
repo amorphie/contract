@@ -65,7 +65,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
-    public DbSet<DocumentGroup> DocumentGroup { get; set; }
+    public DbSet<DocumentDefinitionGroup> DocumentDefinitionGroup { get; set; }
     public DbSet<DocumentDefinitionGroupDetail> DocumentGroupDetail { get; set; }
     public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
     public DbSet<DocumentType> DocumentType { get; set; }

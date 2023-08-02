@@ -10,16 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Index(nameof(Code),IsUnique =true)]
+    [Index(nameof(Code), IsUnique = true)]
     [Table("DocumentGroup", Schema = "Doc")]
-    public class DocumentGroup : EntityBase
+    public class DocumentDefinitionGroup : EntityBase
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public Guid LanguageId { get; set; }
+        public Guid MultiLanguageId { get; set; }
 
-        public virtual MultiLanguage? MultiLanguage { get; set; }
+        public Guid StatusId { get; set; }
+        public Status? Status { get; set; }
         public virtual ICollection<DocumentDefinitionGroupDetail>? DocumentDefinitionGroupDetails { get; set; }
+        public virtual ICollection<DocumentDefinitionGroupLanguageDetail>? DocumentDefinitionGroupLanguageDetail { get; set; }
 
     }
 }

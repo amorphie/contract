@@ -17,10 +17,9 @@ namespace amorphie.contract;
         {
         }
 
-        // public override string[]? PropertyCheckList => new string[] {"Code","Contact"};
+        public override string[]? PropertyCheckList => new string[] {"Code"};
 
         public override string? UrlFragment => "entity-property";
 
-    public override string[]? PropertyCheckList => throw new NotImplementedException();
 }
 
