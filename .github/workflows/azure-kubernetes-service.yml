@@ -1,0 +1,92 @@
+name: CONTRACT-CI-CD
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  APP_NAME: amorphie.contract
+  NAMESPACE: amorphie-contract
+  CLUSTER_NAME: BurganAKS
+  CLUSTER_RESOURCE_GROUP: BurganTech
+  SECRET: docker-hub
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./amorphie.contract/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+
+      # Set the target Azure Kubernetes Service (AKS) cluster. 
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+    
+      # Create namespace if doesn't exist
+      - run: |
+          kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o json | kubectl apply -f -
+    
+      # Create image pull secret for Docker
+      - uses: azure/k8s-create-secret@v1
+        with:
+          container-registry-url: docker.io
+          container-registry-username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          container-registry-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          secret-name: ${{ env.SECRET }}
+          namespace: ${{ env.NAMESPACE }}
+          arguments: --force true
+
+  
+      - name: Deploy appsettings as Configmap
+        run: |
+          cd /amorphie.contract
+          ls
+          if [ -e appsettings.Test.json ]
+          then
+            echo "Creating appsettings from appsettings.Test.json"
+            oc create configmap appsettings-test-config -n amorphie-workflow --from-file=appsettings.Test.json 2>/dev/null
+          else
+            echo "Test ortami icin appsettings.Test.json yok. Olusturmaniz gerekiyor"
+          fi
+
+          
+      - name: Replace vault address
+        run: |
+          sed -i -e "s/vault-address/${{ secrets.VAULT_ADDRESS }}/g" ./manifest/Dapr/vault-component.yaml
+
+      - name: Replace vault token
+        run: |
+          sed -i -e "s/vault-token/${{ secrets.VAULT_TOKEN }}/g" ./manifest/Dapr/vault-component.yaml
+
+      # Deploy app to AKS
+      - uses: azure/k8s-deploy@v1
+        with:
+          manifests: |
+            ${{ github.workspace }}/manifest/deployment.yaml
+            ${{ github.workspace }}/manifest/service.yaml
+            ${{ github.workspace }}/manifest/ingress.yaml
+            ${{ github.workspace }}/manifest/dapr/cache-redis-component.yaml
+            ${{ github.workspace }}/manifest/dapr/vault-component.yaml
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+          imagepullsecrets: |
+            ${{ env.SECRET }}
+          namespace: ${{ env.NAMESPACE }}
