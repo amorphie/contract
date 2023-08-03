@@ -1,0 +1,23 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: contract-cache
+  namespace: amorphie-contract
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: redis-cluster.amorphie-redis.svc.cluster.local:6379
+  - name: redisPassword
+    secretKeyRef:
+      name: redis-secret
+      key: redis-password
+  - name: actorStateStore
+    value: "true"
+  - name: redisType
+    value: "cluster"
+  - name: keyPrefix
+    value: none
+auth:
+  secretStore: contract-secretstore
