@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentDefinitionConfiguration : IEntityTypeConfiguration<DocumentDefinition>
+    public class DocumentDefinitionConfiguration : ConfigurationBase<DocumentDefinition>
     {
         public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
         {
-            // builder.HasKey(x => new { x.Id,x.Document.Id});
+         
         }
+
     }
 }

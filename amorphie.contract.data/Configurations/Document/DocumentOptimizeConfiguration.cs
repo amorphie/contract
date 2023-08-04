@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.Definition
 {
-     public class DocumentOptimizeConfiguration : IEntityTypeConfiguration<DocumentOptimize>
+     public class DocumentOptimizeConfiguration : ConfigurationBase<DocumentOptimize>
     {
         public void Configure(EntityTypeBuilder<DocumentOptimize> builder)
         {

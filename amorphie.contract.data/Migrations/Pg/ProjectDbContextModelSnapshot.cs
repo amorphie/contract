@@ -135,7 +135,7 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Statu", "Common");
+                    b.ToTable("Status", "Common");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>

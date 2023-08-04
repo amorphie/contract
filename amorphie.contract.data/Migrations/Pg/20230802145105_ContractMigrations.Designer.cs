@@ -12,7 +12,7 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20230802134401_ContractMigrations")]
+    [Migration("20230802145105_ContractMigrations")]
     partial class ContractMigrations
     {
         /// <inheritdoc />
@@ -138,7 +138,7 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Statu", "Common");
+                    b.ToTable("Status", "Common");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentFormIODetailConfiguration : IEntityTypeConfiguration<DocumentFormIODetail>
+    public class DocumentFormIODetailConfiguration : ConfigurationBase<DocumentFormIODetail>
     {
         public void Configure(EntityTypeBuilder<DocumentFormIODetail> builder)
         {

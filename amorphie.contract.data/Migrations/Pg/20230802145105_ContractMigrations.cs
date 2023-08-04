@@ -199,7 +199,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "Statu",
+                name: "Status",
                 schema: "Common",
                 columns: table => new
                 {
@@ -214,7 +214,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Statu", x => x.Id);
+                    table.PrimaryKey("PK_Status", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -360,10 +360,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     table.PrimaryKey("PK_ContractDefinition", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContractDefinition_Statu_StatusId",
+                        name: "FK_ContractDefinition_Status_StatusId",
                         column: x => x.StatusId,
                         principalSchema: "Common",
-                        principalTable: "Statu",
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -389,10 +389,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     table.PrimaryKey("PK_DocumentGroup", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentGroup_Statu_StatusId",
+                        name: "FK_DocumentGroup_Status_StatusId",
                         column: x => x.StatusId,
                         principalSchema: "Common",
-                        principalTable: "Statu",
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -458,17 +458,17 @@ namespace amorphie.contract.data.Migrations.Pg
                         principalTable: "ContractDefinition",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentDefinition_Statu_BaseStatusId",
+                        name: "FK_DocumentDefinition_Status_BaseStatusId",
                         column: x => x.BaseStatusId,
                         principalSchema: "Common",
-                        principalTable: "Statu",
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DocumentDefinition_Statu_StatusId",
+                        name: "FK_DocumentDefinition_Status_StatusId",
                         column: x => x.StatusId,
                         principalSchema: "Common",
-                        principalTable: "Statu",
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1140,9 +1140,9 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "LanguageTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Statu_Name",
+                name: "IX_Status_Name",
                 schema: "Common",
-                table: "Statu",
+                table: "Status",
                 column: "Name",
                 unique: true);
         }
@@ -1271,7 +1271,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Cont");
 
             migrationBuilder.DropTable(
-                name: "Statu",
+                name: "Status",
                 schema: "Common");
         }
     }

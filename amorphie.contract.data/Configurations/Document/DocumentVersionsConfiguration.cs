@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentVersionsConfiguration : IEntityTypeConfiguration<DocumentVersions>
+    public class DocumentVersionsConfiguration : ConfigurationBase<DocumentVersions>
     {
         public void Configure(EntityTypeBuilder<DocumentVersions> builder)
         {
