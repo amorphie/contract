@@ -57,7 +57,7 @@ jobs:
   
       - name: Deploy appsettings as Configmap
         run: |
-          cd /amorphie.contract
+          cd ./amorphie.contract
           ls
           if [ -e appsettings.Test.json ]
           then
