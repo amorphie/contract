@@ -85,6 +85,7 @@ jobs:
             ${{ github.workspace }}/manifest/ingress.yaml
             ${{ github.workspace }}/manifest/dapr/cache-redis-component.yaml
             ${{ github.workspace }}/manifest/dapr/vault-component.yaml
+            ${{ github.workspace }}/manifest/dapr/zeebe-command.yaml
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
           imagepullsecrets: |
