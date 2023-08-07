@@ -62,7 +62,7 @@ jobs:
           if [ -e appsettings.Test.json ]
           then
             echo "Creating appsettings from appsettings.Test.json"
-            oc create configmap appsettings-test-config -n amorphie-workflow --from-file=appsettings.Test.json 2>/dev/null
+            oc create configmap appsettings-test-config -n amorphie-contract --from-file=appsettings.Test.json 2>/dev/null
           else
             echo "Test ortami icin appsettings.Test.json yok. Olusturmaniz gerekiyor"
           fi
