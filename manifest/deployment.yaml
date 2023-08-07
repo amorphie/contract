@@ -25,7 +25,7 @@ spec:
             - containerPort: 5000
           env:
           - name: ASPNETCORE_ENVIRONMENT
-            value: "bortam"
+            value: "Test"
           - name: EnableApm
             value: "true"
           - name: TZ
