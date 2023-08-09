@@ -47,9 +47,6 @@ spec:
           - mountPath: /app/appsettings.Test.json
             name: appsettings-test-config-volume
             subPath: appsettings.Test.json
-      dnsConfig:
-        searches:
-          - ebt.bank
       volumes:
         - name: appsettings-test-config-volume
           configMap:
