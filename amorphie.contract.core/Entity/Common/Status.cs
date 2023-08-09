@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Common
 {
-    [Table("Statu", Schema = "Common")]
+    [Table("Status", Schema = "Common")]
 [Index(nameof(Name), IsUnique = true)]
     public class Status : EntityBase
     {

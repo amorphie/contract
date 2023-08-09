@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.Definition
 {
-     public class DocumentSizeConfiguration : IEntityTypeConfiguration<DocumentSize>
+     public class DocumentSizeConfiguration : ConfigurationBase<DocumentSize>
     {
         public void Configure(EntityTypeBuilder<DocumentSize> builder)
         {

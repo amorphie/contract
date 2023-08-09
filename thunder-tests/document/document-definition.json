@@ -1,114 +1,41 @@
 {
-  "createdAt": "2023-08-02T11:32:44.216Z",
-  "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "modifiedAt": "2023-08-02T11:32:44.216Z",
-  "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
   "code": "identification-certificate-nc",
-  "statusId":  "493f3b9e-6886-4de6-a35a-5278b3bc9606",
-    "status": {
-        "id": "493f3b9e-6886-4de6-a35a-5278b3bc9606",
+  "statusId": "493f3b9e-6886-4de6-a35a-5278b3bc9606",
+  "status": {
+    "id": "493f3b9e-6886-4de6-a35a-5278b3bc9606",
     "name": "active"
-  }, 
-    "baseStatusId": "493f3b9e-6886-4de6-a35a-5278b3bc9606"
-  , 
+  },
+  "baseStatusId": "493f3b9e-6886-4de6-a35a-5278b3bc9606",
   "documentDefinitionLanguageDetails": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
       "multiLanguage": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
         "name": "Nufus Cuzdani",
-        "code": "identification-certificate-nc", 
+        "code": "identification-certificate-nc",
         "languageType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "name": "TR"
         }
-      } 
+      }
     }
   ],
   "documentFormatDetails": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
       "documentFormat": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  
         "documentType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "name": "png",
           "contentType": "pngcontext"
-        }, 
+        },
         "documentSize": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "kiloBytes": 512
         }
       }
     },
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
       "documentFormat": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  
         "documentType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "name": "jpg",
           "contentType": "jpgcontext"
-        }, 
+        },
         "documentSize": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "kiloBytes": 1024
         }
       }
@@ -116,19 +43,7 @@
   ],
   "documentTemplateDetails": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  
       "documentTemplate": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
         "name": "consent-gdpr-2.2-tr-html",
         "url": "consent-gdpr-2.2-tr-html"
       }
@@ -136,20 +51,7 @@
   ],
   "documentFormIODetail": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
- 
       "documentFormIO": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
         "name": "identification-certificate-nc-FormIO",
         "data": "identification-certificate-nc-FormIOdatasi"
       }
@@ -157,73 +59,23 @@
   ],
   "documentEntityPropertys": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
- 
       "entityProperty": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
-        "code": "valid-after-upload", 
+        "code": "valid-after-upload",
         "entityPropertyType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "code": "string"
-        }, 
+        },
         "entityPropertyValue": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "data": "6M"
         }
       }
     },
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
- 
       "entityProperty": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
-        "code": "offical-expiry", 
+        "code": "offical-expiry",
         "entityPropertyType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "code": "response"
-        }, 
+        },
         "entityPropertyValue": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "data": "#mernis.response.$.information.expiryAt"
         }
       }
@@ -231,63 +83,23 @@
   ],
   "documentTags": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-     
       "code": "id-card",
       "contact": "reference"
     },
-      {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-     
+    {
       "code": "customer-info",
       "contact": "#mernis.response.$.tcknno"
     },
-      {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-     
+    {
       "code": "mernis",
       "contact": "owner"
     }
   ],
   "documentAllowedDetails": [
     {
-      "createdAt": "2023-08-02T11:32:44.216Z",
-      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedAt": "2023-08-02T11:32:44.216Z",
-      "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
- 
       "documentAllowed": {
-        "createdAt": "2023-08-02T11:32:44.216Z",
-        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedAt": "2023-08-02T11:32:44.216Z",
-        "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
         "name": "web-ib",
         "documentAllowedType": {
-          "createdAt": "2023-08-02T11:32:44.216Z",
-          "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "createdByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedAt": "2023-08-02T11:32:44.216Z",
-          "modifiedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          "modifiedByBehalfOf": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
           "name": "allowed-clients"
         }
       }

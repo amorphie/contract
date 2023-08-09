@@ -6,6 +6,7 @@ using amorphie.core.Extension;
 using amorphie.contract.core.Mapping;
 using System.Reflection;
 using FluentValidation;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -21,6 +22,8 @@ IConfiguration Configuration;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 
