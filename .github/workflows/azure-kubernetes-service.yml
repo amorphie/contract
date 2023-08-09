@@ -54,6 +54,11 @@ jobs:
           namespace: ${{ env.NAMESPACE }}
           arguments: --force true
 
+
+      - name: Replace vault address
+        run: |
+          sed -i -e "s,DatabaseConnection,${{ secrets.TEST_DBCONNECTION }},g" ./amorphie.contract/appsettings.Test.json
+
   
       - name: Deploy appsettings as Configmap
         run: |
