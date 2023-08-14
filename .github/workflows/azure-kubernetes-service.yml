@@ -88,7 +88,6 @@ jobs:
           manifests: |
             ${{ github.workspace }}/manifest/deployment.yaml
             ${{ github.workspace }}/manifest/service.yaml
-            ${{ github.workspace }}/manifest/ingress.yaml
             ${{ github.workspace }}/manifest/dapr/cache-redis-component.yaml
             ${{ github.workspace }}/manifest/dapr/vault-component.yaml
             ${{ github.workspace }}/manifest/dapr/zeebe-command.yaml
