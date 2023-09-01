@@ -13,14 +13,14 @@ namespace amorphie.contract;
 
     public class ContractEntityPropertyModule
         : BaseBBTRoute<ContractEntityProperty, ContractEntityProperty, ProjectDbContext>
+{
+    public ContractEntityPropertyModule(WebApplication app) : base(app)
     {
-        public ContractEntityPropertyModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"ContractDefinitionId","EntityPropertyId"};
-
-        public override string? UrlFragment => "contract-entity-property";
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "ContractDefinitionId", "EntityPropertyId" };
+
+    public override string? UrlFragment => "contract-entity-property";
+
+}
 

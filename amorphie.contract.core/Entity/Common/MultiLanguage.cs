@@ -14,9 +14,9 @@ namespace amorphie.contract.core.Entity.Common
         public string Name { get; set; }//Nufus Cuzdani
         public string Code { get; set; }//identification-certificate-nc
         [Required]
-        public Guid  LanguageTypeId { get; set; } 
-        public LanguageType  LanguageType { get; set; } 
-        
+        public Guid LanguageTypeId { get; set; }
+        public LanguageType LanguageType { get; set; }
+
 
     }
 }

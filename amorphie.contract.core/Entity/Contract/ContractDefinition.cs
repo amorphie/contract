@@ -16,7 +16,7 @@ namespace amorphie.contract.core.Entity.Contract
         public string Code { get; set; }
         public Guid StatusId { get; set; }
         public Status? Status { get; set; }
-        public virtual ICollection<DocumentDefinition> DocumentDefinitions { get;  }= new List<DocumentDefinition> ();
+        public virtual ICollection<DocumentDefinition> DocumentDefinitions { get; } = new List<DocumentDefinition>();
 
     }
 }

@@ -12,14 +12,14 @@ namespace amorphie.contract;
 
     public class EntityPropertyModule
         : BaseBBTRoute<EntityProperty, EntityProperty, ProjectDbContext>
+{
+    public EntityPropertyModule(WebApplication app) : base(app)
     {
-        public EntityPropertyModule(WebApplication app) : base(app)
-        {
-        }
+    }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
+    public override string[]? PropertyCheckList => new string[] { "Code" };
 
-        public override string? UrlFragment => "entity-property";
+    public override string? UrlFragment => "entity-property";
 
 }
 

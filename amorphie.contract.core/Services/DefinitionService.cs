@@ -6,8 +6,8 @@ using amorphie.contract.core.Services.Interfaces;
 
 namespace amorphie.contract.core.Services
 {
-    public class DefinitionService:IDefinitionService
+    public class DefinitionService : IDefinitionService
     {
-        
+
     }
 }

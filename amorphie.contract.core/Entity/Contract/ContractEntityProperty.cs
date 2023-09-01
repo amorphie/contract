@@ -12,7 +12,7 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractEntityProperty", Schema = "Cont")]
     public class ContractEntityProperty : EntityBase
     {
-        
+
         public Guid ContractDefinitionId { get; set; }
         public ContractDefinition? ContractDefinition { get; set; }
         public Guid EntityPropertyId { get; set; }

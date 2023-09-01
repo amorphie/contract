@@ -84,6 +84,6 @@ public class ProjectDbContext : DbContext
         // modelBuilder.Entity<DocumentDefinition>().Navigation(s => s.BaseStatus).AutoInclude();
         base.OnModelCreating(modelBuilder);
     }
-     
-    
+
+
 }

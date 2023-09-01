@@ -9,7 +9,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentFormIO : EntityBase
     {
         //Render edilecekler
-     
+
         public string Name { get; set; }
         public string Data { get; set; }
     }

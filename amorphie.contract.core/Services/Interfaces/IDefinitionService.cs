@@ -7,6 +7,6 @@ namespace amorphie.contract.core.Services.Interfaces
 {
     public interface IDefinitionService
     {
-        
+
     }
 }

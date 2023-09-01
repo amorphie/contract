@@ -11,7 +11,7 @@ using amorphie.contract.core.Mapping;
 
 namespace amorphie.contract;
 
-public class DocumentTypeModule : BaseBBTRoute<DocumentType, DocumentType , ProjectDbContext>
+public class DocumentTypeModule : BaseBBTRoute<DocumentType, DocumentType, ProjectDbContext>
 {
     public DocumentTypeModule(WebApplication app) : base(app)
     {

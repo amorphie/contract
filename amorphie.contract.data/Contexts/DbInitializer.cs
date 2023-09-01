@@ -31,7 +31,7 @@ namespace amorphie.contract.data.Contexts
             //     context.DocumentType.Add(new core.Entity.Document.DocumentType { Name = "xlsx", ContentType = "application/xlsx" });
             //     var c = context.SaveChanges();
             // }
-            
+
             // if (!context.LanguageType.Any())
             // {
             //     var tr = context.LanguageType.Add(new core.Entity.Common.LanguageType { Name = "TR" }).Entity.Id;
