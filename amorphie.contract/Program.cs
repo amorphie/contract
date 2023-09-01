@@ -11,13 +11,13 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
 
-    Configuration = builder
-        .Configuration
-        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
-        .AddEnvironmentVariables()
-        .AddCommandLine(args)
-        .AddUserSecrets<Program>()
-        .Build();
+Configuration = builder
+    .Configuration
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .AddUserSecrets<Program>()
+    .Build();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -32,8 +32,8 @@ var assemblies = new Assembly[]
                       typeof(DocumentTypeValidator).Assembly,
                       typeof(MappingDocumentProfile).Assembly,
                 };
-                builder.Services.AddAutoMapper(assemblies);
-                builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>(includeInternalTypes: true);
+builder.Services.AddAutoMapper(assemblies);
+builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>(includeInternalTypes: true);
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 

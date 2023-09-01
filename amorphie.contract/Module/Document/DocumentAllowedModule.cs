@@ -12,15 +12,15 @@ namespace amorphie.contract;
 
     public class DocumentAllowedModule
         : BaseBBTRoute<DocumentAllowed, DocumentAllowed, ProjectDbContext>
+{
+    public DocumentAllowedModule(WebApplication app) : base(app)
     {
-        public DocumentAllowedModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "document-allowed";
-
-
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "document-allowed";
+
+
+}
 

@@ -12,16 +12,16 @@ namespace amorphie.contract;
 
     public class DocumentFormIOModule
         : BaseBBTRoute<DocumentFormIO, DocumentFormIO, ProjectDbContext>
+{
+    public DocumentFormIOModule(WebApplication app) : base(app)
     {
-        public DocumentFormIOModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Name","Data"};
-
-        public override string? UrlFragment => "document-formio";
-
-
-     
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name", "Data" };
+
+    public override string? UrlFragment => "document-formio";
+
+
+
+}
 

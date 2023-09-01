@@ -12,16 +12,16 @@ namespace amorphie.contract;
 
     public class DocumentFormIODetailModule
         : BaseBBTRoute<DocumentFormIODetail, DocumentFormIODetail, ProjectDbContext>
+{
+    public DocumentFormIODetailModule(WebApplication app) : base(app)
     {
-        public DocumentFormIODetailModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentFormIOId"};
-
-        public override string? UrlFragment => "document-formio-detail";
-
-
-     
     }
+
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentFormIOId" };
+
+    public override string? UrlFragment => "document-formio-detail";
+
+
+
+}
 

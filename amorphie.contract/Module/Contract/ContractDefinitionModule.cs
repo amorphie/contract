@@ -13,18 +13,18 @@ namespace amorphie.contract;
 
     public class ContractDefinitionModule
         : BaseBBTRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
+{
+    public ContractDefinitionModule(WebApplication app) : base(app)
     {
-        public ContractDefinitionModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name","Code"};
-
-        public override string? UrlFragment => "contract-definition";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name", "Code" };
+
+    public override string? UrlFragment => "contract-definition";
+
+
+
+
+}
 

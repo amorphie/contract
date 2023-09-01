@@ -11,16 +11,16 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class DocumentVersionsModule
-        : BaseBBTRoute<DocumentVersions, DocumentVersions,ProjectDbContext>
+        : BaseBBTRoute<DocumentVersions, DocumentVersions, ProjectDbContext>
+{
+    public DocumentVersionsModule(WebApplication app) : base(app)
     {
-        public DocumentVersionsModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Name","DocumentDefinitionId"};
-
-        public override string? UrlFragment => "document-versions";
-
-
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name", "DocumentDefinitionId" };
+
+    public override string? UrlFragment => "document-versions";
+
+
+}
 

@@ -20,18 +20,18 @@ namespace amorphie.contract.core.Entity.Document
         [Description("Kode")]
         [Required]
         public string Code { get; set; } //Unique olmali
-        public Status Status { get; set; }  
-        public Guid StatusId { get; set; }  
-        public Status BaseStatus { get; set; }  
-        public Guid BaseStatusId { get; set; }  
+        public Status Status { get; set; }
+        public Guid StatusId { get; set; }
+        public Status BaseStatus { get; set; }
+        public Guid BaseStatusId { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } // bu güzel
         // public virtual ICollection<MultiLanguage>? MultiLanguage { get; set; }//bu olmaz
         public virtual ICollection<DocumentFormatDetail>? DocumentFormatDetails { get; set; }
         public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
         public virtual ICollection<DocumentFormIODetail>? DocumentFormIODetail { get; set; }
         public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }
-        public virtual ICollection<DocumentTag>?  DocumentTags { get; set;} 
-        public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; }
+        public virtual ICollection<DocumentTag>? DocumentTags { get; set; }
+        public virtual ICollection<DocumentAllowedDetail>? DocumentAllowedDetails { get; set; }
         public override string ToString()
         {
             return Code;

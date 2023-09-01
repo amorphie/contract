@@ -7,10 +7,10 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-      [Table("DocumentSize", Schema = "Doc")]
+    [Table("DocumentSize", Schema = "Doc")]
     public class DocumentSize : EntityBase
     {
         public ulong KiloBytes { get; set; }
-        
+
     }
 }
