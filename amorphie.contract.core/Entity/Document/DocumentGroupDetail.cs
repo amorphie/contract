@@ -7,15 +7,15 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentDefinitionGroupDetail", Schema = "Doc")]
+    [Table("DocumentGroupDetail", Schema = "Doc")]
 
-    public class DocumentDefinitionGroupDetail : EntityBase
+    public class DocumentGroupDetail : EntityBase
     {
         public Guid DocumentDefinitionId { get; set; }
 
         public DocumentDefinition? DocumentDefinition { get; set; }
-        public Guid DocumentDefinitionGroupID { get; set; }
-        public DocumentDefinitionGroup? DocumentDefinitionGroup { get; set; }
+        public Guid DocumentGroupID { get; set; }
+        public DocumentGroup? DocumentGroup { get; set; }
 
     }
 }

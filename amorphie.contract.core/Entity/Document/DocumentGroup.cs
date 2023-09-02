@@ -12,16 +12,14 @@ namespace amorphie.contract.core.Entity.Document
 {
     [Index(nameof(Code), IsUnique = true)]
     [Table("DocumentGroup", Schema = "Doc")]
-    public class DocumentDefinitionGroup : EntityBase
+    public class DocumentGroup : EntityBase
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public Guid MultiLanguageId { get; set; }
-
         public Guid StatusId { get; set; }
         public Status? Status { get; set; }
-        public virtual ICollection<DocumentDefinitionGroupDetail>? DocumentDefinitionGroupDetails { get; set; }
-        public virtual ICollection<DocumentDefinitionGroupLanguageDetail>? DocumentDefinitionGroupLanguageDetail { get; set; }
+        public virtual ICollection<DocumentGroupDetail>? DocumentGroupDetails { get; set; }
+        public virtual ICollection<DocumentGroupLanguageDetail>? DocumentGroupLanguageDetail { get; set; }
 
     }
 }

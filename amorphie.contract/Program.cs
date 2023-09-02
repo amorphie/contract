@@ -1,5 +1,4 @@
 using amorphie.core.Identity;
-
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
@@ -38,7 +37,6 @@ builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 
 var app = builder.Build();
-
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();

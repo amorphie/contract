@@ -22,9 +22,9 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentFormat, DocumentFormat>().ReverseMap();
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();
             CreateMap<DocumentFormIO, DocumentFormIO>().ReverseMap();
-            CreateMap<DocumentDefinitionGroup, DocumentDefinitionGroup>().ReverseMap();
-            CreateMap<DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetail>().ReverseMap();
-            CreateMap<DocumentDefinitionGroupLanguageDetail, DocumentDefinitionGroupLanguageDetail>().ReverseMap();
+            CreateMap<DocumentGroup, DocumentGroup>().ReverseMap();
+            CreateMap<DocumentGroupDetail, DocumentGroupDetail>().ReverseMap();
+            CreateMap<DocumentGroupLanguageDetail, DocumentGroupLanguageDetail>().ReverseMap();
             CreateMap<DocumentOptimize, DocumentOptimize>().ReverseMap();
             CreateMap<DocumentSize, DocumentSize>().ReverseMap();
             CreateMap<DocumentTag, DocumentTag>().ReverseMap();
