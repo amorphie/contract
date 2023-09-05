@@ -1,3 +1,6 @@
 {
-    "dotnet.defaultSolution": "contract.sln"
+    "dotnet.defaultSolution": "contract.sln",
+    "cSpell.words": [
+        "amorphie"
+    ]
 }

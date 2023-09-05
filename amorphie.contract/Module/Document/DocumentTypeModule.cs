@@ -11,14 +11,14 @@ using amorphie.contract.core.Mapping;
 
 namespace amorphie.contract;
 
-public class DocumentTypeModule : BaseBBTRoute<DocumentType, DocumentType , ProjectDbContext>
+public class DocumentFormatTypeModule : BaseBBTRoute<DocumentFormatType, DocumentFormatType , ProjectDbContext>
 {
-    public DocumentTypeModule(WebApplication app) : base(app)
+    public DocumentFormatTypeModule(WebApplication app) : base(app)
     {
     }
 
     public override string[]? PropertyCheckList => new string[] { "Name", "ContentType" };
 
-    public override string? UrlFragment => "document-type";
+    public override string? UrlFragment => "document-format-type";
 }
 

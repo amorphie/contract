@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentType", Schema = "Doc")]
+    [Table("DocumentFormatType", Schema = "Doc")]
     [Index(nameof(Name), IsUnique = true)] 
     
-    public class DocumentType : EntityBase
+    public class DocumentFormatType : EntityBase
     {
         public string Name { get; set; }
         public string ContentType { get; set; }

@@ -14,6 +14,7 @@ namespace amorphie.contract.core.Mapping
         {
              CreateMap<LanguageType, LanguageType>().ReverseMap();
              CreateMap<MultiLanguage, MultiLanguage>().ReverseMap();
+             CreateMap<Status, Status>().ReverseMap();
         }
     }
 }

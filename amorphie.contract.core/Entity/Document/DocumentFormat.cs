@@ -10,9 +10,9 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentFormat", Schema = "Doc")]
     public class DocumentFormat : EntityBase
     {
-        public Guid DocumentTypeId { get; set; }
+        public Guid DocumentFormatTypeId { get; set; }
 
-        public DocumentType? DocumentType { get; set; }
+        public DocumentFormatType? DocumentFormatType { get; set; }
         public Guid DocumentSizeId { get; set; }
 
         public DocumentSize? DocumentSize { get; set; }

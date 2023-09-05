@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.Document.DocumentTypes;
 using AutoMapper;
 
 namespace amorphie.contract.core.Mapping
@@ -30,8 +31,17 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentTag, DocumentTag>().ReverseMap();
             CreateMap<DocumentTemplate, DocumentTemplate>().ReverseMap();
             CreateMap<DocumentTemplateDetail, DocumentTemplateDetail>().ReverseMap();
-            CreateMap<DocumentType, DocumentType>().ReverseMap();
+            CreateMap<DocumentFormatType, DocumentFormatType>().ReverseMap();
             CreateMap<DocumentVersions, DocumentVersions>().ReverseMap();
+            #region documentType
+            CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
+            CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
+            CreateMap<DocumentRender, DocumentRender>().ReverseMap();
+            #endregion
+
+
+
+
 
         }
     }
