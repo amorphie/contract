@@ -12,7 +12,7 @@ namespace amorphie.contract.data.Configurations.Definition
         public void Configure(EntityTypeBuilder<core.Entity.Document.Document> builder)
         {
 
-           
+
         }
     }
 }

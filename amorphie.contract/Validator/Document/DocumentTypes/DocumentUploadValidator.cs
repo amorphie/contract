@@ -2,10 +2,10 @@ using FluentValidation;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 
 public sealed class DocumentUploadValidator : AbstractValidator<DocumentUpload>
+{
+    public DocumentUploadValidator()
     {
-        public DocumentUploadValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

@@ -17,9 +17,9 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid DocumentDefinitionId { get; set; }
 
         public DocumentDefinition? DocumentDefinition { get; set; }
-        public string MinVersiyon{ get; set; }
-        public string Required{ get; set; }
-        public string UseExisting{ get; set; }
+        public string MinVersiyon { get; set; }
+        public string Required { get; set; }
+        public string UseExisting { get; set; }
 
     }
 }

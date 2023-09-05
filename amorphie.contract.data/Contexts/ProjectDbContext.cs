@@ -59,11 +59,11 @@ public class ProjectDbContext : DbContext
     /// <param name="configuration"></param>
 
 
-#region Common
+    #region Common
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
     public DbSet<Status> Status { get; set; }
-#endregion
+    #endregion
 
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
     public DbSet<Document> Document { get; set; }
@@ -88,6 +88,6 @@ public class ProjectDbContext : DbContext
         // modelBuilder.Entity<DocumentDefinition>().Navigation(s => s.BaseStatus).AutoInclude();
         base.OnModelCreating(modelBuilder);
     }
-     
-    
+
+
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.Definition
 {
-     public class DocumentGroupDetailConfiguration : ConfigurationBase<DocumentGroupDetail>
+    public class DocumentGroupDetailConfiguration : ConfigurationBase<DocumentGroupDetail>
     {
         public void Configure(EntityTypeBuilder<DocumentGroupDetail> builder)
         {

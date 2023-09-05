@@ -7,11 +7,11 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document.DocumentTypes
 {
-      [Table("DocumentUpload", Schema = "DocTp")]
+    [Table("DocumentUpload", Schema = "DocTp")]
     public class DocumentUpload : EntityBase
     {
         public bool Required { get; set; }
         public virtual ICollection<DocumentFormatDetail>? DocumentFormatDetails { get; set; }
-        public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; }
+        public virtual ICollection<DocumentAllowedDetail>? DocumentAllowedDetails { get; set; }
     }
 }

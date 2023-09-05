@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentFormIO", Schema = "Doc")]
-    [Index(nameof(Name), IsUnique = true)] 
+    [Index(nameof(Name), IsUnique = true)]
 
     public class DocumentFormIO : EntityBase
     {
         //Render edilecekler
-     
+
         public string Name { get; set; }
         public string Data { get; set; }
     }

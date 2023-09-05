@@ -8,7 +8,7 @@ namespace amorphie.contract.core.Entity.Document
 
     public class DocumentFormIODetail : EntityBase
     {
-         public Guid DocumentDefinitionId { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
 
         // public DocumentDefinition? DocumentDefinition { get; set; }
         public Guid DocumentFormIOId { get; set; }

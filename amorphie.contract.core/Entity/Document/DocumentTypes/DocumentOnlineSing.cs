@@ -7,13 +7,13 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document.DocumentTypes
 {
-      [Table("DocumentOnlineSing", Schema = "DocTp")]
+    [Table("DocumentOnlineSing", Schema = "DocTp")]
     public class DocumentOnlineSing : EntityBase
     {
         public bool Required { get; set; }
-        public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; }
+        public virtual ICollection<DocumentAllowedDetail>? DocumentAllowedDetails { get; set; }
         public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
-        public Guid DocumentVersionsId { get; set; }  
+        public Guid DocumentVersionsId { get; set; }
         public DocumentVersions DocumentVersions { get; set; }
     }
 }

@@ -2,10 +2,10 @@ using FluentValidation;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 
 public sealed class DocumentRenderValidator : AbstractValidator<DocumentRender>
+{
+    public DocumentRenderValidator()
     {
-        public DocumentRenderValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

@@ -17,7 +17,7 @@ public class DocumentGroupLanguageDetailModule
     {
     }
 
-    public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionGroupId","MultiLanguageId"};
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionGroupId", "MultiLanguageId" };
 
     public override string? UrlFragment => "document-group-language-detail";
 
