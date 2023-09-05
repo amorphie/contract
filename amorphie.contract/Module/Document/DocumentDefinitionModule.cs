@@ -17,7 +17,7 @@ namespace amorphie.contract;
         {
         }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
+        public override string[]? PropertyCheckList => new string[] {"Code","StatusId"};
 
         public override string? UrlFragment => "document-definition";
 

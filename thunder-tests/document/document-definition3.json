@@ -1,0 +1,91 @@
+  {
+    "code": "identification-certificate-nc",
+    "statusId":"3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "BaseStatusId":"3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  
+    "documentDefinitionLanguageDetails": [
+      {
+      
+        "multiLanguage": {
+          "name": "Nufus Cuzdani",
+          "code": "identification-certificate-nc",
+          "languageType": {
+            "name": "TR-tr"
+          }
+        }
+      },
+      {
+      "multiLanguage": {
+        "name": "Birth Certificate",
+        "code": "identification-certificate-nc",
+        "languageType": {
+          "name": "EN-en"
+        }
+      }
+      }
+    ],
+    "documentFormatDetails": [
+    {
+        "documentFormat": {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "documentType": {
+            "name": "jpg",
+            "contentType": "application/jpg"
+          },
+          "documentSize": {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "kiloBytes": 1024
+          }
+        }
+      },
+      {
+        "documentFormat": {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "documentType": {
+            "name": "png",
+            "contentType": "application/pdf"
+          },
+          "documentSize": {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "kiloBytes": 512
+          }
+        }
+      }
+    ],
+
+    
+    "documentEntityPropertys": [
+      {
+        "entityPropertyId":"3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      {
+      "entityPropertyId":"ccaccdd8-6efc-4f5a-8ed0-a245c7d9bb68"
+    }
+
+    ],
+    "documentTags": [
+      {
+        "code": "id-card",
+        "contact": "reference"
+      }, 
+      {
+        "code": "customer-info",
+        "contact": "#mernis.response.$.tcknno"
+      },
+      {
+        "code": "mernis",
+        "contact": "owner"
+      }
+
+    ],
+    "documentAllowedDetails": [
+      {
+        "documentAllowed": {
+          "name": "web-ib",
+          "documentAllowedType": {
+            "name": "clients"
+          }
+        }
+      }
+    ]
+  }

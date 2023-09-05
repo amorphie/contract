@@ -10,16 +10,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-public class DocumentDefinitionGroupLanguageDetailModule
-    : BaseBBTRoute<DocumentDefinitionGroupLanguageDetail, DocumentDefinitionGroupLanguageDetail, ProjectDbContext>
+public class DocumentGroupLanguageDetailModule
+    : BaseBBTRoute<DocumentGroupLanguageDetail, DocumentGroupLanguageDetail, ProjectDbContext>
 {
-    public DocumentDefinitionGroupLanguageDetailModule(WebApplication app) : base(app)
+    public DocumentGroupLanguageDetailModule(WebApplication app) : base(app)
     {
     }
 
     public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionGroupId","MultiLanguageId"};
 
-    public override string? UrlFragment => "document-definition-group-language-detail";
+    public override string? UrlFragment => "document-group-language-detail";
 
 
 

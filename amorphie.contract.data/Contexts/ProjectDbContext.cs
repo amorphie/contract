@@ -59,16 +59,20 @@ public class ProjectDbContext : DbContext
     /// <param name="configuration"></param>
 
 
+#region Common
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
+    public DbSet<Status> Status { get; set; }
+#endregion
+
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
-    public DbSet<DocumentDefinitionGroup> DocumentDefinitionGroup { get; set; }
-    public DbSet<DocumentDefinitionGroupDetail> DocumentGroupDetail { get; set; }
+    public DbSet<DocumentGroup> DocumentDefinitionGroup { get; set; }
+    public DbSet<DocumentGroupDetail> DocumentGroupDetail { get; set; }
     public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
-    public DbSet<DocumentType> DocumentType { get; set; }
+    public DbSet<DocumentFormatType> DocumentType { get; set; }
     public DbSet<DocumentVersions> DocumentVersions { get; set; }
     public DbSet<DocumentTag> DocumentTag { get; set; }
     public DbSet<DocumentSize> DocumentSize { get; set; }

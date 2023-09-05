@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     // [Index(nameof(MultiLanguageId), IsUnique = true)]
-    [Table("DocumentDefinitionGroupLanguageDetail", Schema = "Doc")]
-    public class DocumentDefinitionGroupLanguageDetail : EntityBase
+    [Table("DocumentGroupLanguageDetail", Schema = "Doc")]
+    public class DocumentGroupLanguageDetail : EntityBase
     {
          public Guid MultiLanguageId { get; set; }
 
         public  MultiLanguage? MultiLanguage { get; set; }
-        public Guid DocumentDefinitionGroupId { get; set; }
+        public Guid DocumentGroupId { get; set; }
 
-        public DocumentDefinitionGroup? DocumentDefinitionGroup { get; set; }
+        public DocumentGroup? DocumentGroup { get; set; }
 
     }
 }

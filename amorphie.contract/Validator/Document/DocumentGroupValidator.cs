@@ -1,9 +1,9 @@
 using FluentValidation;
 using amorphie.contract.core.Entity.Document;
 
-public sealed class DocumentDefinitionGroupLanguageDetailValidator : AbstractValidator<DocumentDefinitionGroupLanguageDetail>
+public sealed class DocumentGroupValidator : AbstractValidator<DocumentGroup>
     {
-        public DocumentDefinitionGroupLanguageDetailValidator()
+        public DocumentGroupValidator()
         {
             // RuleFor(x => x.Name).NotNull();
             // RuleFor(x => x.Name).MinimumLength(10);

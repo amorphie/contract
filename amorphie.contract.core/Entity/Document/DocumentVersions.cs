@@ -11,8 +11,8 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentVersions:EntityBase
     {
         public string Name {get;set;}
-        public Guid DocumentDefinitionId { get; set; }
+        // public Guid DocumentDefinitionId { get; set; }
 
-        public DocumentDefinition? DocumentDefinition {get;set;}
+        // public DocumentDefinition? DocumentDefinition {get;set;}
     }
 }

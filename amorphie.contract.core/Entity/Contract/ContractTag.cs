@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Document;
 using amorphie.core.Base;
-using Microsoft.EntityFrameworkCore;
 
-namespace amorphie.contract.core.Entity.Document
+namespace amorphie.contract.core.Entity.Contract
 {
-    [Table("DocumentTag", Schema = "Doc")]
-    [Index(nameof(Code), IsUnique = true)] 
-
-    public class DocumentTag : EntityBase
+    [Table("ContractTag", Schema = "Cont")]
+    public class ContractTag : EntityBase
     {
-        public Guid DocumentDefinitionId { get; set; }
+        public Guid ContractDefinitionId { get; set; }
 
         // public DocumentDefinition? DocumentDefinition { get; set; }
         public string Code { get; set; }

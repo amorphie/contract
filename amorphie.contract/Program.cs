@@ -1,5 +1,4 @@
 using amorphie.core.Identity;
-
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
@@ -29,16 +28,15 @@ builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 
 var assemblies = new Assembly[]
                 {
-                      typeof(DocumentTypeValidator).Assembly,
+                      typeof(DocumentDefinitionValidator).Assembly,
                       typeof(MappingDocumentProfile).Assembly,
                 };
                 builder.Services.AddAutoMapper(assemblies);
-                builder.Services.AddValidatorsFromAssemblyContaining<DocumentTypeValidator>(includeInternalTypes: true);
+                builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 
 var app = builder.Build();
-
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();

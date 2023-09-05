@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.Document.DocumentTypes;
 using AutoMapper;
 
 namespace amorphie.contract.core.Mapping
@@ -22,16 +23,25 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentFormat, DocumentFormat>().ReverseMap();
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();
             CreateMap<DocumentFormIO, DocumentFormIO>().ReverseMap();
-            CreateMap<DocumentDefinitionGroup, DocumentDefinitionGroup>().ReverseMap();
-            CreateMap<DocumentDefinitionGroupDetail, DocumentDefinitionGroupDetail>().ReverseMap();
-            CreateMap<DocumentDefinitionGroupLanguageDetail, DocumentDefinitionGroupLanguageDetail>().ReverseMap();
+            CreateMap<DocumentGroup, DocumentGroup>().ReverseMap();
+            CreateMap<DocumentGroupDetail, DocumentGroupDetail>().ReverseMap();
+            CreateMap<DocumentGroupLanguageDetail, DocumentGroupLanguageDetail>().ReverseMap();
             CreateMap<DocumentOptimize, DocumentOptimize>().ReverseMap();
             CreateMap<DocumentSize, DocumentSize>().ReverseMap();
             CreateMap<DocumentTag, DocumentTag>().ReverseMap();
             CreateMap<DocumentTemplate, DocumentTemplate>().ReverseMap();
             CreateMap<DocumentTemplateDetail, DocumentTemplateDetail>().ReverseMap();
-            CreateMap<DocumentType, DocumentType>().ReverseMap();
+            CreateMap<DocumentFormatType, DocumentFormatType>().ReverseMap();
             CreateMap<DocumentVersions, DocumentVersions>().ReverseMap();
+            #region documentType
+            CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
+            CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
+            CreateMap<DocumentRender, DocumentRender>().ReverseMap();
+            #endregion
+
+
+
+
 
         }
     }

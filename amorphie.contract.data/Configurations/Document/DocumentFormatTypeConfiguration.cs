@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentTypeConfiguration : ConfigurationBase<DocumentType>
+    public class DocumentFormatTypeConfiguration : ConfigurationBase<DocumentFormatType>
     {
-        public void Configure(EntityTypeBuilder<DocumentType> builder)
+        public void Configure(EntityTypeBuilder<DocumentFormatType> builder)
         {
             // builder.HasKey(x => new { x.DocumentDefinition.Id});
 
