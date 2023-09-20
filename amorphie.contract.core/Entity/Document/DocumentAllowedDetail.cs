@@ -7,9 +7,11 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentAllowedDetail", Schema = "Doc")]
     public class DocumentAllowedDetail : EntityBase
     {
+        [Required]
         public Guid DocumentDefinitionId { get; set; }
 
         // public DocumentDefinition? DocumentDefinition { get; set; }
+        [Required]
         public Guid DocumentAllowedId { get; set; }
 
 

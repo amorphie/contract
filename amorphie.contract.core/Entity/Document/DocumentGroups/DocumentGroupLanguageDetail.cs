@@ -7,6 +7,7 @@ using amorphie.core.Base;
 
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract.core.Entity.Document.DocumentGroups
 {
@@ -14,12 +15,13 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     [Table("DocumentGroupLanguageDetail", Schema = "DocGroup")]
     public class DocumentGroupLanguageDetail : EntityBase
     {
-         public Guid MultiLanguageId { get; set; }
-
-        public  MultiLanguage? MultiLanguage { get; set; }
+        [Required]
+        public Guid MultiLanguageId { get; set; }
+        public MultiLanguage MultiLanguage { get; set; }
+        [Required]
         public Guid DocumentGroupId { get; set; }
 
-        public DocumentGroup? DocumentGroup { get; set; }
+        public DocumentGroup DocumentGroup { get; set; }
 
     }
 }

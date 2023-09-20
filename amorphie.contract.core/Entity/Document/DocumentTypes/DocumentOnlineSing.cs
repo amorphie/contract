@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,9 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
     public class DocumentOnlineSing : EntityBase
     {
         public bool Required { get; set; }
-        public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; }
-        public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
+        public virtual ICollection<DocumentAllowedDetail> DocumentAllowedDetails { get; set; } = new List<DocumentAllowedDetail>();
+        public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; } = new List<DocumentTemplateDetail>();
+        [Required]
         public Guid VersionsId { get; set; }  
         public Versions Versions { get; set; }
     }

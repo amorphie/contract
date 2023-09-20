@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentAllowedType", Schema = "Doc")]
-    [Index(nameof(Name), IsUnique = true)] 
+    [Index(nameof(Code), IsUnique = true)] 
 
     public class DocumentAllowedType : EntityBase
     {
-        public string Name { get; set; }
+        public string Code { get; set; }
     }
 }

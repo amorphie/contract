@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace amorphie.contract.core.Entity.Common
     public class Validation : EntityBase
     {
         public  string Code { get; set; }// all-valid
+        [Required]
         public Guid ValidationDecisionId { get; set; }
         public  ValidationDecision ValidationDecision { get; set; }
 

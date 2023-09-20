@@ -19,7 +19,7 @@ namespace amorphie.contract.common;
             
         }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
+        public override string[]? PropertyCheckList => new string[] {"Code","Url"};
 
         public override string? UrlFragment => "Common-Callback";
 

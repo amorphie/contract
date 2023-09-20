@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace amorphie.contract.core.Entity.Common
 
     public class Callback : EntityBase
     {
-        public  string Code { get; set; }// dmn-ekyc-document-validation
-        public  string Url { get; set; }
+        public string Code { get; set; }// dmn-ekyc-document-validation
+        [Required]
+        public string Url { get; set; }
         public string? Token { get; set; }
 
     }

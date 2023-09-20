@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace amorphie.contract.core.Entity.Common
     public class ValidationDecision : EntityBase
     {
         public string Code { get; set; }// dmn-ekyc-document-validation
+         [Required]
         public Guid ValidationDecisionTypeId { get; set; }
         public  ValidationDecisionType ValidationDecisionTypes { get; set; }// zeebe-comand-dmn-table - script -c# roslyn– esicion-table
 

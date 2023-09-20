@@ -22,16 +22,15 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public string Code { get; set; } //buna göre getirile biline bilir.
         public Status Status { get; set; }
+        [Required]
         public Guid StatusId { get; set; }
         public Status BaseStatus { get; set; }
+        [Required]
+
         public Guid BaseStatusId { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } // bu güzel
-        // public virtual ICollection<MultiLanguage>? MultiLanguage { get; set; }//bu olmaz
-        // public virtual ICollection<DocumentFormatDetail>? DocumentFormatDetails { get; set; } //DocumentUpload
-        // public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
         public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }
         public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; }
-        // public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; } //DocumentUpload
 
         #region documentType
         public virtual Guid? DocumentUploadId { get; set; }
