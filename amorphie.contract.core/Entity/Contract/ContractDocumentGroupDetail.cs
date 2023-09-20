@@ -18,7 +18,7 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid DocumentGroupId { get; set; }
 
         public DocumentGroup? DocumentGroup { get; set; }
-        public required string AtLeastRequiredDocument{ get; set; }
+        public  string AtLeastRequiredDocument{ get; set; }
         public bool Required{ get; set; }
 
     }

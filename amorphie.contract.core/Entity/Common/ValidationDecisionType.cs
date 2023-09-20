@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Common
 
     public class ValidationDecisionType : EntityBase
     {
-        public required string Code { get; set; }// dmn-ekyc-document-validation
+        public string Code { get; set; }// dmn-ekyc-document-validation
 
     }
 }

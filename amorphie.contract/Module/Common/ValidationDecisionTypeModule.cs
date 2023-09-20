@@ -11,20 +11,20 @@ using amorphie.contract.core.Entity.Common;
 
 namespace amorphie.contract.common;
 
-    public class ValidationDecisionTypeModule
-        : BaseBBTRoute<ValidationDecisionType, ValidationDecisionType, ProjectDbContext>
+public class ValidationDecisionTypeModule
+    : BaseBBTRoute<ValidationDecisionType, ValidationDecisionType, ProjectDbContext>
+{
+    public ValidationDecisionTypeModule(WebApplication app) : base(app)
     {
-        public ValidationDecisionTypeModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-Validation-Decision-Type";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "Common-Validation-Decision-Type";
+
+
+
+
+}
 

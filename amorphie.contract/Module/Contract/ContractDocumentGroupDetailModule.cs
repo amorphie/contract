@@ -14,7 +14,7 @@ namespace amorphie.contract;
     public class ContractDocumentGroupDetailModule
         : BaseBBTRoute<ContractDocumentGroupDetail, ContractDocumentGroupDetail, ProjectDbContext>
     {
-        public ContractDocumentDetailModule(WebApplication app) : base(app)
+        public ContractDocumentGroupDetailModule(WebApplication app) : base(app)
         {
         }
 
