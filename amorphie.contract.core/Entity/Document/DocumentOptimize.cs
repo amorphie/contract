@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentOptimize", Schema = "Doc")]
     public class DocumentOptimize : EntityBase
     {
-         public Guid DocumentDefinitionId { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
         public bool Size { get; set; }
         public Guid DocumentOptimizeTypeId { get; set; }
         public DocumentOptimizeType DocumentOptimizeType { get; set; }

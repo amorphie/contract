@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  VersionsConfiguration : ConfigurationBase<Versions>
+    public class VersionsConfiguration : ConfigurationBase<Versions>
     {
         public void Configure(EntityTypeBuilder<Versions> builder)
         {
-            
+
         }
     }
 }

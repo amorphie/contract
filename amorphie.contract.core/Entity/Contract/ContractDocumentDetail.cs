@@ -21,9 +21,9 @@ namespace amorphie.contract.core.Entity.Contract
 
         public Guid UseExistingId { get; set; }
         public UseExisting? UseExisting { get; set; }
-        public Guid VersionsId{ get; set; }
-        public Versions? Versions{ get; set; }
-        public bool Required{ get; set; }
+        public Guid VersionsId { get; set; }
+        public Versions? Versions { get; set; }
+        public bool Required { get; set; }
 
     }
 }

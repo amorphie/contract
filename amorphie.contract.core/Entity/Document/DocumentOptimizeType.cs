@@ -11,7 +11,7 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentOptimizeType", Schema = "Doc")]
     [Index(nameof(Code), IsUnique = true)]
     public class DocumentOptimizeType : EntityBase
-    { 
-        public string Code {get;set;}
+    {
+        public string Code { get; set; }
     }
 }

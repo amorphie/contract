@@ -13,18 +13,18 @@ namespace amorphie.contract.common;
 
     public class UseExistingModule
         : BaseBBTRoute<UseExisting, UseExisting, ProjectDbContext>
+{
+    public UseExistingModule(WebApplication app) : base(app)
     {
-        public UseExistingModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-UseExisting";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "Common-UseExisting";
+
+
+
+
+}
 

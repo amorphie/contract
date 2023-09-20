@@ -8,10 +8,10 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.EAV
 {
     [Table("EntityPropertyType", Schema = "EAV")]
-    
-    public class EntityPropertyType: EntityBase
+
+    public class EntityPropertyType : EntityBase
     {
         public string Code { get; set; }
-        
+
     }
 }

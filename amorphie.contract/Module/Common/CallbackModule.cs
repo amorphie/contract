@@ -13,18 +13,18 @@ namespace amorphie.contract.common;
 
     public class CallbackModule
         : BaseBBTRoute<Callback, Callback, ProjectDbContext>
+{
+    public CallbackModule(WebApplication app) : base(app)
     {
-        public CallbackModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
-
-        public override string? UrlFragment => "Common-Callback";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "Common-Callback";
+
+
+
+
+}
 

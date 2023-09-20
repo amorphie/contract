@@ -13,8 +13,8 @@ namespace amorphie.contract.core.Entity.Common
 
     public class Callback : EntityBase
     {
-        public  string Code { get; set; }// dmn-ekyc-document-validation
-        public  string Url { get; set; }
+        public string Code { get; set; }// dmn-ekyc-document-validation
+        public string Url { get; set; }
         public string? Token { get; set; }
 
     }

@@ -7,17 +7,17 @@ using AutoMapper;
 
 namespace amorphie.contract.core.Mapping
 {
-    public class MappingContractProfile:Profile
+    public class MappingContractProfile : Profile
     {
         public MappingContractProfile()
         {
-             CreateMap<ContractDefinition, ContractDefinition>().ReverseMap();
-             CreateMap<ContractDocumentDetail, ContractDocumentDetail>().ReverseMap();
-             CreateMap<ContractDocumentGroupDetail, ContractDocumentGroupDetail>().ReverseMap();
-             CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
-             CreateMap<ContractTag, ContractTag>().ReverseMap();
-             CreateMap<ContractValidation, ContractValidation>().ReverseMap();
+            CreateMap<ContractDefinition, ContractDefinition>().ReverseMap();
+            CreateMap<ContractDocumentDetail, ContractDocumentDetail>().ReverseMap();
+            CreateMap<ContractDocumentGroupDetail, ContractDocumentGroupDetail>().ReverseMap();
+            CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
+            CreateMap<ContractTag, ContractTag>().ReverseMap();
+            CreateMap<ContractValidation, ContractValidation>().ReverseMap();
         }
     }
-   
+
 }

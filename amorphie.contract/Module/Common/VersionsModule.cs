@@ -13,18 +13,18 @@ namespace amorphie.contract.common;
 
     public class VersionsModule
         : BaseBBTRoute<Versions, Versions, ProjectDbContext>
+{
+    public VersionsModule(WebApplication app) : base(app)
     {
-        public VersionsModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-Versions";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "Common-Versions";
+
+
+
+
+}
 

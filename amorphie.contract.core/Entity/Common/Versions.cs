@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Common
 {
     [Table("Versions", Schema = "Common")]
-    [Index(nameof(Code), IsUnique = true)] 
+    [Index(nameof(Code), IsUnique = true)]
 
-    public class  Versions: EntityBase
+    public class Versions : EntityBase
     {
         public string Code { get; set; }// 1.1
     }

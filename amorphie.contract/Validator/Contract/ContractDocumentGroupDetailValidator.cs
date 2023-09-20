@@ -2,10 +2,10 @@ using FluentValidation;
 using amorphie.contract.core.Entity.Contract;
 
 public sealed class ContractDocumentGroupDetailValidator : AbstractValidator<ContractDocumentGroupDetail>
+{
+    public ContractDocumentGroupDetailValidator()
     {
-        public ContractDocumentGroupDetailValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  CallbackConfiguration : ConfigurationBase<Callback>
+    public class CallbackConfiguration : ConfigurationBase<Callback>
     {
         public void Configure(EntityTypeBuilder<Callback> builder)
         {
-            
+
         }
     }
 }

@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Entity.Contract
         public virtual ICollection<ContractTag>? ContractTags { get; set; }
         public virtual ICollection<ContractEntityProperty>? ContractEntityProperty { get; set; }
         public virtual ICollection<ContractValidation>? ContractValidations { get; set; }
-        
+
 
 
     }
