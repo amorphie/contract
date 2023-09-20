@@ -20,25 +20,35 @@ namespace amorphie.contract.core.Entity.Document
         [MaxLength(500)]
         [Description("Kode")]
         [Required]
-        public string Code { get; set; } //Unique olmali
-        // public string TransitionName { get; set; } burda olmaz yazma
-        public Status Status { get; set; }  
-        public Guid StatusId { get; set; }  
-        public Status BaseStatus { get; set; }  
-        public Guid BaseStatusId { get; set; }  
+        public string Code { get; set; } //buna göre getirile biline bilir.
+        public Status Status { get; set; }
+        public Guid StatusId { get; set; }
+        public Status BaseStatus { get; set; }
+        public Guid BaseStatusId { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } // bu güzel
         // public virtual ICollection<MultiLanguage>? MultiLanguage { get; set; }//bu olmaz
         // public virtual ICollection<DocumentFormatDetail>? DocumentFormatDetails { get; set; } //DocumentUpload
         // public virtual ICollection<DocumentTemplateDetail>? DocumentTemplateDetails { get; set; }
         public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }
-        public virtual ICollection<DocumentTag>?  DocumentTags { get; set;} 
+        public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; }
         // public virtual ICollection<DocumentAllowedDetail>?  DocumentAllowedDetails { get; set; } //DocumentUpload
-        public virtual Guid? DocumentUploadId{ get; set;} 
-        public virtual DocumentUpload? DocumentUpload{ get; set;} 
-        public virtual Guid? DocumentRenderId{ get; set;} 
-        public virtual DocumentRender? DocumentRender{ get; set;} 
-        public virtual Guid? DocumentOnlineSingId{ get; set;} 
-        public virtual DocumentOnlineSing? DocumentOnlineSing{ get; set;} 
+
+        #region documentType
+        public virtual Guid? DocumentUploadId { get; set; }
+        public virtual DocumentUpload? DocumentUpload { get; set; }
+        public virtual Guid? DocumentRenderId { get; set; }
+        public virtual DocumentRender? DocumentRender { get; set; }
+        public virtual Guid? DocumentOnlineSingId { get; set; }
+        public virtual DocumentOnlineSing? DocumentOnlineSing { get; set; }
+
+
+        #endregion
+        public virtual Guid? DocumentOptimizeId { get; set; }
+        public virtual DocumentOptimize? DocumentOptimize { get; set; }
+        public virtual Guid? DocumentOperationsId { get; set; }
+        public virtual DocumentOperations? DocumentOperations { get; set; }
+
+
         public override string ToString()
         {
             return Code;

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Common;
 
-namespace amorphie.contract;
+namespace amorphie.contract.common;
 
     public class StatusModule
         : BaseBBTRoute<Status, Status, ProjectDbContext>

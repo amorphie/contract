@@ -13,8 +13,10 @@ namespace amorphie.contract.core.Mapping
         {
              CreateMap<ContractDefinition, ContractDefinition>().ReverseMap();
              CreateMap<ContractDocumentDetail, ContractDocumentDetail>().ReverseMap();
+             CreateMap<ContractDocumentGroupDetail, ContractDocumentGroupDetail>().ReverseMap();
              CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
-             
+             CreateMap<ContractTag, ContractTag>().ReverseMap();
+             CreateMap<ContractValidation, ContractValidation>().ReverseMap();
         }
     }
    
