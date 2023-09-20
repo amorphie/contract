@@ -12,9 +12,16 @@ namespace amorphie.contract.core.Mapping
     {
         public MappingCommonProfile()
         {
+             CreateMap<Callback, Callback>().ReverseMap();
              CreateMap<LanguageType, LanguageType>().ReverseMap();
              CreateMap<MultiLanguage, MultiLanguage>().ReverseMap();
              CreateMap<Status, Status>().ReverseMap();
+             CreateMap<Tag, Tag>().ReverseMap();
+             CreateMap<UseExisting, UseExisting>().ReverseMap();
+             CreateMap<Validation, Validation>().ReverseMap();
+             CreateMap<ValidationDecision, ValidationDecision>().ReverseMap();
+             CreateMap<ValidationDecisionType, ValidationDecisionType>().ReverseMap();
+             CreateMap<Versions, Versions>().ReverseMap();
         }
     }
 }

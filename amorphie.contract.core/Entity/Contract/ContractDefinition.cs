@@ -12,12 +12,16 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractDefinition", Schema = "Cont")]
     public class ContractDefinition : EntityBase
     {
-        public string Name { get; set; }
         public string Code { get; set; }
         public Guid StatusId { get; set; }
         public Status? Status { get; set; }
-        public virtual ICollection<DocumentDefinition> DocumentDefinitions { get; set; }
+        public virtual ICollection<ContractDocumentDetail>? ContractDocumentDetails { get; set; }
+        public virtual ICollection<ContractDocumentGroupDetail>? ContractDocumentGroupDetails { get; set; }
+        public virtual ICollection<ContractTag>? ContractTags { get; set; }
         public virtual ICollection<ContractEntityProperty>? ContractEntityProperty { get; set; }
+        public virtual ICollection<ContractValidation>? ContractValidations { get; set; }
+        
+
 
     }
 }

@@ -13,9 +13,8 @@ namespace amorphie.contract.core.Entity.Contract
     {
         public Guid ContractDefinitionId { get; set; }
 
-        // public DocumentDefinition? DocumentDefinition { get; set; }
-        public string Code { get; set; }
-        public string Contact { get; set; }
+        public Guid TagId { get; set; }
+        public Common.Tag Tags { get; set; }
 
     }
 }
