@@ -29,7 +29,7 @@ namespace amorphie.contract.core.Entity.Document
 
         public Guid BaseStatusId { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } // bu güzel
-        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }
+        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }//****
         public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; }
 
         #region documentType

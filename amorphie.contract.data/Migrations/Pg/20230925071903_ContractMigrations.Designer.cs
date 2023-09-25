@@ -12,7 +12,7 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20230920071444_ContractMigrations")]
+    [Migration("20230925071903_ContractMigrations")]
     partial class ContractMigrations
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace amorphie.contract.data.Migrations.Pg
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.Callback", b =>
+            modelBuilder.Entity("amorphie.contract.core.Entity.Common.LanguageType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,52 +53,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Token")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("Callback", "Common");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.LanguageType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("LanguageType", "Common");
@@ -154,6 +111,10 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -172,13 +133,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
 
                     b.ToTable("Status", "Common");
@@ -195,7 +152,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("text");
 
                     b.Property<string>("Contact")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -222,42 +178,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsUnique();
 
                     b.ToTable("Tag", "Common");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.UseExisting", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("UseExisting", "Common");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Common.Validation", b =>
@@ -447,6 +367,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("StatusId");
 
                     b.ToTable("ContractDefinition", "Cont");
@@ -485,8 +408,8 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("UseExistingId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("UseExisting")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("VersionsId")
                         .HasColumnType("uuid");
@@ -496,8 +419,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("ContractDefinitionId");
 
                     b.HasIndex("DocumentDefinitionId");
-
-                    b.HasIndex("UseExistingId");
 
                     b.HasIndex("VersionsId");
 
@@ -510,9 +431,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AtLeastRequiredDocument")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("AtLeastRequiredDocument")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("ContractDefinitionId")
                         .HasColumnType("uuid");
@@ -706,53 +626,16 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.ToTable("Document", "Doc");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowed", b =>
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedClient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentAllowedTypeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentAllowedTypeId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("DocumentAllowed", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -760,12 +643,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentAllowedId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentDefinitionId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("DocumentOnlineSingId")
@@ -788,7 +665,8 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentAllowedId");
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.HasIndex("DocumentOnlineSingId");
 
@@ -796,43 +674,7 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasIndex("DocumentUploadId");
 
-                    b.ToTable("DocumentAllowedDetail", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("DocumentAllowedType", "Doc");
+                    b.ToTable("DocumentAllowedClient", "Doc");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentContent", b =>
@@ -855,7 +697,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<string>("KiloBytesSize")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -1039,6 +880,10 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -1052,6 +897,9 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("LanguageTypeId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -1061,14 +909,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("LanguageTypeId");
 
                     b.ToTable("DocumentFormIO", "Doc");
                 });
@@ -1202,6 +1048,10 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1224,13 +1074,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
 
                     b.ToTable("DocumentFormatType", "Doc");
@@ -1548,6 +1394,10 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -1569,16 +1419,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LanguageTypeId");
-
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("LanguageTypeId");
 
                     b.ToTable("DocumentTemplate", "Doc");
                 });
@@ -1769,6 +1615,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("EntityPropertyTypeId");
 
                     b.HasIndex("EntityPropertyValueId");
@@ -1806,6 +1655,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("EntityPropertyType", "EAV");
                 });
 
@@ -1825,6 +1677,7 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<string>("Data")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -1899,12 +1752,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("amorphie.contract.core.Entity.Common.UseExisting", "UseExisting")
-                        .WithMany()
-                        .HasForeignKey("UseExistingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("amorphie.contract.core.Entity.Common.Versions", "Versions")
                         .WithMany()
                         .HasForeignKey("VersionsId")
@@ -1912,8 +1759,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsRequired();
 
                     b.Navigation("DocumentDefinition");
-
-                    b.Navigation("UseExisting");
 
                     b.Navigation("Versions");
                 });
@@ -2005,36 +1850,19 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("DocumentDefinition");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowed", b =>
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedClient", b =>
                 {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentAllowedType", "DocumentAllowedType")
-                        .WithMany()
-                        .HasForeignKey("DocumentAllowedTypeId");
-
-                    b.Navigation("DocumentAllowedType");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedDetail", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentAllowed", "DocumentAllowed")
-                        .WithMany()
-                        .HasForeignKey("DocumentAllowedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentOnlineSing", null)
-                        .WithMany("DocumentAllowedDetails")
+                        .WithMany("DocumentAllowedClients")
                         .HasForeignKey("DocumentOnlineSingId");
 
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", null)
-                        .WithMany("DocumentAllowedDetails")
+                        .WithMany("DocumentAllowedClients")
                         .HasForeignKey("DocumentRenderId");
 
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", null)
-                        .WithMany("DocumentAllowedDetails")
+                        .WithMany("DocumentAllowedClients")
                         .HasForeignKey("DocumentUploadId");
-
-                    b.Navigation("DocumentAllowed");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentContent", b =>
@@ -2129,6 +1957,17 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsRequired();
 
                     b.Navigation("EntityProperty");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIO", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Common.LanguageType", "LanguageType")
+                        .WithMany()
+                        .HasForeignKey("LanguageTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LanguageType");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIODetail", b =>
@@ -2370,14 +2209,14 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentOnlineSing", b =>
                 {
-                    b.Navigation("DocumentAllowedDetails");
+                    b.Navigation("DocumentAllowedClients");
 
                     b.Navigation("DocumentTemplateDetails");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", b =>
                 {
-                    b.Navigation("DocumentAllowedDetails");
+                    b.Navigation("DocumentAllowedClients");
 
                     b.Navigation("DocumentFormIODetail");
 
@@ -2386,7 +2225,7 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", b =>
                 {
-                    b.Navigation("DocumentAllowedDetails");
+                    b.Navigation("DocumentAllowedClients");
 
                     b.Navigation("DocumentFormatDetails");
                 });

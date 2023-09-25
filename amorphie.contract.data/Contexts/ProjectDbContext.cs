@@ -63,9 +63,8 @@ public class ProjectDbContext : DbContext
 
     #region Common
 
-    public DbSet<Callback> Callback { get; set; }
+    // public DbSet<Callback> Callback { get; set; }
     public DbSet<Tag> Tag { get; set; }
-    public DbSet<UseExisting> UseExisting { get; set; }
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
     public DbSet<Status> Status { get; set; }
@@ -89,9 +88,8 @@ public class ProjectDbContext : DbContext
 
     #region Document
     public DbSet<Document> Document { get; set; }
-    public DbSet<DocumentAllowed> DocumentAllowed { get; set; }
-    public DbSet<DocumentAllowedDetail> DocumentAllowedDetail { get; set; }
-    public DbSet<DocumentAllowedType> DocumentAllowedType { get; set; }
+    public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
+  
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }

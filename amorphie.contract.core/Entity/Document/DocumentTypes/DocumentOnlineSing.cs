@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
     public class DocumentOnlineSing : EntityBase
     {
         public bool Required { get; set; }
-        public virtual ICollection<DocumentAllowedDetail> DocumentAllowedDetails { get; set; } = new List<DocumentAllowedDetail>();
+        public virtual ICollection<DocumentAllowedClient> DocumentAllowedClients { get; set; } = new List<DocumentAllowedClient>();
         public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; } = new List<DocumentTemplateDetail>();
         [Required]
         public Guid VersionsId { get; set; }  

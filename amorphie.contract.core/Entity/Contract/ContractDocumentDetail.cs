@@ -24,8 +24,8 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid DocumentDefinitionId { get; set; }
         public DocumentDefinition DocumentDefinition { get; set; }
 
-        public Guid UseExistingId { get; set; }
-        public UseExisting? UseExisting { get; set; }
+        public ushort UseExisting { get; set; }
+        // public UseExisting? UseExisting { get; set; }//enum
         public Guid VersionsId{ get; set; }
         public Versions? Versions{ get; set; }
         public bool Required{ get; set; }
