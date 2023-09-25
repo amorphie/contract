@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentEntityProperty : EntityBase
     {
         [Required]
-        
+
         public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]

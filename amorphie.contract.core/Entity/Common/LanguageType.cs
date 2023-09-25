@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Common
 {
     [Table("LanguageType", Schema = "Common")]
-[Index(nameof(Code), IsUnique = true)]
+    [Index(nameof(Code), IsUnique = true)]
     public class LanguageType : EntityBase
     {
         public string Code { get; set; }// EN |TR |FR
-        
+
     }
 }

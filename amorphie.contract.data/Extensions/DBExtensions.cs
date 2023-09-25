@@ -9,7 +9,7 @@ namespace amorphie.contract.data.Extensions
 {
     public static class DBExtensions
     {
-            
+
         public static ProjectDbContext? projectDbContext;
         // public static LanguageType LanguageTypeCreateOrGet(string value)
         // { 
@@ -24,6 +24,6 @@ namespace amorphie.contract.data.Extensions
         //     }
         //     return firs;
         // }
-        
+
     }
 }

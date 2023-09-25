@@ -9,14 +9,14 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document.DocumentTypes
 {
-      [Table("DocumentOnlineSing", Schema = "DocTp")]
+    [Table("DocumentOnlineSing", Schema = "DocTp")]
     public class DocumentOnlineSing : EntityBase
     {
         public bool Required { get; set; }
         public virtual ICollection<DocumentAllowedClient> DocumentAllowedClients { get; set; } = new List<DocumentAllowedClient>();
         public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; } = new List<DocumentTemplateDetail>();
         [Required]
-        public Guid VersionsId { get; set; }  
+        public Guid VersionsId { get; set; }
         public Versions Versions { get; set; }
     }
 }

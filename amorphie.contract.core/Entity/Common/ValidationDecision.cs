@@ -15,9 +15,9 @@ namespace amorphie.contract.core.Entity.Common
     public class ValidationDecision : EntityBase
     {
         public string Code { get; set; }// dmn-ekyc-document-validation
-         [Required]
+        [Required]
         public Guid ValidationDecisionTypeId { get; set; }
-        public  ValidationDecisionType ValidationDecisionTypes { get; set; }// zeebe-comand-dmn-table - script -c# roslyn– esicion-table
+        public ValidationDecisionType ValidationDecisionTypes { get; set; }// zeebe-comand-dmn-table - script -c# roslyn– esicion-table
 
     }
 }

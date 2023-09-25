@@ -89,7 +89,7 @@ public class ProjectDbContext : DbContext
     #region Document
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
-  
+
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }

@@ -15,9 +15,9 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
 
         public string ContentData { get; set; }
-        public string? KiloBytesSize {get;set;}
+        public string? KiloBytesSize { get; set; }
         [Required]
-        public Guid VersionsId{ get; set; }
+        public Guid VersionsId { get; set; }
 
         public Versions Versions { get; set; }
     }
