@@ -14,6 +14,6 @@ namespace amorphie.contract.core.Entity.Common
     public class  Tag: EntityBase
     {
         public string Code { get; set; }
-        public string Contact { get; set; }
+        public string? Contact { get; set; }
     }
 }

@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentAllowed", Schema = "Doc")]
-    [Index(nameof(Name), IsUnique = true)] 
-    public class DocumentAllowed : EntityBase
+    [Table("DocumentAllowedClient", Schema = "Doc")]
+    [Index(nameof(Code), IsUnique = true)] 
+    public class DocumentAllowedClient : EntityBase
     {
         //Render edilecekler
-        public string Name { get; set; }
-        public DocumentAllowedType? DocumentAllowedType { get; set; }//client,
+        public string Code { get; set; }
+        // public DocumentAllowedType? DocumentAllowedType { get; set; }//client, örnek ver
     }
 }

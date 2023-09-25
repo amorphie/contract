@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +12,12 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
 
     public class DocumentGroupDetail : EntityBase
     {
+        [Required]
         public Guid DocumentDefinitionId { get; set; }
-
-        public DocumentDefinition? DocumentDefinition { get; set; }
+        public DocumentDefinition DocumentDefinition { get; set; }
+        [Required]
         public Guid DocumentGroupID { get; set; }
-        public DocumentGroup? DocumentGroup { get; set; }
+        public DocumentGroup DocumentGroup { get; set; }
 
     }
 }

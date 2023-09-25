@@ -7,24 +7,20 @@ using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using amorphie.contract.core.Entity.Common;
 
-namespace amorphie.contract.common;
+namespace amorphie.contract;
 
-    public class CallbackModule
-        : BaseBBTRoute<Callback, Callback, ProjectDbContext>
+    public class DocumentAllowedClientModule
+        : BaseBBTRoute<DocumentAllowedClient, DocumentAllowedClient, ProjectDbContext>
     {
-        public CallbackModule(WebApplication app) : base(app)
+        public DocumentAllowedClientModule(WebApplication app) : base(app)
         {
-            
         }
 
         public override string[]? PropertyCheckList => new string[] {"Code"};
 
-        public override string? UrlFragment => "Common-Callback";
+        public override string? UrlFragment => "document-allowed-client";
 
 
-   
-       
     }
 

@@ -7,6 +7,7 @@ using amorphie.core.Base;
 
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract.core.Entity.Document.DocumentGroups
 {
@@ -16,10 +17,11 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     {
         public string Code { get; set; }
         // public string Name { get; set; }
+        [Required]
         public Guid StatusId { get; set; }
-        public Status? Status { get; set; }
-        public virtual ICollection<DocumentGroupDetail>? DocumentGroupDetails { get; set; }
-        public virtual ICollection<DocumentGroupLanguageDetail>? DocumentGroupLanguageDetail { get; set; }
+        public Status Status { get; set; }
+        public virtual ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
+        public virtual ICollection<DocumentGroupLanguageDetail> DocumentGroupLanguageDetail { get; set; }= new List<DocumentGroupLanguageDetail>();
 
     }
 }

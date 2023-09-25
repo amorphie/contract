@@ -12,9 +12,6 @@ namespace amorphie.contract.data.Migrations.Pg
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "Common");
-
-            migrationBuilder.EnsureSchema(
                 name: "Cont");
 
             migrationBuilder.EnsureSchema(
@@ -29,45 +26,8 @@ namespace amorphie.contract.data.Migrations.Pg
             migrationBuilder.EnsureSchema(
                 name: "EAV");
 
-            migrationBuilder.CreateTable(
-                name: "Callback",
-                schema: "Common",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: false),
-                    Token = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Callback", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentAllowedType",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentAllowedType", x => x.Id);
-                });
+            migrationBuilder.EnsureSchema(
+                name: "Common");
 
             migrationBuilder.CreateTable(
                 name: "DocumentFormatType",
@@ -75,7 +35,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
                     ContentType = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -87,26 +47,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DocumentFormatType", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentFormIO",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Data = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentFormIO", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,7 +131,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Data = table.Column<string>(type: "text", nullable: true),
+                    Data = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -210,7 +150,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -229,7 +169,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -249,7 +189,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Code = table.Column<string>(type: "text", nullable: false),
-                    Contact = table.Column<string>(type: "text", nullable: false),
+                    Contact = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -260,25 +200,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tag", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UseExisting",
-                schema: "Common",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UseExisting", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -317,32 +238,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Versions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentAllowed",
-                schema: "Doc",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    DocumentAllowedTypeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentAllowed", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentAllowed_DocumentAllowedType_DocumentAllowedTypeId",
-                        column: x => x.DocumentAllowedTypeId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentAllowedType",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -443,12 +338,40 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
+                name: "DocumentFormIO",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<string>(type: "text", nullable: false),
+                    LanguageTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentFormIO", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentFormIO_LanguageType_LanguageTypeId",
+                        column: x => x.LanguageTypeId,
+                        principalSchema: "Common",
+                        principalTable: "LanguageType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentTemplate",
                 schema: "Doc",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
                     LanguageTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -613,7 +536,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ContentData = table.Column<string>(type: "text", nullable: false),
-                    KiloBytesSize = table.Column<string>(type: "text", nullable: false),
+                    KiloBytesSize = table.Column<string>(type: "text", nullable: true),
                     VersionsId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -797,7 +720,7 @@ namespace amorphie.contract.data.Migrations.Pg
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentGroupId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AtLeastRequiredDocument = table.Column<string>(type: "text", nullable: false),
+                    AtLeastRequiredDocument = table.Column<long>(type: "bigint", nullable: false),
                     Required = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -887,13 +810,12 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentAllowedDetail",
+                name: "DocumentAllowedClient",
                 schema: "Doc",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentAllowedId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
                     DocumentOnlineSingId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentRenderId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentUploadId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -906,28 +828,21 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentAllowedDetail", x => x.Id);
+                    table.PrimaryKey("PK_DocumentAllowedClient", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentAllowed_DocumentAllowedId",
-                        column: x => x.DocumentAllowedId,
-                        principalSchema: "Doc",
-                        principalTable: "DocumentAllowed",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentOnlineSing_DocumentOnlineSing~",
+                        name: "FK_DocumentAllowedClient_DocumentOnlineSing_DocumentOnlineSing~",
                         column: x => x.DocumentOnlineSingId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentOnlineSing",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentRender_DocumentRenderId",
+                        name: "FK_DocumentAllowedClient_DocumentRender_DocumentRenderId",
                         column: x => x.DocumentRenderId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentRender",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedDetail_DocumentUpload_DocumentUploadId",
+                        name: "FK_DocumentAllowedClient_DocumentUpload_DocumentUploadId",
                         column: x => x.DocumentUploadId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentUpload",
@@ -1123,7 +1038,7 @@ namespace amorphie.contract.data.Migrations.Pg
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UseExistingId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UseExisting = table.Column<int>(type: "integer", nullable: false),
                     VersionsId = table.Column<Guid>(type: "uuid", nullable: false),
                     Required = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -1148,13 +1063,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.DocumentDefinitionId,
                         principalSchema: "Doc",
                         principalTable: "DocumentDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContractDocumentDetail_UseExisting_UseExistingId",
-                        column: x => x.UseExistingId,
-                        principalSchema: "Common",
-                        principalTable: "UseExisting",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -1337,9 +1245,9 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Callback_Code",
-                schema: "Common",
-                table: "Callback",
+                name: "IX_ContractDefinition_Code",
+                schema: "Cont",
+                table: "ContractDefinition",
                 column: "Code",
                 unique: true);
 
@@ -1360,12 +1268,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Cont",
                 table: "ContractDocumentDetail",
                 column: "DocumentDefinitionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContractDocumentDetail_UseExistingId",
-                schema: "Cont",
-                table: "ContractDocumentDetail",
-                column: "UseExistingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContractDocumentDetail_VersionsId",
@@ -1434,48 +1336,29 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowed_DocumentAllowedTypeId",
+                name: "IX_DocumentAllowedClient_Code",
                 schema: "Doc",
-                table: "DocumentAllowed",
-                column: "DocumentAllowedTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowed_Name",
-                schema: "Doc",
-                table: "DocumentAllowed",
-                column: "Name",
+                table: "DocumentAllowedClient",
+                column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedDetail_DocumentAllowedId",
+                name: "IX_DocumentAllowedClient_DocumentOnlineSingId",
                 schema: "Doc",
-                table: "DocumentAllowedDetail",
-                column: "DocumentAllowedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedDetail_DocumentOnlineSingId",
-                schema: "Doc",
-                table: "DocumentAllowedDetail",
+                table: "DocumentAllowedClient",
                 column: "DocumentOnlineSingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedDetail_DocumentRenderId",
+                name: "IX_DocumentAllowedClient_DocumentRenderId",
                 schema: "Doc",
-                table: "DocumentAllowedDetail",
+                table: "DocumentAllowedClient",
                 column: "DocumentRenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedDetail_DocumentUploadId",
+                name: "IX_DocumentAllowedClient_DocumentUploadId",
                 schema: "Doc",
-                table: "DocumentAllowedDetail",
+                table: "DocumentAllowedClient",
                 column: "DocumentUploadId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedType_Name",
-                schema: "Doc",
-                table: "DocumentAllowedType",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentContent_VersionsId",
@@ -1581,18 +1464,24 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentUploadId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentFormatType_Name",
+                name: "IX_DocumentFormatType_Code",
                 schema: "Doc",
                 table: "DocumentFormatType",
-                column: "Name",
+                column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentFormIO_Name",
+                name: "IX_DocumentFormIO_Code",
                 schema: "Doc",
                 table: "DocumentFormIO",
-                column: "Name",
+                column: "Code",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentFormIO_LanguageTypeId",
+                schema: "Doc",
+                table: "DocumentFormIO",
+                column: "LanguageTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentFormIODetail_DocumentFormIOId",
@@ -1687,17 +1576,17 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentTemplate_Code",
+                schema: "Doc",
+                table: "DocumentTemplate",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentTemplate_LanguageTypeId",
                 schema: "Doc",
                 table: "DocumentTemplate",
                 column: "LanguageTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentTemplate_Name",
-                schema: "Doc",
-                table: "DocumentTemplate",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentTemplateDetail_DocumentOnlineSingId",
@@ -1718,6 +1607,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentTemplateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EntityProperty_Code",
+                schema: "EAV",
+                table: "EntityProperty",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EntityProperty_EntityPropertyTypeId",
                 schema: "EAV",
                 table: "EntityProperty",
@@ -1730,10 +1626,17 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "EntityPropertyValueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LanguageType_Name",
+                name: "IX_EntityPropertyType_Code",
+                schema: "EAV",
+                table: "EntityPropertyType",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LanguageType_Code",
                 schema: "Common",
                 table: "LanguageType",
-                column: "Name",
+                column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1749,23 +1652,16 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "LanguageTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Status_Name",
+                name: "IX_Status_Code",
                 schema: "Common",
                 table: "Status",
-                column: "Name",
+                column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tag_Code",
                 schema: "Common",
                 table: "Tag",
-                column: "Code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UseExisting_Code",
-                schema: "Common",
-                table: "UseExisting",
                 column: "Code",
                 unique: true);
 
@@ -1814,10 +1710,6 @@ namespace amorphie.contract.data.Migrations.Pg
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Callback",
-                schema: "Common");
-
-            migrationBuilder.DropTable(
                 name: "ContractDocumentDetail",
                 schema: "Cont");
 
@@ -1842,7 +1734,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "DocumentAllowedDetail",
+                name: "DocumentAllowedClient",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
@@ -1878,10 +1770,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "UseExisting",
-                schema: "Common");
-
-            migrationBuilder.DropTable(
                 name: "ContractDefinition",
                 schema: "Cont");
 
@@ -1891,10 +1779,6 @@ namespace amorphie.contract.data.Migrations.Pg
 
             migrationBuilder.DropTable(
                 name: "DocumentContent",
-                schema: "Doc");
-
-            migrationBuilder.DropTable(
-                name: "DocumentAllowed",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
@@ -1928,10 +1812,6 @@ namespace amorphie.contract.data.Migrations.Pg
             migrationBuilder.DropTable(
                 name: "ValidationDecision",
                 schema: "Common");
-
-            migrationBuilder.DropTable(
-                name: "DocumentAllowedType",
-                schema: "Doc");
 
             migrationBuilder.DropTable(
                 name: "EntityPropertyType",

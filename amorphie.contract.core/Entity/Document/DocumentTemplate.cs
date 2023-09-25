@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentTemplate", Schema = "Doc")]
-    [Index(nameof(Name), IsUnique = true)]
+    [Index(nameof(Code), IsUnique = true)]
 
     public class DocumentTemplate : EntityBase
-    {
-        //Render edilecekler
-        public string Name { get; set; }
+    { 
+        public string Code { get; set; }
+        [Required]
         public Guid LanguageTypeId { get; set; }
         public LanguageType LanguageType { get; set; }
 
