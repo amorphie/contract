@@ -1,13 +1,13 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: amorphie-contract-set-state
+  name: Validated
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: amorphie-contract-set-state
+    value: Validated
   - name: gatewayAddr
     value: localhost:26500
   - name: gatewayKeepAlive
