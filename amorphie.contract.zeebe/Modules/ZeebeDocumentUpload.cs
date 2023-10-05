@@ -124,7 +124,7 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                
+
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
