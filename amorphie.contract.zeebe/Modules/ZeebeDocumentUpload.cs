@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
@@ -121,10 +122,23 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                var document = new amorphie.contract.core.Entity.Document.Document();
+                var documentDefinitionIdString = entityData.GetProperty("document-definition-id").ToString();
+
+                Guid documentDefinitionId;
+                if (!Guid.TryParse(documentDefinitionIdString, out documentDefinitionId))
+                {
+                    throw new Exception("DocumentDefinitionId not provided or not as a GUID");
+                }
+
+                document.DocumentContent.ContentData = entityData.GetProperty("document-content").ToString();
+                document.DocumentContent.KiloBytesSize = (document.DocumentContent.ContentData.Length / 1024).ToString();
+                document.DocumentDefinitionId = documentDefinitionId;
+
+
+                messageVariables.Variables.Add("IsAutoControl", true);
                 messageVariables.Success = true;
-                
+
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -151,6 +165,8 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
+
+
             }
             catch (Exception ex)
             {
@@ -159,9 +175,9 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+
+                messageVariables.Variables.Remove("IsValidated");
+                messageVariables.Variables.Add("IsValidated", false);
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -188,6 +204,8 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
+
+
             }
             catch (Exception ex)
             {
@@ -196,9 +214,11 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+                // string deviceId = entityData.GetProperty("deviceId").ToString();
+                messageVariables.Variables.Remove("IsValidated");
+                messageVariables.Variables.Add("IsValidated", false);
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -225,6 +245,8 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
+
+
             }
             catch (Exception ex)
             {
@@ -233,9 +255,8 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                messageVariables.Variables.Remove("IsValidated");
+                messageVariables.Variables.Add("IsValidated", true);
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -270,9 +291,9 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+                // string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -309,9 +330,9 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+                // string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
                 messageVariables.LastTransition = "TimeoutUploaded";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
@@ -347,9 +368,9 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+                // string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
                 messageVariables.LastTransition = "DeleteProcessUploaded";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
@@ -385,9 +406,9 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+                // string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
                 messageVariables.LastTransition = "ErrorUploaded";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));

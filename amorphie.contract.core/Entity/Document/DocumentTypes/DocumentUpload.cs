@@ -12,6 +12,6 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
     {
         public bool Required { get; set; }
         public virtual ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; } = new List<DocumentFormatDetail>();
-        public virtual ICollection<DocumentAllowedClient> DocumentAllowedClients { get; set; } = new List<DocumentAllowedClient>();
+        public virtual ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();
     }
 }
