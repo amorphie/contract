@@ -106,7 +106,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -144,7 +143,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -182,7 +180,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -220,7 +217,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -258,7 +254,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -298,7 +293,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -336,7 +330,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -344,7 +337,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 messageVariables.Success = true;
                 messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+                messageVariables.LastTransition = "DeleteProcessUploaded";
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -374,7 +367,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
