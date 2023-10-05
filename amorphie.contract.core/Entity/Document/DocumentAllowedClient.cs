@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentAllowedClient", Schema = "Doc")]
-    [Index(nameof(Code), IsUnique = true)] 
+    [Index(nameof(Code), IsUnique = true)]
     public class DocumentAllowedClient : EntityBase
     {
         //Render edilecekler

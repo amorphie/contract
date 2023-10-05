@@ -10,7 +10,7 @@ public static class ZeebeMessageHelper
 {
     public static dynamic CreateMessageVariables(MessageVariables messageVariables)
     {
-        
+
         messageVariables.Variables.Add("EntityName", messageVariables.Body.GetProperty("EntityName").ToString());
         messageVariables.Variables.Add("InstanceId", messageVariables.InstanceId);
         messageVariables.Variables.Add("LastTransition", messageVariables.LastTransition);
