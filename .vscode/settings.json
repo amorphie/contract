@@ -1,6 +1,11 @@
 {
     "dotnet.defaultSolution": "contract.sln",
     "cSpell.words": [
-        "amorphie"
+        "amorphie",
+        "dapr",
+        "Expando",
+        "jobworker",
+        "NOTOK",
+        "zeebe"
     ]
 }

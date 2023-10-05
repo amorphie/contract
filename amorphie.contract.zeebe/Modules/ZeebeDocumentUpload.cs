@@ -12,14 +12,31 @@ namespace amorphie.contract.zeebe.Modules
 {
     public static class ZeebeDocumentUpload
     {
+
         public static void MapZeebeDocumentUploadEndpoints(this WebApplication app)
         {
+            #region auto-map
+            //  var  mapList = new List<string>{"Uploaded","AutoControl","WaitingControl",
+            // "NotValidated","Validated","TimeoutUploaded","DeleteProcessUploaded","ErrorUploaded"};
+            // foreach (var item in mapList)
+            // {
+            //     app.MapPost("/"+item,new Delegate)
+            //                 .Produces(StatusCodes.Status200OK)
+            //                 .WithOpenApi(operation =>
+            //                 {
+            //                     operation.Summary = string.Format("_summary",item);
+            //                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+            //                     return operation;
+            //                 });
+            // }
+            #endregion
+            #region  map-post
             app.MapPost("/Uploaded", Uploaded)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps uploaded service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                 return operation;
             });
             app.MapPost("/AutoControl", AutoControl)
@@ -27,7 +44,7 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps AutoControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
               return operation;
           });
             app.MapPost("/WaitingControl", WaitingControl)
@@ -35,7 +52,7 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps WaitingControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
               return operation;
           });
             app.MapPost("/NotValidated", NotValidated)
@@ -43,7 +60,7 @@ namespace amorphie.contract.zeebe.Modules
                  .WithOpenApi(operation =>
                  {
                      operation.Summary = "Maps NotValidated service worker on Zeebe";
-                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                      return operation;
                  });
             app.MapPost("/Validated", Validated)
@@ -51,7 +68,7 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                 return operation;
             });
 
@@ -61,7 +78,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
             return operation;
         });
             app.MapPost("/DeleteProcessUploaded", DeleteProcessUploaded)
@@ -69,7 +86,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteProcessUploaded service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
             return operation;
         });
             app.MapPost("/ErrorUploaded", ErrorUploaded)
@@ -77,9 +94,10 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorUploaded service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
             return operation;
         });
+            #endregion
         }
         static IResult Uploaded(
           [FromBody] dynamic body,
@@ -106,9 +124,8 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                // messageVariables.LastTransition = "Buraya bir sonraki";//endormentdaki gibi aslında 
-                //IsAutoControl degerine bakıp belirlicek boş geç  
                 
+
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -146,7 +163,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -184,7 +200,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -222,7 +237,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -260,7 +274,6 @@ namespace amorphie.contract.zeebe.Modules
                 string reference = entityData.GetProperty("reference").ToString();
                 string deviceId = entityData.GetProperty("deviceId").ToString();
                 messageVariables.Success = true;
-                messageVariables.LastTransition = "Buraya bir sonraki";
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
@@ -275,14 +288,14 @@ namespace amorphie.contract.zeebe.Modules
         }
 
 
-          static IResult TimeoutUploaded(
-        [FromBody] dynamic body,
-       [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-    )
+        static IResult TimeoutUploaded(
+      [FromBody] dynamic body,
+     [FromServices] ProjectDbContext dbContext,
+      HttpRequest request,
+      HttpContext httpContext,
+      [FromServices] DaprClient client
+      , IConfiguration configuration
+  )
         {
             var messageVariables = new MessageVariables();
             try
@@ -313,14 +326,14 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
-          static IResult DeleteProcessUploaded(
-        [FromBody] dynamic body,
-       [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-    )
+        static IResult DeleteProcessUploaded(
+      [FromBody] dynamic body,
+     [FromServices] ProjectDbContext dbContext,
+      HttpRequest request,
+      HttpContext httpContext,
+      [FromServices] DaprClient client
+      , IConfiguration configuration
+  )
         {
             var messageVariables = new MessageVariables();
             try
@@ -351,14 +364,14 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
-          static IResult ErrorUploaded(
-        [FromBody] dynamic body,
-       [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-    )
+        static IResult ErrorUploaded(
+      [FromBody] dynamic body,
+     [FromServices] ProjectDbContext dbContext,
+      HttpRequest request,
+      HttpContext httpContext,
+      [FromServices] DaprClient client
+      , IConfiguration configuration
+  )
         {
             var messageVariables = new MessageVariables();
             try
