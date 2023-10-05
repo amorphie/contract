@@ -30,6 +30,25 @@ namespace amorphie.contract.data.Migrations.Pg
                 name: "Common");
 
             migrationBuilder.CreateTable(
+                name: "DocumentAllowedClient",
+                schema: "Doc",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentAllowedClient", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentFormatType",
                 schema: "Doc",
                 columns: table => new
@@ -810,12 +829,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentAllowedClient",
+                name: "DocumentAllowedClientDetail",
                 schema: "Doc",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
+                    DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentAllowedClientId = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentOnlineSingId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentRenderId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentUploadId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -828,21 +848,28 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentAllowedClient", x => x.Id);
+                    table.PrimaryKey("PK_DocumentAllowedClientDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedClient_DocumentOnlineSing_DocumentOnlineSing~",
+                        name: "FK_DocumentAllowedClientDetail_DocumentFormat_DocumentAllowedC~",
+                        column: x => x.DocumentAllowedClientId,
+                        principalSchema: "Doc",
+                        principalTable: "DocumentFormat",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentAllowedClientDetail_DocumentOnlineSing_DocumentOnli~",
                         column: x => x.DocumentOnlineSingId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentOnlineSing",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedClient_DocumentRender_DocumentRenderId",
+                        name: "FK_DocumentAllowedClientDetail_DocumentRender_DocumentRenderId",
                         column: x => x.DocumentRenderId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentRender",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentAllowedClient_DocumentUpload_DocumentUploadId",
+                        name: "FK_DocumentAllowedClientDetail_DocumentUpload_DocumentUploadId",
                         column: x => x.DocumentUploadId,
                         principalSchema: "DocTp",
                         principalTable: "DocumentUpload",
@@ -1343,21 +1370,27 @@ namespace amorphie.contract.data.Migrations.Pg
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedClient_DocumentOnlineSingId",
+                name: "IX_DocumentAllowedClientDetail_DocumentAllowedClientId",
                 schema: "Doc",
-                table: "DocumentAllowedClient",
+                table: "DocumentAllowedClientDetail",
+                column: "DocumentAllowedClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentAllowedClientDetail_DocumentOnlineSingId",
+                schema: "Doc",
+                table: "DocumentAllowedClientDetail",
                 column: "DocumentOnlineSingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedClient_DocumentRenderId",
+                name: "IX_DocumentAllowedClientDetail_DocumentRenderId",
                 schema: "Doc",
-                table: "DocumentAllowedClient",
+                table: "DocumentAllowedClientDetail",
                 column: "DocumentRenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentAllowedClient_DocumentUploadId",
+                name: "IX_DocumentAllowedClientDetail_DocumentUploadId",
                 schema: "Doc",
-                table: "DocumentAllowedClient",
+                table: "DocumentAllowedClientDetail",
                 column: "DocumentUploadId");
 
             migrationBuilder.CreateIndex(
@@ -1735,6 +1768,10 @@ namespace amorphie.contract.data.Migrations.Pg
 
             migrationBuilder.DropTable(
                 name: "DocumentAllowedClient",
+                schema: "Doc");
+
+            migrationBuilder.DropTable(
+                name: "DocumentAllowedClientDetail",
                 schema: "Doc");
 
             migrationBuilder.DropTable(

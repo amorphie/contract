@@ -10,18 +10,16 @@ public static class ZeebeMessageHelper
 {
     public static dynamic CreateMessageVariables(MessageVariables messageVariables)
     {
-        dynamic variables = new Dictionary<string, dynamic>();
-
-        variables.Add("EntityName", messageVariables.Body.GetProperty("EntityName").ToString());
-        variables.Add("RecordId", messageVariables.RecordId);
-        variables.Add("InstanceId", messageVariables.InstanceId);
-        variables.Add("LastTransition", messageVariables.LastTransition);
-        variables.Add("Message", messageVariables.Message);
+        
+        messageVariables.Variables.Add("EntityName", messageVariables.Body.GetProperty("EntityName").ToString());
+        messageVariables.Variables.Add("InstanceId", messageVariables.InstanceId);
+        messageVariables.Variables.Add("LastTransition", messageVariables.LastTransition);
+        messageVariables.Variables.Add("Message", messageVariables.Message);
         if (messageVariables.Success)
-            variables.Add("Status", "OK");
+            messageVariables.Variables.Add("Status", "OK");
         else
         {
-            variables.Add("Status", "NOTOK");
+            messageVariables.Variables.Add("Status", "NOTOK");
         }
         dynamic targetObject = new System.Dynamic.ExpandoObject();
         targetObject.Data = messageVariables.Data;
@@ -29,8 +27,8 @@ public static class ZeebeMessageHelper
         targetObject.TriggeredByBehalfOf = messageVariables.TriggeredByBehalfOf;
 
 
-        variables.Add($"TRX-{messageVariables.TransitionName}", targetObject);
-        return variables;
+        messageVariables.Variables.Add($"TRX-{messageVariables.TransitionName}", targetObject);
+        return messageVariables.Variables;
     }
     public static MessageVariables VariablesControl(dynamic body)
     {
