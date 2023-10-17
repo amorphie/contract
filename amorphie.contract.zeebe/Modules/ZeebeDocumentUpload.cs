@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Document;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
@@ -32,7 +33,7 @@ namespace amorphie.contract.zeebe.Modules
             // }
             #endregion
             #region  map-post
-            app.MapPost("/Uploaded", Uploaded)
+            app.MapPost("/uploaded", Uploaded)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -40,7 +41,7 @@ namespace amorphie.contract.zeebe.Modules
                 operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                 return operation;
             });
-            app.MapPost("/AutoControl", AutoControl)
+            app.MapPost("/autocontrol", AutoControl)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -130,8 +131,9 @@ namespace amorphie.contract.zeebe.Modules
                 {
                     throw new Exception("DocumentDefinitionId not provided or not as a GUID");
                 }
-
-                document.DocumentContent.ContentData = entityData.GetProperty("document-content").ToString();
+                // document.DocumentContent.ContentData =
+                document.DocumentContent = new DocumentContent{ ContentData = entityData.GetProperty("document-content").ToString() };
+                
                 document.DocumentContent.KiloBytesSize = (document.DocumentContent.ContentData.Length / 1024).ToString();
                 document.DocumentDefinitionId = documentDefinitionId;
 
