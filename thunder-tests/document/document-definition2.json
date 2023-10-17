@@ -1,103 +1,55 @@
 {
-  "code": "identification-certificate-nc2",
-  "statusId": "493f3b9e-6886-4de6-a35a-5278b3bc9606",
-  
-  "baseStatusId": "493f3b9e-6886-4de6-a35a-5278b3bc9653",
+  "code": "identification-certificate-nc",
+  "statusId": "1c987065-86fc-4998-860b-8e8f129b1357",
+  "baseStatusId": "1c987065-86fc-4998-860b-8e8f129b1357",
   "documentDefinitionLanguageDetails": [
     {
       "multiLanguage": {
-        "name": "Nufus Cuzdani2",
-        "code": "identification-certificate-nc2",
-        "languageTypeId": "5d0160e5-880d-4ef5-a1bd-128ba371f928"
-      }
-    }
-  ],
-  "documentFormatDetails": [
-    {
-      "documentFormat": {
-        "documentType": {
-          "name": "png",
-          "contentType": "pngcontext"
-        },
-        "documentSize": {
-          "kiloBytes": 512
-        }
-      }
-    },
-    {
-      "documentFormat": {
-        "documentType": {
-          "name": "jpg",
-          "contentType": "jpgcontext"
-        },
-        "documentSize": {
-          "kiloBytes": 1024
-        }
-      }
-    }
-  ],
-  "documentTemplateDetails": [
-    {
-      "documentTemplate": {
-        "name": "consent-gdpr-2.2-tr-html",
-        "url": "consent-gdpr-2.2-tr-html"
-      }
-    }
-  ],
-  "documentFormIODetail": [
-    {
-      "documentFormIO": {
-        "name": "identification-certificate-nc-FormIO",
-        "data": "identification-certificate-nc-FormIOdatasi"
+        "name": "identification-certificate-nc",
+        "code": "Nufus Cuzdani",
+        "languageTypeId": "e0b07d35-5f38-4511-ac63-be16652528f2"
+         
       }
     }
   ],
   "documentEntityPropertys": [
     {
-      "entityProperty": {
-        "code": "valid-after-upload",
-        "entityPropertyType": {
-          "code": "string"
-        },
-        "entityPropertyValue": {
-          "data": "6M"
-        }
-      }
-    },
-    {
-      "entityProperty": {
-        "code": "offical-expiry",
-        "entityPropertyType": {
-          "code": "response"
-        },
-        "entityPropertyValue": {
-          "data": "#mernis.response.$.information.expiryAt"
-        }
-      }
+      "entityPropertyId": "8a4988f1-64d8-4893-8033-f7459e432ef1"
     }
   ],
-  "documentTags": [
+  "documentTagsDetails": [
     {
-      "code": "id-card",
-      "contact": "reference"
-    },
-    {
-      "code": "customer-info",
-      "contact": "#mernis.response.$.tcknno"
-    },
-    {
-      "code": "mernis",
-      "contact": "owner"
+      "tagId": "e2b05ad0-30fb-4147-8cae-aff480fa6f65"
     }
   ],
-  "documentAllowedDetails": [
-    {
-      "documentAllowed": {
-        "name": "web-ib",
-        "documentAllowedType": {
-          "name": "allowed-clients"
+  "documentUpload": {
+    "required": true,
+    "documentFormatDetails": [
+      {
+        "documentFormatId": "10bdc5b1-a13d-41d1-957e-2408f520f46f"
+      }
+    ],
+    "documentAllowedClientDetails": [
+      {
+        "documentAllowedClient": {
+          "documentFormatTypeId": "10bdc5b1-a13d-41d1-957e-2408f520f46f",
+          "documentSizeId":"a572af25-55e1-44fc-8028-dc32e0c6bb6d"
         }
       }
+    ]
+  },
+  "documentTemplateDetails": [
+    {
+      
+      "documentTemplateId": "dca66db1-51e0-47fc-8249-81fac70eb23e"
+    
     }
-  ]
+  ],
+   
+ 
+  "documentOperations": {
+    "documentManuelControl": true,
+    "tagId": "368e552c-4ebb-4557-bb14-c928b754b184"
+    
+  }
 }

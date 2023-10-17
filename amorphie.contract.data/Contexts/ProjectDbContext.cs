@@ -89,6 +89,7 @@ public class ProjectDbContext : DbContext
     #region Document
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
+    public DbSet<DocumentAllowedClientDetail> DocumentAllowedClientDetail { get; set; }
   
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
@@ -103,8 +104,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentFormatDetail> DocumentFormatDetail { get; set; }
     public DbSet<DocumentFormatType> DocumentFormatType { get; set; }
 
-    public DbSet<DocumentFormIO> DocumentFormIO { get; set; }
-    public DbSet<DocumentFormIODetail> DocumentFormIODetail { get; set; }
 
     public DbSet<DocumentOperations> DocumentOperations { get; set; }
     public DbSet<DocumentOptimize> DocumentOptimize { get; set; }
