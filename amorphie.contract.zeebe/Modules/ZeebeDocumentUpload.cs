@@ -132,8 +132,8 @@ namespace amorphie.contract.zeebe.Modules
                     throw new Exception("DocumentDefinitionId not provided or not as a GUID");
                 }
                 // document.DocumentContent.ContentData =
-                document.DocumentContent = new DocumentContent{ ContentData = entityData.GetProperty("document-content").ToString() };
-                
+                document.DocumentContent = new DocumentContent { ContentData = entityData.GetProperty("document-content").ToString() };
+
                 document.DocumentContent.KiloBytesSize = (document.DocumentContent.ContentData.Length / 1024).ToString();
                 document.DocumentDefinitionId = documentDefinitionId;
 
