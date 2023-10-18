@@ -15,8 +15,6 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
         // public bool Required { get; set; }//
         public virtual ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();
         public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; } = new List<DocumentTemplateDetail>();
-        [Required]
-        public Guid VersionsId { get; set; }
-        public Versions Versions { get; set; }
+        public string Semver { get; set; }
     }
 }
