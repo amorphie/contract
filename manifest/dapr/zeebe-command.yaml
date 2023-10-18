@@ -1,0 +1,15 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: contract-zeebe-command
+  namespace: amorphie-contract
+spec:
+  type: bindings.zeebe.command
+  version: v1
+  metadata:
+  - name: gatewayAddr
+    value: zeebe-zeebe-gateway.amorphie-zeebe.svc.cluster.local:26500
+  - name: gatewayKeepAlive
+    value: 45s
+  - name: usePlainTextConnection
+    value: true

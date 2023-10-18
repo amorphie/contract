@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amorphie-contract
+  namespace: amorphie-contract
+spec:
+  selector:
+    matchLabels:
+      app: amorphie-contract
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: amorphie-contract
+      annotations:
+        dapr.io/app-id: amorphie-contract
+        dapr.io/enabled: 'true'
+        dapr.io/app-port: '5000'
+    spec:
+      serviceAccountName: amorphie-contractuser
+      containers:
+        - name: amorphie-contract
+          image: burganbank/amorphie.contract:latest
+          ports:
+            - containerPort: 5000
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Test"
+          - name: EnableApm
+            value: "true"
+          - name: TZ
+            value: Europe/Istanbul
+          - name: DAPR_STATE_STORE_NAME
+            value: contract-cache
+          - name: DAPR_SECRET_STORE_NAME
+            value: contract-secretstore
+          - name: DAPR_ZEEBE_COMMAND_NAME
+            value: contract-zeebe-command
+          resources:
+            limits:
+              cpu: "1"
+              memory: "4096Mi"
+            requests:
+              cpu: "0.1"
+              memory: "256Mi"
+          volumeMounts:
+          - mountPath: /app/appsettings.Test.json
+            name: appsettings-test-config-volume
+            subPath: appsettings.Test.json
+      volumes:
+        - name: appsettings-test-config-volume
+          configMap:
+            name: appsettings-test-config

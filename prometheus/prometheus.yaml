@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "dapr"
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ["host.docker.internal:41012", "host.docker.internal:41022"] 
+      

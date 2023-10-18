@@ -1,0 +1,86 @@
+{
+  "name": "document-upload-start",
+  "title": {
+    "language": "en-EN",
+    "label": "Document Upload  Start State"
+  },
+  "baseStatus": 4,
+  "type": 100,
+  "transitions": [
+    {
+      "name": "StartUploaded",
+      "title": {
+        "language": "en-EN",
+        "label": "Document Upload Create"
+      },
+      "toState": "document-uploaded",
+	   "page":{
+	   "operation":1,
+	   "type":2,
+	   "timeout":3000
+	  },
+      "form": {
+        "language": "en-EN",
+        "label": "Form-io-document-uploaded"
+      },
+	  "message":"StartUploaded",
+	  "gateway":"zeebe-local",
+      "fromState": "document-upload-start"
+    },
+	    {
+      "name": "TimeoutUploaded",
+      "title": {
+        "language": "en-EN",
+        "label": "Document TimeoutUploaded"
+      },
+      "toState": "TimeoutUploaded-state",
+	   "page":{
+	   "operation":1,
+	   "type":2,
+	   "timeout":3000
+	  },
+      "form": {
+        "language": "en-EN",
+        "label": "Form-io-document-uploaded"
+      },
+      "fromState": "document-upload-start"
+    }
+	,
+	    {
+      "name": "DeleteProcessUploaded",
+      "title": {
+        "language": "en-EN",
+        "label": "Document DeleteProcessUploaded"
+      },
+      "toState": "DeleteProcessUploaded-state",
+	   "page":{
+	   "operation":1,
+	   "type":2,
+	   "timeout":3000
+	  },
+      "form": {
+        "language": "en-EN",
+        "label": "Form-io-document-uploaded"
+      },
+      "fromState": "document-upload-start"
+    },
+	    {
+      "name": "ErrorUploaded",
+      "title": {
+        "language": "en-EN",
+        "label": "Document TimeoutUploaded"
+      },
+      "toState": "ErrorUploaded-state",
+	   "page":{
+	   "operation":1,
+	   "type":2,
+	   "timeout":3000
+	  },
+      "form": {
+        "language": "en-EN",
+        "label": "Form-io-document-uploaded"
+      },
+      "fromState": "document-upload-start"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+version: "3.9"
+services:
+
+  redis:
+    container_name: bbt-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/data
+    networks:
+      - bbt-development
+
+  redisinsight:
+    container_name: bbt-red-insight
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5501:8001'
+    volumes:
+      - redisinsight:/db
+    restart: unless-stopped
+    networks:
+      - bbt-development
+  postgres:
+    container_name: bbt-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - bbt-development
+
+  pgadmin:
+    container_name: bbt-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-123456}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-82}:80"
+    networks:
+      - bbt-development
+    restart: unless-stopped
+
+  elastic:
+    container_name: bbt_elastic
+    image: elasticsearch:7.17.9
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    networks:
+      - bbt-development
+    ports:
+      - 9200:9200
+    # depends_on:
+    #   - zeebe
+
+  kibana:
+    container_name: bbt_kibana
+    image: docker.elastic.co/kibana/kibana:7.17.9
+    environment:
+      - ELASTICSEARCH_HOSTS=http://bbt_elastic:9200
+    networks:
+      - bbt-development
+    depends_on:
+      - elastic
+    ports:
+      - 5601:5601
+
+  vault:
+    image: vault:latest
+    container_name: vault
+    restart: on-failure:10
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: 'https://0.0.0.0:8200'
+      VAULT_API_ADDR: 'https://0.0.0.0:8200'
+      VAULT_DEV_ROOT_TOKEN_ID: 'admin'
+      VAULT_TOKEN: 'admin'
+    volumes:
+      - ./file:/vault/file
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      retries: 5
+    command: server -dev -dev-root-token-id="admin"
+    networks:
+      - bbt-development
+
+  vault-prepopulate:
+    image: alpine/curl
+    depends_on:
+      - vault
+    volumes:
+      - ./vault.sh:/usr/local/bin/prepopulate_vault.sh
+    command: [ "sh", "-c", "/usr/local/bin/prepopulate_vault.sh" ]
+    networks:
+      - bbt-development
+
+networks:
+  bbt-development:
+    external: true
+
+volumes:
+  redis:
+  postgres:
+  redisinsight:
+  pgadmin:

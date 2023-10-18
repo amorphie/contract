@@ -1,0 +1,89 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "amorphie-contract",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dapr-debug-amorphie-contract",
+            "program": "${workspaceFolder}/amorphie.contract/bin/Debug/net7.0/amorphie.contract.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/amorphie.contract",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:4300",
+                "DAPR_HTTP_PORT": "4301",
+                "DAPR_GRPC_PORT": "4302",
+                "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
+                "DAPR_STATE_STORE_NAME" : "transaction-cache"
+
+            },
+            "postDebugTask": "daprd-down-amorphie-contract",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
+        },
+        {
+            "name": "amorphie-contract-hub",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dapr-debug-amorphie-contract-hub",
+            "program": "${workspaceFolder}/amorphie.contract.hub/bin/Debug/net7.0/amorphie.contract.hub.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/amorphie.contract.hub",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:4301",
+                "DAPR_HTTP_PORT": "43020",
+                "DAPR_GRPC_PORT": "43021",
+                "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
+                "DAPR_STATE_STORE_NAME" : "transaction-cache"
+            },
+            "postDebugTask": "daprd-down-amorphie-contract-hub",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
+        },
+        {
+            "name": "amorphie-contract-zeebe",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dapr-debug-amorphie-contract-zeebe",
+            "program": "${workspaceFolder}/amorphie.contract.zeebe/bin/Debug/net7.0/amorphie.contract.zeebe.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/amorphie.contract.zeebe",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:4302",
+                "DAPR_HTTP_PORT": "43030",
+                "DAPR_GRPC_PORT": "43031",
+                "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
+                "DAPR_STATE_STORE_NAME" : "transaction-cache"
+            },
+            "postDebugTask": "daprd-down-amorphie-contract-zeebe",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Halay Mode",
+            "configurations": [
+                "amorphie-contract",
+                "amorphie-contract-hub",
+                "amorphie-contract-zeebe"
+            ],
+            "stopAll": true
+        }
+    ],
+}

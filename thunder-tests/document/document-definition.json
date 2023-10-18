@@ -1,0 +1,66 @@
+{
+  "code": "identification-certificate-nc",
+  "statusId": "1c987065-86fc-4998-860b-8e8f129b1357",
+  "baseStatusId": "1c987065-86fc-4998-860b-8e8f129b1357",
+  "documentDefinitionLanguageDetails": [
+    {
+      "multiLanguage": {
+        "name": "identification-certificate-nc",
+        "code": "Nufus Cuzdani",
+        "languageTypeId": "e0b07d35-5f38-4511-ac63-be16652528f2"
+         
+      }
+    }
+  ],
+  "documentEntityPropertys": [
+    {
+      "entityPropertyId": "8a4988f1-64d8-4893-8033-f7459e432ef1"
+    }
+  ],
+  "documentTagsDetails": [
+    {
+      "tagId": "e2b05ad0-30fb-4147-8cae-aff480fa6f65"
+    }
+  ],
+  "documentUpload": {
+    "required": true,
+    "documentFormatDetails": [
+      {
+        "documentFormatId": "10bdc5b1-a13d-41d1-957e-2408f520f46f"
+      }
+    ],
+    "documentAllowedClientDetails": [
+      {
+        "documentAllowedClient": {
+          "documentFormatTypeId": "10bdc5b1-a13d-41d1-957e-2408f520f46f",
+          "documentSizeId":"a572af25-55e1-44fc-8028-dc32e0c6bb6d"
+        }
+      }
+    ]
+  },
+  "documentTemplateDetails": [
+    {
+      
+      "documentTemplateId": "dca66db1-51e0-47fc-8249-81fac70eb23e"
+    
+    }
+  ],
+  "documentFormIODetail": [
+    {
+       
+      "documentFormIO": {
+         
+        "code": "asd",
+        "data": "dsa",
+        "languageTypeId":"e0b07d35-5f38-4511-ac63-be16652528f2"
+        
+      }
+    }
+  ],
+ 
+  "documentOperations": {
+    "documentManuelControl": true,
+    "tagId": "368e552c-4ebb-4557-bb14-c928b754b184"
+    
+  }
+}

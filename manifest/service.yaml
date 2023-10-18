@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: amorphie-contract
+  namespace: amorphie-contract
+spec:
+  selector:
+    app: amorphie-contract
+  ports:
+    - port: 5000
+      targetPort: 5000
