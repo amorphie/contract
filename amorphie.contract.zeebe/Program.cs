@@ -1,5 +1,8 @@
 using amorphie.contract.data.Contexts;
+using amorphie.contract.zeebe.Extensions;
 using amorphie.contract.zeebe.Modules;
+using amorphie.contract.zeebe.Service.Minio;
+using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +22,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 builder.Services.AddDaprClient();
-
+builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configuration);
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+var settings = builder.Configuration.Get<AppSettings>();
+StaticValuesExtensions.SetStaticValues(settings);
+builder.Services.AddSingleton<IMinioService, MinioService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
