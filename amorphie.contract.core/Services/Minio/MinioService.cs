@@ -17,9 +17,9 @@ namespace amorphie.contract.core.Service.Minio
         private string bucketName = "contract-management";
         public MinioService()
         {
-            var endpoint = "test-minio-api.burgan.com.tr";
-            var accessKey = "v75tUNjCX1ggof8b";
-            var secretKey = "ASlFiTWg7aIMJBzb9Erhhf9fZFH4r21V";
+            var endpoint = "xx";
+            var accessKey = "xx";
+            var secretKey = "xx";
             minioClient = new MinioClient()
                            .WithEndpoint(endpoint)
                            .WithCredentials(accessKey, secretKey)
