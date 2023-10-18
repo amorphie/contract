@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using amorphie.contract.core.Services.Interfaces;
+using amorphie.contract.zeebe.Services.Interfaces;
 
-namespace amorphie.contract.core.Services
+namespace amorphie.contract.zeebe.Services
 {
     public static class ExtensionService
     {
