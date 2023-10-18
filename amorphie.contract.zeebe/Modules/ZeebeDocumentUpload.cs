@@ -1,13 +1,24 @@
+using System.Security.Cryptography.X509Certificates;
+using System.Xml.XPath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Document;
+using amorphie.contract.zeebe.Service.Minio;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
+using Google.Api;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.OpenApi.Models;
+using System.ComponentModel;
+using Google.Protobuf;
+using amorphie.contract.zeebe.Services;
+using amorphie.contract.zeebe.Services.Interfaces;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -32,7 +43,7 @@ namespace amorphie.contract.zeebe.Modules
             // }
             #endregion
             #region  map-post
-            app.MapPost("/Uploaded", Uploaded)
+            app.MapPost("/uploaded", Uploaded)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -40,7 +51,7 @@ namespace amorphie.contract.zeebe.Modules
                 operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                 return operation;
             });
-            app.MapPost("/AutoControl", AutoControl)
+            app.MapPost("/autocontrol", AutoControl)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -106,9 +117,12 @@ namespace amorphie.contract.zeebe.Modules
           HttpRequest request,
           HttpContext httpContext,
           [FromServices] DaprClient client
-          , IConfiguration configuration
+          , IConfiguration configuration,
+          [FromServices] IMinioService minioService
       )
         {
+
+
             var messageVariables = new MessageVariables();
             try
             {
@@ -121,9 +135,10 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
+
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 var document = new amorphie.contract.core.Entity.Document.Document();
-                var documentDefinitionIdString = entityData.GetProperty("document-definition-id").ToString();
+                var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
 
                 Guid documentDefinitionId;
                 if (!Guid.TryParse(documentDefinitionIdString, out documentDefinitionId))
@@ -131,14 +146,29 @@ namespace amorphie.contract.zeebe.Modules
                     throw new Exception("DocumentDefinitionId not provided or not as a GUID");
                 }
 
-                document.DocumentContent.ContentData = entityData.GetProperty("document-content").ToString();
-                document.DocumentContent.KiloBytesSize = (document.DocumentContent.ContentData.Length / 1024).ToString();
+                var fileName = entityData.GetProperty("identity").ToString()+"_"+documentDefinitionIdString+"_"+ entityData.GetProperty("file-name").ToString();
+                document.DocumentContent = new DocumentContent
+                {
+                    KiloBytesSize = entityData.GetProperty("file-size").ToString(),
+                    ContentType = entityData.GetProperty("file-type").ToString(),
+                    Name = fileName,
+                    ContentData =entityData.GetProperty("file-byte-array").ToString()
+                };
+                var filebytes = ExtensionService.StringToBytes(entityData.GetProperty("file-byte-array").ToString(), entityData.GetProperty("file-size").ToString());
+                
+                 
+                _ = minioService.UploadFile(filebytes,fileName,entityData.GetProperty("file-type").ToString());
+
                 document.DocumentDefinitionId = documentDefinitionId;
+                // var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
 
+                // if (documentDefinition != null)
+                // {
+                //     messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
+                    messageVariables.Variables.Add("IsAutoControl", true);
 
-                messageVariables.Variables.Add("IsAutoControl", true);
+                // }
                 messageVariables.Success = true;
-
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }

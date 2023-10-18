@@ -61,6 +61,7 @@ DbInitializer.Initialize(db);
 //     app.UseSwagger();
 //     app.UseSwaggerUI();
 // }
+
 app.UseSwagger();
 app.UseSwaggerUI();
 // app.UseHttpsRedirection();

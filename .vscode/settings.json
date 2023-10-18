@@ -5,6 +5,7 @@
         "dapr",
         "Expando",
         "jobworker",
+        "Minio",
         "NOTOK",
         "zeebe"
     ]

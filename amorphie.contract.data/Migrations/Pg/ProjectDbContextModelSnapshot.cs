@@ -48,7 +48,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -91,7 +92,8 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -128,7 +130,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -167,7 +170,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -206,7 +210,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ValidationDecisionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -247,7 +252,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ValidationDecisionTypeId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -285,7 +291,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -293,42 +300,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsUnique();
 
                     b.ToTable("ValidationDecisionType", "Common");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.Versions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("Versions", "Common");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>
@@ -360,7 +331,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -405,19 +377,19 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("UseExisting")
-                        .HasColumnType("integer");
+                    b.Property<string>("Semver")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("VersionsId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("UseExisting")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContractDefinitionId");
 
                     b.HasIndex("DocumentDefinitionId");
-
-                    b.HasIndex("VersionsId");
 
                     b.ToTable("ContractDocumentDetail", "Cont");
                 });
@@ -456,7 +428,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -495,7 +468,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -534,7 +508,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("TagId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -573,7 +548,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ValidationId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -612,7 +588,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -649,7 +626,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -696,7 +674,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -721,6 +700,12 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ContentTransferEncoding")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -742,12 +727,11 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("VersionsId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VersionsId");
 
                     b.ToTable("DocumentContent", "Doc");
                 });
@@ -806,7 +790,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -858,7 +843,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("MultiLanguageId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -897,7 +883,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -906,93 +893,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("EntityPropertyId");
 
                     b.ToTable("DocumentEntityProperty", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIO", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Data")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("LanguageTypeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("LanguageTypeId");
-
-                    b.ToTable("DocumentFormIO", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIODetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentDefinitionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentFormIOId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentRenderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentFormIOId");
-
-                    b.HasIndex("DocumentRenderId");
-
-                    b.ToTable("DocumentFormIODetail", "Doc");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormat", b =>
@@ -1023,7 +923,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1065,7 +966,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1106,7 +1008,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1145,7 +1048,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1185,7 +1089,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1224,7 +1129,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("MultiLanguageId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1266,7 +1172,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("TagId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1306,7 +1213,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Size")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1341,7 +1249,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1376,7 +1285,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1411,7 +1321,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("TagId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1451,7 +1362,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1497,7 +1409,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1537,12 +1450,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("VersionsId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Semver")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VersionsId");
 
                     b.ToTable("DocumentOnlineSing", "DocTp");
                 });
@@ -1571,12 +1484,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("VersionsId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Semver")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VersionsId");
 
                     b.ToTable("DocumentRender", "DocTp");
                 });
@@ -1606,7 +1519,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1645,7 +1559,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1685,7 +1600,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1721,7 +1637,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasAnnotation("Relational:JsonPropertyName", "xxx");
 
                     b.HasKey("Id");
 
@@ -1786,15 +1703,7 @@ namespace amorphie.contract.data.Migrations.Pg
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("amorphie.contract.core.Entity.Common.Versions", "Versions")
-                        .WithMany()
-                        .HasForeignKey("VersionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("DocumentDefinition");
-
-                    b.Navigation("Versions");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDocumentGroupDetail", b =>
@@ -1886,7 +1795,7 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentAllowedClientDetail", b =>
                 {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentFormat", "DocumentAllowedClient")
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentAllowedClient", "DocumentAllowedClients")
                         .WithMany()
                         .HasForeignKey("DocumentAllowedClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1904,18 +1813,7 @@ namespace amorphie.contract.data.Migrations.Pg
                         .WithMany("DocumentAllowedClientDetails")
                         .HasForeignKey("DocumentUploadId");
 
-                    b.Navigation("DocumentAllowedClient");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentContent", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Common.Versions", "Versions")
-                        .WithMany()
-                        .HasForeignKey("VersionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Versions");
+                    b.Navigation("DocumentAllowedClients");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinition", b =>
@@ -1999,32 +1897,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsRequired();
 
                     b.Navigation("EntityProperty");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIO", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Common.LanguageType", "LanguageType")
-                        .WithMany()
-                        .HasForeignKey("LanguageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LanguageType");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormIODetail", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentFormIO", "DocumentFormIO")
-                        .WithMany()
-                        .HasForeignKey("DocumentFormIOId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", null)
-                        .WithMany("DocumentFormIODetail")
-                        .HasForeignKey("DocumentRenderId");
-
-                    b.Navigation("DocumentFormIO");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentFormat", b =>
@@ -2179,28 +2051,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("DocumentTemplate");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentOnlineSing", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Common.Versions", "Versions")
-                        .WithMany()
-                        .HasForeignKey("VersionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Versions");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Common.Versions", "Versions")
-                        .WithMany()
-                        .HasForeignKey("VersionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Versions");
-                });
-
             modelBuilder.Entity("amorphie.contract.core.Entity.EAV.EntityProperty", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.EAV.EntityPropertyType", "EntityPropertyType")
@@ -2259,8 +2109,6 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", b =>
                 {
                     b.Navigation("DocumentAllowedClientDetails");
-
-                    b.Navigation("DocumentFormIODetail");
 
                     b.Navigation("DocumentTemplateDetails");
                 });

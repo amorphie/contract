@@ -68,9 +68,9 @@
         },
         {
             "appId": "amorphie-contract",
-            "appPort": 4200,
-            "httpPort": 4201,
-            "grpcPort": 4202,
+            "appPort": 4300,
+            "httpPort": 4301,
+            "grpcPort": 4302,
             "label": "dapr-debug-amorphie-contract",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract",
@@ -78,9 +78,9 @@
         },
         {
             "appId": "amorphie-contract-hub",
-            "appPort": 4201,
-            "httpPort": 42020,
-            "grpcPort": 42021,
+            "appPort": 4301,
+            "httpPort": 43020,
+            "grpcPort": 43021,
             "label": "dapr-debug-amorphie-contract-hub",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract-hub",
@@ -88,13 +88,13 @@
         },
         {
             "appId": "amorphie-contract-zeebe",
-            "appPort": 4202,
-            "httpPort": 42030,
-            "grpcPort": 42031,
+            "appPort": 4302,
+            "httpPort": 43030,
+            "grpcPort": 43031,
             "label": "dapr-debug-amorphie-contract-zeebe",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract-zeebe",
-            "componentsPath": "Dapr/Components"
+            "componentsPath": "Dapr/Components/AmorphieZeebeContractDocumentUpload"
         },
         {
             "appId": "amorphie-contract",

@@ -24,8 +24,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();
             CreateMap<DocumentFormatType, DocumentFormatType>().ReverseMap();
 
-            CreateMap<DocumentFormIO, DocumentFormIO>().ReverseMap();
-            CreateMap<DocumentFormIODetail, DocumentFormIODetail>().ReverseMap();
+          
 
 
             CreateMap<DocumentOperations, DocumentOperations>().ReverseMap();

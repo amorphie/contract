@@ -13,7 +13,7 @@ namespace amorphie.contract.data.Configurations
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(x => x.Id);
-            
+            builder.Metadata.GetProperties().Last().SetJsonPropertyName("xxx");
             var entitypropNavigationList = builder.Metadata.GetNavigations();
             foreach (var entitypropNavigation in entitypropNavigationList)
             {
