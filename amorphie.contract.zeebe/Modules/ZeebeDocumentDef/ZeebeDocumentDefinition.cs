@@ -12,7 +12,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
     public static class ZeebeDocumentDefinition
     {
-         public static void MapZeebeDocumentDefinitionEndpoints(this WebApplication app)
+        public static void MapZeebeDocumentDefinitionEndpoints(this WebApplication app)
         {
             app.MapPost("/DefinitionUpload", DefinitionUpload)
             .Produces(StatusCodes.Status200OK)
@@ -23,31 +23,31 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
 
-              app.MapPost("/ErrorDefinitionUpload", ErrorDefinitionUpload)
-            .Produces(StatusCodes.Status200OK)
-            .WithOpenApi(operation =>
-            {
-                operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
-                return operation;
-            });
-              app.MapPost("/DeleteProcessDefinitionUpload", DeleteProcessDefinitionUpload)
-            .Produces(StatusCodes.Status200OK)
-            .WithOpenApi(operation =>
-            {
-                operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
-                return operation;
-            });
-              app.MapPost("/TimeoutDefinitionUpload", TimeoutDefinitionUpload)
-            .Produces(StatusCodes.Status200OK)
-            .WithOpenApi(operation =>
-            {
-                operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
-                return operation;
-            });
-           
+            app.MapPost("/ErrorDefinitionUpload", ErrorDefinitionUpload)
+          .Produces(StatusCodes.Status200OK)
+          .WithOpenApi(operation =>
+          {
+              operation.Summary = "Maps Render service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              return operation;
+          });
+            app.MapPost("/DeleteProcessDefinitionUpload", DeleteProcessDefinitionUpload)
+          .Produces(StatusCodes.Status200OK)
+          .WithOpenApi(operation =>
+          {
+              operation.Summary = "Maps Render service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              return operation;
+          });
+            app.MapPost("/TimeoutDefinitionUpload", TimeoutDefinitionUpload)
+          .Produces(StatusCodes.Status200OK)
+          .WithOpenApi(operation =>
+          {
+              operation.Summary = "Maps Render service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              return operation;
+          });
+
         }
         static IResult DefinitionUpload(
           [FromBody] dynamic body,
@@ -84,14 +84,14 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             }
         }
 
-              static IResult TimeoutDefinitionUpload(
-      [FromBody] dynamic body,
-     [FromServices] ProjectDbContext dbContext,
-      HttpRequest request,
-      HttpContext httpContext,
-      [FromServices] DaprClient client
-      , IConfiguration configuration
-  )
+        static IResult TimeoutDefinitionUpload(
+[FromBody] dynamic body,
+[FromServices] ProjectDbContext dbContext,
+HttpRequest request,
+HttpContext httpContext,
+[FromServices] DaprClient client
+, IConfiguration configuration
+)
         {
             var messageVariables = new MessageVariables();
             try

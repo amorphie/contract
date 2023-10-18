@@ -14,10 +14,10 @@ namespace amorphie.contract.core.Entity.Common
 
     public class Validation : EntityBase
     {
-        public  string Code { get; set; }// all-valid
+        public string Code { get; set; }// all-valid
         [Required]
         public Guid ValidationDecisionId { get; set; }
-        public  ValidationDecision ValidationDecision { get; set; }
+        public ValidationDecision ValidationDecision { get; set; }
 
     }
 }

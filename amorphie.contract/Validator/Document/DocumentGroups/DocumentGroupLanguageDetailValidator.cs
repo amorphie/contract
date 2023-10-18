@@ -3,10 +3,10 @@ using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 
 public sealed class DocumentGroupLanguageDetailValidator : AbstractValidator<DocumentGroupLanguageDetail>
+{
+    public DocumentGroupLanguageDetailValidator()
     {
-        public DocumentGroupLanguageDetailValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

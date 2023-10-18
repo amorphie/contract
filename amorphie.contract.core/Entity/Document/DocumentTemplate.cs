@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Document
     [Index(nameof(Code), IsUnique = true)]
 
     public class DocumentTemplate : EntityBase
-    { 
+    {
         public string Code { get; set; }
         [Required]
         public Guid LanguageTypeId { get; set; }

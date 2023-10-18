@@ -13,18 +13,18 @@ namespace amorphie.contract.common;
 
     public class ValidationModule
         : BaseBBTRoute<Validation, Validation, ProjectDbContext>
+{
+    public ValidationModule(WebApplication app) : base(app)
     {
-        public ValidationModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-Validation";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "Common-Validation";
+
+
+
+
+}
 

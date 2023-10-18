@@ -12,15 +12,15 @@ namespace amorphie.contract;
 
     public class DocumentOptimizeTypeModule
         : BaseBBTRoute<DocumentOptimizeType, DocumentOptimizeType, ProjectDbContext>
+{
+    public DocumentOptimizeTypeModule(WebApplication app) : base(app)
     {
-        public DocumentOptimizeTypeModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Code"};
-
-        public override string? UrlFragment => "document-Optimize-Type";
-
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "document-Optimize-Type";
+
+
+}
 

@@ -10,10 +10,10 @@ namespace amorphie.contract.core.Entity.EAV
 {
     [Table("EntityPropertyType", Schema = "EAV")]
     [Index(nameof(Code), IsUnique = true)]
-    
-    public class EntityPropertyType: EntityBase
+
+    public class EntityPropertyType : EntityBase
     {
         public string Code { get; set; }
-        
+
     }
 }

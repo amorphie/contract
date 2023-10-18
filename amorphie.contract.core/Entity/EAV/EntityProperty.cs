@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.EAV
     [Index(nameof(Code), IsUnique = true)]
 
 
-    public class EntityProperty: EntityBase
+    public class EntityProperty : EntityBase
     {
         public string Code { get; set; }
         [Required]
@@ -23,6 +23,6 @@ namespace amorphie.contract.core.Entity.EAV
 
         public Guid EntityPropertyValueId { get; set; }
         public EntityPropertyValue EntityPropertyValue { get; set; }
-        
+
     }
 }

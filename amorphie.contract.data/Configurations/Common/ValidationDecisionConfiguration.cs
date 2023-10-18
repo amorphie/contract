@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  ValidationDecisionConfiguration : ConfigurationBase<ValidationDecision>
+    public class ValidationDecisionConfiguration : ConfigurationBase<ValidationDecision>
     {
         public void Configure(EntityTypeBuilder<ValidationDecision> builder)
         {
-            
+
         }
     }
 }
