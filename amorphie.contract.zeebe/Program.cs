@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
 
-    Configuration = builder
-        .Configuration
-        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
-        .AddEnvironmentVariables()
-        .AddCommandLine(args)
-        .AddUserSecrets<Program>()
-        .Build();
+Configuration = builder
+    .Configuration
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .AddUserSecrets<Program>()
+    .Build();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,13 +45,13 @@ var summaries = new[]
 app.MapZeebeDocumentUploadEndpoints();
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+       new WeatherForecast
+       (
+           DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+           Random.Shared.Next(-20, 55),
+           summaries[Random.Shared.Next(summaries.Length)]
+       ))
         .ToArray();
     return forecast;
 })
@@ -60,7 +60,7 @@ app.MapGet("/weatherforecast", () =>
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.Run();
- 
+
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace amorphie.contract.zeebe.Services.Interfaces
 {
-  public interface IMinioService
-  {
-    Task UploadFile(byte[] data, string objectName, string contentType);
-    Task UploadFile();
-  }
+    public interface IMinioService
+    {
+        Task UploadFile(byte[] data, string objectName, string contentType);
+        Task UploadFile();
+    }
 }

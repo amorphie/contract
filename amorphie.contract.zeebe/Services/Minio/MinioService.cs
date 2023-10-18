@@ -15,7 +15,7 @@ using Minio.DataModel.Tags;
 using Minio.Exceptions;
 namespace amorphie.contract.zeebe.Service.Minio
 {
-    public class MinioService:  IMinioService
+    public class MinioService : IMinioService
     {
         private IMinioClient minioClient;
         private string bucketName = "contract-management";
@@ -25,7 +25,7 @@ namespace amorphie.contract.zeebe.Service.Minio
             var endpoint = StaticValuesExtensions.MinioEndPoint;
             var accessKey = StaticValuesExtensions.AccessKey;
             var secretKey = StaticValuesExtensions.SecretKey;
-            bucketName= StaticValuesExtensions.MinioBucketName;
+            bucketName = StaticValuesExtensions.MinioBucketName;
 
             minioClient = new MinioClient()
                            .WithEndpoint(endpoint)
@@ -34,7 +34,7 @@ namespace amorphie.contract.zeebe.Service.Minio
                            .Build();
 
         }
-        public async Task UploadFile(byte[] data,string objectName ,string contentType)
+        public async Task UploadFile(byte[] data, string objectName, string contentType)
         {
             MemoryStream stream = new MemoryStream(data);
 
@@ -67,7 +67,7 @@ namespace amorphie.contract.zeebe.Service.Minio
 
             await minioClient.MakeBucketAsync(args);
         }
-         
+
         public async Task UploadFile()
         {
             try
@@ -98,11 +98,12 @@ namespace amorphie.contract.zeebe.Service.Minio
                 await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
                 Console.WriteLine("Successfully uploaded " + objectName);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Console.WriteLine(e.Message);
-             }
+            }
         }
 
-        
+
     }
 }
