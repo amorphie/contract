@@ -27,7 +27,7 @@ namespace amorphie.contract.core.Service.Minio
                            .Build();
 
         }
-        public async Task UploadFile(byte[] data,string objectName ,string contentType)
+        public async Task UploadFile(byte[] data, string objectName, string contentType)
         {
             MemoryStream stream = new MemoryStream(data);
 
@@ -94,9 +94,10 @@ namespace amorphie.contract.core.Service.Minio
                 await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
                 Console.WriteLine("Successfully uploaded " + objectName);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Console.WriteLine(e.Message);
-             }
+            }
         }
 
     }
