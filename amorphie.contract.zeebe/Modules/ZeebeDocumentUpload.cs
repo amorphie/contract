@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
-using amorphie.contract.core.Service.Minio;
+using amorphie.contract.zeebe.Service.Minio;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
@@ -17,7 +17,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.OpenApi.Models;
 using System.ComponentModel;
 using Google.Protobuf;
-using amorphie.contract.core.Services;
+using amorphie.contract.zeebe.Services;
+using amorphie.contract.zeebe.Services.Interfaces;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -116,7 +117,8 @@ namespace amorphie.contract.zeebe.Modules
           HttpRequest request,
           HttpContext httpContext,
           [FromServices] DaprClient client
-          , IConfiguration configuration
+          , IConfiguration configuration,
+          [FromServices] IMinioService minioService
       )
         {
 
@@ -144,18 +146,18 @@ namespace amorphie.contract.zeebe.Modules
                     throw new Exception("DocumentDefinitionId not provided or not as a GUID");
                 }
 
-                var fileName = entityData.GetProperty("identity").ToString()+"_"+documentDefinitionIdString+"_"+ entityData.GetProperty("file-name").ToString();
+                var fileName = entityData.GetProperty("identity").ToString() + "_" + documentDefinitionIdString + "_" + entityData.GetProperty("file-name").ToString();
                 document.DocumentContent = new DocumentContent
                 {
                     KiloBytesSize = entityData.GetProperty("file-size").ToString(),
                     ContentType = entityData.GetProperty("file-type").ToString(),
                     Name = fileName,
-                    ContentData =entityData.GetProperty("file-byte-array").ToString()
+                    ContentData = entityData.GetProperty("file-byte-array").ToString()
                 };
                 var filebytes = ExtensionService.StringToBytes(entityData.GetProperty("file-byte-array").ToString(), entityData.GetProperty("file-size").ToString());
-                
-                var microservice = new MinioService();
-                _ = microservice.UploadFile(filebytes,fileName,entityData.GetProperty("file-type").ToString());
+
+
+                _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
 
                 document.DocumentDefinitionId = documentDefinitionId;
                 // var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
@@ -163,7 +165,7 @@ namespace amorphie.contract.zeebe.Modules
                 // if (documentDefinition != null)
                 // {
                 //     messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
-                    messageVariables.Variables.Add("IsAutoControl", true);
+                messageVariables.Variables.Add("IsAutoControl", true);
 
                 // }
                 messageVariables.Success = true;
