@@ -71,7 +71,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
     public DbSet<ValidationDecisionType> ValidationDecisionType { get; set; }
-    public DbSet<Versions> Versions { get; set; }
+   
     #endregion
     #region Contract
 
