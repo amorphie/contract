@@ -6,14 +6,14 @@ USER amorphie-contract-zeebe-user
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["./amorphie.contract.zeebe\amorphie.contract.zeebe.csproj", "."]
+COPY ["./amorphie.contract.zeebe/amorphie.contract.zeebe.csproj", "."]
 RUN dotnet restore "./amorphie.contract.zeebe.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./amorphie.contract.zeebe\amorphie.contract.zeebe.csproj" -c Release -o /app/build
+RUN dotnet build "./amorphie.contract.zeebe/amorphie.contract.zeebe.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "./amorphie.contract.zeebe\amorphie.contract.zeebe.csproj" -c Release -o /app/publish
+RUN dotnet publish "./amorphie.contract.zeebe/amorphie.contract.zeebe.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
