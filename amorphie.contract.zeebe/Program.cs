@@ -37,7 +37,7 @@ builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test ")
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
     app.UseSwagger();
     app.UseSwaggerUI();

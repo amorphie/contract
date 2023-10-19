@@ -62,7 +62,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 //     app.UseSwaggerUI();
 // }
 
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test ")
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
