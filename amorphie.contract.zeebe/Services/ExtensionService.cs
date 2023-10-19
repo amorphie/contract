@@ -10,14 +10,14 @@ namespace amorphie.contract.zeebe.Services
     {
         public static byte[] StringToBytes(string filebyte, string count)
         {
-            byte[] bytes = new byte[Convert.ToInt32(count)];
+            List<byte>  bytes = new List<byte>();
             var arrayfile = filebyte.Split(',');
             foreach (var i in arrayfile)
-            {
-                bytes.Append<byte>(Convert.ToByte(i));
+            { 
+                bytes.Add(Convert.ToByte(i));
 
             }
-            return bytes;
+            return bytes.ToArray();
         }
     }
 }

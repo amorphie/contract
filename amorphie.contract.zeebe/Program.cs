@@ -1,7 +1,9 @@
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Extensions;
 using amorphie.contract.zeebe.Modules;
+using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
 using amorphie.contract.zeebe.Service.Minio;
+using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,11 +28,16 @@ builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configurat
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
+
+
 builder.Services.AddSingleton<IMinioService, MinioService>();
+builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test ")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -43,6 +50,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 app.MapZeebeDocumentUploadEndpoints();
+app.MapZeebeDocumentDefinitionEndpoints();
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>

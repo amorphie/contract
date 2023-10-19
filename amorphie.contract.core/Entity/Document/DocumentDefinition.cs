@@ -47,7 +47,7 @@ namespace amorphie.contract.core.Entity.Document
         public virtual Guid? DocumentOperationsId { get; set; }
         public virtual DocumentOperations? DocumentOperations { get; set; }
 
-
+        // public string StartingTransitionName{ get; set; }
         public override string ToString()
         {
             return Code;
