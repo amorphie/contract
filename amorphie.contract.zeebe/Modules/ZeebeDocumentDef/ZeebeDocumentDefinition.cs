@@ -94,7 +94,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 {
                     throw new Exception("DefinitionUpload data is DocumentDefinitionDataModel");
                 }
-              
+
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -227,4 +227,4 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 
 
 
-} 
+}

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
 {
-  // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class AllowedClient
     {
         public string select { get; set; }
@@ -45,10 +45,10 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string status { get; set; }
 
         [JsonProperty("base-status")]
-        public string basestatus { get; set; } 
+        public string basestatus { get; set; }
     }
 
-  
+
 
     public class EntityProperty
     {

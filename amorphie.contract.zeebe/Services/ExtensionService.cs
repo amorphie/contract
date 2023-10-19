@@ -10,10 +10,10 @@ namespace amorphie.contract.zeebe.Services
     {
         public static byte[] StringToBytes(string filebyte, string count)
         {
-            List<byte>  bytes = new List<byte>();
+            List<byte> bytes = new List<byte>();
             var arrayfile = filebyte.Split(',');
             foreach (var i in arrayfile)
-            { 
+            {
                 bytes.Add(Convert.ToByte(i));
 
             }

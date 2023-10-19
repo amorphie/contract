@@ -41,7 +41,7 @@ namespace amorphie.contract.zeebe.Services
                     Code = documentdef.Code
                 }
             }).ToList();
-          
+
             documentdef.DocumentTagsDetails = documentDefinitionDataModel.data.tags.Select(
                 x => new DocumentTagsDetail
                 {
