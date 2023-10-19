@@ -5,8 +5,10 @@
         "dapr",
         "Expando",
         "jobworker",
+        "maxsizekilobytes",
         "Minio",
         "NOTOK",
+        "scarequired",
         "zeebe"
     ]
 }
