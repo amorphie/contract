@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore.Design;
 using amorphie.core.Identity;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Entity.Document.DocumentTypes;
+using amorphie.contract.core.Entity.EAV;
 
 namespace amorphie.contract.data.Contexts;
 
@@ -115,10 +117,13 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
     public DbSet<DocumentTemplateDetail> DocumentTemplateDetail { get; set; }
 
-    // public DbSet<Versions> Versions { get; set; }
+     public DbSet<DocumentUpload> DocumentUpload { get; set; }
 
 
     #endregion
+     public DbSet<EntityProperty> EntityProperty { get; set; }
+     public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
+     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
 
 
     protected IConfiguration Configuration { get; }

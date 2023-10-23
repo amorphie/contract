@@ -10,6 +10,6 @@ namespace amorphie.contract.zeebe.Services.Interfaces
 {
     public interface IDocumentDefinitionService
     {
-        Task<DocumentDefinition> DataModelToDocumentDefinition(DocumentDefinitionDataModel documentDefinitionDataModel);
+        Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic? documentDefinitionDataDynamic);
     }
 }

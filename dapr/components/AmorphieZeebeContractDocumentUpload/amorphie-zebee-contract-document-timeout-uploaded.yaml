@@ -1,15 +1,15 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: TimeoutUploaded
+  name: timeoutuploaded
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: TimeoutUploaded
+    value: timeoutuploaded
   - name: gatewayAddr
-    value: localhost:26500
+    value: localhost:265000
   - name: gatewayKeepAlive
     value: 45s
   - name: usePlainTextConnection

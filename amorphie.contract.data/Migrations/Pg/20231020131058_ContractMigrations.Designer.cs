@@ -12,7 +12,7 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20231018092948_ContractMigrations")]
+    [Migration("20231020131058_ContractMigrations")]
     partial class ContractMigrations
     {
         /// <inheritdoc />

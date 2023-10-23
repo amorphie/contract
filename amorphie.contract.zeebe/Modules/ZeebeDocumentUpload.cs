@@ -160,14 +160,17 @@ namespace amorphie.contract.zeebe.Modules
                 _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
 
                 document.DocumentDefinitionId = documentDefinitionId;
-                // var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
+                var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
 
-                // if (documentDefinition != null)
-                // {
-                //     messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
-                messageVariables.Variables.Add("IsAutoControl", true);
+                if (documentDefinition != null)
+                {
+                    messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
+                    messageVariables.Variables.Add("IsAutoControl", documentDefinition.DocumentOperations.DocumentManuelControl);
+                }else{
+                    messageVariables.Variables.Add("IsAutoControl", false);
 
-                // }
+                }
+
                 messageVariables.Success = true;
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
