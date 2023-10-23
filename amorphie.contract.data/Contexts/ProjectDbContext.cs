@@ -73,7 +73,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
     public DbSet<ValidationDecisionType> ValidationDecisionType { get; set; }
-   
+
     #endregion
     #region Contract
 
@@ -92,7 +92,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Document> Document { get; set; }
     public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
     public DbSet<DocumentAllowedClientDetail> DocumentAllowedClientDetail { get; set; }
-  
+
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
@@ -117,13 +117,13 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
     public DbSet<DocumentTemplateDetail> DocumentTemplateDetail { get; set; }
 
-     public DbSet<DocumentUpload> DocumentUpload { get; set; }
+    public DbSet<DocumentUpload> DocumentUpload { get; set; }
 
 
     #endregion
-     public DbSet<EntityProperty> EntityProperty { get; set; }
-     public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
-     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
+    public DbSet<EntityProperty> EntityProperty { get; set; }
+    public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
+    public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
 
 
     protected IConfiguration Configuration { get; }

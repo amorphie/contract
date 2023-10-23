@@ -166,7 +166,9 @@ namespace amorphie.contract.zeebe.Modules
                 {
                     messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
                     messageVariables.Variables.Add("IsAutoControl", documentDefinition.DocumentOperations.DocumentManuelControl);
-                }else{
+                }
+                else
+                {
                     messageVariables.Variables.Add("IsAutoControl", false);
 
                 }
