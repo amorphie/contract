@@ -28,9 +28,9 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
 
         public Guid BaseStatusId { get; set; }
-        public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } // bu güzel
-        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; }//****
-        public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; }
+        public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
+        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
+        public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 
         #region documentType
         public virtual Guid? DocumentUploadId { get; set; }

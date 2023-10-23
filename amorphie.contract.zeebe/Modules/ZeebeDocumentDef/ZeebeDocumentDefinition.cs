@@ -1,20 +1,8 @@
-using System.Runtime.CompilerServices;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using amorphie.contract.core.Entity.Document;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
-using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using amorphie.contract.core.Entity.Common;
 using amorphie.contract.zeebe.Services.Interfaces;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
@@ -83,17 +71,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             {
 
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
-                var data = JsonConvert.DeserializeObject<DocumentDefinitionDataModel>(entityData);
-                DocumentDefinitionDataModel documentDefinitionDataModel;
-                if (data is DocumentDefinitionDataModel)
-                {
-                    documentDefinitionDataModel = data;
 
-                }
-                else
-                {
-                    throw new Exception("DefinitionUpload data is DocumentDefinitionDataModel");
-                }
+                var _ = IDocumentDefinitionService.DataModelToDocumentDefinition(entityData);
 
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));

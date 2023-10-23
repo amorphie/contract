@@ -1,7 +1,524 @@
 {
- 
-
-  "starting-transition-name" : "trx-upload-document",
-  
-
+  "display": "form",
+  "components": [
+    {
+      "label": "Header",
+      "applyMaskOn": "change",
+      "hideLabel": true,
+      "disabled": true,
+      "tableView": true,
+      "key": "header",
+      "type": "textfield",
+      "input": true,
+      "defaultValue": "KONTRAT YÖNETİMİ"
+    },
+    {
+      "title": "Document Defination",
+      "collapsible": false,
+      "key": "documentDefination",
+      "type": "panel",
+      "label": "Panel",
+      "input": false,
+      "tableView": false,
+      "components": [
+        {
+          "label": "Name",
+          "labelPosition": "left-left",
+          "applyMaskOn": "change",
+          "tableView": true,
+          "key": "name",
+          "type": "textfield",
+          "input": true,
+          "labelWidth": 40,
+          "labelMargin": 1
+        },
+        {
+          "label": "Title",
+          "reorder": false,
+          "addAnotherPosition": "bottom",
+          "layoutFixed": false,
+          "enableRowGroups": false,
+          "initEmpty": false,
+          "tableView": false,
+          "defaultValue": [
+            {
+              "textField": "",
+              "language": "",
+              "label": "",
+              "selectBoxes": {},
+              "select": "",
+              "title": ""
+            }
+          ],
+          "key": "titles",
+          "type": "datagrid",
+          "input": true,
+          "components": [
+            {
+              "label": "Language",
+              "labelPosition": "left-left",
+              "widget": "choicesjs",
+              "tableView": true,
+              "dataSrc": "url",
+              "data": {
+                "url": "http://localhost:4300/Common-LanguageType?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "idPath": "Id",
+              "valueProperty": "id",
+              "template": "<span>{{ item.code }}</span>",
+              "key": "language",
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
+            },
+            {
+              "label": "Title",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "title",
+              "type": "textfield",
+              "input": true
+            }
+          ]
+        },
+        {
+          "label": "Tags",
+          "reorder": false,
+          "addAnotherPosition": "bottom",
+          "layoutFixed": false,
+          "enableRowGroups": false,
+          "initEmpty": false,
+          "tableView": false,
+          "defaultValue": [
+            {}
+          ],
+          "key": "tags",
+          "type": "datagrid",
+          "input": true,
+          "components": [
+            {
+              "label": "Tag",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "tag",
+              "type": "textfield",
+              "input": true
+            },
+            {
+              "label": "Contact",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "Contact",
+              "type": "textfield",
+              "input": true
+            }
+          ]
+        },
+        {
+          "title": "Upload",
+          "collapsible": false,
+          "key": "upload",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Sca-required",
+              "labelPosition": "left-left",
+              "optionsLabelPosition": "top",
+              "inline": false,
+              "tableView": false,
+              "values": [
+                {
+                  "label": "True",
+                  "value": "true",
+                  "shortcut": ""
+                },
+                {
+                  "label": "False",
+                  "value": "false",
+                  "shortcut": ""
+                }
+              ],
+              "key": "sca-required",
+              "type": "radio",
+              "input": true
+            },
+            {
+              "label": "allowed-clients",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "select": ""
+                }
+              ],
+              "key": "allowed-clients",
+              "conditional": {
+                "show": false,
+                "when": "sca-required",
+                "eq": "true"
+              },
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "clients",
+                  "labelPosition": "left-left",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "http://localhost:4300/document-allowed-client?page=0&pageSize=100",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "idPath": "Id",
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.code }}</span>",
+                  "key": "select",
+                  "type": "select",
+                  "labelWidth": 40,
+                  "labelMargin": 1,
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                }
+              ]
+            },
+            {
+              "label": "allowed-formats",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "format": ""
+                }
+              ],
+              "key": "allowed-formats",
+              "conditional": {
+                "show": false,
+                "when": "sca-required",
+                "eq": "true"
+              },
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "format",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "http://localhost:4300/document-format-type?page=0&pageSize=100",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.code }}</span>",
+                  "key": "format",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                },
+                {
+                  "label": "max-size-kilobytes",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "http://localhost:4300/document-size?page=0&pageSize=10",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.kiloBytes }}</span>",
+                  "key": "max-size-kilobytes",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "optimize",
+          "reorder": false,
+          "addAnotherPosition": "bottom",
+          "layoutFixed": false,
+          "enableRowGroups": false,
+          "initEmpty": false,
+          "tableView": false,
+          "defaultValue": [
+            {}
+          ],
+          "key": "optimize",
+          "type": "datagrid",
+          "input": true,
+          "components": [
+            {
+              "label": "transform-to",
+              "widget": "choicesjs",
+              "tableView": true,
+              "dataSrc": "url",
+              "data": {
+                "url": "http://localhost:4300/document-Optimize-Type?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "valueProperty": "id",
+              "template": "<span>{{ item.code }}</span>",
+              "key": "transform-to",
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
+            },
+            {
+              "label": "size",
+              "optionsLabelPosition": "right",
+              "inline": false,
+              "tableView": false,
+              "values": [
+                {
+                  "label": "True",
+                  "value": "true",
+                  "shortcut": ""
+                },
+                {
+                  "label": "False",
+                  "value": "false",
+                  "shortcut": ""
+                }
+              ],
+              "key": "size",
+              "type": "radio",
+              "labelWidth": 40,
+              "labelMargin": 1,
+              "input": true
+            }
+          ]
+        },
+        {
+          "label": "starting-transition-name",
+          "labelPosition": "left-left",
+          "applyMaskOn": "change",
+          "tableView": true,
+          "key": "starting-transition-name",
+          "type": "textfield",
+          "input": true
+        },
+        {
+          "title": "operation",
+          "collapsible": false,
+          "key": "operation",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "documentManuelControl",
+              "optionsLabelPosition": "right",
+              "inline": false,
+              "tableView": false,
+              "values": [
+                {
+                  "label": "True",
+                  "value": "true",
+                  "shortcut": ""
+                },
+                {
+                  "label": "False",
+                  "value": "false",
+                  "shortcut": ""
+                }
+              ],
+              "key": "documentManuelControl",
+              "type": "radio",
+              "labelWidth": 40,
+              "labelMargin": 1,
+              "input": true
+            },
+            {
+              "label": "Tags Operation",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "tag": "",
+                  "Contact": ""
+                }
+              ],
+              "key": "TagsOperation",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Tag Operation",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "tag",
+                  "type": "textfield",
+                  "input": true
+                },
+                {
+                  "label": "Contact Operation",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "Contact",
+                  "type": "textfield",
+                  "input": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "metadata",
+          "collapsible": false,
+          "key": "metadata",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "EAV",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "property": "",
+                  "value": ""
+                }
+              ],
+              "key": "EntityProperty",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Property",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "property",
+                  "type": "textfield",
+                  "input": true
+                },
+                {
+                  "label": "value",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "value",
+                  "type": "textfield",
+                  "input": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "status",
+          "labelPosition": "left-left",
+          "widget": "choicesjs",
+          "tableView": true,
+          "dataSrc": "url",
+          "data": {
+            "url": "http://localhost:4300/Common-Status?page=0&pageSize=100",
+            "headers": [
+              {
+                "key": "",
+                "value": ""
+              }
+            ]
+          },
+          "idPath": "Id",
+          "valueProperty": "id",
+          "template": "<span>{{ item.code }}</span>",
+          "key": "status",
+          "type": "select",
+          "disableLimit": false,
+          "noRefreshOnScroll": false,
+          "applyMaskOn": "change",
+          "input": true
+        },
+        {
+          "label": "base-status",
+          "labelPosition": "left-left",
+          "widget": "choicesjs",
+          "tableView": true,
+          "dataSrc": "url",
+          "data": {
+            "url": "http://localhost:4300/Common-Status?page=0&pageSize=100",
+            "headers": [
+              {
+                "key": "",
+                "value": ""
+              }
+            ]
+          },
+          "idPath": "Id",
+          "valueProperty": "id",
+          "template": "<span>{{ item.code }}</span>",
+          "key": "base-status",
+          "type": "select",
+          "disableLimit": false,
+          "noRefreshOnScroll": false,
+          "applyMaskOn": "change",
+          "input": true
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "label": "Submit",
+      "key": "submit",
+      "disableOnInvalid": true,
+      "input": true,
+      "tableView": false
+    }
+  ]
 }

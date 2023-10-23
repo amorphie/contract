@@ -1,15 +1,15 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: DeleteProcessUploaded
+  name: deleteprocessuploaded
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: DeleteProcessUploaded
+    value: deleteprocessuploaded
   - name: gatewayAddr
-    value: localhost:26500
+    value: localhost:265000
   - name: gatewayKeepAlive
     value: 45s
   - name: usePlainTextConnection
