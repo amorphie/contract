@@ -72,11 +72,11 @@ namespace amorphie.contract.zeebe.Services
                 var tag = tagListDb.FirstOrDefault(x => x.Code == i.Tags.Code && x.Contact == i.Tags.Contact);
                 if (tag == null)
                 {
-                    _dbContext.Tag.Add(i.Tags);
+                    // _dbContext.Tag.Add(i.Tags);
                     _documentdef.DocumentTagsDetails.Add(new DocumentTagsDetail
                     {
                         DocumentDefinitionId = _documentdef.Id,
-                        TagId = i.TagId
+                        Tags = i.Tags
                     });
                 }
                 else
