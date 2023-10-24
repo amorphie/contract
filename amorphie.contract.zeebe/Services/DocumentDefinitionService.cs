@@ -101,14 +101,14 @@ namespace amorphie.contract.zeebe.Services
 
                 DocumentOptimizeType = new DocumentOptimizeType
                 {
-                    Code = x.transformto
+                    Id = ZeebeMessageHelper.StringToGuid(x.transformto)
                 },
                 Size = x.size,
                 DocumentDefinitionId = _documentdef.Id
             }).First();
 
 
-            var documentOptimizeTypedb = _dbContext.DocumentOptimizeType.FirstOrDefault(x => list.DocumentOptimizeType.Code == x.Code);
+            var documentOptimizeTypedb = _dbContext.DocumentOptimizeType.FirstOrDefault(x => list.DocumentOptimizeType.Id == x.Id);
             if (documentOptimizeTypedb != null)
             {
                 if (!_dbContext.DocumentOptimize.Any(x => x.DocumentDefinitionId == _documentdef.Id && x.DocumentOptimizeTypeId == documentOptimizeTypedb.Id))
@@ -130,7 +130,7 @@ namespace amorphie.contract.zeebe.Services
                        new DocumentOptimize
                        {
 
-                           DocumentOptimizeTypeId = list.Id,
+                           DocumentOptimizeType = list.DocumentOptimizeType,
                            Size = list.Size,
                            DocumentDefinitionId = _documentdef.Id
                        };
