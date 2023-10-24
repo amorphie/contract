@@ -278,9 +278,7 @@ namespace amorphie.contract.zeebe.Services
                   && x.DocumentFormat.DocumentSizeId == i.DocumentFormat.DocumentSizeId);
                 if (dacd == null)
                 {
-
                     _documentdef.DocumentUpload.DocumentFormatDetails.Add(i);
-
                 }
             }
             // _dbContext.SaveChanges();
@@ -299,15 +297,17 @@ namespace amorphie.contract.zeebe.Services
 
         private void DynamicToDocumentDefinitionDataModel()
         {
-            var data = JsonConvert.DeserializeObject<DocumentDefinitionDataModel>(_documentDefinitionDataDynamic);
-            if (data is DocumentDefinitionDataModel)
-            {
-                _documentDefinitionDataModel = data;
-            }
-            else
-            {
-                throw new Exception("DefinitionUpload data is DocumentDefinitionDataModel");
-            }
+            _documentDefinitionDataModel = new DocumentDefinitionDataModel();
+            _documentDefinitionDataModel.data = new Data();
+            _documentDefinitionDataModel.data = JsonConvert.DeserializeObject<Data>(_documentDefinitionDataDynamic);
+            // if (data is DocumentDefinitionDataModel)
+            // {
+            //     _documentDefinitionDataModel = data;
+            // }
+            // else
+            // {
+            //     throw new Exception("DefinitionUpload data is DocumentDefinitionDataModel");
+            // }
             // var documentDefinition = new DocumentDefinition();
             // var documentDefinitionLanguageDetailList = new List<DocumentDefinitionLanguageDetail>();
             // documentDefinitionLanguageDetailList.AddRange(
@@ -329,9 +329,10 @@ namespace amorphie.contract.zeebe.Services
         public async Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic? documentDefinitionDataDynamic)
         {
             _documentDefinitionDataDynamic = documentDefinitionDataDynamic;
-            DynamicToDocumentDefinitionDataModel();
             try
             {
+                DynamicToDocumentDefinitionDataModel();
+
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.name);
                 if (documentDefinition != null)
                 {
@@ -360,7 +361,7 @@ namespace amorphie.contract.zeebe.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return _documentdef;
 

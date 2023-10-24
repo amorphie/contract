@@ -11,7 +11,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
     {
         public static void MapZeebeDocumentDefinitionEndpoints(this WebApplication app)
         {
-            app.MapPost("/DefinitionUpload", DefinitionUpload)
+            app.MapPost("/definitionupload", DefinitionUpload)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -84,7 +84,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 messageVariables.Message = ex.Message;
                 messageVariables.LastTransition = "ErrorDefinition";
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+                return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
 
