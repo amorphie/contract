@@ -52,8 +52,8 @@ app.UseCors();
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
-db.Database.Migrate();
-DbInitializer.Initialize(db);
+// db.Database.Migrate();
+// DbInitializer.Initialize(db);
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
