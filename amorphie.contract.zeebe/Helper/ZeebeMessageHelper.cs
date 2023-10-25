@@ -44,51 +44,7 @@ public static class ZeebeMessageHelper
         }
         return dataGuid;
     }
-    public static DataTable GetDataTableFromObjects(object[] objects)
-
-    {
-
-        if (objects != null && objects.Length > 0)
-
-        {
-
-            Type t = objects[0].GetType();
-
-            DataTable dt = new DataTable(t.Name);
-
-            foreach (PropertyInfo pi in t.GetProperties())
-
-            {
-
-                dt.Columns.Add(new DataColumn(pi.Name));
-
-            }
-
-            foreach (var o in objects)
-
-            {
-
-                DataRow dr = dt.NewRow();
-
-                foreach (DataColumn dc in dt.Columns)
-
-                {
-
-                    dr[dc.ColumnName] = o.GetType().GetProperty(dc.ColumnName).GetValue(o, null);
-
-                }
-
-                dt.Rows.Add(dr);
-
-            }
-
-            return dt;
-
-        }
-
-        return null;
-
-    }
+   
     public static MessageVariables VariablesControl(dynamic body)
     {
         var messageVariables = new MessageVariables();
