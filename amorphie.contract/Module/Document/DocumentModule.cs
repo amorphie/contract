@@ -1,3 +1,4 @@
+using System.Xml.XPath;
 
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
@@ -29,23 +30,71 @@ public class DocumentModule
            CancellationToken cancellationToken
       )
     {
-        var query = context!.Document
-            .Skip(dataSearch.Page * dataSearch.PageSize)
-            .Take(dataSearch.PageSize);
-
-
-        if (!string.IsNullOrEmpty(dataSearch.Keyword))
+        try
         {
-            query = query.Where(x => x.Status.Code == dataSearch.Keyword);
-            // query = query.AsNoTracking().Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery("english", dataSearch.Keyword)));
+
+
+            var query = context!.Document
+                .Skip(dataSearch.Page * dataSearch.PageSize)
+                .Take(dataSearch.PageSize);
+
+
+            if (!string.IsNullOrEmpty(dataSearch.Keyword))
+            {
+                query = query.Where(x => x.Status.Code == dataSearch.Keyword);
+                // query = query.AsNoTracking().Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery("english", dataSearch.Keyword)));
+            }
+
+            var securityQuestions = await query.ToListAsync(cancellationToken);
+
+            if (securityQuestions.Any())
+            {
+
+                // var response = securityQuestions.Select(x => ObjectMapper.Mapper.Map<RootDocumentModel>(x));
+                var response = securityQuestions.Select(x =>
+                 new RootDocumentModel
+                 {
+                     DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                     StatuCode = x.Status.Code,
+                     CreatedAt = x.CreatedAt,
+                     DocumentDefinition = new DocumentDefinitionModel
+                     {
+                         Code = x.DocumentDefinition.Code,
+                         MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails!
+                                .Select(a => new MultilanguageText
+                                {
+                                    Label = a.MultiLanguage.Name,
+                                    Language = a.MultiLanguage.LanguageType.Code
+                                }).ToList(),
+                         DocumentOperations = new DocumentOperationsModel
+                         {
+                             DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
+                             DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail!.Select(x => new TagModel
+                             {
+                                 Contact = x.Tags.Contact,
+                                 Code = x.Tags.Code
+                             }).ToList()
+                         }
+                     },
+                     DocumentContent = new DocumentContentModel
+                     {
+                         ContentData = x.DocumentContent.ContentData,
+                         KiloBytesSize = x.DocumentContent.KiloBytesSize,
+                         ContentType = x.DocumentContent.ContentType,
+                         ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
+                         Name = x.DocumentContent.Name,
+                         Id = x.DocumentContent.Id.ToString()
+
+                     }
+                 }).ToList();
+
+
+                return Results.Ok(response);
+            }
         }
-
-        var securityQuestions = await query.ToListAsync(cancellationToken);
-
-        if (securityQuestions.Any())
+        catch (Exception ex)
         {
-            var response = securityQuestions.Select(x => ObjectMapper.Mapper.Map<RootDocumentModel>(x));
-            return Results.Ok(response);
+            throw ex;
         }
 
         return Results.NoContent();
