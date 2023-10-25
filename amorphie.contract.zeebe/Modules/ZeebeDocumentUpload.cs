@@ -59,7 +59,7 @@ namespace amorphie.contract.zeebe.Modules
               operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
               return operation;
           });
-            app.MapPost("/WaitingControl", WaitingControl)
+            app.MapPost("/waitingcontrol", WaitingControl)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -67,7 +67,7 @@ namespace amorphie.contract.zeebe.Modules
               operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
               return operation;
           });
-            app.MapPost("/NotValidated", NotValidated)
+            app.MapPost("/notvalidated", NotValidated)
                  .Produces(StatusCodes.Status200OK)
                  .WithOpenApi(operation =>
                  {
@@ -75,7 +75,7 @@ namespace amorphie.contract.zeebe.Modules
                      operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                      return operation;
                  });
-            app.MapPost("/Validated", Validated)
+            app.MapPost("/validated", Validated)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -85,7 +85,7 @@ namespace amorphie.contract.zeebe.Modules
             });
 
 
-            app.MapPost("/TimeoutUploaded", TimeoutUploaded)
+            app.MapPost("/timeoutuploaded", TimeoutUploaded)
         .Produces(StatusCodes.Status200OK)
         .WithOpenApi(operation =>
         {
@@ -93,7 +93,7 @@ namespace amorphie.contract.zeebe.Modules
             operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
             return operation;
         });
-            app.MapPost("/DeleteProcessUploaded", DeleteProcessUploaded)
+            app.MapPost("/deleteprocessuploaded", DeleteProcessUploaded)
         .Produces(StatusCodes.Status200OK)
         .WithOpenApi(operation =>
         {
@@ -101,7 +101,7 @@ namespace amorphie.contract.zeebe.Modules
             operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
             return operation;
         });
-            app.MapPost("/ErrorUploaded", ErrorUploaded)
+            app.MapPost("/erroruploaded", ErrorUploaded)
         .Produces(StatusCodes.Status200OK)
         .WithOpenApi(operation =>
         {
