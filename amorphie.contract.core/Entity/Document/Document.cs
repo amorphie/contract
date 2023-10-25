@@ -21,6 +21,6 @@ namespace amorphie.contract.core.Entity.Document
         public DocumentContent DocumentContent { get; set; }
         public Status Status { get; set; }
         [Required]
-        public Guid StatusId { get; set; } 
+        public Guid StatusId { get; set; }
     }
 }

@@ -7,10 +7,10 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Model.Document
 {
-  public class PageComponentSearch : DtoSearchBase
-{
- 
-}
+    public class PageComponentSearch : DtoSearchBase
+    {
+
+    }
 
     public class DocumentContentModel
     {
@@ -34,12 +34,13 @@ namespace amorphie.contract.core.Model.Document
         public bool DocumentManuelControl { get; set; }
         public List<TagModel> DocumentOperationsTagsDetail { get; set; }
     }
-public class TagModel {
+    public class TagModel
+    {
         public string Code { get; set; }
         public string Contact { get; set; }
-    
-}
-   
+
+    }
+
 
     public class RootDocumentModel
     {

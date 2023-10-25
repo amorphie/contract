@@ -12,9 +12,9 @@ namespace amorphie.contract.data.Configurations.Definition
         public void Configure(EntityTypeBuilder<core.Entity.Document.Document> builder)
         {
 
-        //       builder.Entity<Document>().HasIndex(item => item.SearchVector).HasMethod("GIN");
-        // builder..Entity<Document>().Property(item => item.SearchVector).HasComputedColumnSql(FullTextSearchHelper.GetTsVectorComputedColumnSql("english", new[] { "hangialanlarsearch olacaksa ekle", "componentName", "PageName", "transitionName" }), true);
-        
+            //       builder.Entity<Document>().HasIndex(item => item.SearchVector).HasMethod("GIN");
+            // builder..Entity<Document>().Property(item => item.SearchVector).HasComputedColumnSql(FullTextSearchHelper.GetTsVectorComputedColumnSql("english", new[] { "hangialanlarsearch olacaksa ekle", "componentName", "PageName", "transitionName" }), true);
+
         }
     }
 }
