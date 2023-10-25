@@ -122,15 +122,17 @@ namespace amorphie.contract.zeebe.Modules
           [FromServices] IMinioService minioService
       )
         {
-
-
             var messageVariables = new MessageVariables();
             try
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                var document = new amorphie.contract.core.Entity.Document.Document();
+                var document = new amorphie.contract.core.Entity.Document.Document
+                {
+                    Id = messageVariables.RecordIdGuid
+                };
+
                 var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
                 var status = dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
                 if (status != null)
