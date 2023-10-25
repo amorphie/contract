@@ -306,7 +306,7 @@ namespace amorphie.contract.zeebe.Modules
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");
                 messageVariables.Variables.Add("document", Newtonsoft.Json.JsonConvert.SerializeObject(document));
-                
+
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
