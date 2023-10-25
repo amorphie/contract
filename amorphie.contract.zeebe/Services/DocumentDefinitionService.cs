@@ -181,7 +181,7 @@ namespace amorphie.contract.zeebe.Services
                 }
                 else
                 {
-                     _documentdef.DocumentOperations.DocumentOperationsTagsDetail.Add(new DocumentOperationsTagsDetail
+                    _documentdef.DocumentOperations.DocumentOperationsTagsDetail.Add(new DocumentOperationsTagsDetail
                     {
                         Tags = i.Tags,
                         DocumentOperationsId = _documentdef.DocumentOperationsId
