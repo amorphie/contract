@@ -54,6 +54,7 @@ public class DocumentModule
                 var response = securityQuestions.Select(x =>
                  new RootDocumentModel
                  {
+                     Id = x.Id.ToString(),
                      DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
                      StatuCode = x.Status.Code,
                      CreatedAt = x.CreatedAt,
