@@ -309,6 +309,7 @@ namespace amorphie.contract.zeebe.Services
             _documentDefinitionDataModel = new DocumentDefinitionDataModel();
             _documentDefinitionDataModel.data = new Data();
             _documentDefinitionDataModel.data = JsonConvert.DeserializeObject<Data>(_documentDefinitionDataDynamic);
+
             // if (data is DocumentDefinitionDataModel)
             // {
             //     _documentDefinitionDataModel = data;
@@ -335,7 +336,7 @@ namespace amorphie.contract.zeebe.Services
 
         }
 
-        public async Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic? documentDefinitionDataDynamic)
+        public async Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic? documentDefinitionDataDynamic,Guid id)
         {
             _documentDefinitionDataDynamic = documentDefinitionDataDynamic;
             try
@@ -351,6 +352,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     _documentdef = new core.Entity.Document.DocumentDefinition
                     {
+                        Id=id,
                         Code = _documentDefinitionDataModel.data.name,
                         StatusId = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.status),
                         BaseStatusId = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.basestatus),

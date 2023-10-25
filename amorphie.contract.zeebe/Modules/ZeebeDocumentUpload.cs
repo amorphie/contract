@@ -128,7 +128,11 @@ namespace amorphie.contract.zeebe.Modules
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                var document = new amorphie.contract.core.Entity.Document.Document();
+                var document = new amorphie.contract.core.Entity.Document.Document
+                {
+                    Id = messageVariables.RecordIdGuid
+                };
+
                 var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
                 var status = dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
                 if (status != null)
@@ -167,7 +171,6 @@ namespace amorphie.contract.zeebe.Modules
                     messageVariables.Variables.Add("IsAutoControl", false);
 
                 }
-                document.Id = messageVariables.RecordIdGuid;
                 dbContext.Document.Add(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
