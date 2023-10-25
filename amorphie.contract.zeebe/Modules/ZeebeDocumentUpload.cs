@@ -139,12 +139,12 @@ namespace amorphie.contract.zeebe.Modules
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 var document = new amorphie.contract.core.Entity.Document.Document();
                 var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
+                var status = dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
+                if (status != null)
+                    document.StatusId = status.Id;
 
-                Guid documentDefinitionId;
-                if (!Guid.TryParse(documentDefinitionIdString, out documentDefinitionId))
-                {
-                    throw new Exception("DocumentDefinitionId not provided or not as a GUID");
-                }
+                Guid documentDefinitionId = ZeebeMessageHelper.StringToGuid(documentDefinitionIdString);
+
 
                 var fileName = entityData.GetProperty("identity").ToString() + "_" + documentDefinitionIdString + "_" + entityData.GetProperty("file-name").ToString();
                 document.DocumentContent = new DocumentContent

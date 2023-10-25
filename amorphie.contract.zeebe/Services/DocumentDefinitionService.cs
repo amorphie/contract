@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document;
@@ -147,39 +148,47 @@ namespace amorphie.contract.zeebe.Services
             {
                 DocumentDefinitionId = _documentdef.Id,
                 DocumentManuelControl = manuelControl,
+
+            }).First();
+            var list2 = _documentDefinitionDataModel.data.TagsOperation.Select(x => new DocumentOperationsTagsDetail
+            {
                 Tags = new core.Entity.Common.Tag
                 {
-                    Contact = x.Contact,
-                    Code = x.tag
+                    Code = x.tag,
+                    Contact = x.Contact
                 }
-            }).First();
-
-            var tagDb = _dbContext.Tag.FirstOrDefault(x => list.Tags.Code == x.Code && list.Tags.Contact == x.Contact);
-            if (tagDb != null)
-            {
-                if (!_dbContext.DocumentOperations.Any(x => x.TagId == tagDb.Id))
-                {
-                    _documentdef.DocumentOperations =
+            }).ToList();
+            list.DocumentOperationsTagsDetail = list2;
+            _documentdef.DocumentOperations =
                         new DocumentOperations
                         {
                             DocumentDefinitionId = _documentdef.Id,
                             DocumentManuelControl = manuelControl,
-                            TagId = tagDb.Id
+                            DocumentOperationsTagsDetail = new List<DocumentOperationsTagsDetail>()
+                            // TagId = tagDb.Id
                         };
+            foreach (var i in list.DocumentOperationsTagsDetail)
+            {
+                var tag = _dbContext.Tag.FirstOrDefault(x => x.Contact == i.Tags.Contact && x.Code == i.Tags.Code);
+                if (tag != null)
+                {
+                    _documentdef.DocumentOperations.DocumentOperationsTagsDetail.Add(new DocumentOperationsTagsDetail
+                    {
+                        TagId = tag.Id,
+                        DocumentOperationsId = _documentdef.DocumentOperationsId
+
+                    });
+                }
+                else
+                {
+                    _documentdef.DocumentOperations.DocumentOperationsTagsDetail.Add(new DocumentOperationsTagsDetail
+                    {
+                        Tags = i.Tags,
+                        DocumentOperationsId = _documentdef.DocumentOperationsId
+
+                    });
                 }
             }
-            else
-            {
-                _documentdef.DocumentOperations =
-                      new DocumentOperations
-                      {
-                          DocumentDefinitionId = _documentdef.Id,
-                          DocumentManuelControl = manuelControl,
-                          Tags = list.Tags
-                      };
-
-            }
-            // _dbContext.SaveChanges();
 
         }
         private void SetDocumentEOV()

@@ -15,9 +15,10 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
-        public bool DocumentManuelControl {get;set;}
-        [Required]
-        public Guid TagId { get; set; }
-        public Tag Tags {get;set;}
+        public bool DocumentManuelControl { get; set; }
+        public virtual ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();
+        // [Required]
+        // public Guid TagId { get; set; }
+        // public Tag Tags {get;set;}
     }
 }
