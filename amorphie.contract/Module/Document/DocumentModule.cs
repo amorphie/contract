@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Mapping;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Model.Document;
+using AutoMapper;
 
 namespace amorphie.contract;
 
@@ -104,6 +105,7 @@ public class DocumentModule
           [FromServices] ProjectDbContext context,
           CancellationToken cancellationToken
      )
+
     {
         try
         {
@@ -172,7 +174,58 @@ public class DocumentModule
         routeGroupBuilder.MapGet("search", getAllDocumentFullTextSearch);
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
     }
+    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+    [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    {
+        var query = context!.Document;
 
+        var securityQuestions = await query.ToListAsync(token);
+
+        if (securityQuestions.Any())
+        {
+
+            // var response = securityQuestions.Select(x => ObjectMapper.Mapper.Map<RootDocumentModel>(x));
+            var response = securityQuestions.Select(x =>
+             new RootDocumentModel
+             {
+                 Id = x.Id.ToString(),
+                 DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                 StatuCode = x.Status.Code,
+                 CreatedAt = x.CreatedAt,
+                 DocumentDefinition = new DocumentDefinitionModel
+                 {
+                     Code = x.DocumentDefinition.Code,
+                     MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails!
+                            .Select(a => new MultilanguageText
+                            {
+                                Label = a.MultiLanguage.Name,
+                                Language = a.MultiLanguage.LanguageType.Code
+                            }).ToList(),
+                     DocumentOperations = new DocumentOperationsModel
+                     {
+                         DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
+                         DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail!.Select(x => new TagModel
+                         {
+                             Contact = x.Tags.Contact,
+                             Code = x.Tags.Code
+                         }).ToList()
+                     }
+                 },
+                 DocumentContent = new DocumentContentModel
+                 {
+                     ContentData = x.DocumentContent.ContentData,
+                     KiloBytesSize = x.DocumentContent.KiloBytesSize,
+                     ContentType = x.DocumentContent.ContentType,
+                     ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
+                     Name = x.DocumentContent.Name,
+                     Id = x.DocumentContent.Id.ToString()
+
+                 }
+             }).ToList();
+            return Results.Ok(response);
+        }
+        return Results.NoContent();
+    }
 }
 
 
