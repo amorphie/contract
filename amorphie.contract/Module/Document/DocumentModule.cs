@@ -100,10 +100,10 @@ public class DocumentModule
 
         return Results.NoContent();
     }
-     async ValueTask<IResult> getAllDocumentAll(
-           [FromServices] ProjectDbContext context ,
-           CancellationToken cancellationToken
-      )
+    async ValueTask<IResult> getAllDocumentAll(
+          [FromServices] ProjectDbContext context,
+          CancellationToken cancellationToken
+     )
     {
         try
         {
