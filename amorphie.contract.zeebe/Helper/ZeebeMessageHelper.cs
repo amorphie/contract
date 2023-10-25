@@ -44,7 +44,7 @@ public static class ZeebeMessageHelper
         }
         return dataGuid;
     }
-   
+
     public static MessageVariables VariablesControl(dynamic body)
     {
         var messageVariables = new MessageVariables();
