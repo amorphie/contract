@@ -177,7 +177,8 @@ namespace amorphie.contract.zeebe.Modules
                     messageVariables.Variables.Add("IsAutoControl", false);
 
                 }
-
+                dbContext.Document.Add(document);
+                dbContext.SaveChanges();
                 messageVariables.Success = true;
 
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
