@@ -122,8 +122,6 @@ namespace amorphie.contract.zeebe.Modules
           [FromServices] IMinioService minioService
       )
         {
-
-
             var messageVariables = new MessageVariables();
             try
             {
@@ -169,6 +167,7 @@ namespace amorphie.contract.zeebe.Modules
                     messageVariables.Variables.Add("IsAutoControl", false);
 
                 }
+                document.Id = messageVariables.RecordIdGuid;
                 dbContext.Document.Add(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
@@ -306,7 +305,7 @@ namespace amorphie.contract.zeebe.Modules
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");
                 messageVariables.Variables.Add("document", Newtonsoft.Json.JsonConvert.SerializeObject(document));
-                
+
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
