@@ -16,12 +16,12 @@ namespace amorphie.contract;
     //     public DocumentUIModule(WebApplication app) : base(app)
     //     {
 
-    //     }
+//     }
 
-    //     public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentContentId"};
+//     public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentContentId"};
 
-    //     public override string? UrlFragment => "document";
+//     public override string? UrlFragment => "document";
 
 
-    // }
+// }
 
