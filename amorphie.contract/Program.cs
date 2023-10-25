@@ -62,7 +62,7 @@ DbInitializer.Initialize(db);
 //     app.UseSwaggerUI();
 // }
 
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName.IndexOf("Test")>-1)
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName.IndexOf("Test") > -1)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
