@@ -125,7 +125,6 @@ public class ProjectDbContext : DbContext
     public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
 
-
     protected IConfiguration Configuration { get; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -133,6 +132,7 @@ public class ProjectDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         // modelBuilder.Entity<DocumentDefinition>().Navigation(s => s.BaseStatus).AutoInclude();
         base.OnModelCreating(modelBuilder);
+
     }
 
 

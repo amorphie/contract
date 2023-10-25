@@ -1,3 +1,6 @@
+using System.Xml.XPath;
+using System.Xml.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +8,9 @@ using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
+using amorphie.contract.core.Model.Document;
 using AutoMapper;
+using amorphie.core.Base;
 
 namespace amorphie.contract.core.Mapping
 {
@@ -24,7 +29,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();
             CreateMap<DocumentFormatType, DocumentFormatType>().ReverseMap();
 
-          
+
 
 
             CreateMap<DocumentOperations, DocumentOperations>().ReverseMap();
@@ -46,9 +51,42 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
             #endregion
 
+            CreateMap<Document, RootDocumentModel>()
+                     .ConstructUsing(x => new RootDocumentModel
+                     {
+                         DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                         StatuCode = x.Status.Code,
+                         CreatedAt = x.CreatedAt,
+                         DocumentDefinition = new DocumentDefinitionModel
+                         {
+                             Code = x.DocumentDefinition.Code,
+                             MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails!
+                                .Select(a => new MultilanguageText
+                                {
+                                    Label = a.MultiLanguage.Name,
+                                    Language = a.MultiLanguage.LanguageType.Code
+                                }).ToList(),
+                             DocumentOperations = new DocumentOperationsModel
+                             {
+                                 DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
+                                 DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail!.Select(x => new TagModel
+                                 {
+                                     Contact = x.Tags.Contact,
+                                     Code = x.Tags.Code
+                                 }).ToList()
+                             }
+                         },
+                         DocumentContent = new DocumentContentModel
+                         {
+                             ContentData = x.DocumentContent.ContentData,
+                             KiloBytesSize = x.DocumentContent.KiloBytesSize,
+                             ContentType = x.DocumentContent.ContentType,
+                             ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
+                             Name = x.DocumentContent.Name,
+                             Id = x.DocumentContent.Id.ToString()
 
-
-
+                         }
+                     });
 
         }
     }
