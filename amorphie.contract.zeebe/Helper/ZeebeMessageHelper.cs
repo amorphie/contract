@@ -58,9 +58,9 @@ public static class ZeebeMessageHelper
         {
 
             messageVariables.InstanceIdGuid = StringToGuid(instanceIdAsString);
-        
+
             messageVariables.RecordIdGuid = StringToGuid(recordIdAsString);
-          
+
             messageVariables.TriggeredByGuid = StringToGuid(triggeredByAsString);
 
             messageVariables.TriggeredByBehalfOfGuid = StringToGuid(triggeredByBehalfOfAsString);
@@ -78,7 +78,7 @@ public static class ZeebeMessageHelper
             InstanceId = instanceIdAsString,
             Data = data,
             RecordId = recordIdAsString,
-            RecordIdGuid =  messageVariables.RecordIdGuid ,
+            RecordIdGuid = messageVariables.RecordIdGuid,
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
         };

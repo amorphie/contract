@@ -122,7 +122,7 @@ namespace amorphie.contract.zeebe.Modules
           [FromServices] IMinioService minioService
       )
         {
-            var messageVariables =  ZeebeMessageHelper.VariablesControl(body);
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
             try
             {
