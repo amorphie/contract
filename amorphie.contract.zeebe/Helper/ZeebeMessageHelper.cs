@@ -57,32 +57,14 @@ public static class ZeebeMessageHelper
         try
         {
 
-            Guid instanceId;
-            if (!Guid.TryParse(instanceIdAsString, out instanceId))
-            {
-                throw new Exception("InstanceId not provided or not as a GUID");
-            }
-            messageVariables.InstanceIdGuid = instanceId;
-            Guid recordId;
-            if (!Guid.TryParse(recordIdAsString, out recordId))
-            {
-                throw new Exception("RecordId not provided or not as a GUID");
-            }
-            messageVariables.RecordIdGuid = recordId;
+            messageVariables.InstanceIdGuid = StringToGuid(instanceIdAsString);
+        
+            messageVariables.RecordIdGuid = StringToGuid(recordIdAsString);
+          
+            messageVariables.TriggeredByGuid = StringToGuid(triggeredByAsString);
 
-            Guid triggeredBy;
-            if (!Guid.TryParse(triggeredByAsString, out triggeredBy))
-            {
-                throw new Exception("triggeredBy not provided or not as a GUID");
-            }
-            messageVariables.TriggeredByGuid = triggeredBy;
-
-            Guid triggeredByBehalfOf;
-            if (!Guid.TryParse(triggeredByBehalfOfAsString, out triggeredByBehalfOf))
-            {
-                throw new Exception("triggeredBy not provided or not as a GUID");
-            }
-            messageVariables.TriggeredByBehalfOfGuid = triggeredByBehalfOf;
+            messageVariables.TriggeredByBehalfOfGuid = StringToGuid(triggeredByBehalfOfAsString);
+            // messageVariables bunu dön 
 
         }
         catch (Exception ex)
@@ -96,6 +78,7 @@ public static class ZeebeMessageHelper
             InstanceId = instanceIdAsString,
             Data = data,
             RecordId = recordIdAsString,
+            RecordIdGuid =  messageVariables.RecordIdGuid ,
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
         };

@@ -122,10 +122,10 @@ namespace amorphie.contract.zeebe.Modules
           [FromServices] IMinioService minioService
       )
         {
-            var messageVariables = new MessageVariables();
+            var messageVariables =  ZeebeMessageHelper.VariablesControl(body);
+
             try
             {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 var document = new amorphie.contract.core.Entity.Document.Document
@@ -280,6 +280,7 @@ namespace amorphie.contract.zeebe.Modules
 
             catch (Exception ex)
             {
+
                 messageVariables.Success = true;
                 messageVariables.Message = ex.Message;
                 messageVariables.LastTransition = "ErrorUploaded";
