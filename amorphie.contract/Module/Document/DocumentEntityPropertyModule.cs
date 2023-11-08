@@ -12,17 +12,17 @@ namespace amorphie.contract;
 
     public class DocumentEntityPropertyModule
         : BaseBBTRoute<DocumentEntityProperty, DocumentEntityProperty, ProjectDbContext>
+{
+    public DocumentEntityPropertyModule(WebApplication app) : base(app)
     {
-        public DocumentEntityPropertyModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","EntityPropertyId"};
-
-        public override string? UrlFragment => "document-entity-property";
-
-
-      
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "EntityPropertyId" };
+
+    public override string? UrlFragment => "document-entity-property";
+
+
+
+
+}
 

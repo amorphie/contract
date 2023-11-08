@@ -18,7 +18,7 @@ public class DocumentGroupDetailModule
     {
     }
 
-    public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentGroupId"};
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentGroupId" };
 
     public override string? UrlFragment => "document-group-detail";
 

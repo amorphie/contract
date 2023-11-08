@@ -9,7 +9,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentTemplateDetail : EntityBase
     {
         [Required]
-         public Guid DocumentDefinitionId { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]
         public Guid DocumentTemplateId { get; set; }

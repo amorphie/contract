@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
 {
- // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class AllowedFormatsUploadList
     {
         public string format { get; set; }
@@ -27,13 +27,13 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public List<string> Tags { get; set; }
         public List<EntityProperty> EntityProperty { get; set; }
         public string versiyon { get; set; }
-        public Dictionary<string,bool> RenderAllowedClients { get; set; }
+        public Dictionary<string, bool> RenderAllowedClients { get; set; }
         public List<TemplateList> TemplateList { get; set; }
         public bool DocumentManuelControl { get; set; }
         public List<string> UploadTags { get; set; }
         public bool Size { get; set; }
         public bool ScaRequired { get; set; }
-        public Dictionary<string,bool>  UploadAllowedClients { get; set; }
+        public Dictionary<string, bool> UploadAllowedClients { get; set; }
         public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
         public string TransformTo { get; set; }
     }
@@ -45,7 +45,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string PropertyName { get; set; }
     }
 
-   
+
     public class Root
     {
         public Data data { get; set; }
@@ -63,6 +63,6 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string title { get; set; }
     }
 
-   
+
 
 }

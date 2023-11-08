@@ -2,10 +2,10 @@ using FluentValidation;
 using amorphie.contract.core.Entity.Document;
 
 public sealed class DocumentOptimizeTypeValidator : AbstractValidator<DocumentOptimizeType>
+{
+    public DocumentOptimizeTypeValidator()
     {
-        public DocumentOptimizeTypeValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

@@ -21,7 +21,7 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
         public Guid StatusId { get; set; }
         public Status Status { get; set; }
         public virtual ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
-        public virtual ICollection<DocumentGroupLanguageDetail> DocumentGroupLanguageDetail { get; set; }= new List<DocumentGroupLanguageDetail>();
+        public virtual ICollection<DocumentGroupLanguageDetail> DocumentGroupLanguageDetail { get; set; } = new List<DocumentGroupLanguageDetail>();
 
     }
 }

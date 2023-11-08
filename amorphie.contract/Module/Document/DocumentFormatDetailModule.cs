@@ -12,17 +12,17 @@ namespace amorphie.contract;
 
     public class DocumentFormatDetailModule
         : BaseBBTRoute<DocumentFormatDetail, DocumentFormatDetail, ProjectDbContext>
+{
+    public DocumentFormatDetailModule(WebApplication app) : base(app)
     {
-        public DocumentFormatDetailModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentFormatId"};
-
-        public override string? UrlFragment => "document-format-detail";
-
-
-      
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentFormatId" };
+
+    public override string? UrlFragment => "document-format-detail";
+
+
+
+
+}
 
