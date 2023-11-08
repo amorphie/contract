@@ -6,12 +6,12 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Model
 {
-  public class PageComponentSearch : DtoSearchBase
-  {
+    public class PageComponentSearch : DtoSearchBase
+    {
 
-  }
-  public class ComponentSearch
-  {
-    public required string Keyword {get;set;}
-  }
+    }
+    public class ComponentSearch
+    {
+        public required string Keyword { get; set; }
+    }
 }

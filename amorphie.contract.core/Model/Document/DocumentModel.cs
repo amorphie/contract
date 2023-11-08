@@ -7,7 +7,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Model.Document
 {
-   
+
 
     public class DocumentContentModel
     {
