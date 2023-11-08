@@ -46,7 +46,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
     }
 
    
-    public class Root
+    public class DocumentDefinitionDataModel
     {
         public Data data { get; set; }
     }
