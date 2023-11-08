@@ -45,7 +45,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string PropertyName { get; set; }
     }
 
-   
+
     public class DocumentDefinitionDataModel
     {
         public Data data { get; set; }

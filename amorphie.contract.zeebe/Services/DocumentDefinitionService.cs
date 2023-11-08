@@ -317,9 +317,10 @@ namespace amorphie.contract.zeebe.Services
             try
             {
                 DynamicToDocumentDefinitionDataModel();
-                var onHoldStatus = _dbContext.Status.FirstOrDefault(x=>x.Code == "on-hold");
-                if(onHoldStatus==null){
-                    onHoldStatus =new Status{Code="on-hold"};
+                var onHoldStatus = _dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
+                if (onHoldStatus == null)
+                {
+                    onHoldStatus = new Status { Code = "on-hold" };
                 }
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code);
                 if (documentDefinition != null)
