@@ -13,6 +13,7 @@ using amorphie.contract.core.Mapping;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Model.Document;
 using AutoMapper;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract;
 

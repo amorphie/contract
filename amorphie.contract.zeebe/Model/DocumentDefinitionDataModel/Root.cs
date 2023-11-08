@@ -6,78 +6,55 @@ using Newtonsoft.Json;
 
 namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class AllowedClient
-    {
-        public string select { get; set; }
-    }
-
-    public class AllowedFormat
+ // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class AllowedFormatsUploadList
     {
         public string format { get; set; }
 
         [JsonProperty("max-size-kilobytes")]
         public string maxsizekilobytes { get; set; }
+        public string Format { get; set; }
+        public string MaxSizeKilobytes { get; set; }
     }
 
     public class Data
     {
         public string header { get; set; }
-        public string name { get; set; }
-        public List<Title> titles { get; set; }
-        public List<Tag> tags { get; set; }
-
-        [JsonProperty("sca-required")]
-        public bool scarequired { get; set; }
-
-        [JsonProperty("allowed-clients")]
-        public List<AllowedClient> allowedclients { get; set; }
-
-        [JsonProperty("allowed-formats")]
-        public List<AllowedFormat> allowedformats { get; set; }
-        public List<Optimize> optimize { get; set; }
-
-        [JsonProperty("starting-transition-name")]
-        public string startingtransitionname { get; set; }
-        public bool documentManuelControl { get; set; }
-        public List<TagsOperation> TagsOperation { get; set; }
+        public string DocumentType { get; set; }
+        public string Code { get; set; }
+        public List<Title> Titles { get; set; }
+        public string StartingTransitionName { get; set; }
+        public List<string> Tags { get; set; }
         public List<EntityProperty> EntityProperty { get; set; }
-        public string status { get; set; }
-
-        [JsonProperty("base-status")]
-        public string basestatus { get; set; }
+        public string versiyon { get; set; }
+        public Dictionary<string,bool> RenderAllowedClients { get; set; }
+        public List<TemplateList> TemplateList { get; set; }
+        public bool DocumentManuelControl { get; set; }
+        public List<string> UploadTags { get; set; }
+        public bool Size { get; set; }
+        public bool ScaRequired { get; set; }
+        public Dictionary<string,bool>  UploadAllowedClients { get; set; }
+        public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
+        public string TransformTo { get; set; }
     }
-
-
 
     public class EntityProperty
     {
         public string property { get; set; }
         public string value { get; set; }
+        public string PropertyName { get; set; }
     }
 
-    public class Optimize
-    {
-        [JsonProperty("transform-to")]
-        public string transformto { get; set; }
-        public bool size { get; set; }
-    }
-
-    public class DocumentDefinitionDataModel
+   
+    public class Root
     {
         public Data data { get; set; }
     }
 
-    public class Tag
+    public class TemplateList
     {
-        public string tag { get; set; }
-        public string Contact { get; set; }
-    }
-
-    public class TagsOperation
-    {
-        public string tag { get; set; }
-        public string Contact { get; set; }
+        public string language { get; set; }
+        public string RenderTemplate { get; set; }
     }
 
     public class Title
@@ -86,5 +63,6 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string title { get; set; }
     }
 
+   
 
 }
