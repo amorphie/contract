@@ -1,3 +1,4 @@
+using System.Net;
 using System.IO.Compression;
 
 using amorphie.core.Module.minimal_api;
@@ -10,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Model;
 using Google.Rpc;
+using AutoMapper;
+using Refit;
+using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract;
 
@@ -28,11 +32,40 @@ public class DocumentDefinitionModule
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("getAnyDocumentDefinitionListSearch", getAnyDocumentDefinitionListSearch);
+        routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
+    }
+    async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
+   [FromHeader(Name = "Language")] string? language = "en-EN")
+    {
+        var query = context!.DocumentDefinition.AsQueryable();
+
+        if (data != null)
+        {
+            data.Keyword = data.Keyword.Trim();
+            if (!string.IsNullOrEmpty(data.Keyword.Trim()) && data.Keyword != "*" && data.Keyword != "string")
+            {
+                query = query.Where(x => x.Code.Contains(data.Keyword));
+            }
+        }
+        var list = await query.Select(x => new
+        {
+            x.Id,
+            x.Code,
+            title = x.DocumentDefinitionLanguageDetails.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
+            x.DocumentDefinitionLanguageDetails.Where(a => a.MultiLanguage.LanguageType.Code == language)
+            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
+            x.DocumentDefinitionLanguageDetails.Where(a => a.MultiLanguage.LanguageType.Code == "en-EN")
+            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
+
+        }).ToListAsync(token);
+        // var list = await query.ToListAsync(token);
+        return Results.Ok(list);
     }
     async ValueTask<IResult> getAnyDocumentDefinitionListSearch(
         [FromServices] ProjectDbContext context, [AsParameters] ComponentSearch dataSearch,
         CancellationToken cancellationToken
-   )
+    )
     {
         try
         {
