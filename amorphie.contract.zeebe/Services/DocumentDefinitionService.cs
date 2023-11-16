@@ -52,18 +52,23 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentOptimize()
         {
-            _documentdef.DocumentOptimize = new DocumentOptimize
+            if (_documentDefinitionDataModel.data.TransformTo != null)
             {
-                DocumentOptimizeType = new DocumentOptimizeType
+                _documentdef.DocumentOptimize = new DocumentOptimize
                 {
-                    Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
-                },
-                Size = _documentDefinitionDataModel.data.Size,
-                DocumentDefinitionId = _documentdef.Id
-            };
+                    DocumentOptimizeType = new DocumentOptimizeType
+                    {
+                        Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
+                    },
+                    Size = _documentDefinitionDataModel.data.Size,
+                    DocumentDefinitionId = _documentdef.Id
+                };
+            }
         }
         private void SetDocumentOperation()
         {
+            if(_documentDefinitionDataModel.data.UploadTags==null)
+            return;
             var manuelControl = _documentDefinitionDataModel.data.DocumentManuelControl;
             var list2 = _documentDefinitionDataModel.data.UploadTags.Select(x => new DocumentOperationsTagsDetail
             {
@@ -236,7 +241,10 @@ namespace amorphie.contract.zeebe.Services
 
         private void DynamicToDocumentDefinitionDataModel()
         {
-            _documentDefinitionDataModel = JsonConvert.DeserializeObject<DocumentDefinitionDataModel>(_documentDefinitionDataDynamic);
+            _documentDefinitionDataModel = new DocumentDefinitionDataModel();
+            _documentDefinitionDataModel.data = new Data();
+
+            _documentDefinitionDataModel.data = JsonConvert.DeserializeObject<Data>(_documentDefinitionDataDynamic);
         }
 
 
