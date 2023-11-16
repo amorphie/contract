@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: timeoutcontractdefinition
+spec:
+  type: bindings.zeebe.jobworker
+  version: v1
+  metadata:
+  - name: jobType
+    value: timeoutcontractdefinition
+  - name: gatewayAddr
+    value: localhost:26500
+  - name: gatewayKeepAlive
+    value: 45s
+  - name: usePlainTextConnection
+    value: true
