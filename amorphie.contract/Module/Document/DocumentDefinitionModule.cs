@@ -43,7 +43,7 @@ public class DocumentDefinitionModule
         if (data != null)
         {
             data.Keyword = data.Keyword.Trim();
-            if (!string.IsNullOrEmpty(data.Keyword.Trim()) && data.Keyword != "*"&& data.Keyword != "string")
+            if (!string.IsNullOrEmpty(data.Keyword.Trim()) && data.Keyword != "*" && data.Keyword != "string")
             {
                 query = query.Where(x => x.Code.Contains(data.Keyword));
             }
