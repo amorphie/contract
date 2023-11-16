@@ -22,7 +22,7 @@ public class DocumentGroupModule
     public override string[]? PropertyCheckList => new string[] { "Code", "Name" };
 
     public override string? UrlFragment => "document-group";
-      public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
+    public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("getAnyDocumentGroupListSearch", getAnyDocumentGroupListSearch);

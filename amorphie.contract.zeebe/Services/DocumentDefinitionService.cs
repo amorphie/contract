@@ -67,8 +67,8 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentOperation()
         {
-            if(_documentDefinitionDataModel.data.UploadTags==null)
-            return;
+            if (_documentDefinitionDataModel.data.UploadTags == null)
+                return;
             var manuelControl = _documentDefinitionDataModel.data.DocumentManuelControl;
             var list2 = _documentDefinitionDataModel.data.UploadTags.Select(x => new DocumentOperationsTagsDetail
             {
