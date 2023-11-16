@@ -1,0 +1,642 @@
+{
+  "display": "form",
+  "components": [
+    {
+      "label": "Header",
+      "applyMaskOn": "change",
+      "hideLabel": true,
+      "disabled": true,
+      "tableView": true,
+      "key": "header",
+      "type": "textfield",
+      "input": true,
+      "defaultValue": "Contract Management"
+    },
+    {
+      "label": "Document Type",
+      "widget": "choicesjs",
+      "tableView": true,
+      "data": {
+        "values": [
+          {
+            "label": "OnlineSing",
+            "value": "onlineSing"
+          },
+          {
+            "label": "Upload",
+            "value": "upload"
+          },
+          {
+            "label": "RenderUpload",
+            "value": "renderUpload"
+          }
+        ]
+      },
+      "key": "DocumentType",
+      "type": "select",
+      "input": true,
+      "defaultValue": "renderUpload"
+    },
+    {
+      "title": "Document Defination",
+      "collapsible": false,
+      "key": "documentDefination",
+      "type": "panel",
+      "label": "Panel",
+      "input": false,
+      "tableView": false,
+      "components": [
+        {
+          "label": "Code",
+          "labelPosition": "left-left",
+          "tooltip": "Belgenin benzersiz kodu, sistemde daha önce tanımlanmış bir belgeyi engellemek için kontrol edilir.",
+          "applyMaskOn": "change",
+          "tableView": true,
+          "case": "lowercase",
+          "validateOn": "blur",
+          "validate": {
+            "required": true,
+            "pattern": "^\\S*$",
+            "custom": " \nFormio.request(\n  'https://test-amorphie-contract.burgan.com.tr/document-definition/getAnyDocumentDefinitionListSearch?Keyword='+input\n  ,'GET',\n  null,\n  null,\n  {\n    headers: {\n      'content-type': 'application/json'\n    },\n    mode: 'cors',\n  }).then(function(result) {\n    console.log(\"result = \" + result); \n    rest = result;\n    \n  });\n  valid = !rest ? true : 'Daha önce eklenmiş kayıt';\n \nconsole.log(\"rest\"+rest);\n\n "
+          },
+          "unique": true,
+          "errorLabel": "Boşluk Girilemez",
+          "key": "Code",
+          "type": "textfield",
+          "labelWidth": 40,
+          "labelMargin": 1,
+          "input": true
+        },
+        {
+          "label": "Title",
+          "tooltip": "Belgenin başlığı, farklı dillerde tanımlanabilir. Her dil için bir başlık girilmesi gerekir.",
+          "reorder": false,
+          "addAnotherPosition": "bottom",
+          "layoutFixed": false,
+          "enableRowGroups": false,
+          "initEmpty": false,
+          "tableView": false,
+          "defaultValue": [
+            {
+              "textField": "",
+              "language": "",
+              "label": "",
+              "selectBoxes": {},
+              "select": "",
+              "title": ""
+            }
+          ],
+          "key": "Titles",
+          "type": "datagrid",
+          "input": true,
+          "components": [
+            {
+              "label": "Language",
+              "labelPosition": "left-left",
+              "widget": "choicesjs",
+              "tooltip": "Dökümanın dil tercihi",
+              "uniqueOptions": true,
+              "tableView": true,
+              "dataSrc": "url",
+              "data": {
+                "url": "https://test-amorphie-contract.burgan.com.tr/Common-LanguageType?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "idPath": "Id",
+              "valueProperty": "id",
+              "template": "<span>{{ item.code }}</span>",
+              "validate": {
+                "required": true
+              },
+              "errorLabel": "Dil Seçimi Yapınız",
+              "key": "language",
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
+            },
+            {
+              "label": "Title",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "title",
+              "type": "textfield",
+              "input": true
+            }
+          ]
+        },
+        {
+          "label": "Starting Transition Name",
+          "labelPosition": "left-left",
+          "applyMaskOn": "change",
+          "tableView": true,
+          "key": "StartingTransitionName",
+          "type": "textfield",
+          "input": true
+        },
+        {
+          "label": "Tags",
+          "widget": "choicesjs",
+          "tooltip": "Belge ile ilişkilendirilecek etiketler, belirli servislerden bilgi alınmasını sağlar.",
+          "tableView": true,
+          "multiple": true,
+          "dataSrc": "url",
+          "data": {
+            "url": "https://test-amorphie-contract.burgan.com.tr/Common-Tag?page=0&pageSize=100",
+            "headers": [
+              {
+                "key": "",
+                "value": ""
+              }
+            ]
+          },
+          "valueProperty": "id",
+          "template": "<span>{{ item.code }} -> {{ item.contact }}</span>",
+          "key": "Tags",
+          "type": "select",
+          "disableLimit": false,
+          "noRefreshOnScroll": false,
+          "input": true
+        },
+        {
+          "label": "Meta Data",
+          "tooltip": "Belge için birden fazla kural tanımı yapılmasını sağlar. Bu metadata, belgenin son kullanma tarihini, geçerlilik süresini ve diğer özelliklerini içerebilir.",
+          "reorder": false,
+          "addAnotherPosition": "bottom",
+          "layoutFixed": false,
+          "enableRowGroups": false,
+          "initEmpty": false,
+          "tableView": false,
+          "defaultValue": [
+            {
+              "property": "",
+              "value": "",
+              "PropertyName": ""
+            }
+          ],
+          "key": "EntityProperty",
+          "type": "datagrid",
+          "input": true,
+          "components": [
+            {
+              "label": "Name",
+              "tooltip": "Field Bilgisi(Key)",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "PropertyName",
+              "type": "textfield",
+              "input": true
+            },
+            {
+              "label": "PropertyValue",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "key": "value",
+              "type": "textfield",
+              "input": true
+            }
+          ]
+        },
+        {
+          "title": "Render",
+          "tooltip": "'OnlineSing' için özel bir şablonun kullanılması durumunda, şablonun versiyonu, hangi müşteri türlerine izin verildiği ve hangi dillerde şablonların mevcut olduğu bilgileri gereklidir.“RenderUpload” özelliği, belgenin render edilip yüklendiği senaryolar için kullanılır. Genellikle, belgenin öncelikle bir şablon veya form kullanılarak oluşturulduğu ve ardından yüklendiği durumları kapsar. ",
+          "collapsible": true,
+          "key": "render",
+          "conditional": {
+            "show": false,
+            "when": "DocumentType",
+            "eq": "upload"
+          },
+          "type": "panel",
+          "label": "Panel",
+          "collapsed": false,
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Versiyon",
+              "tooltip": "Belge için kullanılacak online imza şablonunun sürüm bilgisi.",
+              "applyMaskOn": "change",
+              "tableView": true,
+              "validate": {
+                "required": true,
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$",
+                "customMessage": "Versiyon Bilgisi Giriniz Örn:1.0.0"
+              },
+              "errorLabel": "Versiyon Bilgisi Giriniz",
+              "key": "versiyon",
+              "type": "textfield",
+              "input": true
+            },
+            {
+              "label": "Allowed Clients",
+              "labelPosition": "left-left",
+              "optionsLabelPosition": "right",
+              "tooltip": "Hangi client’ların belgeyi yükleyebileceği bilgisi.",
+              "tableView": false,
+              "dataSrc": "url",
+              "defaultValue": {
+                "s": false
+              },
+              "values": [
+                {
+                  "label": "",
+                  "value": "",
+                  "shortcut": ""
+                }
+              ],
+              "valueProperty": "id",
+              "validate": {
+                "required": true
+              },
+              "errorLabel": "Client Bilgisi Seçiniz",
+              "key": "RenderAllowedClients",
+              "type": "selectboxes",
+              "labelWidth": 30,
+              "labelMargin": 3,
+              "data": {
+                "url": "https://test-amorphie-contract.burgan.com.tr/document-allowed-client?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "template": "<span>{{ item.code }}</span>",
+              "input": true,
+              "inputType": "checkbox"
+            },
+            {
+              "label": "Template",
+              "tooltip": "Kullanılacak olan şablonun dili ve formatı. Farklı dil seçenekleri sunulabilir.",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "language": "",
+                  "RenderTemplate": ""
+                }
+              ],
+              "key": "TemplateList",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Language",
+                  "labelPosition": "left-left",
+                  "widget": "choicesjs",
+                  "tooltip": "Döküman template dil bilgisi",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/Common-LanguageType?page=0&pageSize=100",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "idPath": "Id",
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.code }}</span>",
+                  "validate": {
+                    "required": true
+                  },
+                  "errorLabel": "Dil Seçimi Yapınız",
+                  "key": "language",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                },
+                {
+                  "label": "Template",
+                  "widget": "choicesjs",
+                  "tooltip": "Template bilgisi",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-template-engine.burgan.com.tr/Template/Definition/name?query=%25",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "idPath": "item",
+                  "valueProperty": "value",
+                  "template": "<span>{{ item }}</span>",
+                  "validate": {
+                    "required": true
+                  },
+                  "errorLabel": "Template Seçiniz",
+                  "key": "RenderTemplate",
+                  "type": "select",
+                  "selectValues": "templateDefinitionNames",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Upload",
+          "tooltip": "“Upload” özelliği, belgenin yüklenmesiyle ilgili ayrıntıları içerir. Bu, belgenin nasıl ve hangi formatlarda yükleneceğini belirleyen kurallar setidir. İlgili özellikler şunları içerir:",
+          "collapsible": true,
+          "key": "upload",
+          "conditional": {
+            "show": false,
+            "when": "DocumentType",
+            "eq": "onlineSing"
+          },
+          "type": "panel",
+          "label": "Panel",
+          "collapsed": false,
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "title": "Operation Kontrol",
+              "tooltip": "Operasyon Kontrol",
+              "collapsible": false,
+              "key": "operation",
+              "type": "panel",
+              "label": "Panel",
+              "input": false,
+              "tableView": false,
+              "components": [
+                {
+                  "label": "Document Manuel Control",
+                  "optionsLabelPosition": "right",
+                  "tooltip": "Döküman Manuel Kontrol",
+                  "inline": false,
+                  "tableView": false,
+                  "defaultValue": false,
+                  "values": [
+                    {
+                      "label": "True",
+                      "value": "true",
+                      "shortcut": ""
+                    },
+                    {
+                      "label": "False",
+                      "value": "false",
+                      "shortcut": ""
+                    }
+                  ],
+                  "key": "DocumentManuelControl",
+                  "type": "radio",
+                  "labelWidth": 40,
+                  "labelMargin": 1,
+                  "input": true
+                },
+                {
+                  "label": "Tags",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "multiple": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/Common-Tag?page=0&pageSize=100",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.code }} -> {{ item.contact }}</span>",
+                  "validate": {
+                    "multiple": true
+                  },
+                  "key": "UploadTags",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                }
+              ]
+            },
+            {
+              "label": "Size Optimize",
+              "optionsLabelPosition": "right",
+              "tooltip": "Dosyanın sunucuya yüklenmeden önce boyutunun optimize edilip edilmeyeceği ve eğer öyleyse, hangi format ve boyuta dönüştürüleceği.",
+              "inline": false,
+              "tableView": false,
+              "defaultValue": false,
+              "values": [
+                {
+                  "label": "True",
+                  "value": "true",
+                  "shortcut": ""
+                },
+                {
+                  "label": "False",
+                  "value": "false",
+                  "shortcut": ""
+                }
+              ],
+              "validate": {
+                "required": true
+              },
+              "errorLabel": "Optimize Bilgisi Seçiniz.",
+              "key": "Size",
+              "type": "radio",
+              "labelWidth": 40,
+              "labelMargin": 1,
+              "input": true
+            },
+            {
+              "label": "Transform To Format",
+              "widget": "choicesjs",
+              "tooltip": "Hangi Türde Transform Edilecek",
+              "tableView": true,
+              "dataSrc": "url",
+              "data": {
+                "url": "https://test-amorphie-contract.burgan.com.tr/document-Optimize-Type?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "valueProperty": "id",
+              "template": "<span>{{ item.code }}</span>",
+              "key": "TransformTo",
+              "conditional": {
+                "show": true,
+                "when": "Size",
+                "eq": "true"
+              },
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
+            },
+            {
+              "label": "Sca-required",
+              "labelPosition": "left-left",
+              "optionsLabelPosition": "top",
+              "tooltip": "Güvenli müşteri doğrulamasının (iki faktörlü doğrulama) gerekip gerekmediği. Güvenlik gereksinimlerine bağlı olarak bu özellik aktif edilebilir.",
+              "inline": false,
+              "tableView": false,
+              "defaultValue": false,
+              "values": [
+                {
+                  "label": "True",
+                  "value": "true",
+                  "shortcut": ""
+                },
+                {
+                  "label": "False",
+                  "value": "false",
+                  "shortcut": ""
+                }
+              ],
+              "key": "ScaRequired",
+              "type": "radio",
+              "input": true
+            },
+            {
+              "label": "Allowed Formats",
+              "tooltip": "Belgenin yüklenebileceği formatlar ve bu formatlar için maksimum boyut sınırlamaları. Örneğin, belgenin PNG veya JPG formatında ve belirli bir kilobayt limiti içinde olması gerekebilir.",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "format": "",
+                  "max-size-kilobytes": "",
+                  "Format": "",
+                  "MaxSizeKilobytes": ""
+                }
+              ],
+              "key": "AllowedFormatsUploadList",
+              "conditional": {
+                "show": false,
+                "when": "ScaRequired",
+                "eq": "true"
+              },
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Format",
+                  "widget": "choicesjs",
+                  "tooltip": "İzin verilen formatlar",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/document-format-type?page=0&pageSize=100",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.code }}</span>",
+                  "validate": {
+                    "required": true
+                  },
+                  "errorLabel": "Format Seçiniz",
+                  "key": "Format",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                },
+                {
+                  "label": "Max Size Kilobytes",
+                  "widget": "choicesjs",
+                  "tooltip": "Dökümanın Boyut Bilgisi",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/document-size?page=0&pageSize=10",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.kiloBytes }}</span>",
+                  "validate": {
+                    "required": true
+                  },
+                  "errorLabel": "Kilobytes Bilgisi Giriniz",
+                  "key": "MaxSizeKilobytes",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                }
+              ]
+            },
+            {
+              "label": "Allowed Clients",
+              "labelPosition": "left-left",
+              "optionsLabelPosition": "right",
+              "tooltip": "Hangi client türlerinin belgeyi yükleyebileceğini belirler.",
+              "tableView": false,
+              "dataSrc": "url",
+              "defaultValue": {
+                "s": false
+              },
+              "values": [
+                {
+                  "label": "",
+                  "value": "",
+                  "shortcut": ""
+                }
+              ],
+              "valueProperty": "id",
+              "validate": {
+                "required": true
+              },
+              "errorLabel": "Client Bilgisi Seçiniz",
+              "key": "UploadAllowedClients",
+              "type": "selectboxes",
+              "labelWidth": 30,
+              "labelMargin": 3,
+              "data": {
+                "url": "https://test-amorphie-contract.burgan.com.tr/document-allowed-client?page=0&pageSize=100",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ]
+              },
+              "template": "<span>{{ item.code }}</span>",
+              "input": true,
+              "inputType": "checkbox"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
