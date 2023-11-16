@@ -10,9 +10,9 @@
       <bpmn:endEvent id="Event_0s90jml" name="End">
         <bpmn:incoming>Flow_15ecgxi</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:serviceTask id="Activity_0jowvcz" name="DocumentGroupDefinition">
+      <bpmn:serviceTask id="Activity_0jowvcz" name="Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="documentgroupdefinition" retries="1" />
+          <zeebe:taskDefinition type="contractdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0angrvf</bpmn:incoming>
         <bpmn:outgoing>Flow_0t3tpr9</bpmn:outgoing>
@@ -51,9 +51,9 @@
       <bpmn:startEvent id="Event_1vbuu44" name="Start">
         <bpmn:outgoing>Flow_0rbzy6h</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_06v52oc" name="Timeout Document Group Definition">
+      <bpmn:serviceTask id="Activity_06v52oc" name="Timeout Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TimeoutDocumentGroupDefinition" retries="1" />
+          <zeebe:taskDefinition type="TimeoutContractDefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0rbzy6h</bpmn:incoming>
         <bpmn:outgoing>Flow_0dor87b</bpmn:outgoing>
@@ -69,7 +69,7 @@
       <bpmn:incoming>Flow_0c6rwwi</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0c6rwwi" sourceRef="Activity_14xgil8" targetRef="Event_1ib6o7m" />
-    <bpmn:boundaryEvent id="Event_02zlf8t" name="DeleteDocumentGroupDefinition" attachedToRef="Activity_1t3gbcf">
+    <bpmn:boundaryEvent id="Event_02zlf8t" name="DeleteContractDefinition" attachedToRef="Activity_1t3gbcf">
       <bpmn:outgoing>Flow_0q5yxog</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_17mwuj4" messageRef="Message_0dem2ek" />
     </bpmn:boundaryEvent>
@@ -84,9 +84,9 @@
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_16wo9dk" sourceRef="Activity_1fgbylm" targetRef="Event_1g54nzd" />
       <bpmn:sequenceFlow id="Flow_03q6bxk" sourceRef="Event_0yr7d5q" targetRef="Activity_1fgbylm" />
-      <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Document Group Definition">
+      <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Process Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="DeleteDocumentGroupDefinition" retries="1" />
+          <zeebe:taskDefinition type="DeleteContractDefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_03q6bxk</bpmn:incoming>
         <bpmn:outgoing>Flow_16wo9dk</bpmn:outgoing>
@@ -104,9 +104,9 @@
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1uq4apf" sourceRef="Activity_1685b8b" targetRef="Event_1ph4b7q" />
       <bpmn:sequenceFlow id="Flow_16f7d70" sourceRef="Event_1nslimr" targetRef="Activity_1685b8b" />
-      <bpmn:serviceTask id="Activity_1685b8b" name="Error Document Group Definition">
+      <bpmn:serviceTask id="Activity_1685b8b" name="Error Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="errordocumentgroupdefinition" retries="1" />
+          <zeebe:taskDefinition type="ErrorContractDefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_16f7d70</bpmn:incoming>
         <bpmn:outgoing>Flow_1uq4apf</bpmn:outgoing>
@@ -127,12 +127,12 @@
     <bpmn:sequenceFlow id="Flow_1ivuvub" sourceRef="Activity_12zt0hi" targetRef="Event_1opa7u1" />
     <bpmn:sequenceFlow id="Flow_0uy104u" sourceRef="StartEvent_1" targetRef="Activity_1t3gbcf" />
   </bpmn:process>
-  <bpmn:message id="Message_0dem2ek" name="DeleteProcessRenderOnlineSign">
+  <bpmn:message id="Message_0dem2ek" name="DeleteContractDefinition">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=InstanceId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_2n60jlh" name="StartDocumentGroupDefinition">
+  <bpmn:message id="Message_2n60jlh" name="StartContractDefinition">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=InstanceId" />
     </bpmn:extensionElements>
@@ -288,7 +288,7 @@
       <bpmndi:BPMNShape id="Event_164xep2_di" bpmnElement="Event_02zlf8t">
         <dc:Bounds x="1017" y="472" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="996" y="515" width="82" height="27" />
+          <dc:Bounds x="993" y="515" width="88" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1mf1mi5_di" bpmnElement="Event_03igwuu">
