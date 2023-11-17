@@ -53,7 +53,7 @@
       </bpmn:startEvent>
       <bpmn:serviceTask id="Activity_06v52oc" name="Timeout Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TimeoutContractDefinition" retries="1" />
+          <zeebe:taskDefinition type="timeoutcontractdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0rbzy6h</bpmn:incoming>
         <bpmn:outgoing>Flow_0dor87b</bpmn:outgoing>
@@ -86,7 +86,7 @@
       <bpmn:sequenceFlow id="Flow_03q6bxk" sourceRef="Event_0yr7d5q" targetRef="Activity_1fgbylm" />
       <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Process Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="DeleteContractDefinition" retries="1" />
+          <zeebe:taskDefinition type="deletecontractdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_03q6bxk</bpmn:incoming>
         <bpmn:outgoing>Flow_16wo9dk</bpmn:outgoing>
@@ -106,7 +106,7 @@
       <bpmn:sequenceFlow id="Flow_16f7d70" sourceRef="Event_1nslimr" targetRef="Activity_1685b8b" />
       <bpmn:serviceTask id="Activity_1685b8b" name="Error Contract Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="ErrorContractDefinition" retries="1" />
+          <zeebe:taskDefinition type="errorcontractdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_16f7d70</bpmn:incoming>
         <bpmn:outgoing>Flow_1uq4apf</bpmn:outgoing>
