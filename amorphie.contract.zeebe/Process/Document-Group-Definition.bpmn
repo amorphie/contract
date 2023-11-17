@@ -53,7 +53,7 @@
       </bpmn:startEvent>
       <bpmn:serviceTask id="Activity_06v52oc" name="Timeout Document Group Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="TimeoutDocumentGroupDefinition" retries="1" />
+          <zeebe:taskDefinition type="timeoutdocumentgroupdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0rbzy6h</bpmn:incoming>
         <bpmn:outgoing>Flow_0dor87b</bpmn:outgoing>
@@ -86,7 +86,7 @@
       <bpmn:sequenceFlow id="Flow_03q6bxk" sourceRef="Event_0yr7d5q" targetRef="Activity_1fgbylm" />
       <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Document Group Definition">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="DeleteDocumentGroupDefinition" retries="1" />
+          <zeebe:taskDefinition type="deletedocumentgroupdefinition" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_03q6bxk</bpmn:incoming>
         <bpmn:outgoing>Flow_16wo9dk</bpmn:outgoing>
