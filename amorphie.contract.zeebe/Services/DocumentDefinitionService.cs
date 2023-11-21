@@ -184,6 +184,7 @@ namespace amorphie.contract.zeebe.Services
             if (_documentdef.DocumentOnlineSing == null)
             {
                 _documentdef.DocumentOnlineSing = new DocumentOnlineSing();
+
             }
             _documentdef.DocumentOnlineSing.Semver = _documentDefinitionDataModel.data.versiyon;
 
@@ -202,7 +203,7 @@ namespace amorphie.contract.zeebe.Services
                     Code = x.RenderTemplate
                 }
             }).ToList();
-            _documentdef.DocumentRender.DocumentTemplateDetails = documentTemplateDetail;
+            _documentdef.DocumentOnlineSing.DocumentTemplateDetails = documentTemplateDetail;
         }
         private void SetDocumentOnlineSingAllowedClientDetails()
         {
@@ -213,7 +214,7 @@ namespace amorphie.contract.zeebe.Services
 
             }).ToList();
 
-            _documentdef.DocumentRender.DocumentAllowedClientDetails = allowedClientDetail;
+            _documentdef.DocumentOnlineSing.DocumentAllowedClientDetails = allowedClientDetail;
         }
         #endregion
 

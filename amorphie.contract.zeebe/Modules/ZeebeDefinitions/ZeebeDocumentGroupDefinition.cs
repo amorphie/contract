@@ -9,14 +9,14 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
     public static class ZeebeDocumentGroupDefinition
     {
-        public static void MapZeebeDocumentDefinitionEndpoints(this WebApplication app)
+        public static void MapZeebeDocumentGroupDefinitionEndpoints(this WebApplication app)
         {
             app.MapPost("/documentgroupdefinition", documentgroupdefinition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
-                operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Summary = "Maps documentgroupdefinition service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe documentgroupdefinition" } };
                 return operation;
             });
 
@@ -24,24 +24,24 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
-              operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Summary = "Maps errordocumentgroupdefinition service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe errordocumentgroupdefinition" } };
               return operation;
           });
             app.MapPost("/deletedocumentgroupdefinition", deletedocumentgroupdefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
-              operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Summary = "Maps deletedocumentgroupdefinition service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe deletedocumentgroupdefinition" } };
               return operation;
           });
             app.MapPost("/timeoutdocumentgroupdefinition", timeoutdocumentgroupdefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
-              operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Summary = "Maps timeoutdocumentgroupdefinition service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe timeoutdocumentgroupdefinition" } };
               return operation;
           });
 
