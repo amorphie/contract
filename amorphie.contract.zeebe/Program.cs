@@ -51,6 +51,8 @@ var summaries = new[]
 };
 app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
+app.MapZeebeContractDefinitionEndpoints();
+app.MapZeebeDocumentGroupDefinitionEndpoints();
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>

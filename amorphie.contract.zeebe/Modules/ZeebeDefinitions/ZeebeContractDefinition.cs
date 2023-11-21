@@ -9,14 +9,14 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
     public static class ZeebeContractDefinition
     {
-        public static void MapZeebeDocumentDefinitionEndpoints(this WebApplication app)
+        public static void MapZeebeContractDefinitionEndpoints(this WebApplication app)
         {
             app.MapPost("/contractdefinition", contractdefinition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
-                operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Summary = "Maps contractdefinition service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeeb contractdefinition" } };
                 return operation;
             });
 
@@ -24,16 +24,16 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
-              operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Summary = "Maps errorcontractdefinition service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe errorcontractdefinition" } };
               return operation;
           });
             app.MapPost("/deletecontractdefinition", deletecontractdefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
-              operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Summary = "Maps deletecontractdefinition service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe deletecontractdefinition" } };
               return operation;
           });
             app.MapPost("/timeoutcontractdefinition", timeoutcontractdefinition)
