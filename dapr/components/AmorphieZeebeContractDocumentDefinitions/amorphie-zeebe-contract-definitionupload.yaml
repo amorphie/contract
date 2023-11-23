@@ -9,7 +9,7 @@ spec:
   - name: jobType
     value: definitionupload
   - name: gatewayAddr
-    value: localhost:265000
+    value: localhost:26500
   - name: gatewayKeepAlive
     value: 45s
   - name: usePlainTextConnection
