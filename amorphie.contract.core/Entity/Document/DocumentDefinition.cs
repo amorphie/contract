@@ -35,8 +35,8 @@ namespace amorphie.contract.core.Entity.Document
         #region documentType
         public virtual Guid? DocumentUploadId { get; set; }
         public virtual DocumentUpload? DocumentUpload { get; set; }
-        public virtual Guid? DocumentRenderId { get; set; }
-        public virtual DocumentRender? DocumentRender { get; set; }
+        // public virtual Guid? DocumentRenderId { get; set; }
+        // public virtual DocumentRender? DocumentRender { get; set; }
         public virtual Guid? DocumentOnlineSingId { get; set; }
         public virtual DocumentOnlineSing? DocumentOnlineSing { get; set; }
 
