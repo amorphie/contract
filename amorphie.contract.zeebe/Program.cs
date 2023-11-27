@@ -32,6 +32,7 @@ StaticValuesExtensions.SetStaticValues(settings);
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
+builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 
 
 var app = builder.Build();

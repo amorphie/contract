@@ -70,7 +70,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             try
             {
 
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
+                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
 
                 var _ = IDocumentDefinitionService.DataModelToDocumentDefinition(entityData, messageVariables.RecordIdGuid);
 

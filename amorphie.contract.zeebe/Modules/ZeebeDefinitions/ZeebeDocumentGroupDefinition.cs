@@ -53,7 +53,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           HttpContext httpContext,
           [FromServices] DaprClient client
           , IConfiguration configuration,
-           [FromServices] IDocumentDefinitionService IDocumentDefinitionService
+           [FromServices] IDocumentGroupDefinitionService IDocumentGroupDefinitionService
       )
         {
             var messageVariables = new MessageVariables();
@@ -70,9 +70,9 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             try
             {
 
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
+                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
 
-                var _ = IDocumentDefinitionService.DataModelToDocumentDefinition(entityData, messageVariables.RecordIdGuid);
+                var _ = IDocumentGroupDefinitionService.DataModelToDocumentGroupDefinition(entityData, messageVariables.RecordIdGuid);
 
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
