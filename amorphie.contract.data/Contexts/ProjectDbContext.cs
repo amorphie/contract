@@ -99,7 +99,7 @@ public class ProjectDbContext : DbContext
 
     public DbSet<DocumentEntityProperty> DocumentEntityProperty { get; set; }
     #region  DocumentGroup
-    public DbSet<DocumentGroup> DocumentDefinitionGroup { get; set; }
+    public DbSet<DocumentGroup> DocumentGroup { get; set; }
     public DbSet<DocumentGroupDetail> DocumentGroupDetail { get; set; }
     #endregion
     public DbSet<DocumentFormat> DocumentFormat { get; set; }

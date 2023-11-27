@@ -35,7 +35,7 @@ public class DocumentGroupModule
         try
         {
 
-            var query = context!.DocumentDefinitionGroup.AsQueryable();
+            var query = context!.DocumentGroup.AsQueryable();
             var anyValue = false;
             if (!string.IsNullOrEmpty(dataSearch.Keyword))
             {

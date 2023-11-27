@@ -235,30 +235,10 @@
             },
             {
               "label": "Allowed Clients",
-              "labelPosition": "left-left",
-              "optionsLabelPosition": "right",
-              "tooltip": "Hangi client’ların belgeyi yükleyebileceği bilgisi.",
-              "tableView": false,
+              "widget": "choicesjs",
+              "tableView": true,
+              "multiple": true,
               "dataSrc": "url",
-              "defaultValue": {
-                "s": false
-              },
-              "values": [
-                {
-                  "label": "",
-                  "value": "",
-                  "shortcut": ""
-                }
-              ],
-              "valueProperty": "id",
-              "validate": {
-                "required": true
-              },
-              "errorLabel": "Client Bilgisi Seçiniz",
-              "key": "RenderAllowedClients",
-              "type": "selectboxes",
-              "labelWidth": 30,
-              "labelMargin": 3,
               "data": {
                 "url": "https://test-amorphie-contract.burgan.com.tr/document-allowed-client?page=0&pageSize=100",
                 "headers": [
@@ -268,9 +248,13 @@
                   }
                 ]
               },
+              "valueProperty": "id",
               "template": "<span>{{ item.code }}</span>",
-              "input": true,
-              "inputType": "checkbox"
+              "key": "RenderAllowedClients",
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
             },
             {
               "label": "Template",
@@ -597,30 +581,10 @@
             },
             {
               "label": "Allowed Clients",
-              "labelPosition": "left-left",
-              "optionsLabelPosition": "right",
-              "tooltip": "Hangi client türlerinin belgeyi yükleyebileceğini belirler.",
-              "tableView": false,
+              "widget": "choicesjs",
+              "tableView": true,
+              "multiple": true,
               "dataSrc": "url",
-              "defaultValue": {
-                "s": false
-              },
-              "values": [
-                {
-                  "label": "",
-                  "value": "",
-                  "shortcut": ""
-                }
-              ],
-              "valueProperty": "id",
-              "validate": {
-                "required": true
-              },
-              "errorLabel": "Client Bilgisi Seçiniz",
-              "key": "UploadAllowedClients",
-              "type": "selectboxes",
-              "labelWidth": 30,
-              "labelMargin": 3,
               "data": {
                 "url": "https://test-amorphie-contract.burgan.com.tr/document-allowed-client?page=0&pageSize=100",
                 "headers": [
@@ -631,8 +595,11 @@
                 ]
               },
               "template": "<span>{{ item.code }}</span>",
-              "input": true,
-              "inputType": "checkbox"
+              "key": "UploadAllowedClients",
+              "type": "select",
+              "disableLimit": false,
+              "noRefreshOnScroll": false,
+              "input": true
             }
           ]
         }

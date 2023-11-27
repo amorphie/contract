@@ -647,7 +647,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     StatusId = table.Column<Guid>(type: "uuid", nullable: false),
                     BaseStatusId = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentUploadId = table.Column<Guid>(type: "uuid", nullable: true),
-                    DocumentRenderId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentOnlineSingId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentOptimizeId = table.Column<Guid>(type: "uuid", nullable: true),
                     DocumentOptimizeId1 = table.Column<Guid>(type: "uuid", nullable: true),
@@ -680,12 +679,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.DocumentOptimizeId1,
                         principalSchema: "Doc",
                         principalTable: "DocumentOptimize",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_DocumentDefinition_DocumentRender_DocumentRenderId",
-                        column: x => x.DocumentRenderId,
-                        principalSchema: "DocTp",
-                        principalTable: "DocumentRender",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_DocumentDefinition_DocumentUpload_DocumentUploadId",
@@ -1103,7 +1096,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DocumentDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DocumentGroupID = table.Column<Guid>(type: "uuid", nullable: false),
+                    DocumentGroupId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -1122,8 +1115,8 @@ namespace amorphie.contract.data.Migrations.Pg
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DocumentGroupDetail_DocumentGroup_DocumentGroupID",
-                        column: x => x.DocumentGroupID,
+                        name: "FK_DocumentGroupDetail_DocumentGroup_DocumentGroupId",
+                        column: x => x.DocumentGroupId,
                         principalSchema: "DocGroup",
                         principalTable: "DocumentGroup",
                         principalColumn: "Id",
@@ -1352,12 +1345,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentOptimizeId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentDefinition_DocumentRenderId",
-                schema: "Doc",
-                table: "DocumentDefinition",
-                column: "DocumentRenderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DocumentDefinition_DocumentUploadId",
                 schema: "Doc",
                 table: "DocumentDefinition",
@@ -1444,10 +1431,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 column: "DocumentDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentGroupDetail_DocumentGroupID",
+                name: "IX_DocumentGroupDetail_DocumentGroupId",
                 schema: "DocGroup",
                 table: "DocumentGroupDetail",
-                column: "DocumentGroupID");
+                column: "DocumentGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentGroupLanguageDetail_DocumentGroupId",
@@ -1726,6 +1713,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Common");
 
             migrationBuilder.DropTable(
+                name: "DocumentRender",
+                schema: "DocTp");
+
+            migrationBuilder.DropTable(
                 name: "DocumentTemplate",
                 schema: "Doc");
 
@@ -1760,10 +1751,6 @@ namespace amorphie.contract.data.Migrations.Pg
             migrationBuilder.DropTable(
                 name: "DocumentOptimize",
                 schema: "Doc");
-
-            migrationBuilder.DropTable(
-                name: "DocumentRender",
-                schema: "DocTp");
 
             migrationBuilder.DropTable(
                 name: "DocumentUpload",
