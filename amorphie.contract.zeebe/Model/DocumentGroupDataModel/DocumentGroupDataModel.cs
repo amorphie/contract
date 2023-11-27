@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace amorphie.contract.zeebe.Model.DocumentGroupDataModel
 {
-    public class DocumentGroupDataModel 
+    public class DocumentGroupDataModel
     {
         public string code { get; set; }
         public List<string> document { get; set; }
