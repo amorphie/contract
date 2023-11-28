@@ -28,11 +28,11 @@ public class DocumentGroupModule
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("getAnyDocumentGroupListSearch", getAnyDocumentGroupListSearch);
-         routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
+        routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
     }
-     async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
-   [FromHeader(Name = "Language")] string? language = "en-EN")
+    async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+   HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
+  [FromHeader(Name = "Language")] string? language = "en-EN")
     {
         var query = context!.DocumentGroup.AsQueryable();
 
