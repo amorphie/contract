@@ -21,13 +21,6 @@
     <PackageReference Include="amorphie.core.security" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
-  </ItemGroup>
-  <ItemGroup>
-    
-      <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.5" /> -->
-      
-  </ItemGroup>
-   <ItemGroup>
     <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
   </ItemGroup>

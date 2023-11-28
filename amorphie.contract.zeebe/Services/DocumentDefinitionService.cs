@@ -93,7 +93,7 @@ namespace amorphie.contract.zeebe.Services
                     Code = "string"
                 },
                 EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                Code = x.property
+                Code = x.PropertyName
             }).ToList();
             var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
             #region EntityPropertyType Control
@@ -140,10 +140,10 @@ namespace amorphie.contract.zeebe.Services
         #region SetDocumentUpload
         private void SetDocumentUploadAllowedClientDetail()
         {
-            var allowedClientDetail = _documentDefinitionDataModel.data.UploadAllowedClients.Where(x => x.Value).Select(x => new DocumentAllowedClientDetail
+            var allowedClientDetail = _documentDefinitionDataModel.data.UploadAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
                 DocumentDefinitionId = _documentdef.Id,
-                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x.Key)
+                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
 
@@ -207,10 +207,10 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentOnlineSingAllowedClientDetails()
         {
-            var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Where(x => x.Value).Select(x => new DocumentAllowedClientDetail
+            var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
                 DocumentDefinitionId = _documentdef.Id,
-                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x.Key)
+                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
 
