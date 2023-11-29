@@ -1,272 +1,329 @@
 {
-    "display": "form",
-    "components": [
-      {
-        "title": "Contract Definition",
-        "collapsible": false,
-        "key": "contractDefinition",
-        "type": "panel",
-        "label": "Panel",
-        "input": false,
-        "tableView": false,
-        "components": [
-          {
-            "label": "Code",
-            "applyMaskOn": "change",
-            "tableView": true,
-            "key": "code",
-            "type": "textfield",
-            "input": true
+  "display": "form",
+  "components": [
+    {
+      "title": "Contract Definition",
+      "collapsible": false,
+      "key": "contractDefinition",
+      "type": "panel",
+      "label": "Panel",
+      "input": false,
+      "tableView": false,
+      "components": [
+        {
+          "label": "Code",
+          "tooltip": "Kontratın benzersiz kodu, sistemde daha önce tanımlanmış bir kontratı engellemek için kontrol edilir.",
+          "applyMaskOn": "change",
+          "tableView": true,
+          "case": "lowercase",
+          "validateOn": "blur",
+          "validate": {
+            "required": true,
+            "pattern": "^\\S*$",
+            "custom": " \nFormio.request(\n  'https://test-amorphie-contract.burgan.com.tr/contract-definition/getAnyContractDefinitionListSearch?Keyword='+input\n  ,'GET',\n  null,\n  null,\n  {\n    headers: {\n      'content-type': 'application/json'\n    },\n    mode: 'cors',\n  }).then(function(result) {\n    console.log(\"result = \" + result); \n    rest = result;\n    \n  });\n  valid = !rest ? true : 'Daha önce eklenmiş kayıt';\n \nconsole.log(\"rest\"+rest);\n\n "
           },
-          {
-            "label": "Tags",
-            "widget": "choicesjs",
-            "tableView": true,
-            "multiple": true,
-            "dataSrc": "url",
-            "data": {
-              "url": "https://test-amorphie-contract.burgan.com.tr/Common-Tag?page=0&pageSize=100",
-              "headers": [
+          "unique": true,
+          "key": "code",
+          "type": "textfield",
+          "input": true
+        },
+        {
+          "label": "Tags",
+          "widget": "choicesjs",
+          "tableView": true,
+          "multiple": true,
+          "dataSrc": "url",
+          "data": {
+            "url": "https://test-amorphie-contract.burgan.com.tr/Common-Tag?page=0&pageSize=100",
+            "headers": [
+              {
+                "key": "",
+                "value": ""
+              }
+            ]
+          },
+          "valueProperty": "id",
+          "template": "<span>{{ item.code }} -> {{ item.contact }}</span>",
+          "key": "tags",
+          "type": "select",
+          "input": true,
+          "disableLimit": false,
+          "noRefreshOnScroll": false
+        },
+        {
+          "title": "Documents",
+          "collapsible": true,
+          "key": "documents",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Documents List",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {}
+              ],
+              "key": "documentsList",
+              "type": "datagrid",
+              "input": true,
+              "components": [
                 {
-                  "key": "",
-                  "value": ""
+                  "label": "Name",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/document-definition/GetAllSearch?Keyword=%20",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
+                  },
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.title.name }}</span>",
+                  "key": "name",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                },
+                {
+                  "label": "Use Existing",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "data": {
+                    "values": [
+                      {
+                        "label": "Any Valid",
+                        "value": "AnyValid"
+                      },
+                      {
+                        "label": "Uploaded By Contract",
+                        "value": "UploadedByContract"
+                      },
+                      {
+                        "label": "Never",
+                        "value": "Never"
+                      }
+                    ]
+                  },
+                  "key": "useExisting",
+                  "type": "select",
+                  "input": true
+                },
+                {
+                  "label": "Required",
+                  "tableView": false,
+                  "key": "required",
+                  "type": "checkbox",
+                  "input": true,
+                  "defaultValue": false
+                },
+                {
+                  "label": "Min Versiyon",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "validate": {
+                    "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$",
+                    "customMessage": "Örnek 1.0.0"
+                  },
+                  "key": "minVersiyon",
+                  "type": "textfield",
+                  "input": true
                 }
               ]
-            },
-            "valueProperty": "id",
-            "template": "<span>{{ item.code }} -> {{ item.contact }}</span>",
-            "key": "tags",
-            "type": "select",
-            "input": true,
-            "disableLimit": false,
-            "noRefreshOnScroll": false
-          },
-          {
-            "title": "Documents",
-            "collapsible": true,
-            "key": "documents",
-            "type": "panel",
-            "label": "Panel",
-            "input": false,
-            "tableView": false,
-            "components": [
-              {
-                "label": "Documents List",
-                "reorder": false,
-                "addAnotherPosition": "bottom",
-                "layoutFixed": false,
-                "enableRowGroups": false,
-                "initEmpty": false,
-                "tableView": false,
-                "defaultValue": [
-                  {}
-                ],
-                "key": "documentsList",
-                "type": "datagrid",
-                "input": true,
-                "components": [
-                  {
-                    "label": "Name",
-                    "widget": "choicesjs",
-                    "tableView": true,
-                    "dataSrc": "url",
-                    "data": {
-                      "url": "https://test-amorphie-contract.burgan.com.tr/document-definition/GetAllSearch?Keyword=%20",
-                      "headers": [
-                        {
-                          "key": "",
-                          "value": ""
-                        }
-                      ]
-                    },
-                    "valueProperty": "id",
-                    "template": "<span>{{ item.title.name }}</span>",
-                    "key": "name",
-                    "type": "select",
-                    "disableLimit": false,
-                    "noRefreshOnScroll": false,
-                    "input": true
+            }
+          ],
+          "collapsed": false
+        },
+        {
+          "title": "Document Group",
+          "collapsible": true,
+          "key": "documentGroup",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Document Group List",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {}
+              ],
+              "key": "documentGroupList",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Group Name",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "dataSrc": "url",
+                  "data": {
+                    "url": "https://test-amorphie-contract.burgan.com.tr/document-group/GetAllSearch?Keyword=%2A",
+                    "headers": [
+                      {
+                        "key": "",
+                        "value": ""
+                      }
+                    ]
                   },
-                  {
-                    "label": "Use Existing",
-                    "widget": "choicesjs",
-                    "tableView": true,
-                    "data": {
-                      "values": [
-                        {
-                          "label": "Any Valid",
-                          "value": "any-valid"
-                        },
-                        {
-                          "label": "Uploaded By Contract",
-                          "value": "uploaded-by-contract"
-                        },
-                        {
-                          "label": "Never",
-                          "value": "never"
-                        }
-                      ]
-                    },
-                    "key": "useExisting",
-                    "type": "select",
-                    "input": true
+                  "valueProperty": "id",
+                  "template": "<span>{{ item.title.name }}</span>",
+                  "key": "groupName",
+                  "type": "select",
+                  "disableLimit": false,
+                  "noRefreshOnScroll": false,
+                  "input": true
+                },
+                {
+                  "label": "Required Document",
+                  "placeholder": "At Least Required Document",
+                  "applyMaskOn": "change",
+                  "mask": false,
+                  "tableView": false,
+                  "delimiter": false,
+                  "requireDecimal": false,
+                  "inputFormat": "plain",
+                  "truncateMultipleSpaces": false,
+                  "key": "atLeastRequiredDocument",
+                  "type": "number",
+                  "input": true
+                },
+                {
+                  "label": "Required",
+                  "tableView": false,
+                  "key": "required",
+                  "type": "checkbox",
+                  "input": true,
+                  "defaultValue": false
+                }
+              ]
+            }
+          ],
+          "collapsed": false
+        },
+        {
+          "title": "Meta Data",
+          "collapsible": true,
+          "key": "metaData",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Meta Data List",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {
+                  "PropertyName": "",
+                  "value": ""
+                }
+              ],
+              "key": "EntityPropertyList",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Name",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "PropertyName",
+                  "type": "textfield",
+                  "input": true
+                },
+                {
+                  "label": "PropertyValue",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "value",
+                  "type": "textfield",
+                  "input": true
+                }
+              ]
+            }
+          ],
+          "collapsed": false
+        },
+        {
+          "title": "Validations",
+          "collapsible": true,
+          "key": "validations",
+          "type": "panel",
+          "label": "Panel",
+          "input": false,
+          "tableView": false,
+          "components": [
+            {
+              "label": "Validation List",
+              "reorder": false,
+              "addAnotherPosition": "bottom",
+              "layoutFixed": false,
+              "enableRowGroups": false,
+              "initEmpty": false,
+              "tableView": false,
+              "defaultValue": [
+                {}
+              ],
+              "key": "validationList",
+              "type": "datagrid",
+              "input": true,
+              "components": [
+                {
+                  "label": "Type",
+                  "widget": "choicesjs",
+                  "tableView": true,
+                  "data": {
+                    "values": [
+                      {
+                        "label": "All Valid",
+                        "value": "AllValid"
+                      },
+                      {
+                        "label": "Decision Table",
+                        "value": "DecisionTable"
+                      }
+                    ]
                   },
-                  {
-                    "label": "Required",
-                    "tableView": false,
-                    "key": "required",
-                    "type": "checkbox",
-                    "input": true,
-                    "defaultValue": false
-                  },
-                  {
-                    "label": "Min Versiyon",
-                    "applyMaskOn": "change",
-                    "tableView": true,
-                    "validate": {
-                      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$",
-                      "customMessage": "Örnek 1.0.0"
-                    },
-                    "key": "minVersiyon",
-                    "type": "textfield",
-                    "input": true
-                  }
-                ]
-              }
-            ],
-            "collapsed": false
-          },
-          {
-            "title": "Document Group",
-            "collapsible": true,
-            "key": "documentGroup",
-            "type": "panel",
-            "label": "Panel",
-            "input": false,
-            "tableView": false,
-            "components": [
-              {
-                "label": "Document Group List",
-                "reorder": false,
-                "addAnotherPosition": "bottom",
-                "layoutFixed": false,
-                "enableRowGroups": false,
-                "initEmpty": false,
-                "tableView": false,
-                "defaultValue": [
-                  {}
-                ],
-                "key": "documentGroupList",
-                "type": "datagrid",
-                "input": true,
-                "components": [
-                  {
-                    "label": "Group Name",
-                    "widget": "choicesjs",
-                    "tableView": true,
-                    "dataSrc": "url",
-                    "data": {
-                      "url": "https://test-amorphie-contract.burgan.com.tr/document-group?page=0&pageSize=10",
-                      "headers": [
-                        {
-                          "key": "",
-                          "value": ""
-                        }
-                      ]
-                    },
-                    "valueProperty": "id",
-                    "template": "<span>{{ item.code }}</span>",
-                    "key": "groupName",
-                    "type": "select",
-                    "input": true,
-                    "disableLimit": false,
-                    "noRefreshOnScroll": false
-                  },
-                  {
-                    "label": "Required Document",
-                    "placeholder": "At Least Required Document",
-                    "applyMaskOn": "change",
-                    "mask": false,
-                    "tableView": false,
-                    "delimiter": false,
-                    "requireDecimal": false,
-                    "inputFormat": "plain",
-                    "truncateMultipleSpaces": false,
-                    "key": "atLeastRequiredDocument",
-                    "type": "number",
-                    "input": true
-                  },
-                  {
-                    "label": "Required",
-                    "tableView": false,
-                    "key": "required",
-                    "type": "checkbox",
-                    "input": true,
-                    "defaultValue": false
-                  }
-                ]
-              }
-            ],
-            "collapsed": false
-          },
-          {
-            "title": "Validations",
-            "collapsible": true,
-            "key": "validations",
-            "type": "panel",
-            "label": "Panel",
-            "input": false,
-            "tableView": false,
-            "components": [
-              {
-                "label": "Validation List",
-                "reorder": false,
-                "addAnotherPosition": "bottom",
-                "layoutFixed": false,
-                "enableRowGroups": false,
-                "initEmpty": false,
-                "tableView": false,
-                "defaultValue": [
-                  {}
-                ],
-                "key": "validationList",
-                "type": "datagrid",
-                "input": true,
-                "components": [
-                  {
-                    "label": "Type",
-                    "widget": "choicesjs",
-                    "tableView": true,
-                    "data": {
-                      "values": [
-                        {
-                          "label": "All Valid",
-                          "value": "all-valid"
-                        },
-                        {
-                          "label": "Decision Table",
-                          "value": "decision-table"
-                        }
-                      ]
-                    },
-                    "key": "type",
-                    "type": "select",
-                    "input": true
-                  },
-                  {
-                    "label": "Decision Table",
-                    "applyMaskOn": "change",
-                    "tableView": true,
-                    "key": "decisionTable",
-                    "type": "textfield",
-                    "input": true
-                  }
-                ]
-              }
-            ],
-            "collapsed": false
-          }
-        ]
-      }
-    ]
-  }
+                  "key": "type",
+                  "type": "select",
+                  "input": true
+                },
+                {
+                  "label": "Decision Table",
+                  "applyMaskOn": "change",
+                  "tableView": true,
+                  "key": "decisionTable",
+                  "type": "textfield",
+                  "input": true
+                }
+              ]
+            }
+          ],
+          "collapsed": false
+        }
+      ]
+    }
+  ]
+}

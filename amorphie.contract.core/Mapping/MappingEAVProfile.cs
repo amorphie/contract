@@ -12,7 +12,7 @@ namespace amorphie.contract.core.Mapping
         public MappingEAVProfile()
         {
              CreateMap<EntityProperty, EntityProperty>().ReverseMap();
-             CreateMap<EntityPropertyType, EntityPropertyType>().ReverseMap();
+            //  CreateMap<EntityPropertyType, EntityPropertyType>().ReverseMap();
              CreateMap<EntityPropertyValue, EntityPropertyValue>().ReverseMap();
 
              

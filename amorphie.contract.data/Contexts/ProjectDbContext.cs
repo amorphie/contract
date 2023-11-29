@@ -72,7 +72,6 @@ public class ProjectDbContext : DbContext
     public DbSet<Status> Status { get; set; }
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
-    public DbSet<ValidationDecisionType> ValidationDecisionType { get; set; }
 
     #endregion
     #region Contract
@@ -122,7 +121,7 @@ public class ProjectDbContext : DbContext
 
     #endregion
     public DbSet<EntityProperty> EntityProperty { get; set; }
-    public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
+    // public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
 
     protected IConfiguration Configuration { get; }

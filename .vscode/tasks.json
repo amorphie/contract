@@ -84,7 +84,7 @@
             "label": "dapr-debug-amorphie-contract-hub",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract-hub",
-            "componentsPath": "Dapr/Components",
+            "componentsPath": "Dapr/Components"
         },
         {
             "appId": "amorphie-contract-zeebe",
@@ -94,7 +94,7 @@
             "label": "dapr-debug-amorphie-contract-zeebe",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract-zeebe",
-            "componentsPath": "Dapr/Components/AmorphieZeebeContractDocumentUpload"
+            "componentsPath": "Dapr/Components/AmorphieZeebeContractDocumentUpload/"
         },
         {
             "appId": "amorphie-contract",

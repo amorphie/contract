@@ -1,6 +1,6 @@
 namespace amorphie.contract.core.Enum
 {
-    public enum UseExisting: ushort
+    public enum EUseExisting: ushort
 
     {
         AnyValid = 0,

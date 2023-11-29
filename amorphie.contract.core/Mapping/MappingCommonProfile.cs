@@ -19,7 +19,7 @@ namespace amorphie.contract.core.Mapping
              CreateMap<Tag, Tag>().ReverseMap();
              CreateMap<Validation, Validation>().ReverseMap();
              CreateMap<ValidationDecision, ValidationDecision>().ReverseMap();
-             CreateMap<ValidationDecisionType, ValidationDecisionType>().ReverseMap();
+            //  CreateMap<ValidationDecisionType, ValidationDecisionType>().ReverseMap();
             
         }
     }

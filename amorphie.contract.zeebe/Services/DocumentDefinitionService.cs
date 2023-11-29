@@ -9,6 +9,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -88,22 +89,11 @@ namespace amorphie.contract.zeebe.Services
         {
             var ep = _documentDefinitionDataModel.data.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
-                EntityPropertyType = new core.Entity.EAV.EntityPropertyType
-                {
-                    Code = "string"
-                },
+                EEntityPropertyType =  (ushort)EEntityPropertyType.str,
                 EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
                 Code = x.PropertyName
             }).ToList();
             var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-            #region EntityPropertyType Control
-            var entityPropertyType = _dbContext.EntityPropertyType.FirstOrDefault(x => x.Code == "string");
-
-            if (entityPropertyType == null)
-            {
-                entityPropertyType = new core.Entity.EAV.EntityPropertyType { Code = "string" };
-            }
-            #endregion
 
             foreach (var i in ep)
             {
@@ -123,7 +113,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     epdb.EntityPropertyValue = i.EntityPropertyValue;
                 }
-                epdb.EntityPropertyTypeId = entityPropertyType.Id;
+                epdb.EEntityPropertyType  =  (ushort)EEntityPropertyType.str;
                 var dep = _dbContext.DocumentEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
                 if (dep == null)
                 {

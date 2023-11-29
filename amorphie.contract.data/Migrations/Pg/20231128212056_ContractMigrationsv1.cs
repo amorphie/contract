@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace amorphie.contract.data.Migrations.Pg
 {
     /// <inheritdoc />
-    public partial class ContractMigrations : Migration
+    public partial class ContractMigrationsv1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -208,25 +208,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "EntityPropertyType",
-                schema: "EAV",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EntityPropertyType", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EntityPropertyValue",
                 schema: "EAV",
                 columns: table => new
@@ -304,7 +285,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "ValidationDecisionType",
+                name: "ValidationDecision",
                 schema: "Common",
                 columns: table => new
                 {
@@ -319,7 +300,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ValidationDecisionType", x => x.Id);
+                    table.PrimaryKey("PK_ValidationDecision", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -439,7 +420,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Code = table.Column<string>(type: "text", nullable: false),
-                    EntityPropertyTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EEntityPropertyType = table.Column<int>(type: "integer", nullable: false),
                     EntityPropertyValueId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -451,13 +432,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EntityProperty", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EntityProperty_EntityPropertyType_EntityPropertyTypeId",
-                        column: x => x.EntityPropertyTypeId,
-                        principalSchema: "EAV",
-                        principalTable: "EntityPropertyType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EntityProperty_EntityPropertyValue_EntityPropertyValueId",
                         column: x => x.EntityPropertyValueId,
@@ -611,13 +585,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "ValidationDecision",
+                name: "Validation",
                 schema: "Common",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    ValidationDecisionTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EValidationType = table.Column<int>(type: "integer", nullable: false),
+                    ValidationDecisionId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -627,14 +601,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ValidationDecision", x => x.Id);
+                    table.PrimaryKey("PK_Validation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ValidationDecision_ValidationDecisionType_ValidationDecisio~",
-                        column: x => x.ValidationDecisionTypeId,
+                        name: "FK_Validation_ValidationDecision_ValidationDecisionId",
+                        column: x => x.ValidationDecisionId,
                         principalSchema: "Common",
-                        principalTable: "ValidationDecisionType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "ValidationDecision",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -916,13 +889,13 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "Validation",
-                schema: "Common",
+                name: "ContractValidation",
+                schema: "Cont",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    ValidationDecisionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ValidationId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -932,12 +905,19 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Validation", x => x.Id);
+                    table.PrimaryKey("PK_ContractValidation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Validation_ValidationDecision_ValidationDecisionId",
-                        column: x => x.ValidationDecisionId,
+                        name: "FK_ContractValidation_ContractDefinition_ContractDefinitionId",
+                        column: x => x.ContractDefinitionId,
+                        principalSchema: "Cont",
+                        principalTable: "ContractDefinition",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContractValidation_Validation_ValidationId",
+                        column: x => x.ValidationId,
                         principalSchema: "Common",
-                        principalTable: "ValidationDecision",
+                        principalTable: "Validation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1153,40 +1133,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         column: x => x.TagId,
                         principalSchema: "Common",
                         principalTable: "Tag",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ContractValidation",
-                schema: "Cont",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ValidationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    ModifiedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContractValidation", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ContractValidation_ContractDefinition_ContractDefinitionId",
-                        column: x => x.ContractDefinitionId,
-                        principalSchema: "Cont",
-                        principalTable: "ContractDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContractValidation_Validation_ValidationId",
-                        column: x => x.ValidationId,
-                        principalSchema: "Common",
-                        principalTable: "Validation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1524,23 +1470,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EntityProperty_EntityPropertyTypeId",
-                schema: "EAV",
-                table: "EntityProperty",
-                column: "EntityPropertyTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EntityProperty_EntityPropertyValueId",
                 schema: "EAV",
                 table: "EntityProperty",
                 column: "EntityPropertyValueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EntityPropertyType_Code",
-                schema: "EAV",
-                table: "EntityPropertyType",
-                column: "Code",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LanguageType_Code",
@@ -1576,10 +1509,10 @@ namespace amorphie.contract.data.Migrations.Pg
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Validation_Code",
+                name: "IX_Validation_EValidationType",
                 schema: "Common",
                 table: "Validation",
-                column: "Code",
+                column: "EValidationType",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1592,19 +1525,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 name: "IX_ValidationDecision_Code",
                 schema: "Common",
                 table: "ValidationDecision",
-                column: "Code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ValidationDecision_ValidationDecisionTypeId",
-                schema: "Common",
-                table: "ValidationDecision",
-                column: "ValidationDecisionTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ValidationDecisionType_Code",
-                schema: "Common",
-                table: "ValidationDecisionType",
                 column: "Code",
                 unique: true);
         }
@@ -1725,10 +1645,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 schema: "Common");
 
             migrationBuilder.DropTable(
-                name: "EntityPropertyType",
-                schema: "EAV");
-
-            migrationBuilder.DropTable(
                 name: "EntityPropertyValue",
                 schema: "EAV");
 
@@ -1762,10 +1678,6 @@ namespace amorphie.contract.data.Migrations.Pg
 
             migrationBuilder.DropTable(
                 name: "LanguageType",
-                schema: "Common");
-
-            migrationBuilder.DropTable(
-                name: "ValidationDecisionType",
                 schema: "Common");
 
             migrationBuilder.DropTable(
