@@ -77,12 +77,12 @@ namespace amorphie.contract.zeebe.Services
 
             var ep = _ContractDefinitionDataModel.EntityPropertyList.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
-                EEntityPropertyType =  (ushort)EEntityPropertyType.str,
+                EEntityPropertyType = (ushort)EEntityPropertyType.str,
                 EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
                 Code = x.PropertyName
             }).ToList();
             var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-          
+
 
             foreach (var i in ep)
             {

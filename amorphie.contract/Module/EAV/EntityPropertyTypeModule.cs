@@ -20,6 +20,6 @@ namespace amorphie.contract;
 //         public override string[]? PropertyCheckList => new string[] {"Code"};
 
 //         public override string? UrlFragment => "entity-property-type";
- 
+
 // }
 

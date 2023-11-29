@@ -13,8 +13,8 @@ namespace amorphie.contract.data.Configurations.EAV
     //     public void Configure(EntityTypeBuilder<EntityPropertyType> builder)
     //     {
 
-           
+
     //     }
-        
+
     // }
 }
