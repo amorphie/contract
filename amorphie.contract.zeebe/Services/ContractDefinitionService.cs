@@ -45,7 +45,7 @@ namespace amorphie.contract.zeebe.Services
                 AtLeastRequiredDocument = (uint)x.atLeastRequiredDocument,
                 Required = x.required
             });
-            _ContractDefinition.ContractDocumentGroupDetails= contractDocumentGroupDetails.ToList();
+            _ContractDefinition.ContractDocumentGroupDetails = contractDocumentGroupDetails.ToList();
         }
         private void SetContractDocumentDetail()
         {
