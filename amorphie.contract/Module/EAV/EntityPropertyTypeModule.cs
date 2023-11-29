@@ -10,16 +10,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-    public class EntityPropertyTypeModule
-        : BaseBBTRoute<EntityPropertyType, EntityPropertyType, ProjectDbContext>
-    {
-        public EntityPropertyTypeModule(WebApplication app) : base(app)
-        {
-        }
+//     public class EntityPropertyTypeModule
+//         : BaseBBTRoute<EntityPropertyType, EntityPropertyType, ProjectDbContext>
+//     {
+//         public EntityPropertyTypeModule(WebApplication app) : base(app)
+//         {
+//         }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
+//         public override string[]? PropertyCheckList => new string[] {"Code"};
 
-        public override string? UrlFragment => "entity-property-type";
- 
-}
+//         public override string? UrlFragment => "entity-property-type";
+
+// }
 

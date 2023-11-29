@@ -183,10 +183,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -195,6 +191,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("EValidationType")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("timestamp without time zone");
@@ -205,12 +204,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ValidationDecisionId")
+                    b.Property<Guid?>("ValidationDecisionId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
+                    b.HasIndex("EValidationType")
                         .IsUnique();
 
                     b.HasIndex("ValidationDecisionId");
@@ -246,53 +245,12 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ValidationDecisionTypeId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
                         .IsUnique();
-
-                    b.HasIndex("ValidationDecisionTypeId");
 
                     b.ToTable("ValidationDecision", "Common");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.ValidationDecisionType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("ValidationDecisionType", "Common");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>
@@ -1545,8 +1503,8 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EntityPropertyTypeId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("EEntityPropertyType")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("EntityPropertyValueId")
                         .HasColumnType("uuid");
@@ -1565,47 +1523,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.HasIndex("EntityPropertyTypeId");
-
                     b.HasIndex("EntityPropertyValueId");
 
                     b.ToTable("EntityProperty", "EAV");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.EAV.EntityPropertyType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("EntityPropertyType", "EAV");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.EAV.EntityPropertyValue", b =>
@@ -1656,22 +1576,9 @@ namespace amorphie.contract.data.Migrations.Pg
                 {
                     b.HasOne("amorphie.contract.core.Entity.Common.ValidationDecision", "ValidationDecision")
                         .WithMany()
-                        .HasForeignKey("ValidationDecisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ValidationDecisionId");
 
                     b.Navigation("ValidationDecision");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Common.ValidationDecision", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Common.ValidationDecisionType", "ValidationDecisionTypes")
-                        .WithMany()
-                        .HasForeignKey("ValidationDecisionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ValidationDecisionTypes");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>
@@ -2057,19 +1964,11 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.EAV.EntityProperty", b =>
                 {
-                    b.HasOne("amorphie.contract.core.Entity.EAV.EntityPropertyType", "EntityPropertyType")
-                        .WithMany()
-                        .HasForeignKey("EntityPropertyTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("amorphie.contract.core.Entity.EAV.EntityPropertyValue", "EntityPropertyValue")
                         .WithMany()
                         .HasForeignKey("EntityPropertyValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("EntityPropertyType");
 
                     b.Navigation("EntityPropertyValue");
                 });
