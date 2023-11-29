@@ -89,7 +89,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var ep = _documentDefinitionDataModel.data.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
-                EEntityPropertyType =  (ushort)EEntityPropertyType.str,
+                EEntityPropertyType = (ushort)EEntityPropertyType.str,
                 EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
                 Code = x.PropertyName
             }).ToList();
@@ -113,7 +113,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     epdb.EntityPropertyValue = i.EntityPropertyValue;
                 }
-                epdb.EEntityPropertyType  =  (ushort)EEntityPropertyType.str;
+                epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
                 var dep = _dbContext.DocumentEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
                 if (dep == null)
                 {
