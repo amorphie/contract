@@ -3,7 +3,7 @@ namespace amorphie.contract.core.Enum
     public enum EValidationType : ushort
 
     {
-        allvalid = 0,
-        decisiontable = 1
+        AllValid = 0,
+        DecisionTable = 1
     }
 }

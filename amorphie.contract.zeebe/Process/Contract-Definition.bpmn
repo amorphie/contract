@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
-  <bpmn:process id="Document-Group-Definition" name="Document-Group-Definition" isExecutable="true">
+  <bpmn:process id="Contract-Definition" name="Contract-Definition" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_0uy104u</bpmn:incoming>
       <bpmn:outgoing>Flow_0ou83v3</bpmn:outgoing>
@@ -139,7 +139,7 @@
   </bpmn:message>
   <bpmn:error id="Error_0kevwfd" name="Error_28dhdfu" errorCode="500" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Document-Group-Definition">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Contract-Definition">
       <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
         <dc:Bounds x="290" y="80" width="1430" height="410" />
       </bpmndi:BPMNShape>
