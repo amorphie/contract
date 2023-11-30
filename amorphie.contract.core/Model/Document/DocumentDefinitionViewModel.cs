@@ -10,6 +10,7 @@ namespace amorphie.contract.core.Model.Document
 {
     public class DocumentDefinitionViewModel
     {
+        public string? Name { get; set; }
         public Guid Id { get; set; }
         public string? Code { get; set; }
         public string? Status { get; set; }
