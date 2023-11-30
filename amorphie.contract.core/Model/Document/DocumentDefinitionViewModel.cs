@@ -27,7 +27,7 @@ namespace amorphie.contract.core.Model.Document
     public class DocumentOperationsView
     {
         public bool DocumentManuelControl { get; set; }
-        public  List<TagsView>? DocumentOperationsTagsDetail{get;set;}
+        public List<TagsView>? DocumentOperationsTagsDetail { get; set; }
 
     }
     public class DocumentOptimizeView
