@@ -103,8 +103,13 @@ public class DocumentDefinitionModule
             {
                 language = "en-EN";
             }
+
             var list = await context!.DocumentDefinition!.Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).Skip(page)
                 .Take(pageSize).ToListAsync(token);
+            list.ForEach(x =>
+            {
+                x.Name = x.MultilanguageText!.FirstOrDefault(a => a.Language == language).Label;
+            });
             return Results.Ok(list);
 
         }
