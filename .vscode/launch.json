@@ -37,9 +37,9 @@
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:4301",
-                "DAPR_HTTP_PORT": "43020",
-                "DAPR_GRPC_PORT": "43021",
+                "ASPNETCORE_URLS": "http://localhost:4200",
+                "DAPR_HTTP_PORT": "4201",
+                "DAPR_GRPC_PORT": "4202",
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
             },
@@ -61,9 +61,9 @@
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:4302",
-                "DAPR_HTTP_PORT": "43030",
-                "DAPR_GRPC_PORT": "43031",
+                "ASPNETCORE_URLS": "http://localhost:4500",
+                "DAPR_HTTP_PORT": "4501",
+                "DAPR_GRPC_PORT": "4502",
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
                 "DAPR_STATE_STORE_NAME" : "transaction-cache"
             },

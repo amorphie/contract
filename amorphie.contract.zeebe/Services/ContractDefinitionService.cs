@@ -38,13 +38,14 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractDocumentGroupDetail()
         {
-            var multiLanguageList = _ContractDefinitionDataModel.documentGroupList.Select(x => new ContractDocumentGroupDetail
+            var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList.Select(x => new ContractDocumentGroupDetail
             {
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
                 AtLeastRequiredDocument = (uint)x.atLeastRequiredDocument,
                 Required = x.required
             });
+            _ContractDefinition.ContractDocumentGroupDetails = contractDocumentGroupDetails.ToList();
         }
         private void SetContractDocumentDetail()
         {
@@ -121,7 +122,7 @@ namespace amorphie.contract.zeebe.Services
                                ContractDefinitionId = _ContractDefinition.Id,
                                Validations = new Validation
                                {
-                                   EValidationType = (EValidationType)Enum.Parse(typeof(EValidationType), x.type),
+                                   EValidationType = (ushort)Enum.Parse(typeof(EValidationType), x.type),
                                },
                            }
                        ).ToList();
