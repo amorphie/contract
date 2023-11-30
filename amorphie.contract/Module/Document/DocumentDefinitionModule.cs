@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using System.Net;
 using System.IO.Compression;
 
@@ -14,6 +15,10 @@ using Google.Rpc;
 using AutoMapper;
 using Refit;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Model.Document;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.Data.Common;
+using amorphie.contract.core.Mapping;
 
 namespace amorphie.contract;
 
@@ -52,10 +57,10 @@ public class DocumentDefinitionModule
         {
             x.Id,
             x.Code,
-            title = x.DocumentDefinitionLanguageDetails.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
-            x.DocumentDefinitionLanguageDetails.Where(a => a.MultiLanguage.LanguageType.Code == language)
+            title = x.DocumentDefinitionLanguageDetails!.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
+            x.DocumentDefinitionLanguageDetails!.Where(a => a.MultiLanguage.LanguageType.Code == language)
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
-            x.DocumentDefinitionLanguageDetails.Where(a => a.MultiLanguage.LanguageType.Code == "en-EN")
+            x.DocumentDefinitionLanguageDetails!.Where(a => a.MultiLanguage.LanguageType.Code == "en-EN")
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
 
         }).ToListAsync(token);
@@ -87,5 +92,28 @@ public class DocumentDefinitionModule
         return Results.NoContent();
     }
 
+    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+       [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    {
+
+        try
+        {
+            var language = httpContext.Request.Headers["Language"].ToString();
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "en-EN";
+            }
+            var list = await context!.DocumentDefinition!.Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).Skip(page)
+                .Take(pageSize).ToListAsync(token);
+            return Results.Ok(list);
+
+        }
+        catch (Exception ex)
+        {
+            Results.Problem(ex.Message);
+        }
+        return Results.NoContent();
+
+    }
 }
 

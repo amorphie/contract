@@ -50,7 +50,6 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentRender, DocumentRender>().ReverseMap();
             CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
             #endregion
-
             CreateMap<Document, RootDocumentModel>()
                      .ConstructUsing(x => new RootDocumentModel
                      {
@@ -87,6 +86,69 @@ namespace amorphie.contract.core.Mapping
 
                          }
                      });
+            CreateMap<DocumentDefinition, DocumentDefinitionViewModel>()
+                    .ConvertUsing(x => new DocumentDefinitionViewModel
+                    {
+                        Id = x.Id,
+                        Code = x.Code,
+                        Status = x.Status.Code,
+                        BaseStatus = x.BaseStatus.Code,
+                        MultilanguageText = x.DocumentDefinitionLanguageDetails!
+                                    .Select(a => new MultilanguageText
+                                    {
+                                        Label = a.MultiLanguage!.Name,
+                                        Language = a.MultiLanguage!.LanguageType!.Code
+                                    }).ToList(),
+                        EntityProperties = x.DocumentEntityPropertys!.Select(a => new EntityPropertyView
+                        {
+                            Code = a.EntityProperty!.Code,
+                            EntityPropertyValue = a.EntityProperty!.EntityPropertyValue!.Data
+                        }).ToList(),
+                        Tags = x.DocumentTagsDetails!.Select(a => new TagsView
+                        {
+                            Code = a.Tags!.Code,
+                            Contact = a.Tags!.Contact,
+                        }).ToList(),
+                        DocumentUpload = x.DocumentUpload != null ? new DocumentUploadView
+                        {
+                            Required = x.DocumentUpload!.Required,
+                            DocumentAllowedClientDetail = x.DocumentUpload!.DocumentAllowedClientDetails.
+                    Select(a => a.DocumentAllowedClients!.Code).ToList(),
+                            DocumentFormatDetail = x.DocumentUpload!.DocumentFormatDetails.
+                    Select(a => new DocumentFormatDetailView
+                    {
+                        Size = a.DocumentFormat!.DocumentSize!.KiloBytes.ToString(),
+                        FormatType = a.DocumentFormat!.DocumentFormatType!.Code,
+                        FormatContentType = a.DocumentFormat!.DocumentFormatType!.ContentType
+                    }).ToList()
+                        } : null,
+                        DocumentOnlineSing = x.DocumentOnlineSing != null ? new DocumentOnlineSingView
+                        {
+                            Semver = x.DocumentOnlineSing!.Semver,
+                            DocumentAllowedClientDetail = x.DocumentOnlineSing!.DocumentAllowedClientDetails.
+                    Select(a => a.DocumentAllowedClients!.Code).ToList(),
+                            DocumentTemplateDetails = x.DocumentOnlineSing.DocumentTemplateDetails
+                    .Select(a => new DocumentTemplateDetailsView
+                    {
+                        Code = a.DocumentTemplate!.Code,
+                        LanguageType = a.DocumentTemplate!.LanguageType.Code,
+                    }).ToList()
+                        } : null,
+                        DocumentOptimize = x.DocumentOptimize != null ? new DocumentOptimizeView
+                        {
+                            Size = x.DocumentOptimize!.Size,
+                            Code = x.DocumentOptimize!.DocumentOptimizeType!.Code
+                        } : null,
+                        DocumentOperations = x.DocumentOperations != null ? new DocumentOperationsView
+                        {
+                            DocumentManuelControl = x.DocumentOperations!.DocumentManuelControl,
+                            DocumentOperationsTagsDetail = x.DocumentOperations!.DocumentOperationsTagsDetail!.Select(a => new TagsView
+                            {
+                                Code = a.Tags!.Code,
+                                Contact = a.Tags!.Contact,
+                            }).ToList()
+                        } : null
+                    });
 
         }
     }
