@@ -9,11 +9,11 @@ using Google.Rpc;
 namespace amorphie.contract.core.Model.Document
 {
     public interface IMultilanguageTextHolder
-{
-    List<MultilanguageText> MultilanguageText { get; set; }
-    string? Name { get; set; }
-}
-    public class DocumentDefinitionViewModel:IMultilanguageTextHolder
+    {
+        List<MultilanguageText> MultilanguageText { get; set; }
+        string? Name { get; set; }
+    }
+    public class DocumentDefinitionViewModel : IMultilanguageTextHolder
     {
         public string? Name { get; set; }
         public Guid Id { get; set; }

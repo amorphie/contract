@@ -145,8 +145,9 @@ public class DocumentGroupModule
         return Results.NoContent();
 
     }
-    private void MultiLanguageTextToNameByLanguage(string language){
-        
+    private void MultiLanguageTextToNameByLanguage(string language)
+    {
+
     }
 
 }

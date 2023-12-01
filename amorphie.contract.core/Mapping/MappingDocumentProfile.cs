@@ -87,16 +87,16 @@ namespace amorphie.contract.core.Mapping
 
                          }
                      });
-        
 
 
 
-CreateMap<DocumentDefinition, DocumentDefinitionViewModel>()
-    .ConvertUsing((source, destination, context) => ConvertDocumentDefinitionToViewModel(source));
+
+            CreateMap<DocumentDefinition, DocumentDefinitionViewModel>()
+                .ConvertUsing((source, destination, context) => ConvertDocumentDefinitionToViewModel(source));
 
 
             CreateMap<DocumentGroup, DocumentGroupViewModel>()
-            .ConvertUsing(x =>new DocumentGroupViewModel
+            .ConvertUsing(x => new DocumentGroupViewModel
             {
                 Id = x.Id,
                 Code = x.Code,
