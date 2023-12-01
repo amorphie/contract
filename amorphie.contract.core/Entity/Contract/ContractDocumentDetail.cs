@@ -22,7 +22,7 @@ namespace amorphie.contract.core.Entity.Contract
         // public ContractDefinition? ContractDefinition { get; set; }
         [Required]
         public Guid DocumentDefinitionId { get; set; }
-        // public DocumentDefinition DocumentDefinition { get; set; }
+        public virtual DocumentDefinition DocumentDefinition { get; set; }
 
         public ushort UseExisting { get; set; }
         // public UseExisting? UseExisting { get; set; }//enum
