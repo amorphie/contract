@@ -15,7 +15,7 @@ namespace amorphie.contract.core.Model.Document
 }
     public class DocumentDefinitionViewModel:IMultilanguageTextHolder
     {
-        public string? Name{ get;set;}
+        public string? Name { get; set; }
         public Guid Id { get; set; }
         public string? Code { get; set; }
         public string? Status { get; set; }
