@@ -11,6 +11,8 @@ using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Model;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Mapping;
+using amorphie.contract.core.Model.Document;
 
 namespace amorphie.contract;
 
@@ -81,6 +83,71 @@ public class DocumentGroupModule
         }
 
         return Results.NoContent();
+    }
+
+    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+           [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    {
+
+        try
+        {
+            var language = httpContext.Request.Headers["Language"].ToString();
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "en-EN";
+            }
+
+            var list = await context!.DocumentGroup!.Select(x => ObjectMapper.Mapper.Map<DocumentGroupViewModel>(x)).Skip(page * pageSize)
+                .Take(pageSize).ToListAsync(token);
+            foreach (var documentGroupViewModel in list)
+            {
+
+                var selectedGroupLanguageText = documentGroupViewModel.MultilanguageText
+                    .FirstOrDefault(t => t.Language == language);
+
+                if (selectedGroupLanguageText != null)
+                {
+                    documentGroupViewModel.Name = selectedGroupLanguageText.Label;
+                }
+                else if (documentGroupViewModel.MultilanguageText.Any())
+                {
+                    documentGroupViewModel.Name = documentGroupViewModel.MultilanguageText.First().Label;
+                }
+
+                // Check if DocumentDefinitionViewModels is null or empty before iterating
+                if (documentGroupViewModel.DocumentDefinitionList != null && documentGroupViewModel.DocumentDefinitionList.Any())
+                {
+                    // Apply the logic to each DocumentDefinitionViewModel in the DocumentGroupViewModel
+                    foreach (var documentDefinitionViewModel in documentGroupViewModel.DocumentDefinitionList)
+                    {
+                        var selectedLanguageText = documentDefinitionViewModel.MultilanguageText
+                            .FirstOrDefault(t => t.Language == language);
+
+                        if (selectedLanguageText != null)
+                        {
+                            documentDefinitionViewModel.Name = selectedLanguageText.Label;
+                        }
+                        else if (documentDefinitionViewModel.MultilanguageText.Any())
+                        {
+                            documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
+                        }
+                    }
+                }
+            }
+
+            return Results.Ok(list);
+
+        }
+        catch (Exception ex)
+        {
+            Results.Problem(ex.Message);
+        }
+        return Results.NoContent();
+
+    }
+    private void MultiLanguageTextToNameByLanguage(string language)
+    {
+
     }
 
 }

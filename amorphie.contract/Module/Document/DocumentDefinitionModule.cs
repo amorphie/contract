@@ -19,6 +19,7 @@ using amorphie.contract.core.Model.Document;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Data.Common;
 using amorphie.contract.core.Mapping;
+using Google.Protobuf.WellKnownTypes;
 
 namespace amorphie.contract;
 
@@ -103,13 +104,23 @@ public class DocumentDefinitionModule
             {
                 language = "en-EN";
             }
-
-            var list = await context!.DocumentDefinition!.Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).Skip(page)
+            var list = await context!.DocumentDefinition!.Select(x =>
+            ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).Skip(page * pageSize)
                 .Take(pageSize).ToListAsync(token);
-            list.ForEach(x =>
+            foreach (var documentDefinitionViewModel in list)
             {
-                x.Name = x.MultilanguageText!.FirstOrDefault(a => a.Language == language).Label;
-            });
+                var selectedLanguageText = documentDefinitionViewModel?.MultilanguageText
+                    .FirstOrDefault(t => t.Language == language);
+
+                if (selectedLanguageText != null)
+                {
+                    documentDefinitionViewModel.Name = selectedLanguageText.Label;
+                }
+                else if (documentDefinitionViewModel.MultilanguageText.Any())
+                {
+                    documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
+                }
+            }
             return Results.Ok(list);
 
         }

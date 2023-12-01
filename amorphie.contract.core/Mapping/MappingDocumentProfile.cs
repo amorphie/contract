@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -59,7 +60,7 @@ namespace amorphie.contract.core.Mapping
                          DocumentDefinition = new DocumentDefinitionModel
                          {
                              Code = x.DocumentDefinition.Code,
-                             MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails!
+                             MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails
                                 .Select(a => new MultilanguageText
                                 {
                                     Label = a.MultiLanguage.Name,
@@ -67,8 +68,8 @@ namespace amorphie.contract.core.Mapping
                                 }).ToList(),
                              DocumentOperations = new DocumentOperationsModel
                              {
-                                 DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
-                                 DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail!.Select(x => new TagModel
+                                 DocumentManuelControl = x.DocumentDefinition.DocumentOperations.DocumentManuelControl,
+                                 DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail.Select(x => new TagModel
                                  {
                                      Contact = x.Tags.Contact,
                                      Code = x.Tags.Code
@@ -86,70 +87,126 @@ namespace amorphie.contract.core.Mapping
 
                          }
                      });
+
+
+
+
             CreateMap<DocumentDefinition, DocumentDefinitionViewModel>()
-                    .ConvertUsing(x => new DocumentDefinitionViewModel
-                    {
-                        Id = x.Id,
-                        Code = x.Code,
-                        Status = x.Status.Code,
-                        BaseStatus = x.BaseStatus.Code,
-                        MultilanguageText = x.DocumentDefinitionLanguageDetails!
+                .ConvertUsing((source, destination, context) => ConvertDocumentDefinitionToViewModel(source));
+
+
+            CreateMap<DocumentGroup, DocumentGroupViewModel>()
+            .ConvertUsing(x => new DocumentGroupViewModel
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Status = x.Status != null ? x.Status.Code : null,
+                MultilanguageText = x.DocumentGroupLanguageDetail != null ? x.DocumentGroupLanguageDetail
                                     .Select(a => new MultilanguageText
                                     {
-                                        Label = a.MultiLanguage!.Name,
-                                        Language = a.MultiLanguage!.LanguageType!.Code
-                                    }).ToList(),
-                        EntityProperties = x.DocumentEntityPropertys!.Select(a => new EntityPropertyView
-                        {
-                            Code = a.EntityProperty!.Code,
-                            EntityPropertyValue = a.EntityProperty!.EntityPropertyValue!.Data
-                        }).ToList(),
-                        Tags = x.DocumentTagsDetails!.Select(a => new TagsView
-                        {
-                            Code = a.Tags!.Code,
-                            Contact = a.Tags!.Contact,
-                        }).ToList(),
-                        DocumentUpload = x.DocumentUpload != null ? new DocumentUploadView
-                        {
-                            Required = x.DocumentUpload!.Required,
-                            DocumentAllowedClientDetail = x.DocumentUpload!.DocumentAllowedClientDetails.
-                    Select(a => a.DocumentAllowedClients!.Code).ToList(),
-                            DocumentFormatDetail = x.DocumentUpload!.DocumentFormatDetails.
-                    Select(a => new DocumentFormatDetailView
-                    {
-                        Size = a.DocumentFormat!.DocumentSize!.KiloBytes.ToString(),
-                        FormatType = a.DocumentFormat!.DocumentFormatType!.Code,
-                        FormatContentType = a.DocumentFormat!.DocumentFormatType!.ContentType
-                    }).ToList()
-                        } : null,
-                        DocumentOnlineSing = x.DocumentOnlineSing != null ? new DocumentOnlineSingView
-                        {
-                            Semver = x.DocumentOnlineSing!.Semver,
-                            DocumentAllowedClientDetail = x.DocumentOnlineSing!.DocumentAllowedClientDetails.
-                    Select(a => a.DocumentAllowedClients!.Code).ToList(),
-                            DocumentTemplateDetails = x.DocumentOnlineSing.DocumentTemplateDetails
-                    .Select(a => new DocumentTemplateDetailsView
-                    {
-                        Code = a.DocumentTemplate!.Code,
-                        LanguageType = a.DocumentTemplate!.LanguageType.Code,
-                    }).ToList()
-                        } : null,
-                        DocumentOptimize = x.DocumentOptimize != null ? new DocumentOptimizeView
-                        {
-                            Size = x.DocumentOptimize!.Size,
-                            Code = x.DocumentOptimize!.DocumentOptimizeType!.Code
-                        } : null,
-                        DocumentOperations = x.DocumentOperations != null ? new DocumentOperationsView
-                        {
-                            DocumentManuelControl = x.DocumentOperations!.DocumentManuelControl,
-                            DocumentOperationsTagsDetail = x.DocumentOperations!.DocumentOperationsTagsDetail!.Select(a => new TagsView
-                            {
-                                Code = a.Tags!.Code,
-                                Contact = a.Tags!.Contact,
-                            }).ToList()
-                        } : null
-                    });
+                                        Label = a.MultiLanguage.Name,
+                                        Language = a.MultiLanguage.LanguageType.Code
+                                    }).ToList() : null,
+                DocumentDefinitionList = x.DocumentGroupDetails.
+                                    Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x.DocumentDefinition)).ToList()
 
+            });
+
+        }
+        private DocumentDefinitionViewModel ConvertDocumentDefinitionToViewModel(DocumentDefinition source, string language)
+        {
+            var viewModel = new DocumentDefinitionViewModel
+            {
+                // Diğer özellikler
+            };
+
+            // Belirtilen dilin etiketini getir
+            var languageDetail = source.DocumentDefinitionLanguageDetails?
+                .FirstOrDefault(a => a.MultiLanguage != null && a.MultiLanguage.LanguageType.Code == language);
+
+            if (languageDetail != null)
+            {
+                // Belirtilen dil bulunduysa, etiketi "Name" özelliğine eşitle
+                viewModel.Name = languageDetail.MultiLanguage?.Name;
+            }
+            else
+            {
+                // Belirtilen dil bulunamazsa, ilk dilin etiketini "Name" özelliğine eşitle
+                viewModel.Name = source.DocumentDefinitionLanguageDetails?
+                    .FirstOrDefault(a => a.MultiLanguage != null)?.MultiLanguage?.Name;
+            }
+
+            // Diğer özellikler
+
+            return viewModel;
+        }
+        private DocumentDefinitionViewModel ConvertDocumentDefinitionToViewModel(DocumentDefinition source)
+        {
+            var viewModel = new DocumentDefinitionViewModel
+            {
+                Id = source.Id,
+                Code = source.Code,
+                Status = source.Status.Code,
+                BaseStatus = source.BaseStatus.Code,
+                MultilanguageText = source.DocumentDefinitionLanguageDetails?
+                    .Select(a => new MultilanguageText
+                    {
+                        Label = a.MultiLanguage != null ? a.MultiLanguage.Name : null,
+                        Language = a.MultiLanguage?.LanguageType?.Code
+                    }).ToList(),
+                EntityProperties = source.DocumentEntityPropertys?.Select(a => new EntityPropertyView
+                {
+                    Code = a.EntityProperty?.Code,
+                    EntityPropertyValue = a.EntityProperty?.EntityPropertyValue?.Data
+                }).ToList(),
+                Tags = source.DocumentTagsDetails?.Select(a => new TagsView
+                {
+                    Code = a.Tags?.Code,
+                    Contact = a.Tags?.Contact,
+                }).ToList(),
+                DocumentUpload = source.DocumentUpload != null ? new DocumentUploadView
+                {
+                    Required = source.DocumentUpload.Required,
+                    DocumentAllowedClientDetail = source.DocumentUpload.DocumentAllowedClientDetails?
+                        .Select(a => a.DocumentAllowedClients?.Code).ToList(),
+                    DocumentFormatDetail = source.DocumentUpload.DocumentFormatDetails?
+                        .Select(a => new DocumentFormatDetailView
+                        {
+                            Size = a.DocumentFormat?.DocumentSize?.KiloBytes.ToString(),
+                            FormatType = a.DocumentFormat?.DocumentFormatType?.Code,
+                            FormatContentType = a.DocumentFormat?.DocumentFormatType?.ContentType
+                        }).ToList()
+                } : null,
+                DocumentOnlineSing = source.DocumentOnlineSing != null ? new DocumentOnlineSingView
+                {
+                    Semver = source.DocumentOnlineSing.Semver,
+                    DocumentAllowedClientDetail = source.DocumentOnlineSing.DocumentAllowedClientDetails?
+                        .Select(a => a.DocumentAllowedClients?.Code).ToList(),
+                    DocumentTemplateDetails = source.DocumentOnlineSing.DocumentTemplateDetails?
+                        .Select(a => new DocumentTemplateDetailsView
+                        {
+                            Code = a.DocumentTemplate?.Code,
+                            LanguageType = a.DocumentTemplate?.LanguageType?.Code,
+                        }).ToList()
+                } : null,
+                DocumentOptimize = source.DocumentOptimize != null ? new DocumentOptimizeView
+                {
+                    Size = source.DocumentOptimize.Size,
+                    Code = source.DocumentOptimize?.DocumentOptimizeType?.Code
+                } : null,
+                DocumentOperations = source.DocumentOperations != null ? new DocumentOperationsView
+                {
+                    DocumentManuelControl = source.DocumentOperations.DocumentManuelControl,
+                    DocumentOperationsTagsDetail = source.DocumentOperations.DocumentOperationsTagsDetail?
+                        .Select(a => new TagsView
+                        {
+                            Code = a.Tags?.Code,
+                            Contact = a.Tags?.Contact,
+                        }).ToList()
+                } : null
+            };
+
+            return viewModel;
         }
     }
 }

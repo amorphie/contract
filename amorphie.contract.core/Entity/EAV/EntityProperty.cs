@@ -21,7 +21,7 @@ namespace amorphie.contract.core.Entity.EAV
         public ushort EEntityPropertyType { get; set; }
         [Required]
         public Guid EntityPropertyValueId { get; set; }
-        public EntityPropertyValue EntityPropertyValue { get; set; }
+        public virtual EntityPropertyValue EntityPropertyValue { get; set; }
 
     }
 }
