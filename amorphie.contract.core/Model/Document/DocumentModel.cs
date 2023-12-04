@@ -48,5 +48,5 @@ namespace amorphie.contract.core.Model.Document
         public string Id { get; set; }
         public DateTime CreatedAt { get; set; }
     }
-  
+
 }

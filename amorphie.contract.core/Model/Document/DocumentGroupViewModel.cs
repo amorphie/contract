@@ -6,7 +6,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Model.Document
 {
-    public class DocumentGroupViewModel:IMultilanguageTextHolder
+    public class DocumentGroupViewModel : IMultilanguageTextHolder
     {
         public string? Name { get; set; }
         public string? Code { get; set; }

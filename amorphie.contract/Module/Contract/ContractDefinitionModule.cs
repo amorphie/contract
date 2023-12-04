@@ -52,7 +52,7 @@ public class ContractDefinitionModule
             b.Name = b.MultilanguageText.Any(c => c.Language == language) ? b.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
             : b.MultilanguageText.First().Label)
             ));
-            list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(b => 
+            list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(b =>
             b.DocumentGroup.Name = b.DocumentGroup.MultilanguageText.Any(c => c.Language == language) ? b.DocumentGroup.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
             : b.DocumentGroup.MultilanguageText.First().Label)
             );
