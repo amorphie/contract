@@ -9,11 +9,11 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document
 {
-      [Table("DocumentSize", Schema = "Doc")]
+    [Table("DocumentSize", Schema = "Doc")]
     public class DocumentSize : AudiEntity
     {
         [Required]
         public ulong KiloBytes { get; set; }
-        
+
     }
 }

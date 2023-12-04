@@ -14,7 +14,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentEntityProperty : AudiEntity
     {
         [Required]
-        
+
         public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]

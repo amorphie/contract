@@ -12,16 +12,16 @@ namespace amorphie.contract;
 
     public class DocumentTemplateModule
         : BaseBBTContractRoute<DocumentTemplate, DocumentTemplate, ProjectDbContext>
+{
+    public DocumentTemplateModule(WebApplication app) : base(app)
     {
-        public DocumentTemplateModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "document-template";
-
-
-     
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "document-template";
+
+
+
+}
 

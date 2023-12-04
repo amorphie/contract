@@ -9,6 +9,6 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentAllowedClient", Schema = "Doc")]
     public class DocumentAllowedClient : BaseEntity
     {
-       
+
     }
 }

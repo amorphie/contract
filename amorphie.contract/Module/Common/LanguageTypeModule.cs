@@ -13,18 +13,18 @@ namespace amorphie.contract.common;
 
     public class LanguageTypeModule
         : BaseBBTContractRoute<LanguageType, LanguageType, ProjectDbContext>
+{
+    public LanguageTypeModule(WebApplication app) : base(app)
     {
-        public LanguageTypeModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Code"};
-
-        public override string? UrlFragment => "Common-LanguageType";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "Common-LanguageType";
+
+
+
+
+}
 

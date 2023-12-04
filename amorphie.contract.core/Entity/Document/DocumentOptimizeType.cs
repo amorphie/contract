@@ -11,6 +11,6 @@ namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOptimizeType", Schema = "Doc")]
     public class DocumentOptimizeType : BaseEntity
-    { 
+    {
     }
 }
