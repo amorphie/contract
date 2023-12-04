@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentAllowedClient", Schema = "Doc")]
-    [Index(nameof(Code), IsUnique = true)] 
-    public class DocumentAllowedClient : EntityBase
+    public class DocumentAllowedClient : BaseEntity
     {
-        //Render edilecekler
-        public string Code { get; set; }
-        // public DocumentAllowedType? DocumentAllowedType { get; set; }//client, örnek ver
+
     }
 }

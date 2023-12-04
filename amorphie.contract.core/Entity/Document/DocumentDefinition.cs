@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.core.Base;
@@ -13,14 +15,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Index(nameof(Code), IsUnique = true)]
     [Table("DocumentDefinition", Schema = "Doc")]
-    public class DocumentDefinition : EntityBase
+    public class DocumentDefinition : BaseEntity
     {
-        [MaxLength(500)]
-        [Description("Kode")]
-        [Required]
-        public string Code { get; set; } //buna göre getirile biline bilir.
+        // [MaxLength(500)]
+        // [Description("Kode")]
+        // [Required]
+        // public string Code { get; set; } //buna göre getirile biline bilir.
         public Status Status { get; set; }
         [Required]
         public Guid StatusId { get; set; }

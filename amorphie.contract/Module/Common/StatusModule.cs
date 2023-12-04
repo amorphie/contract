@@ -12,19 +12,19 @@ using amorphie.contract.core.Entity.Common;
 namespace amorphie.contract.common;
 
     public class StatusModule
-        : BaseBBTRoute<Status, Status, ProjectDbContext>
+        : BaseBBTContractRoute<Status, Status, ProjectDbContext>
+{
+    public StatusModule(WebApplication app) : base(app)
     {
-        public StatusModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-Status";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "Common-Status";
+
+
+
+
+}
 

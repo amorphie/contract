@@ -19,7 +19,7 @@ using System.Diagnostics;
 namespace amorphie.contract;
 
 public class ContractDefinitionModule
-    : BaseBBTRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
 {
     public ContractDefinitionModule(WebApplication app) : base(app)
     {

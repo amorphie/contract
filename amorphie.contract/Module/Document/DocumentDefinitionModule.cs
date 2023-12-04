@@ -24,7 +24,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace amorphie.contract;
 
 public class DocumentDefinitionModule
-    : BaseBBTRoute<DocumentDefinition, DocumentDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<DocumentDefinition, DocumentDefinition, ProjectDbContext>
 {
     public DocumentDefinitionModule(WebApplication app) : base(app)
     {

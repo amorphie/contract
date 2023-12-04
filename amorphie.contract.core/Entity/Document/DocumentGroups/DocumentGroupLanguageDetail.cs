@@ -8,12 +8,13 @@ using amorphie.core.Base;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 
 namespace amorphie.contract.core.Entity.Document.DocumentGroups
 {
     // [Index(nameof(MultiLanguageId), IsUnique = true)]
     [Table("DocumentGroupLanguageDetail", Schema = "DocGroup")]
-    public class DocumentGroupLanguageDetail : EntityBase
+    public class DocumentGroupLanguageDetail : AudiEntity
     {
         [Required]
         public Guid MultiLanguageId { get; set; }

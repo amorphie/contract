@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractDocumentDetail", Schema = "Cont")]
     // [Index(nameof(ContractDefinitionId,DocumentDefinitionId), IsUnique = true)]
 
-    public class ContractDocumentDetail : EntityBase
+    public class ContractDocumentDetail : AudiEntity
     {
         [Required]
         public Guid ContractDefinitionId { get; set; }
@@ -26,7 +27,7 @@ namespace amorphie.contract.core.Entity.Contract
 
         public ushort UseExisting { get; set; }
         // public UseExisting? UseExisting { get; set; }//enum
-        public string Semver { get; set; }
+        public string MinVersion { get; set; }
         public bool Required { get; set; }
 
     }

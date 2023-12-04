@@ -54,7 +54,7 @@ namespace amorphie.contract.zeebe.Services
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentDefinitionId = ZeebeMessageHelper.StringToGuid(x.name),
                 UseExisting = (ushort)Enum.Parse(typeof(EUseExisting), x.useExisting),
-                Semver = x.minVersiyon,
+                MinVersion = x.minVersiyon,
                 Required = x.required
             });
             _ContractDefinition.ContractDocumentDetails = contractDocumentDetail.ToList();

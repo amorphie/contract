@@ -17,7 +17,7 @@ using amorphie.contract.core.Model.Document;
 namespace amorphie.contract;
 
 public class DocumentGroupModule
-    : BaseBBTRoute<DocumentGroup, DocumentGroup, ProjectDbContext>
+    : BaseBBTContractRoute<DocumentGroup, DocumentGroup, ProjectDbContext>
 {
     public DocumentGroupModule(WebApplication app) : base(app)
     {

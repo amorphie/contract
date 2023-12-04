@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Document.DocumentTypes
 {
-    public class DocumentRenderConfiguration : ConfigurationBase<DocumentRender>
+    public class DocumentRenderConfiguration : ConfigurationBaseAudiEntity<DocumentRender>
     {
         public void Configure(EntityTypeBuilder<DocumentRender> builder)
         {
 
-           
+
         }
     }
 }

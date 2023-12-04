@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Contract
 {
-    public class ContractEntityPropertyConfiguration : ConfigurationBase<ContractEntityProperty>
+    public class ContractEntityPropertyConfiguration : ConfigurationBaseAudiEntity<ContractEntityProperty>
     {
         public void Configure(EntityTypeBuilder<ContractEntityProperty> builder)
         {
 
-           
+
         }
     }
 }

@@ -12,19 +12,19 @@ using amorphie.contract.core.Entity.Common;
 namespace amorphie.contract.common;
 
     public class TagModule
-        : BaseBBTRoute<Tag, Tag, ProjectDbContext>
+        : BaseBBTContractRoute<Tag, Tag, ProjectDbContext>
+{
+    public TagModule(WebApplication app) : base(app)
     {
-        public TagModule(WebApplication app) : base(app)
-        {
-            
-        }
 
-        public override string[]? PropertyCheckList => new string[] {"Name"};
-
-        public override string? UrlFragment => "Common-Tag";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Name" };
+
+    public override string? UrlFragment => "Common-Tag";
+
+
+
+
+}
 

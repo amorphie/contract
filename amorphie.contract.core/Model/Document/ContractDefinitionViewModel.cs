@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Model.Document
     public class ContractDocumentDetailView
     {
         public string? UseExisting { get; set; }
-        public string? Semver { get; set; }
+        public string? MinVersion { get; set; }
         public bool Required { get; set; }
         public DocumentDefinitionViewModel? DocumentDefinition { get; set; }
 
