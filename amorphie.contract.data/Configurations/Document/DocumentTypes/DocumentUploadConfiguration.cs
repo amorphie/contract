@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Document.DocumentTypes
 {
-    public class DocumentUploadConfiguration : ConfigurationBase<DocumentUpload>
+    public class DocumentUploadConfiguration : ConfigurationBaseAudiEntity<DocumentUpload>
     {
         public void Configure(EntityTypeBuilder<DocumentUpload> builder)
         {

@@ -72,7 +72,7 @@ namespace amorphie.contract.core.Mapping
         src.ContractDocumentDetails.Select(a => new ContractDocumentDetailView
         {
             UseExisting = ((EUseExisting)a.UseExisting).ToString(),
-            Semver = a.Semver,
+            MinVersion = a.MinVersion,
             Required = a.Required,
             DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
         }).ToList()))

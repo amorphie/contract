@@ -12,7 +12,7 @@ using amorphie.contract.core.Entity.Common;
 namespace amorphie.contract.common;
 
     public class LanguageTypeModule
-        : BaseBBTRoute<LanguageType, LanguageType, ProjectDbContext>
+        : BaseBBTContractRoute<LanguageType, LanguageType, ProjectDbContext>
     {
         public LanguageTypeModule(WebApplication app) : base(app)
         {

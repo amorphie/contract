@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Contract
 {
-    public class ContractValidationConfiguration : ConfigurationBase<ContractValidation>
+    public class ContractValidationConfiguration : ConfigurationBaseAudiEntity<ContractValidation>
     {
         public void Configure(EntityTypeBuilder<ContractValidation> builder)
         {

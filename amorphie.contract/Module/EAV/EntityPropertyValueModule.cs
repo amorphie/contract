@@ -10,7 +10,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-    public class EntityPropertyValueModule: BaseBBTRoute<EntityPropertyValue, EntityPropertyValue, ProjectDbContext>
+    public class EntityPropertyValueModule:
+     BaseBBTRoute<EntityPropertyValue, EntityPropertyValue, ProjectDbContext>
     {
         public EntityPropertyValueModule(WebApplication app) : base(app)
         {

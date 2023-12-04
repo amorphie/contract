@@ -14,7 +14,7 @@ using amorphie.core.Identity;
 namespace amorphie.contract;
 
     public class EntityPropertyModule
-        : BaseBBTRoute<EntityProperty, EntityProperty, ProjectDbContext>
+        : BaseBBTContractRoute<EntityProperty, EntityProperty, ProjectDbContext>
     {
         public EntityPropertyModule(WebApplication app) : base(app)
         {

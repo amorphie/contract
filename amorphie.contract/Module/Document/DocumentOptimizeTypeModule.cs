@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class DocumentOptimizeTypeModule
-        : BaseBBTRoute<DocumentOptimizeType, DocumentOptimizeType, ProjectDbContext>
+        : BaseBBTContractRoute<DocumentOptimizeType, DocumentOptimizeType, ProjectDbContext>
     {
         public DocumentOptimizeTypeModule(WebApplication app) : base(app)
         {

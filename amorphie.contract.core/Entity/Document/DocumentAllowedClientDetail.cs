@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentAllowedClientDetail", Schema = "Doc")]
-    public class DocumentAllowedClientDetail : EntityBase
+    public class DocumentAllowedClientDetail : AudiEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }

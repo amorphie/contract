@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOperations", Schema = "Doc")]
-    public class DocumentOperations : EntityBase
+    public class DocumentOperations : AudiEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }

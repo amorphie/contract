@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.DocumentGroups
 {
-     public class DocumentGroupLanguageDetailConfiguration : ConfigurationBase<DocumentGroupLanguageDetail>
+     public class DocumentGroupLanguageDetailConfiguration : ConfigurationBaseAudiEntity<DocumentGroupLanguageDetail>
     {
         public void Configure(EntityTypeBuilder<DocumentGroupLanguageDetail> builder)
         {

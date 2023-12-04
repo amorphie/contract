@@ -12,7 +12,7 @@ using amorphie.contract.core.Entity.Common;
 namespace amorphie.contract.common;
 
     public class ValidationModule
-        : BaseBBTRoute<Validation, Validation, ProjectDbContext>
+        : BaseBBTContractRoute<Validation, Validation, ProjectDbContext>
     {
         public ValidationModule(WebApplication app) : base(app)
         {

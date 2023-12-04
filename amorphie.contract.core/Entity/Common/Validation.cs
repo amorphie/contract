@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace amorphie.contract.core.Entity.Common
     [Table("Validation", Schema = "Common")]
     [Index(nameof(EValidationType), IsUnique = true)]
 
-    public class Validation : EntityBase
+    public class Validation : BaseEntity
     {
         [Required]
         public ushort EValidationType { get; set; }// all-valid

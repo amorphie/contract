@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.EAV
 {
-    public class EntityPropertyValueConfiguration: ConfigurationBase<EntityPropertyValue>
+    public class EntityPropertyValueConfiguration: ConfigurationBaseAudiEntity<EntityPropertyValue>
     {
         public void Configure(EntityTypeBuilder<EntityPropertyValue> builder)
         {
