@@ -18,7 +18,7 @@ namespace amorphie.contract.core.Entity.Document
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]
         public Guid DocumentFormatId { get; set; }
-        public DocumentFormat DocumentFormat { get; set; }
+        public virtual DocumentFormat DocumentFormat { get; set; }
 
     }
 }

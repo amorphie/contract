@@ -15,6 +15,6 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public Guid DocumentTemplateId { get; set; }
 
-        public DocumentTemplate? DocumentTemplate { get; set; }
+        public virtual DocumentTemplate? DocumentTemplate { get; set; }
     }
 }

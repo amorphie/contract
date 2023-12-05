@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid LanguageTypeId { get; set; }
-        public LanguageType LanguageType { get; set; }
+        public virtual LanguageType LanguageType { get; set; }
 
     }
 }

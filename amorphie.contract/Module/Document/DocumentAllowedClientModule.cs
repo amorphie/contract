@@ -10,8 +10,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-    public class DocumentAllowedClientModule
-        : BaseBBTContractRoute<DocumentAllowedClient, DocumentAllowedClient, ProjectDbContext>
+public class DocumentAllowedClientModule
+    : BaseBBTContractRoute<DocumentAllowedClient, DocumentAllowedClient, ProjectDbContext>
 {
     public DocumentAllowedClientModule(WebApplication app) : base(app)
     {
