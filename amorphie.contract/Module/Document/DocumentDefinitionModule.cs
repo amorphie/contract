@@ -61,7 +61,7 @@ public class DocumentDefinitionModule
             title = x.DocumentDefinitionLanguageDetails!.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
             x.DocumentDefinitionLanguageDetails!.Where(a => a.MultiLanguage.LanguageType.Code == language)
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
-            x.DocumentDefinitionLanguageDetails!.Where(a => a.MultiLanguage.LanguageType.Code == "en-EN")
+            x.DocumentDefinitionLanguageDetails!
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
 
         }).ToListAsync(token);
