@@ -54,7 +54,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<Document, RootDocumentModel>()
                      .ConstructUsing(x => new RootDocumentModel
                      {
-                         DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                         DocumentDefinitionId = x.DocumentDefinitionCode.ToString(),
                          StatuCode = x.Status.Code,
                          CreatedAt = x.CreatedAt,
                          DocumentDefinition = new DocumentDefinitionModel
