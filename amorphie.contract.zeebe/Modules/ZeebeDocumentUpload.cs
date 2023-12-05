@@ -126,7 +126,7 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-
+                //todo: id yerine definition Code kullanıcaksın ön yuzu degiş
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 var document = new amorphie.contract.core.Entity.Document.Document
                 {
@@ -154,7 +154,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
 
-                document.DocumentDefinitionId = documentDefinitionId;
+                document.DocumentDefinitionCode = documentDefinitionId.ToString();//sonra
                 var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
 
                 if (documentDefinition != null)
