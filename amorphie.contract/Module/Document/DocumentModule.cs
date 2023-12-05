@@ -57,7 +57,7 @@ public class DocumentModule
                  new RootDocumentModel
                  {
                      Id = x.Id.ToString(),
-                     DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                     DocumentDefinitionId = x.DocumentDefinitionCode.ToString(),
                      StatuCode = x.Status.Code,
                      CreatedAt = x.CreatedAt,
                      DocumentDefinition = new DocumentDefinitionModel
@@ -124,7 +124,7 @@ public class DocumentModule
                  new RootDocumentModel
                  {
                      Id = x.Id.ToString(),
-                     DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                     DocumentDefinitionId = x.DocumentDefinitionCode.ToString(),
                      StatuCode = x.Status.Code,
                      CreatedAt = x.CreatedAt,
                      DocumentDefinition = new DocumentDefinitionModel
@@ -190,7 +190,7 @@ public class DocumentModule
              new RootDocumentModel
              {
                  Id = x.Id.ToString(),
-                 DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+                 DocumentDefinitionId = x.DocumentDefinitionCode.ToString(),
                  StatuCode = x.Status.Code,
                  CreatedAt = x.CreatedAt,
                  DocumentDefinition = new DocumentDefinitionModel
