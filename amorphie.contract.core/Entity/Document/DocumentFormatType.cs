@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentFormatType", Schema = "Doc")]
-    
+
     public class DocumentFormatType : BaseEntity
     {
         public string ContentType { get; set; }//ayrılcak ihtiyaca dogru bakacaz

@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentTemplateDetail : AudiEntity
     {
         [Required]
-         public Guid DocumentDefinitionId { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]
         public Guid DocumentTemplateId { get; set; }

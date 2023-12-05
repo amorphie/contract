@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentTemplate", Schema = "Doc")]
 
     public class DocumentTemplate : BaseEntity
-    { 
+    {
         [Required]
         public Guid LanguageTypeId { get; set; }
         public virtual LanguageType LanguageType { get; set; }

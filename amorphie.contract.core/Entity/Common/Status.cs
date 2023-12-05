@@ -9,6 +9,6 @@ namespace amorphie.contract.core.Entity.Common
     [Table("Status", Schema = "Common")]
     public class Status : BaseEntity
     {
-        
+
     }
 }

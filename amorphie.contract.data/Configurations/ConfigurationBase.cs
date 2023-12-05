@@ -13,7 +13,7 @@ namespace amorphie.contract.data.Configurations
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            
+
             builder.HasKey(x => x.Id);
             builder.HasIndex(e => e.Code).IsUnique();
             var entitypropNavigationList = builder.Metadata.GetNavigations();
@@ -24,7 +24,7 @@ namespace amorphie.contract.data.Configurations
             }
         }
     }
-     public class ConfigurationBaseAudiEntity<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : AudiEntity
+    public class ConfigurationBaseAudiEntity<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : AudiEntity
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {

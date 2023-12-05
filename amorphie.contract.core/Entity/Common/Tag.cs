@@ -11,7 +11,7 @@ namespace amorphie.contract.core.Entity.Common
 {
     [Table("Tag", Schema = "Common")]
 
-    public class  Tag: BaseEntity
+    public class Tag : BaseEntity
     {
         public string? Contact { get; set; }
     }
