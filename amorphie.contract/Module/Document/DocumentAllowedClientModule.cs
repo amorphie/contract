@@ -16,7 +16,7 @@ public class DocumentAllowedClientModule
     public DocumentAllowedClientModule(WebApplication app) : base(app)
     {
     }
-     
+
     public override string[]? PropertyCheckList => new string[] { "Code" };
 
     public override string? UrlFragment => "document-allowed-client";

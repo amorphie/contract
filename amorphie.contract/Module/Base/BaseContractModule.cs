@@ -19,7 +19,7 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
     protected BaseBBTContractRoute(WebApplication app) : base(app)
     {
     }
- 
+
 
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {

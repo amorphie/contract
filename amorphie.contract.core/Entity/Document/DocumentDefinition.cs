@@ -9,11 +9,11 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentDefinition", Schema = "Doc")]
     public class DocumentDefinition : BaseEntity
     {
-         
+
         public virtual Status Status { get; set; }
         [Required]
         public Guid StatusId { get; set; }
-        public  virtual Status BaseStatus { get; set; }
+        public virtual Status BaseStatus { get; set; }
         [Required]
         public Guid BaseStatusId { get; set; }
         public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
