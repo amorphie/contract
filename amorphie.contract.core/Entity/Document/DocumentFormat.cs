@@ -14,9 +14,9 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid DocumentFormatTypeId { get; set; }
-        public DocumentFormatType DocumentFormatType { get; set; }
+        public virtual DocumentFormatType DocumentFormatType { get; set; }
         [Required]
         public Guid DocumentSizeId { get; set; }
-        public DocumentSize DocumentSize { get; set; }
+        public virtual DocumentSize DocumentSize { get; set; }
     }
 }

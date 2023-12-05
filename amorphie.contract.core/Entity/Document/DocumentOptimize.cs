@@ -18,6 +18,6 @@ namespace amorphie.contract.core.Entity.Document
         public bool Size { get; set; }
         [Required]
         public Guid DocumentOptimizeTypeId { get; set; }
-        public DocumentOptimizeType DocumentOptimizeType { get; set; }
+        public virtual DocumentOptimizeType DocumentOptimizeType { get; set; }
     }
 }

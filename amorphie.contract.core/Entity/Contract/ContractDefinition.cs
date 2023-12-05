@@ -18,7 +18,7 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
         public Guid StatusId { get; set; }
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
         public virtual ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
         public virtual ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
         public virtual ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();

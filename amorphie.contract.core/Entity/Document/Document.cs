@@ -15,13 +15,16 @@ namespace amorphie.contract.core.Entity.Document
     public class Document : AudiEntity
     {
         [Required]
-        public Guid DocumentDefinitionId { get; set; }
-        public DocumentDefinition DocumentDefinition { get; set; }
+        [ForeignKey(nameof(DocumentDefinitionCode))]
+        public string DocumentDefinitionCode { get; set; }
+        public virtual DocumentDefinition DocumentDefinition { get; set; }
         [Required]
         public Guid DocumentContentId { get; set; }
-        public DocumentContent DocumentContent { get; set; }
-        public Status Status { get; set; }
+        public virtual DocumentContent DocumentContent { get; set; }
+        public virtual Status Status { get; set; }
         [Required]
         public Guid StatusId { get; set; }
+        public Guid CustomerId { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

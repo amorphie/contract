@@ -19,7 +19,7 @@ namespace amorphie.contract.core.Entity.Common
         [Required]
         public ushort EValidationType { get; set; }// all-valid
         public Guid? ValidationDecisionId { get; set; }
-        public ValidationDecision? ValidationDecision { get; set; }
+        public virtual ValidationDecision? ValidationDecision { get; set; }
 
     }
 }

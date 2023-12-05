@@ -10,17 +10,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract;
 
-    public class DocumentAllowedClientModule
-        : BaseBBTContractRoute<DocumentAllowedClient, DocumentAllowedClient, ProjectDbContext>
+public class DocumentAllowedClientModule
+    : BaseBBTContractRoute<DocumentAllowedClient, DocumentAllowedClient, ProjectDbContext>
+{
+    public DocumentAllowedClientModule(WebApplication app) : base(app)
     {
-        public DocumentAllowedClientModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Code"};
-
-        public override string? UrlFragment => "document-allowed-client";
-
-
     }
+     
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "document-allowed-client";
+
+
+}
 

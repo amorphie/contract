@@ -1,22 +1,19 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.1",
     "tasks": [
-        {
-            "label": "update-database",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "ef",
-                "database",
-                "update",
-                "--project", "${workspaceFolder}/amorphie.contract.data/amorphie.contract.data.csproj"
-            ],
-            "problemMatcher": "$tsc",
-            "runOptions": {
-                "runOn": "folderOpen"
-            }
-        }
-        //,
+        // {
+        //     "label": "update-database",
+        //     "command": "dotnet",
+        //     "type": "shell",
+        //     "args": [
+        //         "dotnet",
+        //         "--project", "${workspaceFolder}/amorphie.contract.data/amorphie.contract.data.csproj"
+        //     ],
+        //     "problemMatcher": "$tsc",
+        //     "runOptions": {
+        //         "runOn": "folderOpen"
+        //     }
+        // },
         //{
         //    "label": "init-mocks",
         //    "type": "shell",
@@ -28,7 +25,7 @@
         //    "type": "shell",
         //    "command": "docker rm -f amorphie-contract-mocks"
         //},
-        ,
+        
         {
             "label": "build-amorphie-contract",
         //    "dependsOn": "init-mocks",
@@ -42,18 +39,18 @@
             ],
             "problemMatcher": "$msCompile"
         },
-        {
-            "label": "build-amorphie-contract-hub",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/amorphie.contract.hub/amorphie.contract.hub.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
+        // {
+        //     "label": "build-amorphie-contract-hub",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "dotnet",
+        //         "${workspaceFolder}/amorphie.contract.hub/amorphie.contract.hub.csproj",
+        //         "/property:GenerateFullPaths=true",
+        //         "/consoleloggerparameters:NoSummary"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
         {
             "label": "build-amorphie-contract-zeebe",
             "command": "dotnet",
