@@ -15,9 +15,9 @@ namespace amorphie.contract.core.Entity.Common
         public string Name { get; set; }//Nufus Cuzdani
         public string Code { get; set; }//özel durum farkındaysan baseentityden türemiyor
         [Required]
-        public Guid  LanguageTypeId { get; set; } 
-        public virtual LanguageType  LanguageType { get; set; } 
-        
+        public Guid LanguageTypeId { get; set; }
+        public virtual LanguageType LanguageType { get; set; }
+
 
     }
 }
