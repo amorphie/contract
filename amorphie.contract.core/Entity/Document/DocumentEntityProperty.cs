@@ -13,8 +13,8 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentEntityProperty", Schema = "Doc")]
     public class DocumentEntityProperty : AudiEntity
     {
-          [Required]
-         public Guid DocumentDefinitionId { get; set; }
+        [Required]
+        public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]
 

@@ -14,7 +14,7 @@ namespace amorphie.contract.core.Entity.Document
     [Table("Document", Schema = "Doc")]
     public class Document : AudiEntity
     {
-        [Required] 
+        [Required]
         public Guid DocumentDefinitionId { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }
         [Required]

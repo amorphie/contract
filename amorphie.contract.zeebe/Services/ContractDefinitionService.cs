@@ -41,7 +41,7 @@ namespace amorphie.contract.zeebe.Services
             var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList.Select(x => new ContractDocumentGroupDetail
             {
                 ContractDefinitionId = _ContractDefinition.Id,
-                DocumentGroupId= ZeebeMessageHelper.StringToGuid(x.groupName),
+                DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
                 AtLeastRequiredDocument = x.atLeastRequiredDocument,
                 Required = x.required
             });
@@ -119,7 +119,7 @@ namespace amorphie.contract.zeebe.Services
             var list = _ContractDefinitionDataModel.validationList.Select(
                            x => new ContractValidation
                            {
-                               ContractDefinitionId =  _ContractDefinition.Id,
+                               ContractDefinitionId = _ContractDefinition.Id,
                                Validations = new Validation
                                {
                                    EValidationType = (ushort)Enum.Parse(typeof(EValidationType), x.type),

@@ -13,9 +13,9 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractValidation", Schema = "Cont")]
     public class ContractValidation : AudiEntity
     {
-         [Required]
+        [Required]
 
-         
+
         public Guid ContractDefinitionId { get; set; }
         [Required]
         public Guid ValidationId { get; set; }

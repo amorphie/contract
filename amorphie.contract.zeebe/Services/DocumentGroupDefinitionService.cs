@@ -51,7 +51,7 @@ namespace amorphie.contract.zeebe.Services
             var documentGroupDetail = _documentDefinitionDataModel.document.Select(x => new DocumentGroupDetail
             {
                 DocumentDefinitionCode = x,
-                DocumentGroupId =  _documentGroup.Id,
+                DocumentGroupId = _documentGroup.Id,
 
             });
             _documentGroup.DocumentGroupDetails = documentGroupDetail.ToList();

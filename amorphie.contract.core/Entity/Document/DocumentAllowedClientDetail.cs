@@ -10,8 +10,8 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentAllowedClientDetail : AudiEntity
     {
         [Required]
-        
-         
+
+
         public Guid DocumentDefinitionId { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }
         [Required]
