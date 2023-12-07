@@ -63,7 +63,7 @@ public class DocumentDefinitionModule
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
             x.DocumentDefinitionLanguageDetails!
             .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
-
+            x.Semver
         }).ToListAsync(token);
         // var list = await query.ToListAsync(token);
         return Results.Ok(list);

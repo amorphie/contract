@@ -18,7 +18,8 @@ namespace amorphie.contract.core.Entity.Document
 
         public virtual MultiLanguage MultiLanguage { get; set; }
         [Required]
-        public Guid DocumentDefinitionId { get; set; }
+        [ForeignKey(nameof(DocumentDefinitionCode))]
+        public string DocumentDefinitionCode { get; set; }
 
         // public DocumentDefinition? DocumentDefinition { get; set; }
     }

@@ -7,7 +7,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
 {
     public class DocumentGroupList
     {
-        public int atLeastRequiredDocument { get; set; }
+        public ushort atLeastRequiredDocument { get; set; }
         public string groupName { get; set; }
         public bool required { get; set; }
     }

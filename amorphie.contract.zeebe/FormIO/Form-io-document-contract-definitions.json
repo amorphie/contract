@@ -88,7 +88,7 @@
                       }
                     ]
                   },
-                  "valueProperty": "id",
+                  "valueProperty": "code",
                   "template": "<span>{{ item.title.name }}</span>",
                   "key": "name",
                   "type": "select",
@@ -324,6 +324,14 @@
           "collapsed": false
         }
       ]
+    },
+    {
+      "type": "button",
+      "label": "Submit",
+      "key": "submit",
+      "disableOnInvalid": true,
+      "input": true,
+      "tableView": false
     }
   ]
 }

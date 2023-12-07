@@ -36,7 +36,7 @@ namespace amorphie.contract.zeebe.Services
 
             _documentdef.DocumentDefinitionLanguageDetails = multiLanguageList.Select(x => new DocumentDefinitionLanguageDetail
             {
-                DocumentDefinitionId = _documentdef.Id,
+                DocumentDefinitionCode = _documentdef.Code,
                 MultiLanguage = x
             }).ToList();
         }
@@ -45,7 +45,7 @@ namespace amorphie.contract.zeebe.Services
             var list = _documentDefinitionDataModel.data.Tags.Select(
                            x => new DocumentTagsDetail
                            {
-                               DocumentDefinitionId = _documentdef.Id,
+                               DocumentDefinitionCode = _documentdef.Code,
                                TagId = ZeebeMessageHelper.StringToGuid(x)
                            }
                        ).ToList();
@@ -62,7 +62,7 @@ namespace amorphie.contract.zeebe.Services
                         Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
                     },
                     Size = _documentDefinitionDataModel.data.Size,
-                    DocumentDefinitionId = _documentdef.Id
+                    DocumentDefinitionCode = _documentdef.Code
                 };
             }
         }
@@ -78,7 +78,7 @@ namespace amorphie.contract.zeebe.Services
             _documentdef.DocumentOperations =
                         new DocumentOperations
                         {
-                            DocumentDefinitionId = _documentdef.Id,
+                            DocumentDefinitionCode = _documentdef.Code,
                             DocumentManuelControl = manuelControl,
                             DocumentOperationsTagsDetail = list2
                         };
@@ -119,7 +119,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
                     {
-                        DocumentDefinitionId = _documentdef.Id,
+                        DocumentDefinitionCode = _documentdef.Code,
                         EntityProperty = epdb,
                     });
                 }
@@ -132,7 +132,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.UploadAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
-                DocumentDefinitionId = _documentdef.Id,
+                DocumentDefinitionCode = _documentdef.Code,
                 DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
@@ -144,7 +144,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var documentFormatDetail = _documentDefinitionDataModel.data.AllowedFormatsUploadList.Select(x => new DocumentFormatDetail
             {
-                DocumentDefinitionId = _documentdef.Id,
+                DocumentDefinitionCode = _documentdef.Code,
                 DocumentFormat = new DocumentFormat
                 {
                     DocumentFormatTypeId = ZeebeMessageHelper.StringToGuid(x.format),
@@ -176,7 +176,6 @@ namespace amorphie.contract.zeebe.Services
                 _documentdef.DocumentOnlineSing = new DocumentOnlineSing();
 
             }
-            _documentdef.DocumentOnlineSing.Semver = _documentDefinitionDataModel.data.versiyon;
 
             SetDocumentOnlineSingTemplateDetails();
             SetDocumentOnlineSingAllowedClientDetails();
@@ -186,7 +185,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var documentTemplateDetail = _documentDefinitionDataModel.data.TemplateList.Select(x => new DocumentTemplateDetail
             {
-                DocumentDefinitionId = _documentdef.Id,
+                DocumentDefinitionCode = _documentdef.Code,
                 DocumentTemplate = new DocumentTemplate
                 {
                     LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
@@ -199,7 +198,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
-                DocumentDefinitionId = _documentdef.Id,
+                DocumentDefinitionCode = _documentdef.Code,
                 DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
@@ -262,34 +261,36 @@ namespace amorphie.contract.zeebe.Services
                         Id = id,
                         Code = _documentDefinitionDataModel.data.Code,
                         Status = onHoldStatus,
-                        BaseStatus = onHoldStatus
-                    };
-                }
+                        BaseStatus = onHoldStatus,
+                        Semver = _documentDefinitionDataModel.data.versiyon;
+
+                };
+            }
 
                 SetDocumentDefinitionLanguageDetail();
-                SetDocumentTagsDetails();
-                SetDocumentOptimize();
-                SetDocumentOperation();
-                SetDocumentEOV();
+            SetDocumentTagsDetails();
+            SetDocumentOptimize();
+            SetDocumentOperation();
+            SetDocumentEOV();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
-                {
-                    SetDocumentOnlineSing();
+            if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+            {
+                SetDocumentOnlineSing();
 
-                }
-                else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
-                {
-                    SetDocumentOnlineSing();
-                    SetDocumentUpload();
-                }
-                else
-                {
-                    SetDocumentUpload();
-                }
-
-                _dbContext.DocumentDefinition.Add(_documentdef);
-                _dbContext.SaveChanges();
             }
+            else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
+            {
+                SetDocumentOnlineSing();
+                SetDocumentUpload();
+            }
+            else
+            {
+                SetDocumentUpload();
+            }
+
+            _dbContext.DocumentDefinition.Add(_documentdef);
+            _dbContext.SaveChanges();
+        }
             catch (Exception ex)
             {
                 throw ex;

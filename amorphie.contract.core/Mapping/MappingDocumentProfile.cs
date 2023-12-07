@@ -48,7 +48,6 @@ namespace amorphie.contract.core.Mapping
             #endregion
             #region documentType
             CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
-            CreateMap<DocumentRender, DocumentRender>().ReverseMap();
             CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
             #endregion
             CreateMap<Document, RootDocumentModel>()
@@ -179,7 +178,7 @@ namespace amorphie.contract.core.Mapping
                 } : null,
                 DocumentOnlineSing = source.DocumentOnlineSing != null ? new DocumentOnlineSingView
                 {
-                    Semver = source.DocumentOnlineSing.Semver,
+                    Semver = source.Semver,
                     DocumentAllowedClientDetail = source.DocumentOnlineSing.DocumentAllowedClientDetails?
                         .Select(a => a.DocumentAllowedClients?.Code).ToList(),
                     DocumentTemplateDetails = source.DocumentOnlineSing.DocumentTemplateDetails?
