@@ -19,7 +19,7 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
         public virtual DocumentDefinition DocumentDefinition { get; set; }
         public string MinVersion { get; set; }
         [Required]
-        public string DocumentGroupId { get; set; }
+        public Guid DocumentGroupId { get; set; }
         // public DocumentGroup DocumentGroup { get; set; }
 
     }

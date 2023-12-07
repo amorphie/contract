@@ -62,7 +62,7 @@ namespace amorphie.contract.zeebe.Services
                         Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
                     },
                     Size = _documentDefinitionDataModel.data.Size,
-                    DocumentDefinitionCode= _documentdef.Code
+                    DocumentDefinitionId= _documentdef.Id
                 };
             }
         }

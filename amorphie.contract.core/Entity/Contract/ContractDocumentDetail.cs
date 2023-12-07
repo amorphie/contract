@@ -24,7 +24,7 @@ namespace amorphie.contract.core.Entity.Contract
         // public ContractDefinition? ContractDefinition { get; set; }
           [Required]
         [ForeignKey(nameof(DocumentDefinitionCode))]
-        public Guid DocumentDefinitionCode { get; set; }
+        public string DocumentDefinitionCode { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }
 
         public ushort UseExisting { get; set; }
