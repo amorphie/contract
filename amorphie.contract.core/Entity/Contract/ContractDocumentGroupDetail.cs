@@ -21,10 +21,7 @@ namespace amorphie.contract.core.Entity.Contract
 
         // public ContractDefinition? ContractDefinition { get; set; }
         [Required]
-
-       
         public Guid DocumentGroupId{ get; set; }
-
         public virtual DocumentGroup DocumentGroup { get; set; }
         [Required]
         public ushort AtLeastRequiredDocument { get; set; }

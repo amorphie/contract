@@ -865,18 +865,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("DocumentOnlineSingId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DocumentOperationsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOperationsId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOptimizeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOptimizeId1")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("DocumentUploadId")
                         .HasColumnType("uuid");
 
@@ -910,10 +898,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsUnique();
 
                     b.HasIndex("DocumentOnlineSingId");
-
-                    b.HasIndex("DocumentOperationsId1");
-
-                    b.HasIndex("DocumentOptimizeId1");
 
                     b.HasIndex("DocumentUploadId");
 
@@ -1336,6 +1320,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DocumentDefinitionId")
+                        .IsUnique();
+
                     b.ToTable("DocumentOperations", "Doc");
                 });
 
@@ -1425,6 +1412,9 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DocumentDefinitionId")
+                        .IsUnique();
 
                     b.HasIndex("DocumentOptimizeTypeId");
 
@@ -2001,14 +1991,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .WithMany()
                         .HasForeignKey("DocumentOnlineSingId");
 
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentOperations", "DocumentOperations")
-                        .WithMany()
-                        .HasForeignKey("DocumentOperationsId1");
-
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentOptimize", "DocumentOptimize")
-                        .WithMany()
-                        .HasForeignKey("DocumentOptimizeId1");
-
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", "DocumentUpload")
                         .WithMany()
                         .HasForeignKey("DocumentUploadId");
@@ -2022,10 +2004,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("BaseStatus");
 
                     b.Navigation("DocumentOnlineSing");
-
-                    b.Navigation("DocumentOperations");
-
-                    b.Navigation("DocumentOptimize");
 
                     b.Navigation("DocumentUpload");
 
@@ -2145,6 +2123,15 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("MultiLanguage");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperations", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", null)
+                        .WithOne("DocumentOperations")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentOperations", "DocumentDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperationsTagsDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentOperations", null)
@@ -2164,6 +2151,12 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOptimize", b =>
                 {
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", null)
+                        .WithOne("DocumentOptimize")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentOptimize", "DocumentDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentOptimizeType", "DocumentOptimizeType")
                         .WithMany()
                         .HasForeignKey("DocumentOptimizeTypeId")
@@ -2245,6 +2238,10 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("DocumentDefinitionLanguageDetails");
 
                     b.Navigation("DocumentEntityPropertys");
+
+                    b.Navigation("DocumentOperations");
+
+                    b.Navigation("DocumentOptimize");
 
                     b.Navigation("DocumentTagsDetails");
                 });

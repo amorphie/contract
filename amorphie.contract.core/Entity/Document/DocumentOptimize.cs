@@ -13,8 +13,8 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentOptimize : AudiEntity
     {
 
-          [Required]
-         public Guid DocumentDefinitionId { get; set; }
+        [Required]
+        public Guid DocumentDefinitionId { get; set; }
         public bool Size { get; set; }
         [Required]
         public Guid DocumentOptimizeTypeId { get; set; }

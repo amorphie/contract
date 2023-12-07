@@ -21,6 +21,5 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid EntityPropertyId { get; set; }
         public virtual EntityProperty? EntityProperty { get; set; }
 
-
     }
 }

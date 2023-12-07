@@ -14,8 +14,8 @@ namespace amorphie.contract.core.Entity.Document
 
     public class DocumentTagsDetail : AudiEntity
     {
-          [Required]
-       public Guid DocumentDefinitionId { get; set; }
+        [Required]
+        public Guid DocumentDefinitionId { get; set; }
         [Required]
 
         public Guid TagId { get; set; }
