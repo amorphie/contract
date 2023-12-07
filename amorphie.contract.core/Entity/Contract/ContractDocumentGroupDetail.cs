@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid ContractDefinitionId { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
-       [Required]
+        [Required]
 
        
         public Guid DocumentGroupId{ get; set; }

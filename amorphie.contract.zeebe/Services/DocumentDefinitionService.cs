@@ -62,7 +62,7 @@ namespace amorphie.contract.zeebe.Services
                         Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
                     },
                     Size = _documentDefinitionDataModel.data.Size,
-                    DocumentDefinitionId= _documentdef.Id
+                    DocumentDefinitionCode= _documentdef.Code
                 };
             }
         }
@@ -264,33 +264,33 @@ namespace amorphie.contract.zeebe.Services
                         BaseStatus = onHoldStatus,
                         Semver = _documentDefinitionDataModel.data.versiyon
 
-                    };
-                }
+                };
+            }
 
                 SetDocumentDefinitionLanguageDetail();
-                SetDocumentTagsDetails();
-                SetDocumentOptimize();
-                SetDocumentOperation();
-                SetDocumentEOV();
+            SetDocumentTagsDetails();
+            SetDocumentOptimize();
+            SetDocumentOperation();
+            SetDocumentEOV();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
-                {
-                    SetDocumentOnlineSing();
+            if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+            {
+                SetDocumentOnlineSing();
 
-                }
-                else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
-                {
-                    SetDocumentOnlineSing();
-                    SetDocumentUpload();
-                }
-                else
-                {
-                    SetDocumentUpload();
-                }
-
-                _dbContext.DocumentDefinition.Add(_documentdef);
-                _dbContext.SaveChanges();
             }
+            else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
+            {
+                SetDocumentOnlineSing();
+                SetDocumentUpload();
+            }
+            else
+            {
+                SetDocumentUpload();
+            }
+
+            _dbContext.DocumentDefinition.Add(_documentdef);
+            _dbContext.SaveChanges();
+        }
             catch (Exception ex)
             {
                 throw ex;

@@ -14,8 +14,7 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractEntityProperty", Schema = "Cont")]
     public class ContractEntityProperty : AudiEntity
     {
-         [Required]
- 
+        [Required]
         public Guid ContractDefinitionId { get; set; }
         // public ContractDefinition? ContractDefinition { get; set; }
         [Required]
