@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractValidation", Schema = "Cont")]
     public class ContractValidation : AudiEntity
     {
-         [Required]
+        [Required]
 
         [ForeignKey(nameof(ContractDefinitionCode))]
         public string ContractDefinitionCode { get; set; }

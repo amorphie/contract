@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentEntityProperty", Schema = "Doc")]
     public class DocumentEntityProperty : AudiEntity
     {
-          [Required]
+        [Required]
         [ForeignKey(nameof(DocumentDefinitionCode))]
         public string DocumentDefinitionCode { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }

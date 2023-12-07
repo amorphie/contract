@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractDocumentDetail", Schema = "Cont")]
-    
+
     public class ContractDocumentDetail : AudiEntity
     {
         [Required]
@@ -22,7 +22,7 @@ namespace amorphie.contract.core.Entity.Contract
         public string ContractDefinitionCode { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
-          [Required]
+        [Required]
         [ForeignKey(nameof(DocumentDefinitionCode))]
         public string DocumentDefinitionCode { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }

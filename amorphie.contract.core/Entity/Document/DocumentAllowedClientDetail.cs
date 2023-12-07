@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentAllowedClientDetail : AudiEntity
     {
         [Required]
-        
+
         [ForeignKey(nameof(DocumentDefinitionCode))]
         public string DocumentDefinitionCode { get; set; }
         // public DocumentDefinition? DocumentDefinition { get; set; }

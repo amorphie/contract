@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Entity.Contract
         public string ContractDefinitionCode { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
-       [Required]
+        [Required]
 
         [ForeignKey(nameof(DocumentGroupCode))]
         public string DocumentGroupCode { get; set; }

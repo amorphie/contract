@@ -14,7 +14,7 @@ namespace amorphie.contract.core.Entity.Document
 
     public class DocumentTagsDetail : AudiEntity
     {
-          [Required]
+        [Required]
         [ForeignKey(nameof(DocumentDefinitionCode))]
         public string DocumentDefinitionCode { get; set; }
         [Required]
