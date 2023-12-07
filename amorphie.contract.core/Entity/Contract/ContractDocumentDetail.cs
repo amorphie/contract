@@ -13,16 +13,18 @@ using Microsoft.EntityFrameworkCore;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractDocumentDetail", Schema = "Cont")]
-    // [Index(nameof(ContractDefinitionId,DocumentDefinitionId), IsUnique = true)]
-
+    
     public class ContractDocumentDetail : AudiEntity
     {
         [Required]
-        public Guid ContractDefinitionId { get; set; }
+
+        [ForeignKey(nameof(ContractDefinitionCode))]
+        public string ContractDefinitionCode { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
-        [Required]
-        public Guid DocumentDefinitionId { get; set; }
+          [Required]
+        [ForeignKey(nameof(DocumentDefinitionCode))]
+        public string DocumentDefinitionCode { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }
 
         public ushort UseExisting { get; set; }

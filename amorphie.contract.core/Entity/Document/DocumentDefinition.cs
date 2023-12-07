@@ -23,8 +23,6 @@ namespace amorphie.contract.core.Entity.Document
         #region documentType
         public virtual Guid? DocumentUploadId { get; set; }
         public virtual DocumentUpload? DocumentUpload { get; set; }
-        // public virtual Guid? DocumentRenderId { get; set; }
-        // public virtual DocumentRender? DocumentRender { get; set; }
         public virtual Guid? DocumentOnlineSingId { get; set; }
         public virtual DocumentOnlineSing? DocumentOnlineSing { get; set; }
 
@@ -34,8 +32,8 @@ namespace amorphie.contract.core.Entity.Document
         public virtual DocumentOptimize? DocumentOptimize { get; set; }
         public virtual Guid? DocumentOperationsId { get; set; }
         public virtual DocumentOperations? DocumentOperations { get; set; }
+        public string Semver { get; set; }
 
-        // public string StartingTransitionName{ get; set; }
         public override string ToString()
         {
             return Code;

@@ -16,6 +16,5 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
         public bool Required { get; set; }
         public virtual ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();
         public virtual ICollection<DocumentTemplateDetail> DocumentTemplateDetails { get; set; } = new List<DocumentTemplateDetail>();
-        public string Semver { get; set; }
     }
 }

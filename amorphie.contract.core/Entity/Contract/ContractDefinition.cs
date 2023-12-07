@@ -25,7 +25,5 @@ namespace amorphie.contract.core.Entity.Contract
         public virtual ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
         public virtual ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
 
-
-
     }
 }

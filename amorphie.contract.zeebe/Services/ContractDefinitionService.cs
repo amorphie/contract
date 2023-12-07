@@ -40,9 +40,9 @@ namespace amorphie.contract.zeebe.Services
         {
             var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList.Select(x => new ContractDocumentGroupDetail
             {
-                ContractDefinitionId = _ContractDefinition.Id,
-                DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
-                AtLeastRequiredDocument = (uint)x.atLeastRequiredDocument,
+                ContractDefinitionCode = _ContractDefinition.Code,
+                DocumentGroupCode = x.groupName,
+                AtLeastRequiredDocument = x.atLeastRequiredDocument,
                 Required = x.required
             });
             _ContractDefinition.ContractDocumentGroupDetails = contractDocumentGroupDetails.ToList();
@@ -51,8 +51,8 @@ namespace amorphie.contract.zeebe.Services
         {
             var contractDocumentDetail = _ContractDefinitionDataModel.documentsList.Select(x => new ContractDocumentDetail
             {
-                ContractDefinitionId = _ContractDefinition.Id,
-                DocumentDefinitionId = ZeebeMessageHelper.StringToGuid(x.name),
+                ContractDefinitionCode = _ContractDefinition.Code,
+                DocumentDefinitionCode = x.name,
                 UseExisting = (ushort)Enum.Parse(typeof(EUseExisting), x.useExisting),
                 MinVersion = x.minVersiyon,
                 Required = x.required
@@ -66,7 +66,7 @@ namespace amorphie.contract.zeebe.Services
             var list = _ContractDefinitionDataModel.tags.Select(
                            x => new ContractTag
                            {
-                               ContractDefinitionId = _ContractDefinition.Id,
+                               ContractDefinitionCode = _ContractDefinition.Code,
                                TagId = ZeebeMessageHelper.StringToGuid(x)
                            }
                        ).ToList();
@@ -108,7 +108,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
                     {
-                        ContractDefinitionId = _ContractDefinition.Id,
+                        ContractDefinitionCode = _ContractDefinition.Code,
                         EntityProperty = epdb,
                     });
                 }
@@ -119,7 +119,7 @@ namespace amorphie.contract.zeebe.Services
             var list = _ContractDefinitionDataModel.validationList.Select(
                            x => new ContractValidation
                            {
-                               ContractDefinitionId = _ContractDefinition.Id,
+                               ContractDefinitionCode = _ContractDefinition.Code,
                                Validations = new Validation
                                {
                                    EValidationType = (ushort)Enum.Parse(typeof(EValidationType), x.type),

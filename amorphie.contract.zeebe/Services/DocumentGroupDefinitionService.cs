@@ -41,7 +41,7 @@ namespace amorphie.contract.zeebe.Services
             });
             _documentGroup.DocumentGroupLanguageDetail = multiLanguageList.Select(x => new DocumentGroupLanguageDetail
             {
-                DocumentGroupId = _documentGroup.Id,
+                DocumentGroupCode = _documentGroup.Code,
                 MultiLanguage = x
             }).ToList();
 
@@ -50,8 +50,8 @@ namespace amorphie.contract.zeebe.Services
         {
             var documentGroupDetail = _documentDefinitionDataModel.document.Select(x => new DocumentGroupDetail
             {
-                DocumentDefinitionId = ZeebeMessageHelper.StringToGuid(x),
-                DocumentGroupId = _documentGroup.Id,
+                DocumentDefinitionCode = x,
+                DocumentGroupCode = _documentGroup.Code,
 
             });
             _documentGroup.DocumentGroupDetails = documentGroupDetail.ToList();
