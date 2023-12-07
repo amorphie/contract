@@ -12,8 +12,8 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20231206103726_ContractMigrationsv6")]
-    partial class ContractMigrationsv6
+    [Migration("20231207143744_ContractMigrationsV")]
+    partial class ContractMigrationsV
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -370,6 +370,10 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("DocumentDefinitionCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("DocumentDefinitionId")
                         .HasColumnType("uuid");
 
@@ -657,10 +661,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid>("DocumentContentId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("DocumentDefinitionCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("DocumentDefinitionId")
                         .HasColumnType("uuid");
 
@@ -762,9 +762,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("DocumentOnlineSingId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DocumentRenderId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("DocumentUploadId")
                         .HasColumnType("uuid");
 
@@ -788,8 +785,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("DocumentAllowedClientId");
 
                     b.HasIndex("DocumentOnlineSingId");
-
-                    b.HasIndex("DocumentRenderId");
 
                     b.HasIndex("DocumentUploadId");
 
@@ -873,18 +868,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("DocumentOnlineSingId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DocumentOperationsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOperationsId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOptimizeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DocumentOptimizeId1")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("DocumentUploadId")
                         .HasColumnType("uuid");
 
@@ -903,6 +886,10 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Semver")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("StatusId")
                         .HasColumnType("uuid");
 
@@ -914,10 +901,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .IsUnique();
 
                     b.HasIndex("DocumentOnlineSingId");
-
-                    b.HasIndex("DocumentOperationsId1");
-
-                    b.HasIndex("DocumentOptimizeId1");
 
                     b.HasIndex("DocumentUploadId");
 
@@ -1219,6 +1202,10 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("DocumentDefinitionCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("DocumentDefinitionId")
                         .HasColumnType("uuid");
 
@@ -1230,6 +1217,10 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("MinVersion")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("timestamp without time zone");
@@ -1332,6 +1323,9 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DocumentDefinitionId")
+                        .IsUnique();
+
                     b.ToTable("DocumentOperations", "Doc");
                 });
 
@@ -1421,6 +1415,9 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DocumentDefinitionId")
+                        .IsUnique();
 
                     b.HasIndex("DocumentOptimizeTypeId");
 
@@ -1622,9 +1619,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("DocumentOnlineSingId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DocumentRenderId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("DocumentTemplateId")
                         .HasColumnType("uuid");
 
@@ -1646,8 +1640,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentOnlineSingId");
-
-                    b.HasIndex("DocumentRenderId");
 
                     b.HasIndex("DocumentTemplateId");
 
@@ -1687,52 +1679,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Semver")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("DocumentOnlineSing", "DocTp");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Semver")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DocumentRender", "DocTp");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", b =>
@@ -2026,10 +1975,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .WithMany("DocumentAllowedClientDetails")
                         .HasForeignKey("DocumentOnlineSingId");
 
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", null)
-                        .WithMany("DocumentAllowedClientDetails")
-                        .HasForeignKey("DocumentRenderId");
-
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", null)
                         .WithMany("DocumentAllowedClientDetails")
                         .HasForeignKey("DocumentUploadId");
@@ -2049,14 +1994,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .WithMany()
                         .HasForeignKey("DocumentOnlineSingId");
 
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentOperations", "DocumentOperations")
-                        .WithMany()
-                        .HasForeignKey("DocumentOperationsId1");
-
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentOptimize", "DocumentOptimize")
-                        .WithMany()
-                        .HasForeignKey("DocumentOptimizeId1");
-
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentUpload", "DocumentUpload")
                         .WithMany()
                         .HasForeignKey("DocumentUploadId");
@@ -2070,10 +2007,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("BaseStatus");
 
                     b.Navigation("DocumentOnlineSing");
-
-                    b.Navigation("DocumentOperations");
-
-                    b.Navigation("DocumentOptimize");
 
                     b.Navigation("DocumentUpload");
 
@@ -2193,6 +2126,15 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("MultiLanguage");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperations", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", null)
+                        .WithOne("DocumentOperations")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentOperations", "DocumentDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperationsTagsDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentOperations", null)
@@ -2212,6 +2154,12 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOptimize", b =>
                 {
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", null)
+                        .WithOne("DocumentOptimize")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentOptimize", "DocumentDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentOptimizeType", "DocumentOptimizeType")
                         .WithMany()
                         .HasForeignKey("DocumentOptimizeTypeId")
@@ -2255,10 +2203,6 @@ namespace amorphie.contract.data.Migrations.Pg
                         .WithMany("DocumentTemplateDetails")
                         .HasForeignKey("DocumentOnlineSingId");
 
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", null)
-                        .WithMany("DocumentTemplateDetails")
-                        .HasForeignKey("DocumentRenderId");
-
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentTemplate", "DocumentTemplate")
                         .WithMany()
                         .HasForeignKey("DocumentTemplateId")
@@ -2298,6 +2242,10 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.Navigation("DocumentEntityPropertys");
 
+                    b.Navigation("DocumentOperations");
+
+                    b.Navigation("DocumentOptimize");
+
                     b.Navigation("DocumentTagsDetails");
                 });
 
@@ -2314,13 +2262,6 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentOnlineSing", b =>
-                {
-                    b.Navigation("DocumentAllowedClientDetails");
-
-                    b.Navigation("DocumentTemplateDetails");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentRender", b =>
                 {
                     b.Navigation("DocumentAllowedClientDetails");
 

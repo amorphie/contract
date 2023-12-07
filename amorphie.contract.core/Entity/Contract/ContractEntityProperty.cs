@@ -15,14 +15,11 @@ namespace amorphie.contract.core.Entity.Contract
     public class ContractEntityProperty : AudiEntity
     {
         [Required]
-
-        [ForeignKey(nameof(ContractDefinitionCode))]
-        public string ContractDefinitionCode { get; set; }
+        public Guid ContractDefinitionId { get; set; }
         // public ContractDefinition? ContractDefinition { get; set; }
         [Required]
         public Guid EntityPropertyId { get; set; }
         public virtual EntityProperty? EntityProperty { get; set; }
-
 
     }
 }

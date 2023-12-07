@@ -28,9 +28,7 @@ namespace amorphie.contract.core.Entity.Document
 
 
         #endregion
-        public virtual Guid? DocumentOptimizeId { get; set; }
         public virtual DocumentOptimize? DocumentOptimize { get; set; }
-        public virtual Guid? DocumentOperationsId { get; set; }
         public virtual DocumentOperations? DocumentOperations { get; set; }
         public string Semver { get; set; }
 

@@ -15,8 +15,7 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
 
-        [ForeignKey(nameof(ContractDefinitionCode))]
-        public string ContractDefinitionCode { get; set; }
+        public Guid ContractDefinitionId { get; set; }
         [Required]
         public Guid TagId { get; set; }
         public virtual Common.Tag Tags { get; set; }

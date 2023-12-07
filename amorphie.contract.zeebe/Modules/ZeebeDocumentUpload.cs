@@ -154,7 +154,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
 
-                document.DocumentDefinitionCode = documentDefinitionId.ToString();//sonra
+                document.DocumentDefinitionId = documentDefinitionId;//sonra
                 var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
 
                 if (documentDefinition != null)

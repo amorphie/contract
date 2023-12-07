@@ -15,8 +15,7 @@ namespace amorphie.contract.core.Entity.Document
     public class Document : AudiEntity
     {
         [Required]
-        [ForeignKey(nameof(DocumentDefinitionCode))]
-        public string DocumentDefinitionCode { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }
         [Required]
         public Guid DocumentContentId { get; set; }
