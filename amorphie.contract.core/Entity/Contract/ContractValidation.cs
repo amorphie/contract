@@ -14,9 +14,8 @@ namespace amorphie.contract.core.Entity.Contract
     public class ContractValidation : AudiEntity
     {
          [Required]
-
-        [ForeignKey(nameof(ContractDefinitionCode))]
-        public string ContractDefinitionCode { get; set; }
+ 
+        public Guid ContractDefinitionId { get; set; }
         [Required]
         public Guid ValidationId { get; set; }
         public virtual Common.Validation Validations { get; set; }

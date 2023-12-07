@@ -36,7 +36,7 @@ namespace amorphie.contract.zeebe.Services
 
             _documentdef.DocumentDefinitionLanguageDetails = multiLanguageList.Select(x => new DocumentDefinitionLanguageDetail
             {
-                DocumentDefinitionCode = _documentdef.Code,
+               DocumentDefinitionId= _documentdef.Id,
                 MultiLanguage = x
             }).ToList();
         }
@@ -45,7 +45,7 @@ namespace amorphie.contract.zeebe.Services
             var list = _documentDefinitionDataModel.data.Tags.Select(
                            x => new DocumentTagsDetail
                            {
-                               DocumentDefinitionCode = _documentdef.Code,
+                              DocumentDefinitionId= _documentdef.Id,
                                TagId = ZeebeMessageHelper.StringToGuid(x)
                            }
                        ).ToList();
@@ -62,7 +62,7 @@ namespace amorphie.contract.zeebe.Services
                         Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
                     },
                     Size = _documentDefinitionDataModel.data.Size,
-                    DocumentDefinitionCode= _documentdef.Code
+                    DocumentDefinitionId= _documentdef.Id
                 };
             }
         }
@@ -78,7 +78,7 @@ namespace amorphie.contract.zeebe.Services
             _documentdef.DocumentOperations =
                         new DocumentOperations
                         {
-                            DocumentDefinitionCode = _documentdef.Code,
+                           DocumentDefinitionId= _documentdef.Id,
                             DocumentManuelControl = manuelControl,
                             DocumentOperationsTagsDetail = list2
                         };
@@ -119,7 +119,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
                     {
-                        DocumentDefinitionCode = _documentdef.Code,
+                       DocumentDefinitionId= _documentdef.Id,
                         EntityProperty = epdb,
                     });
                 }
@@ -132,7 +132,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.UploadAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
-                DocumentDefinitionCode = _documentdef.Code,
+               DocumentDefinitionId= _documentdef.Id,
                 DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
@@ -144,7 +144,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var documentFormatDetail = _documentDefinitionDataModel.data.AllowedFormatsUploadList.Select(x => new DocumentFormatDetail
             {
-                DocumentDefinitionCode = _documentdef.Code,
+               DocumentDefinitionId= _documentdef.Id,
                 DocumentFormat = new DocumentFormat
                 {
                     DocumentFormatTypeId = ZeebeMessageHelper.StringToGuid(x.format),
@@ -185,7 +185,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var documentTemplateDetail = _documentDefinitionDataModel.data.TemplateList.Select(x => new DocumentTemplateDetail
             {
-                DocumentDefinitionCode = _documentdef.Code,
+               DocumentDefinitionId= _documentdef.Id,
                 DocumentTemplate = new DocumentTemplate
                 {
                     LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
@@ -198,7 +198,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
-                DocumentDefinitionCode = _documentdef.Code,
+               DocumentDefinitionId= _documentdef.Id,
                 DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
 
             }).ToList();
@@ -262,7 +262,7 @@ namespace amorphie.contract.zeebe.Services
                         Code = _documentDefinitionDataModel.data.Code,
                         Status = onHoldStatus,
                         BaseStatus = onHoldStatus,
-                        Semver = _documentDefinitionDataModel.data.versiyon;
+                        Semver = _documentDefinitionDataModel.data.versiyon
 
                     };
                 }

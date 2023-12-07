@@ -18,12 +18,12 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
 
-        [ForeignKey(nameof(ContractDefinitionCode))]
-        public string ContractDefinitionCode { get; set; }
+        
+        public Guid ContractDefinitionId { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
           [Required]
-        [ForeignKey(nameof(DocumentDefinitionCode))]
+       
         public string DocumentDefinitionCode { get; set; }
         public virtual DocumentDefinition DocumentDefinition { get; set; }
 

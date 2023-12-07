@@ -22,8 +22,8 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
 
         [Required]
 
-        [ForeignKey(nameof(DocumentGroupCode))]
-        public string DocumentGroupCode { get; set; }
+       
+        public Guid DocumentGroupId { get; set; }
         // public DocumentGroup DocumentGroup { get; set; }
 
     }
