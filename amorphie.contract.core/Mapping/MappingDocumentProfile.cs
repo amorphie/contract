@@ -146,6 +146,7 @@ namespace amorphie.contract.core.Mapping
                 Id = source.Id,
                 Code = source.Code,
                 Status = source.Status.Code,
+                Semver = source.Semver,
                 BaseStatus = source.BaseStatus.Code,
                 MultilanguageText = source.DocumentDefinitionLanguageDetails?
                     .Select(a => new MultilanguageText
@@ -178,7 +179,6 @@ namespace amorphie.contract.core.Mapping
                 } : null,
                 DocumentOnlineSing = source.DocumentOnlineSing != null ? new DocumentOnlineSingView
                 {
-                    Semver = source.Semver,
                     DocumentAllowedClientDetail = source.DocumentOnlineSing.DocumentAllowedClientDetails?
                         .Select(a => a.DocumentAllowedClients?.Code).ToList(),
                     DocumentTemplateDetails = source.DocumentOnlineSing.DocumentTemplateDetails?
