@@ -55,7 +55,7 @@ public class DocumentDefinitionModule
                 string pattern = data.Keyword.Replace("%", "");
 
                 // Deseni kontrol et
-                query =    query.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
+                query = query.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
             }
             else
             {
@@ -63,7 +63,7 @@ public class DocumentDefinitionModule
                 query = query.Where(x => x.Code == data.Keyword);
             }
         }
-       
+
         var list = await query.Select(x => new
         {
             x.Id,
