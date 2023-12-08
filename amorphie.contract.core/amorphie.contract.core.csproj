@@ -21,4 +21,10 @@
 <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
 <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
 </ItemGroup>
+<ItemGroup>
+  <None Remove="Entity\Proxy\" />
+</ItemGroup>
+<ItemGroup>
+  <Folder Include="Entity\Proxy\" />
+</ItemGroup>
 </Project>

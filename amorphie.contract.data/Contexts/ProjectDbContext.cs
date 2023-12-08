@@ -10,6 +10,7 @@ using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
+using amorphie.contract.core.Entity.Proxy;
 
 namespace amorphie.contract.data.Contexts;
 
@@ -72,7 +73,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Status> Status { get; set; }
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
-
+    public DbSet<TemplateRender> TemplateRender { get; set; }
     #endregion
     #region Contract
 

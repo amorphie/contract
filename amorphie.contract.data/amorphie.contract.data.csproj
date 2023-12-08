@@ -19,4 +19,10 @@
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
 
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Configurations\Proxy\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configurations\Proxy\" />
+  </ItemGroup>
 </Project>
