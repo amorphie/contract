@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 
 namespace amorphie.contract.RequestModel.Proxy
 {
-	public class TemplateRenderRequestModel
-	{
-		public TemplateRenderRequestModel()
-		{
-		}
+    public class TemplateRenderRequestModel
+    {
+        public TemplateRenderRequestModel()
+        {
+        }
 
-		public string Name { get; set; }
+        public string Name { get; set; }
         [JsonProperty("render-id")]
         public Guid RenderId { get; set; }
         [JsonProperty("render-data")]
@@ -22,12 +22,12 @@ namespace amorphie.contract.RequestModel.Proxy
         public string ProcessName { get; set; }
         [JsonProperty("item-id")]
         public string ItemId { get; set; }
-		public string Action { get; set; }
-		public string Identity { get; set; }
-		public string Customer { get; set; }
+        public string Action { get; set; }
+        public string Identity { get; set; }
+        public string Customer { get; set; }
         [JsonProperty("children-name")]
         public string ChildrenName { get; set; }
-		public List<object> Children { get; set; }
-	}
+        public List<object> Children { get; set; }
+    }
 }
 

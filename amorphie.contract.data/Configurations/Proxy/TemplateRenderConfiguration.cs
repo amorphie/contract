@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.Proxy
 {
-	public class TemplateRenderConfiguration
-	{
-		public TemplateRenderConfiguration(EntityTypeBuilder<TemplateRender> builder)
-		{
+    public class TemplateRenderConfiguration
+    {
+        public TemplateRenderConfiguration(EntityTypeBuilder<TemplateRender> builder)
+        {
             builder.HasKey(x => x.Id);
         }
-	}
+    }
 }
 
