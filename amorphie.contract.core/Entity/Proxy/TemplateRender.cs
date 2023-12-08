@@ -10,7 +10,8 @@ namespace amorphie.contract.core.Entity.Proxy
 		}
 
 		public string TemplateName { get; set; }
-		public string RenderData { get; set; }
-	}
+        public string RenderData { get; set; }
+        public string RenderType { get; set; }
+    }
 }
 

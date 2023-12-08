@@ -47,7 +47,8 @@ namespace amorphie.contract.Module.Proxy
                         TemplateRender renderEntity = new TemplateRender
                         {
                             RenderData = JsonConvert.SerializeObject(requestModel.RenderData),
-                            TemplateName = requestModel.Name
+                            TemplateName = requestModel.Name,
+                            RenderType = "Html"
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
@@ -87,7 +88,8 @@ namespace amorphie.contract.Module.Proxy
                         TemplateRender renderEntity = new TemplateRender
                         {
                             RenderData = JsonConvert.SerializeObject(requestModel.RenderData),
-                            TemplateName = requestModel.Name
+                            TemplateName = requestModel.Name,
+                            RenderType = "Pdf"
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
