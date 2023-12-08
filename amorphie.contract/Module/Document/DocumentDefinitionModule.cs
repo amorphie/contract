@@ -46,14 +46,24 @@ public class DocumentDefinitionModule
     {
         var query = context!.DocumentDefinition.AsQueryable();
 
-        if (data != null)
+        if (!string.IsNullOrEmpty(data.Keyword) && data.Keyword != "*")
         {
-            data.Keyword = data.Keyword.Trim();
-            if (!string.IsNullOrEmpty(data.Keyword.Trim()) && data.Keyword != "*" && data.Keyword != "string")
+            // "%" karakteri varsa deseni kontrol et
+            if (data.Keyword.Contains("%"))
             {
-                query = query.Where(x => x.Code.Contains(data.Keyword));
+                // "%" karakterini kaldır
+                string pattern = data.Keyword.Replace("%", "");
+
+                // Deseni kontrol et
+                query =    query.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
+            }
+            else
+            {
+                // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
+                query = query.Where(x => x.Code == data.Keyword);
             }
         }
+       
         var list = await query.Select(x => new
         {
             x.Id,
