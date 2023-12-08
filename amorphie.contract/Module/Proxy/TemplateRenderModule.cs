@@ -56,12 +56,14 @@ namespace amorphie.contract.Module.Proxy
                     }
                     else
                     {
-                        return Results.NoContent();
+                        string exception = await response.Content.ReadAsStringAsync();
+                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
                     }
                 }
                 catch (HttpRequestException e)
                 {
-                    throw new Exception();
+                    throw new Exception("Template Engine Connection Exception");
                 }
             }
 
@@ -97,12 +99,14 @@ namespace amorphie.contract.Module.Proxy
                     }
                     else
                     {
-                        return Results.NoContent();
+                        string exception = await response.Content.ReadAsStringAsync();
+                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
                     }
                 }
                 catch (HttpRequestException e)
                 {
-                    throw new Exception();
+                    throw new Exception("Template Engine Connection Exception");
                 }
             }
 
