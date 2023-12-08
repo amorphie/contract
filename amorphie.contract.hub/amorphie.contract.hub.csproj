@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
        <PackageReference Include="Dapr.Client" Version="1.11.0" />
     <PackageReference Include="Dapr.AspNetCore" Version="1.11.0" />
