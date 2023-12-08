@@ -56,7 +56,7 @@ public class ContractDefinitionModule
             b.DocumentGroup.Name = b.DocumentGroup.MultilanguageText.Any(c => c.Language == language) ? b.DocumentGroup.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
             : b.DocumentGroup.MultilanguageText.First().Label)
             );
-            list.ForEach(x => x.ContractDocumentDetailList.ForEach(b =>
+            list.ForEach(x => x.ContractDocumentDetailList?.ForEach(b =>
             b.DocumentDefinition.Name = b.DocumentDefinition.MultilanguageText.Any(c => c.Language == language) ? b.DocumentDefinition.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
             : b.DocumentDefinition.MultilanguageText.First().Label)
             );

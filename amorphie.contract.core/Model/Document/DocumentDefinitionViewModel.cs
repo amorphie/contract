@@ -19,6 +19,8 @@ namespace amorphie.contract.core.Model.Document
         public Guid Id { get; set; }
         public string? Code { get; set; }
         public string? Status { get; set; }
+        public string Semver { get; set; }
+
         public string? BaseStatus { get; set; }
         public List<MultilanguageText>? MultilanguageText { get; set; }
         public List<EntityPropertyView>? EntityProperties { get; set; }
@@ -58,7 +60,6 @@ namespace amorphie.contract.core.Model.Document
     }
     public class DocumentOnlineSingView
     {
-        public string Semver { get; set; }
         public List<string>? DocumentAllowedClientDetail { get; set; }
         public List<DocumentTemplateDetailsView>? DocumentTemplateDetails { get; set; }
 
