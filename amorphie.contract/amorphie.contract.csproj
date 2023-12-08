@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <PackageReference Include="Dapr.Client" Version="1.11.0" />
     <PackageReference Include="Dapr.AspNetCore" Version="1.11.0" />
@@ -30,4 +32,14 @@
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Module\Proxy\" />
+    <None Remove="RequestModel\" />
+    <None Remove="RequestModel\Proxy\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Module\Proxy\" />
+    <Folder Include="RequestModel\" />
+    <Folder Include="RequestModel\Proxy\" />
+  </ItemGroup>
 </Project>
