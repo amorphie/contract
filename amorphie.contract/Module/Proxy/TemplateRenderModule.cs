@@ -7,6 +7,7 @@ using amorphie.contract.RequestModel.Proxy;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -17,8 +18,6 @@ namespace amorphie.contract.Module.Proxy
         }
 
         public override string? UrlFragment => "template-render";
-
-        private string TemplateEngineUrl => "https://test-template-engine.burgan.com.tr/";
 
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
@@ -39,7 +38,7 @@ namespace amorphie.contract.Module.Proxy
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(TemplateEngineUrl + "Template/Render", httpContent);
+                    HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEngineHtmlRenderEndpoint, httpContent);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -52,7 +51,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
-                        return Results.Ok(responseBody);
+                        return Results.Ok(responseBody.Trim('\"'));
                     }
                     else
                     {
@@ -82,7 +81,7 @@ namespace amorphie.contract.Module.Proxy
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(TemplateEngineUrl + "Template/Render/pdf", httpContent);
+                    HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEnginePdfRenderEndpoint, httpContent);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -95,7 +94,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
-                        return Results.Ok(responseBody);
+                        return Results.Ok(responseBody.Trim('\"'));
                     }
                     else
                     {
