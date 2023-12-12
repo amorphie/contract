@@ -8,6 +8,8 @@ using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using amorphie.contract.Extensions;
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -23,6 +25,7 @@ namespace amorphie.contract.Module.Proxy
         {
             routeGroupBuilder.MapPost("render", RenderHtml);
             routeGroupBuilder.MapPost("render/pdf", RenderPdf);
+            routeGroupBuilder.MapGet("template/definition", GetTemplates);
         }
 
         async ValueTask<IResult> RenderHtml(
@@ -109,6 +112,66 @@ namespace amorphie.contract.Module.Proxy
                 }
             }
 
+        }
+
+        async ValueTask<IResult> GetTemplates(
+          [FromServices] ProjectDbContext context,
+          [FromQuery] string query,
+          CancellationToken cancellationToken)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEngineGetTemplateEndpoint + "?query=" + query);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        if (string.IsNullOrEmpty(responseBody))
+                        {
+                            return Results.NoContent();
+                        }
+
+                        Dictionary<string, List<string>> responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(responseBody);
+                        List<string> responseList = responseDictionary["templateDefinitionNames"];
+
+                        var dbQuery = context!.DocumentTemplate.AsQueryable();
+
+                        if (!string.IsNullOrEmpty(query) && query != "*")
+                        {
+                            if (query.Contains("%"))
+                            {
+                                string pattern = query.Replace("%", "");
+
+                                dbQuery = dbQuery.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
+                            }
+                            else
+                            {
+                                dbQuery = dbQuery.Where(x => x.Code == query);
+                            }
+                        }
+
+                        var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
+
+                        responseList = responseList.Except(dbList).ToList();
+                        responseDictionary["templateDefinitionNames"] = responseList;
+
+                        return Results.Ok(responseDictionary);
+                    }
+                    else
+                    {
+                        string exception = await response.Content.ReadAsStringAsync();
+                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    throw new Exception("Template Engine Connection Exception");
+                }
+            }
         }
     }
 }

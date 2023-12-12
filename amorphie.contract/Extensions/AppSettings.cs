@@ -11,6 +11,7 @@ namespace amorphie.contract.Extensions
 		public string Url { get; set; }
 		public string HtmlRenderEndpoint { get; set; }
 		public string PdfRenderEndpoint { get; set; }
+		public string GetTemplateEndpoint { get; set; }
 	}
 }
 
