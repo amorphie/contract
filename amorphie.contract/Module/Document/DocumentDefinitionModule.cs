@@ -47,7 +47,7 @@ public class DocumentDefinitionModule
     {
         var query = context!.DocumentDefinition.AsQueryable();
 
-      
+
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var list = await query.Select(x => new
         {
