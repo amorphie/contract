@@ -7,6 +7,9 @@ using amorphie.contract.RequestModel.Proxy;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using amorphie.contract.Extensions;
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -18,12 +21,11 @@ namespace amorphie.contract.Module.Proxy
 
         public override string? UrlFragment => "template-render";
 
-        private string TemplateEngineUrl => "https://test-template-engine.burgan.com.tr/";
-
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
             routeGroupBuilder.MapPost("render", RenderHtml);
             routeGroupBuilder.MapPost("render/pdf", RenderPdf);
+            routeGroupBuilder.MapGet("template/definition", GetTemplates);
         }
 
         async ValueTask<IResult> RenderHtml(
@@ -39,7 +41,7 @@ namespace amorphie.contract.Module.Proxy
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(TemplateEngineUrl + "Template/Render", httpContent);
+                    HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEngineHtmlRenderEndpoint, httpContent);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -52,7 +54,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
-                        return Results.Ok(responseBody);
+                        return Results.Ok(responseBody.Trim('\"'));
                     }
                     else
                     {
@@ -82,7 +84,7 @@ namespace amorphie.contract.Module.Proxy
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(TemplateEngineUrl + "Template/Render/pdf", httpContent);
+                    HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEnginePdfRenderEndpoint, httpContent);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -95,7 +97,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
-                        return Results.Ok(responseBody);
+                        return Results.Ok(responseBody.Trim('\"'));
                     }
                     else
                     {
@@ -110,6 +112,54 @@ namespace amorphie.contract.Module.Proxy
                 }
             }
 
+        }
+
+        async ValueTask<IResult> GetTemplates(
+          [FromServices] ProjectDbContext context,
+          [FromQuery] string query,
+          CancellationToken cancellationToken)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEngineGetTemplateEndpoint + "?query=" + query);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        if (string.IsNullOrEmpty(responseBody))
+                        {
+                            return Results.NoContent();
+                        }
+
+                        Dictionary<string, List<string>> responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(responseBody);
+                        List<string> responseList = responseDictionary["templateDefinitionNames"];
+
+                        var dbQuery = context!.DocumentTemplate.AsQueryable();
+
+                        dbQuery = ContractHelperExtensions.LikeWhere(dbQuery, query);
+
+                        var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
+
+                        responseList = responseList.Except(dbList).ToList();
+                        responseDictionary["templateDefinitionNames"] = responseList;
+
+                        return Results.Ok(responseDictionary);
+                    }
+                    else
+                    {
+                        string exception = await response.Content.ReadAsStringAsync();
+                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    throw new Exception("Template Engine Connection Exception");
+                }
+            }
         }
     }
 }

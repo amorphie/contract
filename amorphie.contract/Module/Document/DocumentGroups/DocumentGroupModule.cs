@@ -13,6 +13,8 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Mapping;
 using amorphie.contract.core.Model.Document;
+using System.Runtime.CompilerServices;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract;
 
@@ -38,14 +40,7 @@ public class DocumentGroupModule
     {
         var query = context!.DocumentGroup.AsQueryable();
 
-        if (data != null)
-        {
-            data.Keyword = data.Keyword.Trim();
-            if (!string.IsNullOrEmpty(data.Keyword.Trim()) && data.Keyword != "*" && data.Keyword != "string")
-            {
-                query = query.Where(x => x.Code.Contains(data.Keyword));
-            }
-        }
+        query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var list = await query.Select(x => new
         {
             x.Id,

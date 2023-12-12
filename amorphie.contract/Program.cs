@@ -6,6 +6,7 @@ using amorphie.contract.core.Mapping;
 using System.Reflection;
 using FluentValidation;
 using System.Text.Json.Serialization;
+using amorphie.contract.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -25,6 +26,10 @@ builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+var settings = builder.Configuration.Get<AppSettings>();
+StaticValuesExtensions.SetStaticValues(settings);
 
 var assemblies = new Assembly[]
                 {
