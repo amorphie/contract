@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Data.Common;
 using amorphie.contract.core.Mapping;
 using Google.Protobuf.WellKnownTypes;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract;
 
@@ -46,24 +47,8 @@ public class DocumentDefinitionModule
     {
         var query = context!.DocumentDefinition.AsQueryable();
 
-        if (!string.IsNullOrEmpty(data.Keyword) && data.Keyword != "*")
-        {
-            // "%" karakteri varsa deseni kontrol et
-            if (data.Keyword.Contains("%"))
-            {
-                // "%" karakterini kaldır
-                string pattern = data.Keyword.Replace("%", "");
-
-                // Deseni kontrol et
-                query = query.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
-            }
-            else
-            {
-                // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
-                query = query.Where(x => x.Code == data.Keyword);
-            }
-        }
-
+      
+        query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var list = await query.Select(x => new
         {
             x.Id,

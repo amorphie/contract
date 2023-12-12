@@ -139,19 +139,7 @@ namespace amorphie.contract.Module.Proxy
 
                         var dbQuery = context!.DocumentTemplate.AsQueryable();
 
-                        if (!string.IsNullOrEmpty(query) && query != "*")
-                        {
-                            if (query.Contains("%"))
-                            {
-                                string pattern = query.Replace("%", "");
-
-                                dbQuery = dbQuery.Where(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern));
-                            }
-                            else
-                            {
-                                dbQuery = dbQuery.Where(x => x.Code == query);
-                            }
-                        }
+                        dbQuery = ContractHelperExtensions.LikeWhere(dbQuery, query);
 
                         var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
 
