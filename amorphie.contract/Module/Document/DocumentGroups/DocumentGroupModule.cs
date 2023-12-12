@@ -40,7 +40,7 @@ public class DocumentGroupModule
     {
         var query = context!.DocumentGroup.AsQueryable();
 
-        query = ContractHelperExtensions.LikeWhere(query,data.Keyword);
+        query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var list = await query.Select(x => new
         {
             x.Id,
