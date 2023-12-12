@@ -47,21 +47,30 @@ public class DocumentDefinitionModule
     {
         var query = context!.DocumentDefinition.AsQueryable();
 
-      
+
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
-        var list = await query.Select(x => new
+        var documentDefinitions = await query.ToListAsync(token);
+
+        var result = documentDefinitions.Select(d => new
         {
-            x.Id,
-            x.Code,
-            title = x.DocumentDefinitionLanguageDetails!.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
-            x.DocumentDefinitionLanguageDetails!.Where(a => a.MultiLanguage.LanguageType.Code == language)
-            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
-            x.DocumentDefinitionLanguageDetails!
-            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
-            x.Semver
-        }).ToListAsync(token);
+            Code = d.Code,
+            Title = d.DocumentDefinitionLanguageDetails
+                .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
+                .Select(dl => new { dl.MultiLanguage.Name, LanguageType = dl.MultiLanguage.LanguageType.Code })
+                .FirstOrDefault() ?? d.DocumentDefinitionLanguageDetails
+                    .Select(dl => new { dl.MultiLanguage.Name, LanguageType = dl.MultiLanguage.LanguageType.Code })
+                    .FirstOrDefault(),
+            Semver = d.Semver
+        }).GroupBy(x => new { x.Title.Name, x.Title.LanguageType, x.Code })
+          .Select(group => new
+          {
+              Code = group.Key.Code,
+              Title = new { Name = group.Key.Name, LanguageType = group.Key.LanguageType },
+              SemverList = group.Select(x => x.Semver).ToList()
+          })
+          .ToList();
         // var list = await query.ToListAsync(token);
-        return Results.Ok(list);
+        return Results.Ok(result);
     }
     async ValueTask<IResult> getAnyDocumentDefinitionListSearch(
         [FromServices] ProjectDbContext context, [AsParameters] ComponentSearch dataSearch,
