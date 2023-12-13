@@ -34,14 +34,12 @@
 
   <ItemGroup>
     <None Remove="Module\Proxy\" />
-    <None Remove="RequestModel\" />
-    <None Remove="RequestModel\Proxy\" />
     <None Remove="Extensions\" />
+    <None Remove="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Module\Proxy\" />
-    <Folder Include="RequestModel\" />
-    <Folder Include="RequestModel\Proxy\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>
