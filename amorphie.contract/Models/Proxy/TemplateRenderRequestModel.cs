@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace amorphie.contract.RequestModel.Proxy
+namespace amorphie.contract.Models.Proxy
 {
     public class TemplateRenderRequestModel
     {

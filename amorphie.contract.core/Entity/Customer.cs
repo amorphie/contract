@@ -8,9 +8,7 @@ namespace amorphie.contract.core.Entity
 {
     public class Customer : AudiEntity
     {
-        public string Owner { get; set; }
-        public string Reference { get; set; }
-
-
+        public string? Owner { get; set; }
+        public string? Reference { get; set; }
     }
 }

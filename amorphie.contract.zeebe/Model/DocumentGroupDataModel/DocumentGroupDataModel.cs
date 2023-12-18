@@ -12,6 +12,7 @@ namespace amorphie.contract.zeebe.Model.DocumentGroupDataModel
         public List<Title> titles { get; set; }
     }
 
+
     public class Title
     {
         public string language { get; set; }

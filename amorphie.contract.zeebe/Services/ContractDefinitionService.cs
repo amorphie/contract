@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
+using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -33,19 +34,25 @@ namespace amorphie.contract.zeebe.Services
         }
         private void DynamicToContractDefinitionDataModel()
         {
+            var test = _ContractDefinitionDataModelDynamic.ToString().Replace("{}", "\"\"");
+            test = "{\"code\":\"contractdeftest\",\"tags\":[],\"documentsList\":[{\"name\":\"ddd\",\"useExisting\":\"AnyValid\",\"required\":true,\"minVersiyon\":\"1.0.0\"},{\"name\":\"fatihtest2\",\"useExisting\":\"AnyValid\",\"required\":true,\"minVersiyon\":\"1.0.0\"}],\"documentGroupList\":[{\"groupName\":\"\",\"required\":false}],\"validationList\":[{\"type\":\"AllValid\",\"decisionTable\":\"\"}],\"submit\":false}";
             _ContractDefinitionDataModel = new ContractDefinitionDataModel();
-            _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>(_ContractDefinitionDataModelDynamic.ToString());
+            _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>
+            (test.Replace("{}", "\"\""));
         }
         private void SetContractDocumentGroupDetail()
         {
-            var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList.Select(x => new ContractDocumentGroupDetail
+            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName != "" && x.groupName != null))
             {
-                ContractDefinitionId = _ContractDefinition.Id,
-                DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
-                AtLeastRequiredDocument = x.atLeastRequiredDocument,
-                Required = x.required
-            });
-            _ContractDefinition.ContractDocumentGroupDetails = contractDocumentGroupDetails.ToList();
+                var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList?.Select(x => new ContractDocumentGroupDetail
+                {
+                    ContractDefinitionId = _ContractDefinition.Id,
+                    DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
+                    AtLeastRequiredDocument = x.atLeastRequiredDocument,
+                    Required = x.required
+                });
+                _ContractDefinition.ContractDocumentGroupDetails = contractDocumentGroupDetails.ToList();
+            }
         }
         private void SetContractDocumentDetail()
         {
@@ -54,7 +61,7 @@ namespace amorphie.contract.zeebe.Services
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentDefinitionCode = x.name,
                 UseExisting = (ushort)Enum.Parse(typeof(EUseExisting), x.useExisting),
-                MinVersion = x.minVersiyon,
+                Semver = x.minVersiyon,
                 Required = x.required
             });
             _ContractDefinition.ContractDocumentDetails = contractDocumentDetail.ToList();
@@ -74,6 +81,10 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractEntityProperty()
         {
+            if (_ContractDefinitionDataModel.EntityPropertyList == null)
+            {
+                return;
+            }
 
             var ep = _ContractDefinitionDataModel.EntityPropertyList.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
@@ -116,16 +127,31 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractValidation()
         {
-            var list = _ContractDefinitionDataModel.validationList.Select(
-                           x => new ContractValidation
-                           {
-                               ContractDefinitionId = _ContractDefinition.Id,
-                               Validations = new Validation
-                               {
-                                   EValidationType = (ushort)Enum.Parse(typeof(EValidationType), x.type),
-                               },
-                           }
-                       ).ToList();
+            var list = _ContractDefinitionDataModel.validationList.Select(x =>
+                    {
+                        var validationType = (ushort)Enum.Parse(typeof(EValidationType), x.type);
+                        var existingValidation = _dbContext.Validation.FirstOrDefault(a => a.EValidationType == validationType);
+                        if (existingValidation != null)
+                        {
+                            return new ContractValidation
+                            {
+                                ContractDefinitionId = _ContractDefinition.Id,
+                                ValidationId = existingValidation.Id
+                            };
+                        }
+                        else
+                        {
+                            return new ContractValidation
+                            {
+                                ContractDefinitionId = _ContractDefinition.Id,
+                                Validations = new Validation
+                                {
+                                    EValidationType = validationType,
+                                },
+                            };
+                        }
+
+                    }).ToList();
             _ContractDefinition.ContractValidations = list;
         }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)

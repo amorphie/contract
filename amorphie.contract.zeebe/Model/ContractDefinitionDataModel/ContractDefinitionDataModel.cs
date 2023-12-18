@@ -17,7 +17,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
         public string minVersiyon { get; set; }
         public string name { get; set; }
         public bool required { get; set; }
-        public string useExisting { get; set; }
+        public string? useExisting { get; set; }
     }
 
     public class EntityPropertyList
@@ -28,10 +28,10 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
 
     public class ContractDefinitionDataModel
     {
-        public List<EntityPropertyList> EntityPropertyList { get; set; }
+        public List<EntityPropertyList>? EntityPropertyList { get; set; }
         public string code { get; set; }
-        public List<DocumentGroupList> documentGroupList { get; set; }
-        public List<DocumentsList> documentsList { get; set; }
+        public List<DocumentGroupList>? documentGroupList { get; set; }
+        public List<DocumentsList>? documentsList { get; set; }
         public List<string> tags { get; set; }
         public List<ValidationList> validationList { get; set; }
     }

@@ -22,7 +22,7 @@ namespace amorphie.contract.core.Model.Document
         public string? UseExisting { get; set; }
         public string? MinVersion { get; set; }
         public bool Required { get; set; }
-        public DocumentDefinitionViewModel? DocumentDefinition { get; set; }
+        public string? DocumentDefinitionCode { get; set; }
 
 
     }

@@ -3,13 +3,13 @@ using System.Net.Http.Json;
 using System.Text;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.data.Contexts;
-using amorphie.contract.RequestModel.Proxy;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using amorphie.contract.Extensions;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.Models.Proxy;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -134,8 +134,8 @@ namespace amorphie.contract.Module.Proxy
                             return Results.NoContent();
                         }
 
-                        Dictionary<string, List<string>> responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(responseBody);
-                        List<string> responseList = responseDictionary["templateDefinitionNames"];
+                        Dictionary<string, List<TemplateEngineDefinitionResponseModel>> responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<TemplateEngineDefinitionResponseModel>>>(responseBody);
+                        List<TemplateEngineDefinitionResponseModel> responseList = responseDictionary["templateDefinitionNames"];
 
                         var dbQuery = context!.DocumentTemplate.AsQueryable();
 
@@ -143,7 +143,8 @@ namespace amorphie.contract.Module.Proxy
 
                         var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
 
-                        responseList = responseList.Except(dbList).ToList();
+                        responseList = responseList.Where(x => !dbList.Contains(x.Name)).ToList();
+
                         responseDictionary["templateDefinitionNames"] = responseList;
 
                         return Results.Ok(responseDictionary);
