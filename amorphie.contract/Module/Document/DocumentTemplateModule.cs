@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace amorphie.contract;
 
     public class DocumentTemplateModule
-        : BaseBBTContractRoute<DocumentTemplate, DocumentTemplate, ProjectDbContext>
+        : BaseBBTRoute<DocumentTemplate, DocumentTemplate, ProjectDbContext>
 {
     public DocumentTemplateModule(WebApplication app) : base(app)
     {

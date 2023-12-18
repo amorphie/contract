@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using amorphie.contract.data.Contexts;
@@ -11,9 +12,11 @@ using amorphie.contract.data.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231218104946_ContractMigrationsV1")]
+    partial class ContractMigrationsV1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1535,7 +1538,8 @@ namespace amorphie.contract.data.Migrations.Pg
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -1569,6 +1573,9 @@ namespace amorphie.contract.data.Migrations.Pg
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.HasIndex("LanguageTypeId");
 
