@@ -106,8 +106,8 @@ namespace amorphie.contract.core.Mapping
                                         Label = a.MultiLanguage.Name,
                                         Language = a.MultiLanguage.LanguageType.Code
                                     }).ToList() : null,
-                DocumentDefinitionList = x.DocumentGroupDetails.
-                                    Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x.DocumentDefinition)).ToList()
+                // DocumentDefinitionList = x.DocumentGroupDetails.
+                //                     Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x.DocumentDefinition)).ToList()
 
             });
 

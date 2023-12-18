@@ -37,6 +37,10 @@ namespace amorphie.contract.zeebe.Service.Minio
         public async Task UploadFile(byte[] data, string objectName, string contentType)
         {
             MemoryStream stream = new MemoryStream(data);
+            var headers = new Dictionary<string, string>
+                {
+                    { "x-amz-meta-custom-metadata", "customMetadata" }
+                };
 
             var putObjectArgs = new PutObjectArgs()
                              .WithBucket(bucketName)
@@ -45,7 +49,8 @@ namespace amorphie.contract.zeebe.Service.Minio
                              // .WithFileName(filePath)
                              .WithStreamData(stream)
                              .WithObjectSize(stream.Length)
-                             .WithContentType(contentType);
+                             .WithContentType(contentType)
+                             .WithHeaders(headers);
 
 
 

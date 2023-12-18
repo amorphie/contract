@@ -14,7 +14,7 @@ namespace amorphie.contract.core.Entity.Common
     [Table("Validation", Schema = "Common")]
     [Index(nameof(EValidationType), IsUnique = true)]
 
-    public class Validation : BaseEntity
+    public class Validation : AudiEntity
     {
         [Required]
         public ushort EValidationType { get; set; }// all-valid

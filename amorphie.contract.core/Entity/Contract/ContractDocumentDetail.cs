@@ -22,14 +22,12 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid ContractDefinitionId { get; set; }
 
         // public ContractDefinition? ContractDefinition { get; set; }
-        [Required]
-        [ForeignKey(nameof(DocumentDefinitionCode))]
         public string DocumentDefinitionCode { get; set; }
-        public virtual DocumentDefinition DocumentDefinition { get; set; }
+        // public virtual DocumentDefinition DocumentDefinition { get; set; }
 
         public ushort UseExisting { get; set; }
         // public UseExisting? UseExisting { get; set; }//enum
-        public string MinVersion { get; set; }
+        public string Semver { get; set; }
         public bool Required { get; set; }
 
     }
