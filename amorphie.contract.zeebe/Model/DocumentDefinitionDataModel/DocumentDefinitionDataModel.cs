@@ -51,14 +51,14 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public Data data { get; set; }
     }
 
-     
+
     public class RenderTemplate
     {
         public string name { get; set; }
         public List<string> semanticVersions { get; set; }
     }
 
-     
+
 
     public class TemplateList
     {

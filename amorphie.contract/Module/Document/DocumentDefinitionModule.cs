@@ -69,7 +69,7 @@ public class DocumentDefinitionModule
               SemverList = group.Select(x => x.Semver).ToList()
           })
           .ToList();
-       
+
         // var list = await query.ToListAsync(token);
         return Results.Ok(result);
     }

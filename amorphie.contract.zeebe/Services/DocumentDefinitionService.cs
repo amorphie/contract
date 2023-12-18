@@ -250,11 +250,11 @@ namespace amorphie.contract.zeebe.Services
                 {
                     onHoldStatus = new Status { Code = "on-hold" };
                 }
-                var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver ==_documentDefinitionDataModel.data.versiyon);
+                var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
-                   // _documentdef = documentDefinition;
-                     throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
+                    // _documentdef = documentDefinition;
+                    throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
                 }
                 else
                 {
