@@ -139,15 +139,24 @@ namespace amorphie.contract.Module.Proxy
 
                         var dbQuery = context!.DocumentTemplate.AsQueryable();
 
-                        dbQuery = ContractHelperExtensions.LikeWhere(dbQuery, query);
+
+                        // "%" karakteri varsa deseni kontrol et
+                        if (query.Contains("%"))
+                        {
+                            // Deseni kontrol et ve LIKE operatörünü kullan
+                            dbQuery = dbQuery.Where(x => EF.Functions.Like(x.Code, query));
+                        }
+                        else
+                        {
+                            // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
+                            dbQuery = dbQuery.Where(x => x.Code == query);
+                        }
 
                         var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
 
                         responseList = responseList.Where(x => !dbList.Contains(x.Name)).ToList();
 
-                        responseDictionary["templateDefinitionNames"] = responseList;
-
-                        return Results.Ok(responseDictionary);
+                        return Results.Ok(responseList);
                     }
                     else
                     {

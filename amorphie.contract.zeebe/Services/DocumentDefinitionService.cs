@@ -189,7 +189,8 @@ namespace amorphie.contract.zeebe.Services
                 DocumentTemplate = new DocumentTemplate
                 {
                     LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                    Code = x.RenderTemplate
+                    Code = x.RenderTemplate.name,
+                    Version = x.version
                 }
             }).ToList();
             _documentdef.DocumentOnlineSing.DocumentTemplateDetails = documentTemplateDetail;
@@ -249,10 +250,11 @@ namespace amorphie.contract.zeebe.Services
                 {
                     onHoldStatus = new Status { Code = "on-hold" };
                 }
-                var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code);
+                var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver ==_documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
-                    _documentdef = documentDefinition;
+                   // _documentdef = documentDefinition;
+                     throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
                 }
                 else
                 {

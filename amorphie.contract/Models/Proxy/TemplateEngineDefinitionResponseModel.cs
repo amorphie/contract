@@ -9,6 +9,7 @@ namespace amorphie.contract.Models.Proxy
 
         public string Name { get; set; }
         public List<string> SemanticVersions { get; set; }
+     
     }
 }
 

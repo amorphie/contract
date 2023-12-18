@@ -35,7 +35,6 @@ namespace amorphie.contract.zeebe.Services
         private void DynamicToContractDefinitionDataModel()
         {
             var test = _ContractDefinitionDataModelDynamic.ToString().Replace("{}", "\"\"");
-            test = "{\"code\":\"contractdeftest\",\"tags\":[],\"documentsList\":[{\"name\":\"ddd\",\"useExisting\":\"AnyValid\",\"required\":true,\"minVersiyon\":\"1.0.0\"},{\"name\":\"fatihtest2\",\"useExisting\":\"AnyValid\",\"required\":true,\"minVersiyon\":\"1.0.0\"}],\"documentGroupList\":[{\"groupName\":\"\",\"required\":false}],\"validationList\":[{\"type\":\"AllValid\",\"decisionTable\":\"\"}],\"submit\":false}";
             _ContractDefinitionDataModel = new ContractDefinitionDataModel();
             _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>
             (test.Replace("{}", "\"\""));

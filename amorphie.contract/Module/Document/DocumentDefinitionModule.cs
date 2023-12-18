@@ -69,8 +69,7 @@ public class DocumentDefinitionModule
               SemverList = group.Select(x => x.Semver).ToList()
           })
           .ToList();
-        result.FirstOrDefault().SemverList.Add("1.0.1");
-        result.FirstOrDefault().SemverList.Add("1.0.2");
+       
         // var list = await query.ToListAsync(token);
         return Results.Ok(result);
     }
