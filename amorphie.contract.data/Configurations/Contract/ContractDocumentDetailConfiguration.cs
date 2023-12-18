@@ -11,7 +11,7 @@ namespace amorphie.contract.data.Configurations.Contract
     {
         public void Configure(EntityTypeBuilder<ContractDocumentDetail> builder)
         {
-        
+
 
 
         }
