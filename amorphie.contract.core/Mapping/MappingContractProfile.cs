@@ -88,7 +88,7 @@ namespace amorphie.contract.core.Mapping
         src.ContractValidations != null ? src.ContractValidations.Select(a => new ValidationView
         {
             ValidationDecision = a.Validations.ValidationDecision != null ? a.Validations.ValidationDecision.Code : null,
-            EValidationType = ((EUseExisting)a.Validations.EValidationType).ToString(),
+            EValidationType = ((EValidationType)a.Validations.EValidationType).ToString(),
         }).ToList() : null));
 
         }

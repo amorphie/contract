@@ -58,8 +58,8 @@ namespace amorphie.contract.zeebe.Services
             var contractDocumentDetail = _ContractDefinitionDataModel.documentsList.Select(x => new ContractDocumentDetail
             {
                 ContractDefinitionId = _ContractDefinition.Id,
-                DocumentDefinitionCode = x.name,
-                UseExisting = (ushort)Enum.Parse(typeof(EUseExisting), x.useExisting),
+                DocumentDefinitionCode = x.name.code,
+                UseExisting =  (ushort)x.useExisting,
                 Semver = x.minVersiyon,
                 Required = x.required
             });
@@ -128,7 +128,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var list = _ContractDefinitionDataModel.validationList.Select(x =>
                     {
-                        var validationType = (ushort)Enum.Parse(typeof(EValidationType), x.type);
+                        var validationType = (ushort) x.type;
                         var existingValidation = _dbContext.Validation.FirstOrDefault(a => a.EValidationType == validationType);
                         if (existingValidation != null)
                         {

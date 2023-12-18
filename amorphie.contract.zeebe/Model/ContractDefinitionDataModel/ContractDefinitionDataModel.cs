@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
 {
@@ -11,15 +12,26 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
         public string groupName { get; set; }
         public bool required { get; set; }
     }
-
     public class DocumentsList
     {
         public string minVersiyon { get; set; }
-        public string name { get; set; }
+        public Name name { get; set; }
         public bool required { get; set; }
-        public string? useExisting { get; set; }
+        public EUseExisting useExisting { get; set; }
     }
 
+
+    public class Name
+    {
+        public string code { get; set; }
+        public List<string> semverList { get; set; }
+        public Title title { get; set; }
+    }
+    public class Title
+    {
+        public string languageType { get; set; }
+        public string name { get; set; }
+    }
     public class EntityPropertyList
     {
         public string PropertyName { get; set; }
@@ -39,7 +51,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
     public class ValidationList
     {
         public string decisionTable { get; set; }
-        public string type { get; set; }
+        public EValidationType type { get; set; }
     }
 
 
