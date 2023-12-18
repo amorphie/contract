@@ -59,7 +59,7 @@ namespace amorphie.contract.zeebe.Services
             {
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentDefinitionCode = x.name.code,
-                UseExisting =  (ushort)x.useExisting,
+                UseExisting = (ushort)x.useExisting,
                 Semver = x.minVersiyon,
                 Required = x.required
             });
@@ -128,7 +128,7 @@ namespace amorphie.contract.zeebe.Services
         {
             var list = _ContractDefinitionDataModel.validationList.Select(x =>
                     {
-                        var validationType = (ushort) x.type;
+                        var validationType = (ushort)x.type;
                         var existingValidation = _dbContext.Validation.FirstOrDefault(a => a.EValidationType == validationType);
                         if (existingValidation != null)
                         {

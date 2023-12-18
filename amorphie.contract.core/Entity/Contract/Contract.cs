@@ -21,5 +21,5 @@ namespace amorphie.contract.core.Entity.Contract
         public Guid ProcessId { get; set; }
         public ContractProcess Process { get; set; }
     }
-    
+
 }
