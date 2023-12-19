@@ -10,6 +10,7 @@ using amorphie.contract.Extensions;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Models.Proxy;
+using amorphie.contract.core;
 
 namespace amorphie.contract.Module.Proxy
 {

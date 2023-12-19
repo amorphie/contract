@@ -14,6 +14,7 @@ using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Model.Document;
 using AutoMapper;
 using amorphie.contract.core.Model;
+using amorphie.contract.core.Services;
 
 namespace amorphie.contract;
 
@@ -174,6 +175,19 @@ public class DocumentModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("search", getAllDocumentFullTextSearch);
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
+        routeGroupBuilder.MapPost("Instance", Instance);
+    }
+    async ValueTask<IResult> Instance([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+                    HttpContext httpContext, CancellationToken token,
+                    //  [AsParameters] ComponentSearch data,
+                    [FromBody] string data, [FromServices] IMinioService minioService)
+    {
+        var random = new Random();
+        var fakeData = new byte[100];
+
+        random.NextBytes(fakeData);
+        await minioService.UploadFile(fakeData, "fatihlocaltestfakedata2", ".jpg");
+        return Results.Ok();
     }
     protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
     [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
