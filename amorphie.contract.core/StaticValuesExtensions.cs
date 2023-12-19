@@ -34,13 +34,13 @@ namespace amorphie.contract.core
         public static string TemplateEnginePdfRenderEndpoint { get; set; }
         public static string TemplateEngineGetTemplateEndpoint { get; set; }
 
-        
+
         public static string MinioUrl { get; set; }
         public static string MinioBucketName { get; set; }
         public static string MinioEndPoint { get; set; }
         public static string AccessKey { get; set; }
         public static string SecretKey { get; set; }
-        
+
         public static void SetStaticValues(AppSettings settings)
         {
 

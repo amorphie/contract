@@ -13,7 +13,7 @@ using Minio.DataModel.Tags;
 using Minio.Exceptions;
 namespace amorphie.contract.core.Services
 {
-     public interface IMinioService
+    public interface IMinioService
     {
         Task UploadFile(byte[] data, string objectName, string contentType);
         Task UploadFile();
