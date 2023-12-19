@@ -23,7 +23,7 @@ namespace amorphie.contract.core.Model.Document
         public string Owner { get; set; }
         public override string ToString()
         {
-            return Id.ToString()+ Reference + DocumentCode +DocumentVersion;
+            return Id.ToString() + Reference + DocumentCode + DocumentVersion;
         }
     }
 }

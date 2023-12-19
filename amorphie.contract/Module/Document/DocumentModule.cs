@@ -182,19 +182,20 @@ public class DocumentModule
     }
     async ValueTask<IResult> CustomerDocument([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
                 HttpContext httpContext, CancellationToken token, string reference)
-                    {
-                        var d = await context.Document.Where(x => x.Customer.Reference == reference)
-                        .Select(x=>new {
-                            // x.DocumentDefinitionId,
-                            x.DocumentDefinition.Code,
-                            x.DocumentDefinition.Semver,
-                            status = "valid",
-                            x.DocumentContent.MinioObjectName,
-                            x.DocumentContent.ContentData,
-                            x.Customer.Reference
-                        }).ToListAsync(token);
-                        return Results.Ok(d);
-                    }
+    {
+        var d = await context.Document.Where(x => x.Customer.Reference == reference)
+        .Select(x => new
+        {
+            // x.DocumentDefinitionId,
+            x.DocumentDefinition.Code,
+            x.DocumentDefinition.Semver,
+            status = "valid",
+            x.DocumentContent.MinioObjectName,
+            x.DocumentContent.ContentData,
+            x.Customer.Reference
+        }).ToListAsync(token);
+        return Results.Ok(d);
+    }
     async ValueTask<IResult> Instance([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
                     HttpContext httpContext, CancellationToken token,
                     // IFormFile file,
