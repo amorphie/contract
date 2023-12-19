@@ -26,7 +26,7 @@ namespace amorphie.contract.core.Model.Contract
 
     public class OnlineSignModel
     {
-        public string Version { get; set; }
+
         [JsonPropertyName("sca-required")]
         public bool ScaRequired { get; set; }
         [JsonPropertyName("allowed-clients")]
@@ -44,7 +44,7 @@ namespace amorphie.contract.core.Model.Contract
 
     public class DocumentModel
     {
-        public string Name { get; set; }
+        public string Code { get; set; }
         public string Title { get; set; }
         public string Status { get; set; }
         public bool Required { get; set; }
@@ -52,6 +52,7 @@ namespace amorphie.contract.core.Model.Contract
         public bool Render { get; set; }
         [JsonPropertyName("online-sign")]
         public OnlineSignModel OnlineSign { get; set; }
+        public string Version { get; set; }
     }
 
     public class DocumentGroupModel

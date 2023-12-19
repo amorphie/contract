@@ -20,5 +20,6 @@ namespace amorphie.contract.core.Entity.Document
         public string? ContentType { get; set; }
         public string? ContentTransferEncoding { get; set; }
         public string? Name { get; set; }
+        public string MinioObjectName { get; set; }
     }
 }

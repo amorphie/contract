@@ -15,6 +15,8 @@ using amorphie.contract.core.Model.Document;
 using AutoMapper;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Services;
+using amorphie.contract.core.Entity;
+using System.Buffers.Text;
 
 namespace amorphie.contract;
 
@@ -176,17 +178,85 @@ public class DocumentModule
         routeGroupBuilder.MapGet("search", getAllDocumentFullTextSearch);
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
         routeGroupBuilder.MapPost("Instance", Instance);
+        routeGroupBuilder.MapGet("CustomerDocument", CustomerDocument);
     }
+    async ValueTask<IResult> CustomerDocument([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
+                HttpContext httpContext, CancellationToken token, string reference)
+                    {
+                        var d = await context.Document.Where(x => x.Customer.Reference == reference)
+                        .Select(x=>new {
+                            // x.DocumentDefinitionId,
+                            x.DocumentDefinition.Code,
+                            x.DocumentDefinition.Semver,
+                            status = "valid",
+                            x.DocumentContent.MinioObjectName,
+                            x.DocumentContent.ContentData,
+                            x.Customer.Reference
+                        }).ToListAsync(token);
+                        return Results.Ok(d);
+                    }
     async ValueTask<IResult> Instance([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
                     HttpContext httpContext, CancellationToken token,
+                    // IFormFile file,
                     //  [AsParameters] ComponentSearch data,
-                    [FromBody] string data, [FromServices] IMinioService minioService)
+                    [FromBody] DocumentInstanceModel data, [FromServices] IMinioService minioService)
     {
-        var random = new Random();
-        var fakeData = new byte[100];
+        var docdef = context.DocumentDefinition.FirstOrDefault(x => x.Code == data.DocumentCode && x.Semver == data.DocumentVersion);
+        var statusCompleted = context.Status.FirstOrDefault(x => x.Code == "completed");
+        if (docdef == null)
+        {
+            return Results.NotFound("Document Code ve versiyona ait kayit bulunamadi!");
+        }
 
-        random.NextBytes(fakeData);
-        await minioService.UploadFile(fakeData, "fatihlocaltestfakedata2", ".jpg");
+        // if (!(file == null && file.Length == 0))
+        // {
+        //     using (var stream = new MemoryStream())
+        //     {
+        //         await file.CopyToAsync(stream);
+        //         data.fileByteArray = stream.ToArray();
+        //     }
+        // }
+        var cus = context.Customer.FirstOrDefault(x => x.Reference == data.Reference);
+        if (cus == null)
+        {
+            cus = new Customer
+            {
+                Reference = data.Reference,
+                Owner = data.Owner
+            };
+            context.Customer.Add(cus);
+
+        }
+
+        var document = new Document
+        {
+            Id = data.Id,
+            DocumentDefinitionId = docdef.Id,
+            StatusId = statusCompleted.Id,
+            CustomerId = cus.Id,
+            DocumentContent = new DocumentContent
+            {
+                ContentData = data.FileContext.ToString(),
+                KiloBytesSize = data.FileContext.ToString().Length.ToString(),
+                ContentType = data.FileType,
+                MinioObjectName = data.ToString(),
+            }
+        };
+        context.Document.Add(document);
+        context.SaveChanges();
+
+        byte[] fileByteArray;
+        if (data.FileContextType == "byte")
+        {
+            fileByteArray = data.FileContext.Split(',').Select(byte.Parse).ToArray();
+        }
+        else
+        {
+            fileByteArray = Convert.FromBase64String(data.FileContext);
+        }
+
+        await minioService.UploadFile(fileByteArray, data.ToString(), data.FileType, Newtonsoft.Json.JsonConvert.SerializeObject(docdef));
+
         return Results.Ok();
     }
     protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
