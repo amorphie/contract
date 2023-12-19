@@ -7,6 +7,8 @@ using System.Reflection;
 using FluentValidation;
 using System.Text.Json.Serialization;
 using amorphie.contract.Extensions;
+using amorphie.contract.core.Services;
+using amorphie.contract.core;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -30,7 +32,7 @@ builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
-
+builder.Services.AddSingleton<IMinioService, MinioService>();
 var assemblies = new Assembly[]
                 {
                       typeof(DocumentDefinitionValidator).Assembly,
