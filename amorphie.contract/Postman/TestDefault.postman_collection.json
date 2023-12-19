@@ -345,7 +345,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions",
+									"raw": "{{baseUrl}}Common-Versions",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -375,7 +375,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions",
+									"raw": "{{baseUrl}}Common-Versions",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -405,7 +405,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions",
+									"raw": "{{baseUrl}}Common-Versions",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -435,7 +435,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions",
+									"raw": "{{baseUrl}}Common-Versions",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -465,7 +465,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions",
+									"raw": "{{baseUrl}}Common-Versions",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -486,7 +486,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://test-amorphie-contract.burgan.com.tr/Common-Versions?page=0&pageSize=100\n",
+									"raw": "{{baseUrl}}Common-Versions?page=0&pageSize=100\n",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-contract",
@@ -536,7 +536,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://test-amorphie-workflow.burgan.com.tr/workflow/consumer/document-definition/record/2864a5d0-265a-436d-93a2-1992b434b3b1/transition/StartDocumentDefinition",
+									"raw": "{{BaseURLWorkflowAmorphie}}consumer/document-definition/record/2864a5d0-265a-436d-93a2-1992b434b3b1/transition/StartDocumentDefinition",
 									"protocol": "https",
 									"host": [
 										"test-amorphie-workflow",
@@ -574,7 +574,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-contract.burgan.com.tr/document-definition",
+							"raw": "{{baseUrl}}document-definition",
 							"protocol": "https",
 							"host": [
 								"test-amorphie-contract",
@@ -1017,7 +1017,7 @@
 									"host": [
 										"{{baseUrl}}document-allowed-client"
 									]
-								}
+								} 
 							},
 							"response": []
 						},
@@ -1711,7 +1711,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-workflow.burgan.com.tr/workflow/consumer/document-definition/record/{{$guid}}/transition/StartDocumentDefinition",
+							"raw": "{{BaseURLWorkflowAmorphie}}consumer/document-definition/record/{{$guid}}/transition/StartDocumentDefinition",
 							"protocol": "https",
 							"host": [
 								"test-amorphie-workflow",
@@ -1790,16 +1790,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-contract.burgan.com.tr/contract/Instance",
-							"protocol": "https",
+							"raw": "{{baseUrl}}contract/Instance",
 							"host": [
-								"test-amorphie-contract",
-								"burgan",
-								"com",
-								"tr"
+								"{{baseUrl}}contract"
 							],
 							"path": [
-								"contract",
 								"Instance"
 							]
 						}
@@ -1833,16 +1828,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-contract.burgan.com.tr/template-render/render/pdf",
-							"protocol": "https",
+							"raw": "{{baseUrl}}template-render/render/pdf",
 							"host": [
-								"test-amorphie-contract",
-								"burgan",
-								"com",
-								"tr"
+								"{{baseUrl}}template-render"
 							],
 							"path": [
-								"template-render",
 								"render",
 								"pdf"
 							]
@@ -1876,16 +1866,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-contract.burgan.com.tr/document/Instance",
-							"protocol": "https",
+							"raw": "{{baseUrl}}document/Instance",
 							"host": [
-								"test-amorphie-contract",
-								"burgan",
-								"com",
-								"tr"
+								"{{baseUrl}}document"
 							],
 							"path": [
-								"document",
 								"Instance"
 							]
 						}
@@ -1910,16 +1895,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://test-amorphie-contract.burgan.com.tr/document/CustomerDocument?reference={{referanceKey}}",
-							"protocol": "https",
+							"raw": "{{baseUrl}}document/CustomerDocument?reference={{referanceKey}}",
 							"host": [
-								"test-amorphie-contract",
-								"burgan",
-								"com",
-								"tr"
+								"{{baseUrl}}document"
 							],
 							"path": [
-								"document",
 								"CustomerDocument"
 							],
 							"query": [
@@ -1949,7 +1929,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"pm.collectionVariables.set(\"referanceKey\", \"1122334\");"
+							"pm.collectionVariables.set(\"referanceKey\", \"11223345\");"
 						]
 					}
 				}
@@ -1979,13 +1959,12 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://test-amorphie-contract.burgan.com.tr/",
+			"value": "URL",
 			"type": "string"
 		},
 		{
-			"key": "collection_variable",
-			"value": "https://test-amorphie-contract.burgan.com.tr/",
-			"disabled": true
+			"key": "BaseURLWorkflowAmorphie",
+			"value": "URL"
 		},
 		{
 			"key": "collection_variable",
