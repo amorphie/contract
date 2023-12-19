@@ -11,6 +11,7 @@ using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Entity.Proxy;
+using amorphie.contract.core.Entity;
 
 namespace amorphie.contract.data.Contexts;
 
@@ -124,6 +125,7 @@ public class ProjectDbContext : DbContext
     public DbSet<EntityProperty> EntityProperty { get; set; }
     // public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
+    public DbSet<Customer> Customer { get; set; }
 
     protected IConfiguration Configuration { get; }
 
