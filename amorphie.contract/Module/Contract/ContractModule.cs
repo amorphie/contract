@@ -72,7 +72,7 @@ public class ContractModule
                 {
                     title = document.DocumentDefinitionLanguageDetails
                 .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
-                .FirstOrDefault()?.MultiLanguage?.Name ??  document.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
+                .FirstOrDefault()?.MultiLanguage?.Name ?? document.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
 
                     name = document.Code,
                     status = "not-started",
