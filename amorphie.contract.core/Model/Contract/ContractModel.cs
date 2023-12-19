@@ -2,55 +2,74 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace amorphie.contract.core.Model.Contract
 {
 
     public class AllowedFormatModel
     {
-        public string format { get; set; }
-        public int max_size_kilobytes { get; set; }
+        public string Format { get; set; }
+        [JsonPropertyName("max-size-kilobytes")]
+        public int MaxSizeKilobytes { get; set; }
     }
 
     public class Upload
     {
-        public bool sca_required { get; set; }
-        public List<string> allowed_clients { get; set; }
-        public List<AllowedFormatModel> allowed_formats { get; set; }
+        [JsonPropertyName("sca-required")]
+        public bool ScaRequired { get; set; }
+        [JsonPropertyName("allowed-clients")]
+        public List<string> AllowedClients { get; set; }
+        [JsonPropertyName("allowed-formats")]
+        public List<AllowedFormatModel> AllowedFormats { get; set; }
     }
 
     public class OnlineSignModel
     {
-        public string version { get; set; }
-        public bool sca_required { get; set; }
-        public List<string> alloved_clients { get; set; }
+
+        [JsonPropertyName("sca-required")]
+        public bool ScaRequired { get; set; }
+        [JsonPropertyName("allowed-clients")]
+        public List<string> AllovedClients { get; set; }
+        [JsonPropertyName("document-model-template")]
+        public List<DocumentModelTemplate> DocumentModelTemplate { get; set; }
+
+    }
+    public class DocumentModelTemplate
+    {
+        public string Name { get; set; }
+        [JsonPropertyName("min-version")]
+        public string MinVersion { get; set; }
     }
 
     public class DocumentModel
     {
-        public string name { get; set; }
-        public string title { get; set; }
-        public string status { get; set; }
-        public bool required { get; set; }
-        public Upload upload { get; set; }
-        public bool render { get; set; }
-        public OnlineSignModel online_sign { get; set; }
+        public string Code { get; set; }
+        public string Title { get; set; }
+        public string Status { get; set; }
+        public bool Required { get; set; }
+        //public Upload Upload { get; set; }
+        public bool Render { get; set; }
+        [JsonPropertyName("online-sign")]
+        public OnlineSignModel OnlineSign { get; set; }
+        public string Version { get; set; }
     }
 
     public class DocumentGroupModel
     {
-        public string name { get; set; }
-        public string status { get; set; }
-        public string title { get; set; }
-        public int at_least_required_document { get; set; }
-        public List<DocumentModel> document { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
+        public string Title { get; set; }
+        [JsonPropertyName("at-least-required-document")]
+        public int AtLeastRequiredDocument { get; set; }
+        public List<DocumentModel> Document { get; set; }
     }
 
     public class ContractModel
     {
-        public Guid id { get; set; }
-        public string status { get; set; }
-        public List<DocumentModel> document { get; set; }
-        public List<DocumentGroupModel> document_groups { get; set; }
+        public Guid Id { get; set; }
+        public string Status { get; set; }
+        public List<DocumentModel> Document { get; set; }
+        //public List<DocumentGroupModel> DocumentGroups { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using amorphie.core.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Minio;
@@ -15,7 +16,7 @@ namespace amorphie.contract.core.Services
 {
     public interface IMinioService
     {
-        Task UploadFile(byte[] data, string objectName, string contentType);
+        Task UploadFile(byte[] data, string objectName, string contentType, string customMetadata);
         Task UploadFile();
     }
     public class MinioService : IMinioService
@@ -37,7 +38,7 @@ namespace amorphie.contract.core.Services
                            .Build();
 
         }
-        public async Task UploadFile(byte[] data, string objectName, string contentType)
+        public async Task UploadFile(byte[] data, string objectName, string contentType, string customMetadata)
         {
             MemoryStream stream = new MemoryStream(data);
             var headers = new Dictionary<string, string>
@@ -54,9 +55,6 @@ namespace amorphie.contract.core.Services
                              .WithObjectSize(stream.Length)
                              .WithContentType(contentType)
                              .WithHeaders(headers);
-
-
-
 
             await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
             Console.WriteLine("Successfully uploaded " + objectName);
@@ -112,6 +110,26 @@ namespace amorphie.contract.core.Services
             }
         }
 
+        // public async Task<byte[]> DownloadFile(string objectName, CancellationToken token)
+        // {
+        //     var getObjectArgs = new GetObjectArgs()
+        //         .WithBucket(bucketName)
+        //         .WithObject(objectName);
 
+        //     using (var stream = new MemoryStream())
+        //     {
+        //         var task =  minioClient.GetObjectAsync(getObjectArgs,  (s,token) =>
+        //         {
+        //             // Başka bir değişken kullanarak içerik akışını işleyin
+        //             var innerStream = new MemoryStream();
+        //             s.Content.CopyTo(innerStream);
+        //             return Task.CompletedTask;
+        //         });
+
+        //         task.Wait(token);  // veya .Result
+
+        //         return stream.ToArray();
+        //     }
+        // }
     }
 }
