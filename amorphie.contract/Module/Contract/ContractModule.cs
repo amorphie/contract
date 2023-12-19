@@ -57,8 +57,8 @@ public class ContractModule
             return Results.Ok(list);
         }
         ContractModel contractModel = new ContractModel();
-        contractModel.id = query.Id;
-        contractModel.status = "in-progress";
+        contractModel.Id = query.Id;
+        contractModel.Status = "in-progress";
 
         var documentdeflist = context.DocumentDefinition.ToList().
         Where(x => query.ContractDocumentDetails.Any(a => a.DocumentDefinitionCode == x.Code))
@@ -70,26 +70,35 @@ public class ContractModule
                 contractDetail => new { Code = contractDetail.DocumentDefinitionCode },
                 (document, contractDetail) => new DocumentModel
                 {
-                    title = document.DocumentDefinitionLanguageDetails
+                    Title = document.DocumentDefinitionLanguageDetails
                 .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                 .FirstOrDefault()?.MultiLanguage?.Name ?? document.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
 
-                    name = document.Code,
-                    status = "not-started",
-                    required = contractDetail.Required,
-                    render = document.DocumentOnlineSing != null,
-                    online_sign = new OnlineSignModel
+                    Name = document.Code,
+                    Status = "not-started",
+                    Required = contractDetail.Required,
+                    Render = document.DocumentOnlineSing != null,
+                    OnlineSign = new OnlineSignModel
                     {
-                        version = document.Semver,
-                        sca_required = document.DocumentOnlineSing != null ? document.DocumentOnlineSing.Required : false,
-                        alloved_clients = document.DocumentOnlineSing.DocumentAllowedClientDetails
+                        DocumentModelTemplate = document.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Count() > 0 ? document.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Select(b => new DocumentModelTemplate
+                        {
+                            Name = b.DocumentTemplate.Code,
+                            MinVersion = b.DocumentTemplate.Version,
+                        }).ToList() : document.DocumentOnlineSing.DocumentTemplateDetails.Select(b => new DocumentModelTemplate
+                        {
+                            Name = b.DocumentTemplate.Code,
+                            MinVersion = b.DocumentTemplate.Version,
+                        }).Take(1).ToList(),
+                        Version = document.Semver,
+                        ScaRequired = document.DocumentOnlineSing != null ? document.DocumentOnlineSing.Required : false,
+                        AllovedClients = document.DocumentOnlineSing.DocumentAllowedClientDetails
                                             .Select(x => x.DocumentAllowedClients.Code)
                                             .ToList() ?? new List<string>()
                     }
                 }
             ).ToList();
 
-        contractModel.document = documentModels;
+        contractModel.Document = documentModels;
 
 
         return Results.Ok(contractModel);
