@@ -1,0 +1,419 @@
+{
+	"info": {
+		"_postman_id": "0c97d981-ac9e-41d2-b12c-6a7b0d2c5b0c",
+		"name": "TestDefault",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4783127",
+		"_collection_link": "https://www.postman.com/martian-sunset-325823/workspace/contractmanagementoutsource/collection/4783127-0c97d981-ac9e-41d2-b12c-6a7b0d2c5b0c?action=share&source=collection_link&creator=4783127"
+	},
+	"item": [
+		{
+			"name": "Example",
+			"item": [
+				{
+					"name": "ContractInstance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"// Eğer belgede en az bir örnek varsa",
+									"if (jsonData && jsonData.length > 0) {",
+									"    // İlk belgeyi seç",
+									"    var firstDocument = jsonData[0];",
+									"",
+									"    // İlk belgedeki online-sign özelliğine eriş",
+									"    var onlineSign = firstDocument['online-sign'];",
+									"",
+									"    // online-sign özelliğinde document-model-template özelliğine eriş",
+									"    var documentModelTemplate = onlineSign && onlineSign['document-model-template'];",
+									"",
+									"    // document-model-template özelliğinde name özelliğine eriş",
+									"    var templateName = documentModelTemplate && documentModelTemplate[0] && documentModelTemplate[0].name;",
+									"    var minVersion = documentModelTemplate && documentModelTemplate[0] && documentModelTemplate[0]['min-version'];",
+									"",
+									"    // Değişken değerlerini console'da göster",
+									"    console.log(\"TemplateName:\", templateName);",
+									"    console.log(\"MinVersion:\", minVersion);",
+									"",
+									"    // Postman ortam değişkenlerini set et",
+									"    pm.collectionVariables.set(\"templateName\", templateName);",
+									"    pm.collectionVariables.set(\"minVersion\", minVersion);",
+									"} else {",
+									"    console.error(\"Belge bulunamadı.\");",
+									"    pm.collectionVariables.set(\"templateName\", \"templateName\");",
+									"    pm.collectionVariables.set(\"minVersion\", \"minVersion\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"contractname\": \"logindocs\",\n  \"reference\": \"{{referanceKey}}\",\n  \"owner\": \"{{referanceKey}}\",\n  \"process\": {\n    \"client\": \"ekyc-application\",\n    \"user\": \"34455667789\", \n    \"name\": \"ekyc-process\", \n    \"state\": \"load-document\",\n    \"action\": \"web-mobil-document-load\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}contract/Instance",
+							"host": [
+								"{{baseUrl}}contract"
+							],
+							"path": [
+								"Instance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TemplateRender",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"pdfbase64\", jsonData)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{templateName}}\",\n  \"render-id\": \"{{$guid}}\",\n  \"render-data\": \"{}\",\n  \"render-data-for-log\": \"\",\n  \"semantic-version\": \"{{minVersion}}\",\n  \"process-name\": \"\",\n  \"item-id\": \"string\",\n  \"action\": \"string\",\n  \"identity\": \"string\",\n  \"customer\": \"string\",\n  \"children-name\": \"string\",\n  \"children\": [\n    \"string\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}template-render/render/pdf",
+							"host": [
+								"{{baseUrl}}template-render"
+							],
+							"path": [
+								"render",
+								"pdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DocumentInstance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"file-type\": \"pdf\",\n    \"fileContextType\": \"base64\",\n    \"file-name\": \"{{documentCode}}\",\n    \"documentCode\": \"{{documentCode}}\",\n    \"documentVersion\": \"{{minVersion}}\",\n    \"reference\": \"{{referanceKey}}\",\n    \"owner\": \"{{referanceKey}}\",\n    \"fileContext\": \"{{pdfbase64}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}document/Instance",
+							"host": [
+								"{{baseUrl}}document"
+							],
+							"path": [
+								"Instance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DocumentSearch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}document/CustomerDocument?reference={{referanceKey}}",
+							"host": [
+								"{{baseUrl}}document"
+							],
+							"path": [
+								"CustomerDocument"
+							],
+							"query": [
+								{
+									"key": "reference",
+									"value": "{{referanceKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.collectionVariables.set(\"referanceKey\", \"11223345\");"
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "URL",
+			"type": "string"
+		},
+		{
+			"key": "BaseURLWorkflowAmorphie",
+			"value": "URL"
+		},
+		{
+			"key": "collection_variable",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "variable_key",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "common-tag-test-1",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "common-languageType-tr",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "common-languageType-en",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-Active",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-Passive",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-Inprogress",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-Completed",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-OnHold",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Status-Canceled",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-allowed-client-web",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-format-type-pdf",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-format-type-jpeg",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-format-type-png",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-format-type-word",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-size-1024",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-size-2048",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-size-4096",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-Optimize-Type-jpeg",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "entity-property-value-6M",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "variable_key2",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Tag-CustomerInfo",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "Common-Tag-mernis",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-allowed-client-dealer",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "document-allowed-client-directSales",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "referanceKey2",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "templateName",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "minVersion",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "pdfbase64",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "documentCode",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "referanceKey",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "templateName",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "templateName3",
+			"value": "",
+			"disabled": true
+		}
+	]
+}
