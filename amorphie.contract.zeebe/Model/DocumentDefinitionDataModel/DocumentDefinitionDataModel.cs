@@ -35,7 +35,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public bool ScaRequired { get; set; }
         public List<UploadAllowedClient> UploadAllowedClients { get; set; }
         public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
-         public string TransformTo { get; set; }
+        public string TransformTo { get; set; }
     }
 
     public class UploadAllowedClient
