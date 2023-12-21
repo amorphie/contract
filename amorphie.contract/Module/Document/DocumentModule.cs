@@ -121,7 +121,6 @@ public class DocumentModule
 
             if (securityQuestions.Any())
             {
-
                 // var response = securityQuestions.Select(x => ObjectMapper.Mapper.Map<RootDocumentModel>(x));
                 var response = securityQuestions.Select(x =>
                  new RootDocumentModel

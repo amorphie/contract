@@ -133,7 +133,7 @@ namespace amorphie.contract.zeebe.Services
             var allowedClientDetail = _documentDefinitionDataModel.data.UploadAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
                 DocumentDefinitionId = _documentdef.Id,
-                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x)
+                DocumentAllowedClientId = ZeebeMessageHelper.StringToGuid(x.id)
 
             }).ToList();
 
@@ -147,8 +147,8 @@ namespace amorphie.contract.zeebe.Services
                 DocumentDefinitionId = _documentdef.Id,
                 DocumentFormat = new DocumentFormat
                 {
-                    DocumentFormatTypeId = ZeebeMessageHelper.StringToGuid(x.format),
-                    DocumentSizeId = ZeebeMessageHelper.StringToGuid(x.maxsizekilobytes)
+                    DocumentFormatTypeId = ZeebeMessageHelper.StringToGuid(x.Format),
+                    DocumentSizeId = ZeebeMessageHelper.StringToGuid(x.MaxSizeKilobytes)
                 }
             }).ToList();
 

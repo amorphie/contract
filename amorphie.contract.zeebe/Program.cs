@@ -1,5 +1,5 @@
 using amorphie.contract.data.Contexts;
-using amorphie.contract.zeebe.Extensions;
+using amorphie.contract.core;
 using amorphie.contract.zeebe.Modules;
 using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
 using amorphie.contract.zeebe.Service.Minio;
