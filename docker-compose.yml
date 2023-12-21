@@ -111,8 +111,8 @@ services:
 
 networks:
   bbt-development:
-    external: true
-
+    driver: bridge
+    
 volumes:
   redis:
   postgres:
