@@ -33,9 +33,23 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public List<string> UploadTags { get; set; }
         public bool Size { get; set; }
         public bool ScaRequired { get; set; }
-        public List<string> UploadAllowedClients { get; set; }
+        public List<UploadAllowedClient> UploadAllowedClients { get; set; }
         public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
-        public string TransformTo { get; set; }
+         public string TransformTo { get; set; }
+    }
+
+    public class UploadAllowedClient
+    {
+        public string code { get; set; }
+        public bool isDeleted { get; set; }
+        public bool isActive { get; set; }
+        public string id { get; set; }
+        public DateTime createdAt { get; set; }
+        public string createdBy { get; set; }
+        public string createdByBehalfOf { get; set; }
+        public DateTime modifiedAt { get; set; }
+        public string modifiedBy { get; set; }
+        public string modifiedByBehalfOf { get; set; }
     }
 
     public class EntityProperty
@@ -67,9 +81,17 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string version { get; set; }
     }
 
+    public class SelectBoxes
+    {
+    }
+
     public class Title
     {
+        public string textField { get; set; }
         public string language { get; set; }
+        public string label { get; set; }
+        public SelectBoxes selectBoxes { get; set; }
+        public string select { get; set; }
         public string title { get; set; }
     }
 
