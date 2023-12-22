@@ -29,7 +29,12 @@ namespace amorphie.contract.Module.Customer
 
             var documents = await context.Document.Where(x => x.Customer.Reference == reference).ToListAsync(token);
 
-            List<ContractModel> contractModels = contracts.Select(x => new ContractModel { Id = x.Id, Status = "inProgress" }).ToList();
+            List<ContractModel> contractModels = contracts.Select(x => new ContractModel
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Status = "inProgress"
+            }).ToList();
 
             foreach (var model in contractModels)
             {
