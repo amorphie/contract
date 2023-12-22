@@ -42,6 +42,9 @@ public class ContractModule
         {
             return Results.Ok(new { status = "not contract" });
         }
+        ContractModel contractModel = new ContractModel();
+        contractModel.Id = query.Id;
+        contractModel.Status = "in-progress";
         var documentList = query.ContractDocumentDetails.
                             Select(x => new { x.DocumentDefinitionCode, x.Semver })
                             .ToList();
@@ -93,12 +96,14 @@ public class ContractModule
                         }
                     }
                 ).ToList();
-
-            return Results.Ok(documentModels2);
+            contractModel.Document = documentModels2;
+            if (documentModels2.Count == 0)
+            {
+                contractModel.Status = "valid";
+            }
+            return Results.Ok(contractModel);
         }
-        ContractModel contractModel = new ContractModel();
-        contractModel.Id = query.Id;
-        contractModel.Status = "in-progress";
+
 
         var documentdeflist = context.DocumentDefinition.ToList().
         Where(x => query.ContractDocumentDetails.Any(a => a.DocumentDefinitionCode == x.Code))
