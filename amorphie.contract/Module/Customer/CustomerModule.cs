@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.Module.Customer
 {
-	public class CustomerModule : BaseRoute
+    public class CustomerModule : BaseRoute
     {
         public CustomerModule(WebApplication app) : base(app)
         {
