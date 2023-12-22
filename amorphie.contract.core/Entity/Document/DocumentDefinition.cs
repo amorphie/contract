@@ -30,7 +30,7 @@ namespace amorphie.contract.core.Entity.Document
         #endregion
         public virtual DocumentOptimize? DocumentOptimize { get; set; }
         public virtual DocumentOperations? DocumentOperations { get; set; }
-        public required string Semver { get; set; }
+        public string Semver { get; set; }
 
         public override string ToString()
         {

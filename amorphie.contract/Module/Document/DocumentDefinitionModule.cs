@@ -1,25 +1,14 @@
 using System.Data.SqlTypes;
-using System.Net;
-using System.IO.Compression;
-
-using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-
 using FluentValidation;
-using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Model;
-using Google.Rpc;
 using AutoMapper;
-using Refit;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Model.Document;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System.Data.Common;
 using amorphie.contract.core.Mapping;
-using Google.Protobuf.WellKnownTypes;
 using amorphie.contract.Extensions;
 
 namespace amorphie.contract;
