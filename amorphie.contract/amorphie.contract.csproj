@@ -35,11 +35,11 @@
   <ItemGroup>
     <None Remove="Module\Proxy\" />
     <None Remove="Extensions\" />
-    <None Remove="Models\" />
+    <None Remove="Module\Customer\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Module\Proxy\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Models\" />
+    <Folder Include="Module\Customer\" />
   </ItemGroup>
 </Project>
