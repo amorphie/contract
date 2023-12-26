@@ -14,11 +14,8 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentOperations", Schema = "Doc")]
     public class DocumentOperations : AudiEntity
     {
-        [Required]
-        [ForeignKey(nameof(DocumentDefinitionId))]
-        public Guid DocumentDefinitionId { get; set; }
         public bool DocumentManuelControl { get; set; }
-        public virtual ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();
+        public   ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();
         // [Required]
         // public Guid TagId { get; set; }
         // public Tag Tags {get;set;}

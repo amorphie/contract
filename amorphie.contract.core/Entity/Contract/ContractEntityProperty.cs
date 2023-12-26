@@ -16,10 +16,13 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
         public Guid ContractDefinitionId { get; set; }
-        // public ContractDefinition? ContractDefinition { get; set; }
+        [ForeignKey("ContractDefinitionId")]
+        public ContractDefinition ContractDefinition { get; set; } = default!;
         [Required]
         public Guid EntityPropertyId { get; set; }
-        public virtual EntityProperty? EntityProperty { get; set; }
+        [ForeignKey("EntityPropertyId")]
+
+        public EntityProperty EntityProperty { get; set; } = default!;
 
     }
 }

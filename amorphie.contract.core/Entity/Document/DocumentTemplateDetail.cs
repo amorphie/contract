@@ -11,10 +11,14 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
-        // public DocumentDefinition? DocumentDefinition { get; set; }
+        [ForeignKey("DocumentDefinitionId")]
+        
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentTemplateId { get; set; }
+        [ForeignKey("DocumentTemplateId")]
 
-        public virtual DocumentTemplate? DocumentTemplate { get; set; }
+
+        public   DocumentTemplate DocumentTemplate { get; set; } = default!;
     }
 }

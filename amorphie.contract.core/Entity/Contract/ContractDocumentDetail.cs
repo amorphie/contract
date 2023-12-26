@@ -9,6 +9,7 @@ using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.core.Entity.Contract
 {
@@ -18,16 +19,22 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
 
-
         public Guid ContractDefinitionId { get; set; }
+        [ForeignKey("ContractDefinitionId")]
 
-        // public ContractDefinition? ContractDefinition { get; set; }
-        public string DocumentDefinitionCode { get; set; }
-        // public virtual DocumentDefinition DocumentDefinition { get; set; }
+        public ContractDefinition ContractDefinition { get; set; } = default!;
+        [Required]
 
-        public ushort UseExisting { get; set; }
-        // public UseExisting? UseExisting { get; set; }//enum
-        public string Semver { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
+        [Required]
+        [ForeignKey("DocumentDefinitionId")]
+
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
+        [Required]
+        public EUseExisting UseExisting { get; set; }
+        // [Required]
+        // public string DocumentDefinitionSemver { get; set; }
+        [Required]
         public bool Required { get; set; }
 
     }

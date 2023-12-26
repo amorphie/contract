@@ -10,6 +10,6 @@ namespace amorphie.contract.core.Entity.Document
 
     public class DocumentFormatType : BaseEntity
     {
-        public string ContentType { get; set; }//ayrılcak ihtiyaca dogru bakacaz
+        public string ContentType { get; set; } = default!;//ayrılcak ihtiyaca dogru bakacaz
     }
 }

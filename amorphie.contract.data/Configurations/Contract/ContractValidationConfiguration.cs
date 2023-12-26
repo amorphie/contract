@@ -11,7 +11,10 @@ namespace amorphie.contract.data.Configurations.Contract
     {
         public void Configure(EntityTypeBuilder<ContractValidation> builder)
         {
-
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "Validations",
+            });
 
         }
     }

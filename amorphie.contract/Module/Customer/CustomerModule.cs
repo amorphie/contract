@@ -39,10 +39,10 @@ namespace amorphie.contract.Module.Customer
             foreach (var model in contractModels)
             {
                 var currentContractDocumentCodes = contracts.Where(y => y.Id == model.Id).FirstOrDefault().ContractDocumentDetails.
-                            Select(x => new { x.DocumentDefinitionCode, x.Semver, x.Required })
+                            Select(x => new { x.DocumentDefinitionId, x.Required })
                             .ToList();
 
-                var currentContractDocuments = documents.Where(x => currentContractDocumentCodes.Exists(y => x.DocumentDefinition.Code == y.DocumentDefinitionCode && x.DocumentDefinition.Semver == y.Semver)).ToList();
+                var currentContractDocuments = documents.Where(x => currentContractDocumentCodes.Exists(y => x.DocumentDefinitionId == y.DocumentDefinitionId)).ToList();
 
                 model.Document = currentContractDocuments.Select(x => new DocumentModel
                 {
@@ -52,7 +52,7 @@ namespace amorphie.contract.Module.Customer
 
                     Code = x.DocumentDefinition.Code,
                     Status = "not-started",
-                    Required = currentContractDocumentCodes.Where(y => y.DocumentDefinitionCode == x.DocumentDefinition.Code).FirstOrDefault().Required,
+                    Required = currentContractDocumentCodes.Where(y => y.DocumentDefinitionId == x.DocumentDefinitionId).FirstOrDefault().Required,
                     Render = x.DocumentDefinition.DocumentOnlineSing != null,
                     Version = x.DocumentDefinition.Semver,
                     OnlineSign = new OnlineSignModel

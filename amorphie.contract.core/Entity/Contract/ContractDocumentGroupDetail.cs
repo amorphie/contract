@@ -18,11 +18,14 @@ namespace amorphie.contract.core.Entity.Contract
 
 
         public Guid ContractDefinitionId { get; set; }
+        [ForeignKey("ContractDefinitionId")]
 
-        // public ContractDefinition? ContractDefinition { get; set; }
+        public ContractDefinition ContractDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentGroupId { get; set; }
-        public virtual DocumentGroup DocumentGroup { get; set; }
+        [ForeignKey("DocumentGroupId")]
+
+        public DocumentGroup DocumentGroup { get; set; } = default!;
         [Required]
         public ushort AtLeastRequiredDocument { get; set; }
         public bool Required { get; set; }

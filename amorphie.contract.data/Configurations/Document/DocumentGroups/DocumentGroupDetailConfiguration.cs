@@ -13,7 +13,10 @@ namespace amorphie.contract.data.Configurations.DocumentGroups
     {
         public void Configure(EntityTypeBuilder<DocumentGroupDetail> builder)
         {
-            // builder.HasKey(x => new { x.LanguageId,x.Id});
+             NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentDefinition",
+            });
         }
     }
 }

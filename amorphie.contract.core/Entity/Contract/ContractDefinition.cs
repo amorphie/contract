@@ -18,12 +18,15 @@ namespace amorphie.contract.core.Entity.Contract
     {
         [Required]
         public Guid StatusId { get; set; }
-        public virtual Status Status { get; set; }
-        public virtual ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
-        public virtual ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
-        public virtual ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();
-        public virtual ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
-        public virtual ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
+        [ForeignKey("StatusId")]
+
+        public Status Status { get; set; } = default!;
+
+        public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
+        public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
+        public ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();
+        public ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
+        public ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
 
     }
 }

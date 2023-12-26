@@ -11,7 +11,11 @@ namespace amorphie.contract.data.Configurations.Common
     {
         public void Configure(EntityTypeBuilder<Validation> builder)
         {
-
+            var list = new List<string>
+            {
+                "ValidationDecision",
+            };
+            NavigationBuilderAutoInclude(builder, list);
         }
     }
 }

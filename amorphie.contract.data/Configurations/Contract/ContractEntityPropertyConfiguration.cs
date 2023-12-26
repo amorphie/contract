@@ -12,7 +12,11 @@ namespace amorphie.contract.data.Configurations.Contract
         public void Configure(EntityTypeBuilder<ContractEntityProperty> builder)
         {
 
-
+            var list = new List<string>
+            {
+                "EntityProperty",
+            };
+            NavigationBuilderAutoInclude(builder, list);
         }
     }
 }

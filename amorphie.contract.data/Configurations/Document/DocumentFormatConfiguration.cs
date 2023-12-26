@@ -11,7 +11,11 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentFormat> builder)
         {
-            // builder.HasKey(x => new { x.Id,x.Document.Id});
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentFormatType",
+                "DocumentSize",
+            });
         }
     }
 }

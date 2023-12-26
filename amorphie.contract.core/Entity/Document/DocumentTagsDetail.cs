@@ -16,10 +16,16 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
+        [ForeignKey("DocumentDefinitionId")]
+
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
+
         [Required]
 
         public Guid TagId { get; set; }
-        public virtual Common.Tag Tags { get; set; }
+        [ForeignKey("TagId")]
+
+        public   Common.Tag Tags { get; set; } = default!;
 
     }
 }

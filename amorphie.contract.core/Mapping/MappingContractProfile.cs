@@ -72,9 +72,10 @@ namespace amorphie.contract.core.Mapping
         src.ContractDocumentDetails.Select(a => new ContractDocumentDetailView
         {
             UseExisting = ((EUseExisting)a.UseExisting).ToString(),
-            MinVersion = a.Semver,
+            MinVersion = a.DocumentDefinitionId.ToString(),
             Required = a.Required,
-            DocumentDefinitionCode = a.DocumentDefinitionCode
+            DocumentDefinitionCode = a.DocumentDefinitionId.ToString()
+            // TODO:    definitionId düzenle
             // DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
         }).ToList()))
     .ForMember(dest => dest.ContractDocumentGroupDetailLists, opt => opt.MapFrom(src =>

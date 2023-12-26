@@ -12,12 +12,11 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentOptimize", Schema = "Doc")]
     public class DocumentOptimize : AudiEntity
     {
-
-        [Required]
-        public Guid DocumentDefinitionId { get; set; }
         public bool Size { get; set; }
         [Required]
         public Guid DocumentOptimizeTypeId { get; set; }
-        public virtual DocumentOptimizeType DocumentOptimizeType { get; set; }
+        [ForeignKey("DocumentOptimizeTypeId")]
+        
+        public   DocumentOptimizeType DocumentOptimizeType { get; set; } = default!;
     }
 }

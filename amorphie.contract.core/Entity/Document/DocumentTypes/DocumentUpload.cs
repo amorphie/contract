@@ -12,8 +12,8 @@ namespace amorphie.contract.core.Entity.Document.DocumentTypes
     public class DocumentUpload : AudiEntity
     {
         public bool Required { get; set; }
-        public virtual ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; } = new List<DocumentFormatDetail>();
-        public virtual ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();
+        public   ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; } = new List<DocumentFormatDetail>();
+        public   ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();
 
     }
 }

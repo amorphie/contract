@@ -18,8 +18,11 @@ namespace amorphie.contract.core.Entity.Contract
         public string Reference { get; set; }
         public string Owner { get; set; }
         public string CallbackName { get; set; }
+
         public Guid ProcessId { get; set; }
-        public ContractProcess Process { get; set; }
+        [ForeignKey("ProcessId")]
+
+        public ContractProcess Process { get; set; } = default!;
     }
 
 }

@@ -13,6 +13,10 @@ namespace amorphie.contract.data.Configurations.Definition
         public void Configure(EntityTypeBuilder<DocumentDefinitionLanguageDetail> builder)
         {
             // builder.HasKey(x => new { x.LanguageId,x.Id});
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "MultiLanguage",
+            });
         }
     }
 }

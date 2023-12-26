@@ -11,7 +11,11 @@ namespace amorphie.contract.data.Configurations.Common
     {
         public void Configure(EntityTypeBuilder<MultiLanguage> builder)
         {
-
+            var list = new List<string>
+            {
+                "LanguageType",
+            };
+            NavigationBuilderAutoInclude(builder, list);
         }
     }
 }

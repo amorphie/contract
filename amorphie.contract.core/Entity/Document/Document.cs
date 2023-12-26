@@ -16,14 +16,22 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
-        public virtual DocumentDefinition DocumentDefinition { get; set; }
+        [ForeignKey("DocumentDefinitionId")]
+
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentContentId { get; set; }
-        public virtual DocumentContent DocumentContent { get; set; }
-        public virtual Status Status { get; set; }
+        [ForeignKey("DocumentContentId")]
+
+        public DocumentContent DocumentContent { get; set; } = default!;
+        [ForeignKey("StatusId")]
+
+        public Status Status { get; set; } = default!;
         [Required]
         public Guid StatusId { get; set; }
         public Guid CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        [ForeignKey("CustomerId")]
+
+        public Customer Customer { get; set; } = default!;
     }
 }

@@ -15,11 +15,11 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
 
-        public string ContentData { get; set; }
-        public string? KiloBytesSize { get; set; }
-        public string? ContentType { get; set; }
-        public string? ContentTransferEncoding { get; set; }
-        public string? Name { get; set; }
-        public string MinioObjectName { get; set; }
+        public string ContentData { get; set; } = default!;
+        public string KiloBytesSize { get; set; } = default!;
+        public string  ContentType { get; set; } = default!;
+        public string  ContentTransferEncoding { get; set; } = default!;
+        public string  Name { get; set; } = default!;
+        public string MinioObjectName { get; set; } = default!;
     }
 }

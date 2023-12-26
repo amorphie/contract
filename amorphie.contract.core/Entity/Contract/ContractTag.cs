@@ -14,11 +14,14 @@ namespace amorphie.contract.core.Entity.Contract
     public class ContractTag : AudiEntity
     {
         [Required]
-
         public Guid ContractDefinitionId { get; set; }
+        [ForeignKey("ContractDefinitionId")]
+        public ContractDefinition? ContractDefinition { get; set; } = default!;
         [Required]
         public Guid TagId { get; set; }
-        public virtual Common.Tag Tags { get; set; }
+        [ForeignKey("TagId")]
+
+        public Common.Tag Tags { get; set; } = default!;
 
     }
 }
