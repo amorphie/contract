@@ -267,8 +267,8 @@ namespace amorphie.contract.zeebe.Modules
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
                 core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
-                 
-                    document.Status = EStatus.Passive;
+
+                document.Status = EStatus.Passive;
                 dbContext.Document.Update(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");
@@ -302,8 +302,8 @@ namespace amorphie.contract.zeebe.Modules
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
                 core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
-                 
-                    document.Status = EStatus.Active;
+
+                document.Status = EStatus.Active;
                 dbContext.Document.Update(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");

@@ -11,7 +11,7 @@ namespace amorphie.contract.data.Configurations.Common
     // {
     //     public void Configure(EntityTypeBuilder<Status> builder)
     //     {
-            
+
     //     }
     // }
 }

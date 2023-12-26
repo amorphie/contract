@@ -4,6 +4,6 @@ using amorphie.contract.core.Entity.Common;
 //     {
 //         public StatusValidator()
 //         {
-          
+
 //         }
 //     }

@@ -23,7 +23,7 @@ namespace amorphie.contract.zeebe.Services
         {
             _ContractDefinition = new ContractDefinition();
             var activeStatus = EStatus.Active;
-             
+
             _ContractDefinition.Id = id;
             _ContractDefinition.Status = activeStatus;
             _ContractDefinition.Code = _ContractDefinitionDataModel.code;

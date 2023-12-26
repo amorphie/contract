@@ -59,9 +59,9 @@ namespace amorphie.contract.zeebe.Services
         private void SetDocumentGroupDefault(Guid id)
         {
             _documentGroup = new DocumentGroup();
-             
+
             _documentGroup.Id = id;
-            _documentGroup.Status= core.Enum.EStatus.Active;
+            _documentGroup.Status = core.Enum.EStatus.Active;
             _documentGroup.Code = _documentDefinitionDataModel.code;
 
         }

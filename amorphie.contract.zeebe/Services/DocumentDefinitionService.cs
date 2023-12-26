@@ -245,7 +245,7 @@ namespace amorphie.contract.zeebe.Services
             try
             {
                 DynamicToDocumentDefinitionDataModel();
-                
+
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
