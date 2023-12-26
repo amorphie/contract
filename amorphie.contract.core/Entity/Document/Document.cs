@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Common;
 using amorphie.core.Base;
 using NpgsqlTypes;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.core.Entity.Document
 {
@@ -24,11 +25,11 @@ namespace amorphie.contract.core.Entity.Document
         [ForeignKey("DocumentContentId")]
 
         public DocumentContent DocumentContent { get; set; } = default!;
-        [ForeignKey("StatusId")]
+        // [ForeignKey("StatusId")]
 
-        public Status Status { get; set; } = default!;
-        [Required]
-        public Guid StatusId { get; set; }
+        public EStatus Status { get; set; } = default!;
+        // [Required]
+        // public Guid StatusId { get; set; }
         public Guid CustomerId { get; set; }
         [ForeignKey("CustomerId")]
 

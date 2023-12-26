@@ -17,6 +17,7 @@ using amorphie.contract.core.Model;
 using amorphie.contract.core.Services;
 using amorphie.contract.core.Entity;
 using System.Buffers.Text;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -46,7 +47,7 @@ public class DocumentModule
 
             if (!string.IsNullOrEmpty(dataSearch.Keyword))
             {
-                query = query.Where(x => x.Status.Code == dataSearch.Keyword);
+                query = query.Where(x => x.Status.ToString() == dataSearch.Keyword);
                 // query = query.AsNoTracking().Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery("english", dataSearch.Keyword)));
             }
 
@@ -61,7 +62,7 @@ public class DocumentModule
                  {
                      Id = x.Id.ToString(),
                      DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                     StatuCode = x.Status.Code,
+                     StatuCode = x.Status.ToString(),
                      CreatedAt = x.CreatedAt,
                      DocumentDefinition = new DocumentDefinitionModel
                      {
@@ -127,7 +128,7 @@ public class DocumentModule
                  {
                      Id = x.Id.ToString(),
                      DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                     StatuCode = x.Status.Code,
+                     StatuCode = x.Status.ToString(),
                      CreatedAt = x.CreatedAt,
                      DocumentDefinition = new DocumentDefinitionModel
                      {
@@ -186,7 +187,6 @@ public class DocumentModule
                     [FromBody] DocumentInstanceModel data, [FromServices] IMinioService minioService)
     {
         var docdef = context.DocumentDefinition.FirstOrDefault(x => x.Code == data.DocumentCode && x.Semver == data.DocumentVersion);
-        var statusCompleted = context.Status.FirstOrDefault(x => x.Code == "completed");
         if (docdef == null)
         {
             return Results.NotFound("Document Code ve versiyona ait kayit bulunamadi!");
@@ -216,7 +216,7 @@ public class DocumentModule
         {
             Id = data.Id,
             DocumentDefinitionId = docdef.Id,
-            StatusId = statusCompleted.Id,
+            Status = EStatus.Completed,
             CustomerId = cus.Id,
             DocumentContent = new DocumentContent
             {
@@ -259,7 +259,7 @@ public class DocumentModule
              {
                  Id = x.Id.ToString(),
                  DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                 StatuCode = x.Status.Code,
+                 StatuCode = x.Status.ToString(),
                  CreatedAt = x.CreatedAt,
                  DocumentDefinition = new DocumentDefinitionModel
                  {

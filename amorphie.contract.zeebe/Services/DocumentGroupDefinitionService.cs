@@ -59,13 +59,9 @@ namespace amorphie.contract.zeebe.Services
         private void SetDocumentGroupDefault(Guid id)
         {
             _documentGroup = new DocumentGroup();
-            var activeStatus = _dbContext.Status.FirstOrDefault(x => x.Code == "active");
-            if (activeStatus == null)
-            {
-                activeStatus = new Status { Code = "active" };
-            }
+
             _documentGroup.Id = id;
-            _documentGroup.StatusId = activeStatus.Id;
+            _documentGroup.Status = core.Enum.EStatus.Active;
             _documentGroup.Code = _documentDefinitionDataModel.code;
 
         }

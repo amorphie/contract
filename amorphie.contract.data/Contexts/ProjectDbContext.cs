@@ -71,7 +71,7 @@ public class ProjectDbContext : DbContext
     public DbSet<Tag> Tag { get; set; }
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
-    public DbSet<Status> Status { get; set; }
+    // public DbSet<Status> Status { get; set; }
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
     public DbSet<TemplateRender> TemplateRender { get; set; }
@@ -137,6 +137,19 @@ public class ProjectDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
     }
+    // public override int SaveChanges()
+    // {
+    //     if (ChangeTracker.Entries(). == EntityState.Deleted{
+    //     DefaultValues();
 
+    //     }
+    //     return base.SaveChanges();
+    // }
+
+    // public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    // {
+    //     DefaultValues();
+    //     return base.SaveChangesAsync(cancellationToken);
+    // }
 
 }

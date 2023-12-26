@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace amorphie.contract.core.Entity.Common
 {
-    [Table("Status", Schema = "Common")]
-    public class Status : BaseEntity
-    {
+    // [Table("Status", Schema = "Common")]
+    // public class Status : BaseEntity
+    // {
 
-    }
+    // }
 }
