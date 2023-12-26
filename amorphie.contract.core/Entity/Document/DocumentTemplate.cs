@@ -14,8 +14,10 @@ namespace amorphie.contract.core.Entity.Document
         public string Code { get; set; }
         [Required]
         public Guid LanguageTypeId { get; set; }
-        public virtual LanguageType LanguageType { get; set; }
-        public string Version { get; set; }
+        [ForeignKey("LanguageTypeId")]
+
+        public LanguageType LanguageType { get; set; } = default!;
+        public string Version { get; set; } = default!;
 
     }
 }

@@ -10,27 +10,41 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentDefinition : BaseEntity
     {
 
-        public virtual Status Status { get; set; }
-        [Required]
         public Guid StatusId { get; set; }
-        public virtual Status BaseStatus { get; set; }
-        [Required]
+
+        [ForeignKey("StatusId")]
+
+        public Status Status { get; set; } = default!;
         public Guid BaseStatusId { get; set; }
-        public virtual ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
-        public virtual ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
-        public virtual ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
+
+        [Required]
+        [ForeignKey("BaseStatusId")]
+
+        public Status BaseStatus { get; set; } = default!;
+        [Required]
+        public ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
+        public ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
+        public ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 
         #region documentType
-        public virtual Guid? DocumentUploadId { get; set; }
-        public virtual DocumentUpload? DocumentUpload { get; set; }
-        public virtual Guid? DocumentOnlineSingId { get; set; }
-        public virtual DocumentOnlineSing? DocumentOnlineSing { get; set; }
+        public Guid? DocumentUploadId { get; set; }
+        [ForeignKey("DocumentUploadId")]
 
+        public DocumentUpload? DocumentUpload { get; set; }
+        public Guid? DocumentOnlineSingId { get; set; }
+        [ForeignKey("DocumentOnlineSingId")]
+
+        public DocumentOnlineSing? DocumentOnlineSing { get; set; }
 
         #endregion
-        public virtual DocumentOptimize? DocumentOptimize { get; set; }
-        public virtual DocumentOperations? DocumentOperations { get; set; }
-        public string Semver { get; set; }
+        public Guid? DocumentOptimizeId { get; set; }
+        [ForeignKey("DocumentOptimizeId")]
+        public DocumentOptimize? DocumentOptimize { get; set; }
+        public Guid? DocumentOperationId { get; set; }
+        [ForeignKey("DocumentOperationId")]
+        public DocumentOperations? DocumentOperations { get; set; }
+        [Required]
+        public string Semver { get; set; } = default!;
 
         public override string ToString()
         {

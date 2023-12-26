@@ -17,10 +17,12 @@ namespace amorphie.contract.core.Entity.EAV
     public class EntityProperty : BaseEntity
     {
         [Required]
-        public ushort EEntityPropertyType { get; set; }
+        public EEntityPropertyType EEntityPropertyType { get; set; }
         [Required]
         public Guid EntityPropertyValueId { get; set; }
-        public virtual EntityPropertyValue EntityPropertyValue { get; set; }
+        [ForeignKey("EntityPropertyValueId")]
+
+        public EntityPropertyValue EntityPropertyValue { get; set; } = default!;
 
     }
 }

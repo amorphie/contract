@@ -13,7 +13,7 @@ namespace amorphie.contract.core.Entity.Base
     {
         [MaxLength(1000)]
         [Required]
-        public string Code { get; set; }
+        public string Code { get; set; } = default!;
 
     }
     public class AudiEntity : EntityBase

@@ -12,7 +12,12 @@ namespace amorphie.contract.data.Configurations.Document.DocumentTypes
     {
         public void Configure(EntityTypeBuilder<DocumentOnlineSing> builder)
         {
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentAllowedClientDetails",
+                "DocumentTemplateDetails",
 
+            });
 
         }
     }

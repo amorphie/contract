@@ -14,12 +14,14 @@ namespace amorphie.contract.core.Entity.Contract
     public class ContractValidation : AudiEntity
     {
         [Required]
-
-
         public Guid ContractDefinitionId { get; set; }
+        [ForeignKey("ContractDefinitionId")]
+        public ContractDefinition ContractDefinition { get; set; } = default!;
         [Required]
         public Guid ValidationId { get; set; }
-        public virtual Common.Validation Validations { get; set; }
+        [ForeignKey("ValidationId")]
+
+        public Common.Validation Validations { get; set; } = default!;
 
     }
 }

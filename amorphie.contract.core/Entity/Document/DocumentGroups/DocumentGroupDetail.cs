@@ -14,13 +14,15 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     public class DocumentGroupDetail : AudiEntity
     {
         [Required]
-        // [ForeignKey(nameof(DocumentDefinitionCode))]
-        public string DocumentDefinitionCode { get; set; }
-        // public virtual DocumentDefinition DocumentDefinition { get; set; }
-        public string MinVersion { get; set; }
+        public Guid DocumentDefinitionId { get; set; }
+        [ForeignKey("DocumentDefinitionId")]
+
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentGroupId { get; set; }
-        // public DocumentGroup DocumentGroup { get; set; }
+        [ForeignKey("DocumentGroupId")]
+
+        public DocumentGroup DocumentGroup { get; set; } = default!;
 
     }
 }

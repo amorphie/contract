@@ -18,13 +18,17 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     {
         [Required]
         public Guid MultiLanguageId { get; set; }
-        public virtual MultiLanguage MultiLanguage { get; set; }
+        [ForeignKey("MultiLanguageId")]
+
+        public MultiLanguage MultiLanguage { get; set; } = default!;
 
         [Required]
 
 
         public Guid DocumentGroupId { get; set; }
-        // public DocumentGroup DocumentGroup { get; set; }
+        [ForeignKey("DocumentGroupId")]
+
+        public DocumentGroup DocumentGroup { get; set; } = default!;
 
     }
 }

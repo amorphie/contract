@@ -11,8 +11,11 @@ namespace amorphie.contract.data.Configurations.Contract
     {
         public void Configure(EntityTypeBuilder<ContractDocumentDetail> builder)
         {
-
-
+            var list = new List<string>
+            {
+                "DocumentDefinition",
+            };
+            NavigationBuilderAutoInclude(builder, list);
 
         }
     }

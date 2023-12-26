@@ -16,7 +16,9 @@ namespace amorphie.contract.core.Entity.Common
         public string Code { get; set; }//özel durum farkındaysan baseentityden türemiyor
         [Required]
         public Guid LanguageTypeId { get; set; }
-        public virtual LanguageType LanguageType { get; set; }
+        [ForeignKey("LanguageTypeId")]
+
+        public LanguageType LanguageType { get; set; } = default!;
 
 
     }

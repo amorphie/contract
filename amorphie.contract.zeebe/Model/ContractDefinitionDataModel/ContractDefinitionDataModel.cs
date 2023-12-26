@@ -23,6 +23,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
 
     public class Name
     {
+        public Guid Id { get; set; }
         public string code { get; set; }
         public List<string> semverList { get; set; }
         public Title title { get; set; }

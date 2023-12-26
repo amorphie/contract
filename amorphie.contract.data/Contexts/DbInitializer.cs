@@ -6,6 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.data.Extensions;
+using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Model.Contract;
+using amorphie.contract.core.Entity.Common;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 
 namespace amorphie.contract.data.Contexts
 {
@@ -13,6 +18,86 @@ namespace amorphie.contract.data.Contexts
     {
         public static void Initialize(ProjectDbContext context)
         {
+            // try
+            // {
+
+            //     var s = new Status();
+            //     s.Code = "active";
+            //     context.Status.Add(s);
+            //     context.SaveChanges();
+            //     var def = new DocumentDefinition();
+            //     def.Code = "test";
+            //     def.StatusId = s.Id;
+            //     def.Semver = "1.0.0";
+            //     def.BaseStatusId = s.Id;
+
+            //     var def2 = new DocumentDefinition();
+            //     def2.Semver = "1.0.0";
+            //     def2.Code = "test2";
+            //     def2.StatusId = s.Id;
+            //     def2.BaseStatusId = s.Id;
+            //     context.DocumentDefinition.Add(def);
+            //     context.DocumentDefinition.Add(def2);
+            //     context.SaveChanges();
+            //     var cont = new ContractDefinition();
+            //     cont.Code = "test";
+            //     cont.StatusId = s.Id;
+            //     var co = new ContractDocumentDetail
+            //     {
+            //         ContractDefinitionId = cont.Id,
+            //         DocumentDefinitionId = def.Id,
+            //         Required = false,
+            //         UseExisting = 0
+            //     };
+            //     var co2 = new ContractDocumentDetail
+            //     {
+            //         ContractDefinitionId = cont.Id,
+            //         DocumentDefinitionId = def2.Id,
+            //         Required = false,
+            //         UseExisting = 0
+            //     };
+            //     var a = new List<ContractDocumentDetail>
+            // {
+            //     co,
+            //     co2
+            // };
+
+            //     cont.ContractDocumentDetails = a;
+            //     context.ContractDefinition.Add(cont);
+            //     context.SaveChanges();
+            // }
+            // catch (Exception e)
+            // {
+            //     var a = e;
+            // }
+
+            // var query = context.ContractDefinition
+
+            // .FirstOrDefault(x => x.Code == "test");
+
+            // if (query != null)
+            // {
+            //     // var documentdeflist = context.DocumentDefinition
+            //     //     .Where(x => query.ContractDocumentDetails
+            //     //         .Any(a => a.DocumentDefinitionId == x.Id))
+            //     //     .ToList();
+            //     var documentdeflist =  query.ContractDocumentDetails.Select(document=>new DocumentModel
+            //             {
+
+            //                 Code = document.DocumentDefinition.Code,
+            //                 Status = "not-started",
+            //                 Required = document.Required,
+            //                 Render = document.DocumentDefinition.DocumentOnlineSing != null,
+            //                 Version = document.DocumentDefinition.Semver,
+            //                 // UseExisting = document.UseExisting
+
+            //             }).ToList();
+            //     ContractModel contractModel = new ContractModel();
+            //     // contractModel.Id = query.Id;
+            //     contractModel.Status = "in-progress";
+            //     contractModel.Document = documentdeflist;
+            // }
+
             // context.Database.EnsureCreated();
             // context.SaveChanges();
 
@@ -31,7 +116,7 @@ namespace amorphie.contract.data.Contexts
             //     context.DocumentType.Add(new core.Entity.Document.DocumentType { Name = "xlsx", ContentType = "application/xlsx" });
             //     var c = context.SaveChanges();
             // }
-            
+
             // if (!context.LanguageType.Any())
             // {
             //     var tr = context.LanguageType.Add(new core.Entity.Common.LanguageType { Name = "TR" }).Entity.Id;

@@ -17,9 +17,11 @@ namespace amorphie.contract.core.Entity.Common
     public class Validation : AudiEntity
     {
         [Required]
-        public ushort EValidationType { get; set; }// all-valid
+        public EValidationType EValidationType { get; set; }// all-valid
         public Guid? ValidationDecisionId { get; set; }
-        public virtual ValidationDecision? ValidationDecision { get; set; }
+        [ForeignKey("ValidationDecisionId")]
+
+        public ValidationDecision ValidationDecision { get; set; } = default!;
 
     }
 }

@@ -1,8 +1,9 @@
 
 
- dotnet ef --startup-project "../amorphie.contract/amorphie.contract.csproj" migrations add ContractMigrationsV5 --context ProjectDbContext --output-dir Migrations/Pg
+ dotnet ef --startup-project "../amorphie.contract/amorphie.contract.csproj" migrations add ContractMigrationsv1 --context ProjectDbContext --output-dir Migrations/Pg
 
  
 dotnet ef database update --startup-project "../amorphie.contract/amorphie.contract.csproj"  --context ProjectDbContext
 
+dotnet ef database update ContractMigrationsV5 --startup-project "../amorphie.contract/amorphie.contract.csproj"  --context ProjectDbContext
  

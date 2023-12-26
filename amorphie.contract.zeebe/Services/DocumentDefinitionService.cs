@@ -62,7 +62,7 @@ namespace amorphie.contract.zeebe.Services
                         Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
                     },
                     Size = _documentDefinitionDataModel.data.Size,
-                    DocumentDefinitionId = _documentdef.Id
+                    // DocumentDefinitionId = _documentdef.Id
                 };
             }
         }
@@ -78,7 +78,7 @@ namespace amorphie.contract.zeebe.Services
             _documentdef.DocumentOperations =
                         new DocumentOperations
                         {
-                            DocumentDefinitionId = _documentdef.Id,
+                            // DocumentDefinitionId = _documentdef.Id,
                             DocumentManuelControl = manuelControl,
                             DocumentOperationsTagsDetail = list2
                         };

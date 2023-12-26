@@ -11,7 +11,10 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentAllowedClientDetail> builder)
         {
-
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentAllowedClients",
+            });
 
         }
     }

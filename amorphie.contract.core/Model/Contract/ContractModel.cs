@@ -68,6 +68,7 @@ namespace amorphie.contract.core.Model.Contract
     public class ContractModel
     {
         public Guid Id { get; set; }
+        public string Code { get; set; }
         public string Status { get; set; }
         public List<DocumentModel> Document { get; set; }
         //public List<DocumentGroupModel> DocumentGroups { get; set; }

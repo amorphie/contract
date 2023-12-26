@@ -11,7 +11,11 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentTemplateDetail> builder)
         {
-            // builder.HasKey(x => new { x.DocumentDefinition.Id});
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentTemplate",
+            });
+
 
         }
     }

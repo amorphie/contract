@@ -12,7 +12,10 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentTagsDetail> builder)
         {
-            // builder.HasKey(x => new { x.LanguageId,x.Id});
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "Tags",
+            });
         }
     }
 }

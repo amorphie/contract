@@ -16,7 +16,18 @@ namespace amorphie.contract.data.Configurations
 
             builder.HasKey(x => x.Id);
             builder.HasIndex(e => e.Code).IsUnique();
-            var entitypropNavigationList = builder.Metadata.GetNavigations();
+            // builder.Property(c => c.Id).HasColumnName($"{typeof(TEntity).Name}Id");
+            //
+            // var entitypropNavigationList = builder.Metadata.GetNavigations();
+            // foreach (var entitypropNavigation in entitypropNavigationList)
+            // {
+            //     var navigationBuilder = new NavigationBuilder(entitypropNavigation);
+            //     navigationBuilder.AutoInclude();
+            // }
+        }
+        public void NavigationBuilderAutoInclude(EntityTypeBuilder<TEntity> builder, List<string> list)
+        {
+            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.ToString()));
             foreach (var entitypropNavigation in entitypropNavigationList)
             {
                 var navigationBuilder = new NavigationBuilder(entitypropNavigation);
@@ -24,13 +35,25 @@ namespace amorphie.contract.data.Configurations
             }
         }
     }
+
     public class ConfigurationBaseAudiEntity<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : AudiEntity
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
 
             builder.HasKey(x => x.Id);
-            var entitypropNavigationList = builder.Metadata.GetNavigations();
+            // builder.Property(c => c.Id).HasColumnName($"{typeof(TEntity).Name}Id");
+            //
+            // var entitypropNavigationList = builder.Metadata.GetNavigations();
+            // foreach (var entitypropNavigation in entitypropNavigationList)
+            // {
+            //     var navigationBuilder = new NavigationBuilder(entitypropNavigation);
+            //     navigationBuilder.AutoInclude();
+            // }
+        }
+        public void NavigationBuilderAutoInclude(EntityTypeBuilder<TEntity> builder, List<string> list)
+        {
+            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.ToString()));
             foreach (var entitypropNavigation in entitypropNavigationList)
             {
                 var navigationBuilder = new NavigationBuilder(entitypropNavigation);

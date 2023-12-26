@@ -11,6 +11,11 @@ namespace amorphie.contract.data.Configurations
     {
         public CustomerConfiguration(EntityTypeBuilder<Customer> builder)
         {
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentList",
+            });
+
         }
     }
 }

@@ -9,11 +9,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.data.Configurations.DocumentGroups
 {
-     public class DocumentGroupConfiguration : ConfigurationBase<DocumentGroup>
+    public class DocumentGroupConfiguration : ConfigurationBase<DocumentGroup>
     {
         public void Configure(EntityTypeBuilder<DocumentGroup> builder)
         {
-             
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "DocumentGroupDetails",
+                "DocumentGroupLanguageDetail",
+                "Status",
+            });
         }
     }
 }

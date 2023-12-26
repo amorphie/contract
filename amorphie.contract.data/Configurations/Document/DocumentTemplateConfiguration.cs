@@ -11,7 +11,10 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentTemplate> builder)
         {
-
+            NavigationBuilderAutoInclude(builder, new List<string>
+            {
+                "LanguageType",
+            });
         }
     }
 }
