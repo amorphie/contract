@@ -23,7 +23,7 @@ namespace amorphie.contract.core.Entity.Document
         public Guid EntityPropertyId { get; set; }
         [ForeignKey("EntityPropertyId")]
 
-        public   EntityProperty EntityProperty { get; set; } = default!;
+        public EntityProperty EntityProperty { get; set; } = default!;
 
     }
 }

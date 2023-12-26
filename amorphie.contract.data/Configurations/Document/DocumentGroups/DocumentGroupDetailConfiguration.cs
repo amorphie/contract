@@ -13,7 +13,7 @@ namespace amorphie.contract.data.Configurations.DocumentGroups
     {
         public void Configure(EntityTypeBuilder<DocumentGroupDetail> builder)
         {
-             NavigationBuilderAutoInclude(builder, new List<string>
+            NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "DocumentDefinition",
             });

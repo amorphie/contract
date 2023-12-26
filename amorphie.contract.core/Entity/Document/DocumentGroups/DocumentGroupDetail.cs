@@ -17,12 +17,12 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
         public Guid DocumentDefinitionId { get; set; }
         [ForeignKey("DocumentDefinitionId")]
 
-        public   DocumentDefinition DocumentDefinition { get; set; } = default!;
+        public DocumentDefinition DocumentDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentGroupId { get; set; }
         [ForeignKey("DocumentGroupId")]
 
-        public   DocumentGroup DocumentGroup { get; set; } = default!;
+        public DocumentGroup DocumentGroup { get; set; } = default!;
 
     }
 }

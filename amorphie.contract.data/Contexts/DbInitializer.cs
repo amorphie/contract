@@ -72,7 +72,7 @@ namespace amorphie.contract.data.Contexts
             // }
 
             // var query = context.ContractDefinition
-           
+
             // .FirstOrDefault(x => x.Code == "test");
 
             // if (query != null)

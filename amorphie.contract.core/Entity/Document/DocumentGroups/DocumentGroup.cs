@@ -17,12 +17,12 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     public class DocumentGroup : BaseEntity
     {
 
-        // [Required]
-        // public Guid StatusId { get; set; }
-        // [ForeignKey("StatusId")]
-        public EStatus Status { get; set; } = default!;
-        public ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
-        public ICollection<DocumentGroupLanguageDetail> DocumentGroupLanguageDetail { get; set; } = new List<DocumentGroupLanguageDetail>();
+        [Required]
+        public Guid StatusId { get; set; }
+        [ForeignKey("StatusId")]
+        public   EStatus Status { get; set; } = default!;
+        public   ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
+        public   ICollection<DocumentGroupLanguageDetail> DocumentGroupLanguageDetail { get; set; } = new List<DocumentGroupLanguageDetail>();
 
     }
 }

@@ -22,7 +22,7 @@ namespace amorphie.contract.core.Entity.Document
         public Guid DocumentFormatId { get; set; }
         [ForeignKey("DocumentFormatId")]
 
-        public   DocumentFormat DocumentFormat { get; set; } = default!;
+        public DocumentFormat DocumentFormat { get; set; } = default!;
 
     }
 }

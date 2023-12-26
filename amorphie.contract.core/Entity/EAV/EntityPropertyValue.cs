@@ -13,6 +13,6 @@ namespace amorphie.contract.core.Entity.EAV
     public class EntityPropertyValue : AudiEntity
     {
         [Required]
-        public string Data { get; set; }= default!;
+        public string Data { get; set; } = default!;
     }
 }

@@ -12,13 +12,13 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public Guid DocumentDefinitionId { get; set; }
         [ForeignKey("DocumentDefinitionId")]
-        
+
         public DocumentDefinition DocumentDefinition { get; set; } = default!;
         [Required]
         public Guid DocumentTemplateId { get; set; }
         [ForeignKey("DocumentTemplateId")]
 
 
-        public   DocumentTemplate DocumentTemplate { get; set; } = default!;
+        public DocumentTemplate DocumentTemplate { get; set; } = default!;
     }
 }

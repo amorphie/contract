@@ -15,7 +15,7 @@ namespace amorphie.contract.data.Configurations
             {
                 "DocumentList",
             });
-            
+
         }
     }
 }

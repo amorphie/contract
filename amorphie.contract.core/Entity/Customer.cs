@@ -12,7 +12,7 @@ namespace amorphie.contract.core.Entity
     {
         public string? Owner { get; set; }
         public string? Reference { get; set; }
-        public   ICollection<Document.Document>? DocumentList { get; set; } = new List<Document.Document>();
+        public ICollection<Document.Document>? DocumentList { get; set; } = new List<Document.Document>();
 
     }
 }

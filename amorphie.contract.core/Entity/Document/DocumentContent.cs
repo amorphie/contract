@@ -17,9 +17,9 @@ namespace amorphie.contract.core.Entity.Document
 
         public string ContentData { get; set; } = default!;
         public string KiloBytesSize { get; set; } = default!;
-        public string  ContentType { get; set; } = default!;
-        public string  ContentTransferEncoding { get; set; } = default!;
-        public string  Name { get; set; } = default!;
+        public string ContentType { get; set; } = default!;
+        public string ContentTransferEncoding { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string MinioObjectName { get; set; } = default!;
     }
 }
