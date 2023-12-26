@@ -13,7 +13,7 @@ namespace amorphie.contract.data.Configurations.DocumentGroups
     {
         public void Configure(EntityTypeBuilder<DocumentGroupLanguageDetail> builder)
         {
-             NavigationBuilderAutoInclude(builder, new List<string>
+            NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "MultiLanguage",
             });

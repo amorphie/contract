@@ -12,7 +12,7 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentOptimize> builder)
         {
-             NavigationBuilderAutoInclude(builder, new List<string>
+            NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "DocumentOptimizeType",
             });

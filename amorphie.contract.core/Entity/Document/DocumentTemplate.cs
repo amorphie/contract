@@ -16,7 +16,7 @@ namespace amorphie.contract.core.Entity.Document
         public Guid LanguageTypeId { get; set; }
         [ForeignKey("LanguageTypeId")]
 
-        public   LanguageType LanguageType { get; set; } = default!;
+        public LanguageType LanguageType { get; set; } = default!;
         public string Version { get; set; } = default!;
 
     }

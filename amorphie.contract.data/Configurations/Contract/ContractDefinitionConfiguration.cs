@@ -19,7 +19,7 @@ namespace amorphie.contract.data.Configurations.Contract
                 "ContractEntityProperty",
                 "ContractValidations",
             };
-            NavigationBuilderAutoInclude(builder,list);
+            NavigationBuilderAutoInclude(builder, list);
         }
     }
 }

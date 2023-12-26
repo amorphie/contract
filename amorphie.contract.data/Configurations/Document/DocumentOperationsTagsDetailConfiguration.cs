@@ -11,7 +11,7 @@ namespace amorphie.contract.data.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentOperationsTagsDetail> builder)
         {
-             NavigationBuilderAutoInclude(builder, new List<string>
+            NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "DocumentOperations",
                 "Tags",

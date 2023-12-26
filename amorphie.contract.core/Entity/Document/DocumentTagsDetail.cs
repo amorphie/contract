@@ -25,7 +25,7 @@ namespace amorphie.contract.core.Entity.Document
         public Guid TagId { get; set; }
         [ForeignKey("TagId")]
 
-        public   Common.Tag Tags { get; set; } = default!;
+        public Common.Tag Tags { get; set; } = default!;
 
     }
 }

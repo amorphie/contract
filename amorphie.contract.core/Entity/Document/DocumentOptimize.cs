@@ -16,7 +16,7 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public Guid DocumentOptimizeTypeId { get; set; }
         [ForeignKey("DocumentOptimizeTypeId")]
-        
-        public   DocumentOptimizeType DocumentOptimizeType { get; set; } = default!;
+
+        public DocumentOptimizeType DocumentOptimizeType { get; set; } = default!;
     }
 }

@@ -16,7 +16,7 @@ namespace amorphie.contract.data.Configurations.Document.DocumentTypes
             {
                 "DocumentAllowedClientDetails",
                 "DocumentTemplateDetails",
-                
+
             });
 
         }

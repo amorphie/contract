@@ -15,7 +15,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentOperations : AudiEntity
     {
         public bool DocumentManuelControl { get; set; }
-        public   ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();
+        public ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();
         // [Required]
         // public Guid TagId { get; set; }
         // public Tag Tags {get;set;}

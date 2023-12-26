@@ -20,6 +20,6 @@ namespace amorphie.contract.core.Entity.Document
         public Guid DocumentAllowedClientId { get; set; }
         [ForeignKey("DocumentAllowedClientId")]
 
-        public   DocumentAllowedClient DocumentAllowedClients { get; set; } = default!;
+        public DocumentAllowedClient DocumentAllowedClients { get; set; } = default!;
     }
 }

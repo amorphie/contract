@@ -32,7 +32,7 @@ namespace amorphie.contract.data.Configurations.Definition
                 "DocumentOnlineSing",
                 "DocumentOptimize",
                 "DocumentOperations",
-                
+
             });
         }
 

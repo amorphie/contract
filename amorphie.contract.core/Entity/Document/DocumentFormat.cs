@@ -16,11 +16,11 @@ namespace amorphie.contract.core.Entity.Document
         public Guid DocumentFormatTypeId { get; set; }
         [ForeignKey("DocumentFormatTypeId")]
 
-        public   DocumentFormatType DocumentFormatType { get; set; } = default!;
+        public DocumentFormatType DocumentFormatType { get; set; } = default!;
         [Required]
         public Guid DocumentSizeId { get; set; }
         [ForeignKey("DocumentSizeId")]
 
-        public   DocumentSize DocumentSize { get; set; } = default!;
+        public DocumentSize DocumentSize { get; set; } = default!;
     }
 }
