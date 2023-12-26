@@ -31,19 +31,19 @@ namespace amorphie.contract.core.Entity.Document
         public Guid? DocumentUploadId { get; set; }
         [ForeignKey("DocumentUploadId")]
 
-        public DocumentUpload? DocumentUpload { get; set; }
+        public DocumentUpload? DocumentUpload { get; set; }= default!;
         public Guid? DocumentOnlineSingId { get; set; }
         [ForeignKey("DocumentOnlineSingId")]
 
-        public DocumentOnlineSing? DocumentOnlineSing { get; set; }
+        public DocumentOnlineSing? DocumentOnlineSing { get; set; }= default!;
 
         #endregion
         public Guid? DocumentOptimizeId { get; set; }
         [ForeignKey("DocumentOptimizeId")]
-        public DocumentOptimize? DocumentOptimize { get; set; }
+        public DocumentOptimize? DocumentOptimize { get; set; }= default!;
         public Guid? DocumentOperationId { get; set; }
         [ForeignKey("DocumentOperationId")]
-        public DocumentOperations? DocumentOperations { get; set; }
+        public DocumentOperations? DocumentOperations { get; set; }= default!;
         [Required]
         public string Semver { get; set; } = default!;
 

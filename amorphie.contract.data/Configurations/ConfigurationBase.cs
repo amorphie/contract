@@ -11,6 +11,8 @@ namespace amorphie.contract.data.Configurations
 {
     public class ConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
     {
+
+
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
 
@@ -24,12 +26,14 @@ namespace amorphie.contract.data.Configurations
             //     var navigationBuilder = new NavigationBuilder(entitypropNavigation);
             //     navigationBuilder.AutoInclude();
             // }
+
         }
         public void NavigationBuilderAutoInclude(EntityTypeBuilder<TEntity> builder, List<string> list)
         {
-            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.ToString()));
+            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.Name));
             foreach (var entitypropNavigation in entitypropNavigationList)
             {
+
                 var navigationBuilder = new NavigationBuilder(entitypropNavigation);
                 navigationBuilder.AutoInclude();
             }
@@ -50,15 +54,18 @@ namespace amorphie.contract.data.Configurations
             //     var navigationBuilder = new NavigationBuilder(entitypropNavigation);
             //     navigationBuilder.AutoInclude();
             // }
+
         }
         public void NavigationBuilderAutoInclude(EntityTypeBuilder<TEntity> builder, List<string> list)
         {
-            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.ToString()));
+            var entitypropNavigationList = builder.Metadata.GetNavigations().Where(x => list.Contains(x.Name));
+
             foreach (var entitypropNavigation in entitypropNavigationList)
             {
                 var navigationBuilder = new NavigationBuilder(entitypropNavigation);
                 navigationBuilder.AutoInclude();
             }
+
         }
     }
 }

@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentEntityPropertyConfiguration : ConfigurationBaseAudiEntity<DocumentEntityProperty>
+    public class DocumentEntityPropertyConfiguration : ConfigurationBaseAudiEntity<DocumentEntityProperty>,
+         IEntityTypeConfiguration<DocumentEntityProperty>
+
     {
         public void Configure(EntityTypeBuilder<DocumentEntityProperty> builder)
         {

@@ -98,10 +98,11 @@ public class DocumentDefinitionModule
             {
                 language = "en-EN";
             }
-            var list = await context!.DocumentDefinition!.Select(x =>
-            ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).Skip(page * pageSize)
-                .Take(pageSize).ToListAsync(token);
-            foreach (var documentDefinitionViewModel in list)
+            var list =  await context.DocumentDefinition.OrderBy(x => x.Code).Skip(page * pageSize)
+                .Take(pageSize).AsNoTracking().ToListAsync(token);
+            var c = list.Select(x =>
+         ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).ToList();
+            foreach (var documentDefinitionViewModel in c)
             {
                 var selectedLanguageText = documentDefinitionViewModel?.MultilanguageText
                     .FirstOrDefault(t => t.Language == language);
@@ -115,7 +116,7 @@ public class DocumentDefinitionModule
                     documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
                 }
             }
-            return Results.Ok(list);
+            return Results.Ok(c);
 
         }
         catch (Exception ex)

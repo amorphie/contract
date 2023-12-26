@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Contract
 {
-    public class ContractDocumentGroupDetailConfiguration : ConfigurationBaseAudiEntity<ContractDocumentGroupDetail>
+    public class ContractDocumentGroupDetailConfiguration : ConfigurationBaseAudiEntity<ContractDocumentGroupDetail>,
+     IEntityTypeConfiguration<ContractDocumentGroupDetail>
+
     {
         public void Configure(EntityTypeBuilder<ContractDocumentGroupDetail> builder)
         {

@@ -37,17 +37,17 @@ public class ContractModule
     [FromBody] Contract data,
   [FromHeader(Name = "Language")] string? language = "en-EN")
     {
-        //     var query = context!.ContractDefinition.FirstOrDefault(x => x.Code == data.ContractName);
-        //     if (query == null)
-        //     {
-        //         return Results.Ok(new { status = "not contract" });
-        //     }
+            var query = context!.ContractDefinition.FirstOrDefault(x => x.Code == data.ContractName);
+            if (query == null)
+            {
+                return Results.Ok(new { status = "not contract" });
+            }
         ContractModel contractModel = new ContractModel();
         // contractModel.Id = query.Id;
         contractModel.Status = "in-progress";
-        //     var documentList = query.ContractDocumentDetails.
-        //                         Select(x => new { x.DocumentDefinitionId})
-        //                         .ToList();
+            var documentList = query.ContractDocumentDetails.
+                                Select(x => new { x.DocumentDefinitionId})
+                                .ToList();
 
         //     var oldCreateDocument = context.Document?.Any(x => x.Customer.Reference == data.Reference);
 

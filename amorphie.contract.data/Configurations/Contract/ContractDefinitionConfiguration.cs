@@ -7,11 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Contract
 {
-    public class ContractDefinitionConfiguration : ConfigurationBase<ContractDefinition>
+    public class ContractDefinitionConfiguration : ConfigurationBase<ContractDefinition>,
+     IEntityTypeConfiguration<ContractDefinition>
     {
-        public void Configure(EntityTypeBuilder<ContractDefinition> builder)
+        public virtual void  Configure(EntityTypeBuilder<ContractDefinition> builder)
         {
-            var list = new List<string>
+           var list = new List<string>
             {
                 "ContractDocumentDetails",
                 "ContractDocumentGroupDetails",
