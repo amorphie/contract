@@ -55,7 +55,7 @@ namespace amorphie.contract.core.Mapping
             //         }).ToList():null
             //     });
             CreateMap<ContractDefinition, ContractDefinitionViewModel>()
-    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.Code : null))
+    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.ToString() : null))
     .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
         src.ContractTags.Select(a => new TagsView
         {

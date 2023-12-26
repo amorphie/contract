@@ -245,11 +245,7 @@ namespace amorphie.contract.zeebe.Services
             try
             {
                 DynamicToDocumentDefinitionDataModel();
-                var onHoldStatus = _dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
-                if (onHoldStatus == null)
-                {
-                    onHoldStatus = new Status { Code = "on-hold" };
-                }
+                
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
@@ -262,8 +258,8 @@ namespace amorphie.contract.zeebe.Services
                     {
                         Id = id,
                         Code = _documentDefinitionDataModel.data.Code,
-                        Status = onHoldStatus,
-                        BaseStatus = onHoldStatus,
+                        Status = EStatus.OnHold,
+                        BaseStatus = EStatus.OnHold,
                         Semver = _documentDefinitionDataModel.data.versiyon
 
                     };

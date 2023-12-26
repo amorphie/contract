@@ -20,6 +20,7 @@ using Google.Protobuf;
 using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Newtonsoft.Json;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -134,9 +135,9 @@ namespace amorphie.contract.zeebe.Modules
                 };
 
                 var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
-                var status = dbContext.Status.FirstOrDefault(x => x.Code == "on-hold");
+                var status = EStatus.OnHold;
                 if (status != null)
-                    document.StatusId = status.Id;
+                    document.Status = status;
 
                 Guid documentDefinitionId = ZeebeMessageHelper.StringToGuid(documentDefinitionIdString);
 
@@ -266,9 +267,8 @@ namespace amorphie.contract.zeebe.Modules
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
                 core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
-                var completed = dbContext.Status.FirstOrDefault(x => x.Code == "passive");
-                if (completed != null)
-                    document.StatusId = completed.Id;
+                 
+                    document.Status = EStatus.Passive;
                 dbContext.Document.Update(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");
@@ -302,9 +302,8 @@ namespace amorphie.contract.zeebe.Modules
             {
                 messageVariables = ZeebeMessageHelper.VariablesControl(body);
                 core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
-                var completed = dbContext.Status.FirstOrDefault(x => x.Code == "active");
-                if (completed != null)
-                    document.StatusId = completed.Id;
+                 
+                    document.Status = EStatus.Active;
                 dbContext.Document.Update(document);
                 dbContext.SaveChanges();
                 messageVariables.Variables.Remove("document");

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  StatusConfiguration : ConfigurationBase<Status>
-    {
-        public void Configure(EntityTypeBuilder<Status> builder)
-        {
+    // public class  StatusConfiguration : ConfigurationBase<Status>
+    // {
+    //     public void Configure(EntityTypeBuilder<Status> builder)
+    //     {
             
-        }
-    }
+    //     }
+    // }
 }

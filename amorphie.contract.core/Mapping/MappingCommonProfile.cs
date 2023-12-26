@@ -15,7 +15,7 @@ namespace amorphie.contract.core.Mapping
             //  CreateMap<Callback, Callback>().ReverseMap();
             CreateMap<LanguageType, LanguageType>().ReverseMap();
             CreateMap<MultiLanguage, MultiLanguage>().ReverseMap();
-            CreateMap<Status, Status>().ReverseMap();
+            // CreateMap<Status, Status>().ReverseMap();
             CreateMap<Tag, Tag>().ReverseMap();
             CreateMap<Validation, Validation>().ReverseMap();
             CreateMap<ValidationDecision, ValidationDecision>().ReverseMap();

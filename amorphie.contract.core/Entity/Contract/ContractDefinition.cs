@@ -9,6 +9,7 @@ using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.core.Entity.Contract
 {
@@ -16,11 +17,11 @@ namespace amorphie.contract.core.Entity.Contract
     [Index(nameof(Code), IsUnique = true)]
     public class ContractDefinition : BaseEntity
     {
-        [Required]
-        public Guid StatusId { get; set; }
-        [ForeignKey("StatusId")]
+        // [Required]
+        // public Guid StatusId { get; set; }
+        // [ForeignKey("StatusId")]
 
-        public Status Status { get; set; } = default!;
+        public EStatus Status { get; set; } = default!;
 
         public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
         public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();

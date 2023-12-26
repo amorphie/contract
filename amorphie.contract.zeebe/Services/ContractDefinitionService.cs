@@ -22,13 +22,10 @@ namespace amorphie.contract.zeebe.Services
         private void SetContractDefinitionDefault(Guid id)
         {
             _ContractDefinition = new ContractDefinition();
-            var activeStatus = _dbContext.Status.FirstOrDefault(x => x.Code == "active");
-            if (activeStatus == null)
-            {
-                activeStatus = new Status { Code = "active" };
-            }
+            var activeStatus = EStatus.Active;
+             
             _ContractDefinition.Id = id;
-            _ContractDefinition.StatusId = activeStatus.Id;
+            _ContractDefinition.Status = activeStatus;
             _ContractDefinition.Code = _ContractDefinitionDataModel.code;
 
         }

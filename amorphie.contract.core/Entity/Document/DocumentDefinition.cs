@@ -3,6 +3,7 @@ using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.core.Entity.Document
 {
@@ -10,17 +11,17 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentDefinition : BaseEntity
     {
 
-        public Guid StatusId { get; set; }
+        // public Guid StatusId { get; set; }
 
-        [ForeignKey("StatusId")]
+        // [ForeignKey("StatusId")]
 
-        public Status Status { get; set; } = default!;
-        public Guid BaseStatusId { get; set; }
+        public EStatus Status { get; set; } = default!;
+        // public Guid BaseStatusId { get; set; }
 
-        [Required]
-        [ForeignKey("BaseStatusId")]
+        // [Required]
+        // [ForeignKey("BaseStatusId")]
 
-        public Status BaseStatus { get; set; } = default!;
+        public EStatus BaseStatus { get; set; } = default!;
         [Required]
         public ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
         public ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();

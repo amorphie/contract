@@ -54,7 +54,7 @@ namespace amorphie.contract.core.Mapping
                      .ConstructUsing(x => new RootDocumentModel
                      {
                          DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                         StatuCode = x.Status.Code,
+                         StatuCode = x.Status.ToString(),
                          CreatedAt = x.CreatedAt,
                          DocumentDefinition = new DocumentDefinitionModel
                          {
@@ -99,7 +99,7 @@ namespace amorphie.contract.core.Mapping
             {
                 Id = x.Id,
                 Code = x.Code,
-                Status = x.Status != null ? x.Status.Code : null,
+                Status = x.Status.ToString(),
                 MultilanguageText = x.DocumentGroupLanguageDetail != null ? x.DocumentGroupLanguageDetail
                                     .Select(a => new MultilanguageText
                                     {
@@ -145,9 +145,9 @@ namespace amorphie.contract.core.Mapping
             {
                 Id = source.Id,
                 Code = source.Code,
-                Status = source.Status.Code,
+                Status = source.Status.ToString(),
                 Semver = source.Semver,
-                BaseStatus = source.BaseStatus.Code,
+                BaseStatus = source.BaseStatus.ToString(),
                 MultilanguageText = source.DocumentDefinitionLanguageDetails?
                     .Select(a => new MultilanguageText
                     {
