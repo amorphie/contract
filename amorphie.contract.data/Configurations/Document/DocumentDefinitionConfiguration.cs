@@ -9,31 +9,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Definition
 {
-    public class DocumentDefinitionConfiguration : ConfigurationBase<DocumentDefinition>
+    public class DocumentDefinitionConfiguration : ConfigurationBase<DocumentDefinition>,
+    IEntityTypeConfiguration<DocumentDefinition>
     {
         public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
         {
-
-            builder
-            .HasKey(c => new
+            var list = new List<string>
             {
-                c.Code,
-                c.Semver
-            });
-
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "DocumentEntityPropertys",
                 "DocumentDefinitionLanguageDetails",
-                "Status",
-                "BaseStatus",
+                "DocumentEntityPropertys",
                 "DocumentTagsDetails",
                 "DocumentUpload",
                 "DocumentOnlineSing",
                 "DocumentOptimize",
                 "DocumentOperations",
-
-            });
+            };
+            NavigationBuilderAutoInclude(builder, list);
+            // builder
+            // .HasKey(c => new
+            // {
+            //     c.Code,
+            //     c.Semver
+            // });
+            //  builder.HasIndex(e => new {e.Code,e.Semver}).IsUnique();
         }
 
     }

@@ -12,6 +12,7 @@ using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.core.Entity;
+using Microsoft.Extensions.Logging;
 
 namespace amorphie.contract.data.Contexts;
 
@@ -137,6 +138,7 @@ public class ProjectDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
     }
+
     // public override int SaveChanges()
     // {
     //     if (ChangeTracker.Entries(). == EntityState.Deleted{

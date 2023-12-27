@@ -7,11 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.data.Configurations.Common
 {
-    public class  TagConfiguration : ConfigurationBase<Tag>
+    public class TagConfiguration : ConfigurationBase<Tag>,
+    IEntityTypeConfiguration<Tag>
     {
         public void Configure(EntityTypeBuilder<Tag> builder)
         {
-            
+
         }
     }
 }

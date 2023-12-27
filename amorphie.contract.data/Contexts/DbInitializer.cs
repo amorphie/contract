@@ -11,6 +11,7 @@ using amorphie.contract.core.Model.Contract;
 using amorphie.contract.core.Entity.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.data.Contexts
 {
@@ -21,27 +22,25 @@ namespace amorphie.contract.data.Contexts
             // try
             // {
 
-            //     var s = new Status();
-            //     s.Code = "active";
-            //     context.Status.Add(s);
-            //     context.SaveChanges();
+
             //     var def = new DocumentDefinition();
             //     def.Code = "test";
-            //     def.StatusId = s.Id;
+            //     def.Status = EStatus.Active;
+
             //     def.Semver = "1.0.0";
-            //     def.BaseStatusId = s.Id;
+            //     def.BaseStatus = EStatus.Active;
 
             //     var def2 = new DocumentDefinition();
             //     def2.Semver = "1.0.0";
             //     def2.Code = "test2";
-            //     def2.StatusId = s.Id;
-            //     def2.BaseStatusId = s.Id;
+            //     def2.Status=EStatus.Active;
+            //     def2.BaseStatus=EStatus.Active;
             //     context.DocumentDefinition.Add(def);
             //     context.DocumentDefinition.Add(def2);
             //     context.SaveChanges();
             //     var cont = new ContractDefinition();
             //     cont.Code = "test";
-            //     cont.StatusId = s.Id;
+            //     cont.Status=EStatus.Active;
             //     var co = new ContractDocumentDetail
             //     {
             //         ContractDefinitionId = cont.Id,
@@ -71,32 +70,32 @@ namespace amorphie.contract.data.Contexts
             //     var a = e;
             // }
 
-            // var query = context.ContractDefinition
+            var query = context.ContractDefinition
 
-            // .FirstOrDefault(x => x.Code == "test");
+            .FirstOrDefault(x => x.Code == "test");
 
-            // if (query != null)
-            // {
-            //     // var documentdeflist = context.DocumentDefinition
-            //     //     .Where(x => query.ContractDocumentDetails
-            //     //         .Any(a => a.DocumentDefinitionId == x.Id))
-            //     //     .ToList();
-            //     var documentdeflist =  query.ContractDocumentDetails.Select(document=>new DocumentModel
-            //             {
+            if (query != null)
+            {
+                // var documentdeflist = context.DocumentDefinition
+                //     .Where(x => query.ContractDocumentDetails
+                //         .Any(a => a.DocumentDefinitionId == x.Id))
+                //     .ToList();
+                var documentdeflist = query.ContractDocumentDetails.Select(document => new DocumentModel
+                {
 
-            //                 Code = document.DocumentDefinition.Code,
-            //                 Status = "not-started",
-            //                 Required = document.Required,
-            //                 Render = document.DocumentDefinition.DocumentOnlineSing != null,
-            //                 Version = document.DocumentDefinition.Semver,
-            //                 // UseExisting = document.UseExisting
+                    Code = document.DocumentDefinition.Code,
+                    Status = "not-started",
+                    Required = document.Required,
+                    Render = document.DocumentDefinition.DocumentOnlineSing != null,
+                    Version = document.DocumentDefinition.Semver,
+                    // UseExisting = document.UseExisting
 
-            //             }).ToList();
-            //     ContractModel contractModel = new ContractModel();
-            //     // contractModel.Id = query.Id;
-            //     contractModel.Status = "in-progress";
-            //     contractModel.Document = documentdeflist;
-            // }
+                }).ToList();
+                ContractModel contractModel = new ContractModel();
+                // contractModel.Id = query.Id;
+                contractModel.Status = "in-progress";
+                contractModel.Document = documentdeflist;
+            }
 
             // context.Database.EnsureCreated();
             // context.SaveChanges();
