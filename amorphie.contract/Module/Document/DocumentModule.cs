@@ -224,6 +224,8 @@ public class DocumentModule
                 KiloBytesSize = data.FileContext.ToString().Length.ToString(),
                 ContentType = data.FileType,
                 MinioObjectName = data.ToString(),
+                ContentTransferEncoding = data.FileType,
+                Name = data.ToString(),
             }
         };
         context.Document.Add(document);
@@ -239,7 +241,7 @@ public class DocumentModule
             fileByteArray = Convert.FromBase64String(data.FileContext);
         }
 
-        await minioService.UploadFile(fileByteArray, data.ToString(), data.FileType, Newtonsoft.Json.JsonConvert.SerializeObject(docdef));
+        await minioService.UploadFile(fileByteArray, data.ToString(), data.FileType, "");
 
         return Results.Ok();
     }

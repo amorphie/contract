@@ -37,8 +37,8 @@ public class ContractModule
     [FromBody] Contract data,
   [FromHeader(Name = "Language")] string? language = "en-EN")
     {
-        context.Contract.Add(data);
-        context.SaveChanges();
+        // context.Contract.Add(data);
+        // context.SaveChanges();
         ContractModel contractModel = new ContractModel();
 
         var query = context!.ContractDefinition.FirstOrDefault(x => x.Code == data.ContractName);
@@ -48,18 +48,22 @@ public class ContractModule
             return Results.Ok(contractModel);
         }
         contractModel.Status = "in-progress";
+        contractModel.Id = query.Id;
+        contractModel.Code = query.Code;
 
         var documentList = query.ContractDocumentDetails.
-                            Select(x => new { x.DocumentDefinitionId })
+                            Select(x => x.DocumentDefinitionId)
                             .ToList();
 
         var customerDocument = context.Document.Where(x => x.Customer.Reference == data.Reference &&
-                        documentList.Any(d => d.DocumentDefinitionId == x.DocumentDefinitionId))
+                        documentList.Contains(x.DocumentDefinitionId)).ToList()
                         .Select(x => x.DocumentDefinitionId).ToList();
 
 
         var list = query.ContractDocumentDetails.
-        Where(d => !customerDocument.Contains(d.DocumentDefinitionId)).ToList();
+        Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
+
+
         var listModel = list.Select(x => new DocumentModel
         {
             Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails

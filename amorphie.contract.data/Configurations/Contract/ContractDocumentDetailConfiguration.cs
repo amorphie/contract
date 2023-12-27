@@ -17,6 +17,8 @@ namespace amorphie.contract.data.Configurations.Contract
             {
                 "DocumentDefinition",
             };
+            NavigationBuilderAutoInclude(builder, list);
+
 
         }
     }
