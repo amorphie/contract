@@ -10,9 +10,9 @@ namespace amorphie.contract.data.Configurations.Contract
     public class ContractDefinitionConfiguration : ConfigurationBase<ContractDefinition>,
      IEntityTypeConfiguration<ContractDefinition>
     {
-        public virtual void  Configure(EntityTypeBuilder<ContractDefinition> builder)
+        public virtual void Configure(EntityTypeBuilder<ContractDefinition> builder)
         {
-           var list = new List<string>
+            var list = new List<string>
             {
                 "ContractDocumentDetails",
                 "ContractDocumentGroupDetails",

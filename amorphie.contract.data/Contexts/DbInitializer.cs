@@ -22,11 +22,11 @@ namespace amorphie.contract.data.Contexts
             // try
             // {
 
-                 
+
             //     var def = new DocumentDefinition();
             //     def.Code = "test";
             //     def.Status = EStatus.Active;
-            
+
             //     def.Semver = "1.0.0";
             //     def.BaseStatus = EStatus.Active;
 
@@ -80,17 +80,17 @@ namespace amorphie.contract.data.Contexts
                 //     .Where(x => query.ContractDocumentDetails
                 //         .Any(a => a.DocumentDefinitionId == x.Id))
                 //     .ToList();
-                var documentdeflist =  query.ContractDocumentDetails.Select(document=>new DocumentModel
-                        {
+                var documentdeflist = query.ContractDocumentDetails.Select(document => new DocumentModel
+                {
 
-                            Code = document.DocumentDefinition.Code,
-                            Status = "not-started",
-                            Required = document.Required,
-                            Render = document.DocumentDefinition.DocumentOnlineSing != null,
-                            Version = document.DocumentDefinition.Semver,
-                            // UseExisting = document.UseExisting
+                    Code = document.DocumentDefinition.Code,
+                    Status = "not-started",
+                    Required = document.Required,
+                    Render = document.DocumentDefinition.DocumentOnlineSing != null,
+                    Version = document.DocumentDefinition.Semver,
+                    // UseExisting = document.UseExisting
 
-                        }).ToList();
+                }).ToList();
                 ContractModel contractModel = new ContractModel();
                 // contractModel.Id = query.Id;
                 contractModel.Status = "in-progress";

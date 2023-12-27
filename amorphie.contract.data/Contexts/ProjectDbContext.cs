@@ -138,7 +138,7 @@ public class ProjectDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
     }
-   
+
     // public override int SaveChanges()
     // {
     //     if (ChangeTracker.Entries(). == EntityState.Deleted{

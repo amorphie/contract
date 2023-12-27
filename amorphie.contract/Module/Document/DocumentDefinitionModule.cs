@@ -98,7 +98,7 @@ public class DocumentDefinitionModule
             {
                 language = "en-EN";
             }
-            var list =  await context.DocumentDefinition.OrderBy(x => x.Code).Skip(page * pageSize)
+            var list = await context.DocumentDefinition.OrderBy(x => x.Code).Skip(page * pageSize)
                 .Take(pageSize).AsNoTracking().ToListAsync(token);
             var c = list.Select(x =>
          ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).ToList();
