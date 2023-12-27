@@ -21,8 +21,15 @@ namespace amorphie.contract.zeebe.Model.DocumentGroupDataModel
     public class DocumentGroupDocumentSubModel
     {
         public Guid Id { get; set; }
+        public string code { get; set; }
+        public TitleSubModel title { get; set; }
+        public List<string> semverList { get; set; }
+    }
+
+    public class TitleSubModel
+    {
+        public string languageType { get; set; }
         public string name { get; set; }
-        public List<string> semanticVersions { get; set; }
     }
 
     public class Title
