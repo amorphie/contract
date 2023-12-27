@@ -52,7 +52,7 @@ public class ContractModule
         contractModel.Code = query.Code;
 
         var documentList = query.ContractDocumentDetails.
-                            Select(x =>  x.DocumentDefinitionId )
+                            Select(x => x.DocumentDefinitionId)
                             .ToList();
 
         var customerDocument = context.Document.Where(x => x.Customer.Reference == data.Reference &&
