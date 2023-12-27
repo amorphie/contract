@@ -21,7 +21,7 @@ namespace amorphie.contract.core.Entity.Common
         public Guid? ValidationDecisionId { get; set; }
         [ForeignKey("ValidationDecisionId")]
 
-        public ValidationDecision? ValidationDecision { get; set; } 
+        public ValidationDecision? ValidationDecision { get; set; }
 
     }
 }

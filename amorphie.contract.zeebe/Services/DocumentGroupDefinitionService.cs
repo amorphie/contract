@@ -53,7 +53,7 @@ namespace amorphie.contract.zeebe.Services
             //     DocumentDefinitionId = x.document.Id,
             //     DocumentGroupId = _documentGroup.Id,
             // });
-            
+
             var documentGroupDetail = _documentDefinitionDataModel.documents.Select(x => new DocumentGroupDetail
             {
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.document.code).Select(y => y.Id).FirstOrDefault(),
