@@ -127,7 +127,7 @@ public class ProjectDbContext : DbContext
     // public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
     public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
     public DbSet<Customer> Customer { get; set; }
-
+    public DbSet<Contract> Contract { get; set; }
     protected IConfiguration Configuration { get; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -138,7 +138,7 @@ public class ProjectDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
     }
-
+   
     // public override int SaveChanges()
     // {
     //     if (ChangeTracker.Entries(). == EntityState.Deleted{
