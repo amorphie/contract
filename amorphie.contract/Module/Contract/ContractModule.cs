@@ -37,27 +37,69 @@ public class ContractModule
     [FromBody] Contract data,
   [FromHeader(Name = "Language")] string? language = "en-EN")
     {
+        context.Contract.Add(data);
+        context.SaveChanges();
+        ContractModel contractModel = new ContractModel();
+
         var query = context!.ContractDefinition.FirstOrDefault(x => x.Code == data.ContractName);
         if (query == null)
         {
-            return Results.Ok(new { status = "not contract" });
+            contractModel.Status = "not contract";
+            return Results.Ok(contractModel);
         }
-        ContractModel contractModel = new ContractModel();
-        // contractModel.Id = query.Id;
         contractModel.Status = "in-progress";
+
         var documentList = query.ContractDocumentDetails.
                             Select(x => new { x.DocumentDefinitionId })
                             .ToList();
 
-        //     var oldCreateDocument = context.Document?.Any(x => x.Customer.Reference == data.Reference);
+        var customerDocument = context.Document.Where(x => x.Customer.Reference == data.Reference &&
+                        documentList.Any(d => d.DocumentDefinitionId == x.DocumentDefinitionId))
+                        .Select(x => x.DocumentDefinitionId).ToList();
 
-        //     if (oldCreateDocument.Value && context.Document != null)
-        //     {
-        //         var customerDocument = context.Document.Where(x => x.Customer.Reference == data.Reference &&
-        //              documentList.Any(d => d.DocumentDefinitionId == x.DocumentDefinitionId)).Select(x => new { x.DocumentDefinition.Code, x.DocumentDefinition.Semver }).ToList();
 
-        //         var list = query.ContractDocumentDetails.
-        //         Where(d => !customerDocument.Any(cd => cd.Code == d.DocumentDefinitionCode && cd.Semver == d.DocumentDefinitionSemver)).ToList();
+        var list = query.ContractDocumentDetails.
+        Where(d => !customerDocument.Contains(d.DocumentDefinitionId)).ToList();
+        var listModel = list.Select(x => new DocumentModel
+        {
+            Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails
+                .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
+                .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
+
+            Code = x.DocumentDefinition.Code,
+            Status = "not-started",
+            Required = x.Required,
+            Render = x.DocumentDefinition.DocumentOnlineSing != null,
+            Version = x.DocumentDefinition.Semver,
+            OnlineSign = new OnlineSignModel
+            {
+                DocumentModelTemplate = x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Count() > 0 ?
+                 x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Select(b => new DocumentModelTemplate
+                 {
+                     Name = b.DocumentTemplate.Code,
+                     MinVersion = b.DocumentTemplate.Version,
+                 }).ToList() : x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Select(b => new DocumentModelTemplate
+                 {
+                     Name = b.DocumentTemplate.Code,
+                     MinVersion = b.DocumentTemplate.Version,
+                 }).Take(1).ToList(),
+
+                ScaRequired = x.DocumentDefinition.DocumentOnlineSing != null ? x.DocumentDefinition.DocumentOnlineSing.Required : false,
+                AllovedClients = x.DocumentDefinition.DocumentOnlineSing.DocumentAllowedClientDetails
+                                            .Select(x => x.DocumentAllowedClients.Code)
+                                            .ToList() ?? new List<string>()
+            }
+        }
+        ).ToList();
+        contractModel.Document = listModel;
+
+        if (contractModel.Document.Count == 0)
+        {
+            contractModel.Status = "valid";
+        }
+
+
+        return Results.Ok(contractModel);
 
         //         var documentdeflist2 = context.DocumentDefinition.ToList().
         //     Where(x => query.ContractDocumentDetails.Any(a => a.DocumentDefinitionCode == x.Code))
@@ -147,14 +189,9 @@ public class ContractModule
         //             }
         //         ).ToList();
 
-        //     contractModel.Document = documentModels;
-
-
-        return Results.Ok(contractModel);
     }
     public override string[]? PropertyCheckList => new string[] { "Code" };
 
     public override string? UrlFragment => "contract";
 
 }
-
