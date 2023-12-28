@@ -23,6 +23,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("*")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 builder.Services.AddDaprClient();
 builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configuration);
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -36,7 +46,10 @@ builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinit
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 
 var app = builder.Build();
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
+db.Database.Migrate();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
@@ -68,8 +81,6 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
-using var scope = app.Services.CreateScope();
-var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.Run();
 
 
