@@ -25,7 +25,7 @@ namespace amorphie.contract.core.Services
         private string bucketName = "contract-management";
         public MinioService()
         {
-            //todo:vault dan al 
+            ////TODO: :vault dan al 
             var endpoint = StaticValuesExtensions.MinioEndPoint;
             var accessKey = StaticValuesExtensions.AccessKey;
             var secretKey = StaticValuesExtensions.SecretKey;
