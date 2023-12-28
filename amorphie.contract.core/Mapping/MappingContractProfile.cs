@@ -74,9 +74,7 @@ namespace amorphie.contract.core.Mapping
             UseExisting = ((EUseExisting)a.UseExisting).ToString(),
             MinVersion = a.DocumentDefinitionId.ToString(),
             Required = a.Required,
-            DocumentDefinitionCode = a.DocumentDefinitionId.ToString()
-            // TODO:    definitionId düzenle
-            // DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
+            DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
         }).ToList()))
     .ForMember(dest => dest.ContractDocumentGroupDetailLists, opt => opt.MapFrom(src =>
         src.ContractDocumentGroupDetails.Select(a => new ContractDocumentGroupDetailView
