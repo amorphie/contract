@@ -28,6 +28,7 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
         this.GetByCode(routeGroupBuilder);
         this.DeleteByCode(routeGroupBuilder);
         this.DoesExist(routeGroupBuilder);
+
     }
     protected virtual void GetByCode(RouteGroupBuilder routeGroupBuilder)
     {
