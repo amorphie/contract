@@ -292,6 +292,9 @@ namespace amorphie.contract.zeebe.Services
                     SetDocumentUpload();
                 }
 
+                _documentdef.Status = EStatus.Active;
+                _documentdef.BaseStatus = EStatus.Active;
+
                 _dbContext.DocumentDefinition.Add(_documentdef);
                 _dbContext.SaveChanges();
             }
