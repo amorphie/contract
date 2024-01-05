@@ -55,15 +55,21 @@ namespace amorphie.contract.zeebe.Services
         {
             if (_documentDefinitionDataModel.data.TransformTo != null)
             {
-                _documentdef.DocumentOptimize = new DocumentOptimize
+                var documentOptimizeType = _dbContext.DocumentOptimizeType.Where(x => x.Id == ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)).FirstOrDefault();
+                var documentOptimize = _dbContext.DocumentOptimize.Where(x => x.Size == _documentDefinitionDataModel.data.Size && x.DocumentOptimizeTypeId == ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)).FirstOrDefault();
+
+                if (documentOptimize != null)
                 {
-                    DocumentOptimizeType = new DocumentOptimizeType
+                    _documentdef.DocumentOptimizeId = documentOptimize.Id;
+                }
+                else if (documentOptimizeType != null)
+                {
+                    _documentdef.DocumentOptimize = new DocumentOptimize
                     {
-                        Id = ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)
-                    },
-                    Size = _documentDefinitionDataModel.data.Size,
-                    // DocumentDefinitionId = _documentdef.Id
-                };
+                        DocumentOptimizeTypeId = documentOptimizeType.Id,
+                        Size = _documentDefinitionDataModel.data.Size
+                    };
+                }
             }
         }
         private void SetDocumentOperation()
