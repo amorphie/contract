@@ -4,6 +4,7 @@ WORKDIR /app
 RUN adduser -u 5679 --disabled-password --gecos "" amorphie-contractuser && chown -R amorphie-contractuser:amorphie-contractuser /app
 USER amorphie-contractuser
 
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./amorphie.contract/amorphie.contract.csproj", "."]
