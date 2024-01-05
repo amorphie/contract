@@ -56,6 +56,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
+                        context.SaveChanges();
                         return Results.Ok(responseBody.Trim('\"'));
                     }
                     else
@@ -99,6 +100,7 @@ namespace amorphie.contract.Module.Proxy
                         };
 
                         await context.TemplateRender.AddAsync(renderEntity);
+                        context.SaveChanges();
                         return Results.Ok(responseBody.Trim('\"'));
                     }
                     else

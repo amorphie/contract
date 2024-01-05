@@ -19,6 +19,6 @@ namespace amorphie.contract.core.Entity.Base
     public class AudiEntity : EntityBase
     {
         public bool IsDeleted { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }
