@@ -57,7 +57,7 @@ namespace amorphie.contract.zeebe.Services
             {
                 var documentOptimizeType = _dbContext.DocumentOptimizeType.Where(x => x.Id == ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)).FirstOrDefault();
                 var documentOptimize = _dbContext.DocumentOptimize.Where(x => x.Size == _documentDefinitionDataModel.data.Size && x.DocumentOptimizeTypeId == ZeebeMessageHelper.StringToGuid(_documentDefinitionDataModel.data.TransformTo)).FirstOrDefault();
-                
+
                 if (documentOptimize != null)
                 {
                     _documentdef.DocumentOptimizeId = documentOptimize.Id;
