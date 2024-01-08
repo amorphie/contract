@@ -44,7 +44,7 @@ namespace amorphie.contract.Module.Customer
 
                 var currentContractDocuments = documents.Where(x => currentContractDocumentCodes.Exists(y => x.DocumentDefinitionId == y.DocumentDefinitionId)).ToList();
 
-                model.DocumentModel = currentContractDocuments.Select(x => new DocumentModel
+                model.Document = currentContractDocuments.Select(x => new DocumentModel
                 {
                     Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails
                     .Where(dl => dl.MultiLanguage.LanguageType.Code == "en-EN")

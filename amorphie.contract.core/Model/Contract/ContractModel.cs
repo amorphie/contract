@@ -65,7 +65,7 @@ namespace amorphie.contract.core.Model.Contract
         public string Title { get; set; }
         [JsonPropertyName("at-least-required-document")]
         public int AtLeastRequiredDocument { get; set; }
-        public List<DocumentModel> DocumentModel { get; set; }
+        public List<DocumentModel> Document { get; set; }
     }
 
     public class ContractModel
@@ -73,7 +73,7 @@ namespace amorphie.contract.core.Model.Contract
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Status { get; set; }
-        public List<DocumentModel> DocumentModel { get; set; }
+        public List<DocumentModel> Document { get; set; }
         public List<DocumentGroupModel> DocumentGroups { get; set; }
     }
 }

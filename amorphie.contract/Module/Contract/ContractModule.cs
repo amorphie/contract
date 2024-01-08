@@ -122,7 +122,7 @@ public class ContractModule
             AtLeastRequiredDocument = a.AtLeastRequiredDocument,
 
             Required = a.Required,
-            DocumentModel = a.DocumentGroup.DocumentGroupDetails
+            Document = a.DocumentGroup.DocumentGroupDetails
             .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => new DocumentModel
             {
                 Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails
@@ -156,11 +156,11 @@ public class ContractModule
         }
 
         ).ToList();
-        contractModel.DocumentModel = listModel;
+        contractModel.Document = listModel;
 
         contractModel.DocumentGroups = listModelGroup;
 
-        if (contractModel.DocumentModel.Count == 0)
+        if (contractModel.Document.Count == 0)
         {
             contractModel.Status = EStatus.Completed.ToString();
         }
