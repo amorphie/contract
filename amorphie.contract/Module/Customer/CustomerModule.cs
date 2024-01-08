@@ -1,6 +1,7 @@
 ﻿using System;
 using amorphie.contract.core.Model.Contract;
 using amorphie.contract.data.Contexts;
+using amorphie.contract.data.Services;
 using amorphie.core.Module.minimal_api;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,7 @@ namespace amorphie.contract.Module.Customer
                     Required = currentContractDocumentCodes.Where(y => y.DocumentDefinitionId == x.DocumentDefinitionId).FirstOrDefault().Required,
                     Render = x.DocumentDefinition.DocumentOnlineSing != null,
                     Version = x.DocumentDefinition.Semver,
+                    
                     OnlineSign = new OnlineSignModel
                     {
                         DocumentModelTemplate = x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == "en-EN").Count() > 0 ? x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == "en-EN").Select(b => new DocumentModelTemplate
@@ -81,13 +83,15 @@ namespace amorphie.contract.Module.Customer
         async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
                 HttpContext httpContext, CancellationToken token, string reference)
         {
+            IDocumentService  documentService = new DocumentService();
             var documents = await context.Document.Where(x => x.Customer.Reference == reference)
             .Select(x => new
             {
                 x.DocumentDefinition.Code,
                 x.DocumentDefinition.Semver,
                 status = "valid",
-                x.DocumentContent.MinioObjectName,
+                MinioUrl=   documentService.GetDocumentPath(x.DocumentContent.MinioObjectName,token),
+                 x.DocumentContent.MinioObjectName,
                 x.Customer.Reference
             }).ToListAsync(token);
 
