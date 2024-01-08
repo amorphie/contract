@@ -11,7 +11,7 @@ namespace amorphie.contract.data.Services
         Task<string> GetDocumentPath(string objectName, CancellationToken cancellationToken);
 
     }
-    public class DocumentService:IDocumentService
+    public class DocumentService : IDocumentService
     {
         public async Task<string> GetDocumentPath(string objectName, CancellationToken token)
         {

@@ -114,10 +114,10 @@ namespace amorphie.contract.core.Services
         public async Task<string> GetDocumentUrl(string objectName, CancellationToken token)
         {
             var expiry = TimeSpan.FromHours(1);
-             PresignedGetObjectArgs args = new PresignedGetObjectArgs()
-                                      .WithBucket(bucketName)
-                                      .WithObject(objectName)
-                                      .WithExpiry((int)expiry.TotalSeconds);//TODO: Güvenlik Sorgula
+            PresignedGetObjectArgs args = new PresignedGetObjectArgs()
+                                     .WithBucket(bucketName)
+                                     .WithObject(objectName)
+                                     .WithExpiry((int)expiry.TotalSeconds);//TODO: Güvenlik Sorgula
 
             // Tek kullanımlık URL oluştur
             var presignedUrl = await minioClient.PresignedGetObjectAsync(args);
