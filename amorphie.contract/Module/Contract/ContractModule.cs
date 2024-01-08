@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
 using amorphie.contract.core.Model.Contract;
+using System.IO.Compression;
+using System.Linq.Expressions;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -47,46 +50,57 @@ public class ContractModule
             contractModel.Status = "not contract";
             return Results.Ok(contractModel);
         }
-        contractModel.Status = "in-progress";
+        contractModel.Status = EStatus.InProgress.ToString();
         contractModel.Id = query.Id;
         contractModel.Code = query.Code;
 
         var documentList = query.ContractDocumentDetails.
                             Select(x => x.DocumentDefinitionId)
                             .ToList();
+        var documentGroupList = query.ContractDocumentGroupDetails.
+                            SelectMany(x => x.DocumentGroup.DocumentGroupDetails).ToList().Select(a => a.DocumentDefinitionId).ToList();
+
+
 
         var customerDocument = context.Document.Where(x => x.Customer.Reference == data.Reference &&
                         documentList.Contains(x.DocumentDefinitionId)).ToList()
                         .Select(x => x.DocumentDefinitionId).ToList();
 
+        var customerDocumentGroup = context.Document.Where(x => x.Customer.Reference == data.Reference &&
+                                documentGroupList.Contains(x.DocumentDefinitionId)).ToList()
+                                .Select(x => x.DocumentDefinitionId).ToList();
 
-        var list = query.ContractDocumentDetails.
+        var listDocument = query.ContractDocumentDetails.
         Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
 
+        var listDocumentGroup = query.ContractDocumentGroupDetails.ToList();
+        // .SelectMany(x => x.DocumentGroup.DocumentGroupDetails).ToList()
+        // .Where(x=>customerDocumentGroup.Contains( x.DocumentDefinitionId)).ToList();
 
-        var listModel = list.Select(x => new DocumentModel
+
+        var listModel = listDocument.Select(x => new DocumentModel
         {
             Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails
                 .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                 .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
 
             Code = x.DocumentDefinition.Code,
-            Status = "not-started",
+            Status = EStatus.InProgress.ToString(),
             Required = x.Required,
             Render = x.DocumentDefinition.DocumentOnlineSing != null,
             Version = x.DocumentDefinition.Semver,
             OnlineSign = new OnlineSignModel
             {
                 DocumentModelTemplate = x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Count() > 0 ?
-                 x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Select(b => new DocumentModelTemplate
-                 {
-                     Name = b.DocumentTemplate.Code,
-                     MinVersion = b.DocumentTemplate.Version,
-                 }).ToList() : x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Select(b => new DocumentModelTemplate
-                 {
-                     Name = b.DocumentTemplate.Code,
-                     MinVersion = b.DocumentTemplate.Version,
-                 }).Take(1).ToList(),
+                x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Select(b => new DocumentModelTemplate
+                {
+                    Name = b.DocumentTemplate.Code,
+                    MinVersion = b.DocumentTemplate.Version,
+                }).ToList() : x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Select(b => new DocumentModelTemplate
+                {
+                    Name = b.DocumentTemplate.Code,
+                    MinVersion = b.DocumentTemplate.Version,
+                }).Take(1).ToList(),
 
                 ScaRequired = x.DocumentDefinition.DocumentOnlineSing != null ? x.DocumentDefinition.DocumentOnlineSing.Required : false,
                 AllovedClients = x.DocumentDefinition.DocumentOnlineSing.DocumentAllowedClientDetails
@@ -95,11 +109,60 @@ public class ContractModule
             }
         }
         ).ToList();
-        contractModel.Document = listModel;
 
-        if (contractModel.Document.Count == 0)
+        var listModelGroup = listDocumentGroup.Select(a =>
+        new DocumentGroupModel
         {
-            contractModel.Status = "valid";
+            Title = a.DocumentGroup.DocumentGroupLanguageDetail
+                .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
+                .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
+            Status =  a.AtLeastRequiredDocument >= a.DocumentGroup.DocumentGroupDetails
+            .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count()?EStatus.Completed.ToString():EStatus.InProgress.ToString(),
+            
+            AtLeastRequiredDocument = a.AtLeastRequiredDocument,
+            
+            Required = a.Required,
+            DocumentModel = a.DocumentGroup.DocumentGroupDetails
+            .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => new DocumentModel
+            {
+                Title = x.DocumentDefinition.DocumentDefinitionLanguageDetails
+               .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
+               .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
+                Code = x.DocumentDefinition.Code,
+                Status = EStatus.InProgress.ToString(),
+                Render = x.DocumentDefinition.DocumentOnlineSing != null,
+                Version = x.DocumentDefinition.Semver,
+                OnlineSign = new OnlineSignModel
+                {
+                    DocumentModelTemplate = x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Count() > 0 ?
+               x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Where(x => x.DocumentTemplate.LanguageType.Code == language).Select(b => new DocumentModelTemplate
+               {
+                   Name = b.DocumentTemplate.Code,
+                   MinVersion = b.DocumentTemplate.Version,
+               }).ToList() : x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.Select(b => new DocumentModelTemplate
+               {
+                   Name = b.DocumentTemplate.Code,
+                   MinVersion = b.DocumentTemplate.Version,
+               }).Take(1).ToList(),
+
+                    ScaRequired = x.DocumentDefinition.DocumentOnlineSing != null ? x.DocumentDefinition.DocumentOnlineSing.Required : false,
+                    AllovedClients = x.DocumentDefinition.DocumentOnlineSing.DocumentAllowedClientDetails
+                                           .Select(x => x.DocumentAllowedClients.Code)
+                                           .ToList() ?? new List<string>()
+                }
+            }
+
+             ).ToList()
+        }
+
+        ).ToList();
+        contractModel.DocumentModel = listModel;
+
+        contractModel.DocumentGroups = listModelGroup;
+
+        if (contractModel.DocumentModel.Count == 0)
+        {
+            contractModel.Status = EStatus.Completed.ToString();
         }
 
 

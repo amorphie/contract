@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
+using amorphie.contract.core.Model.Contract;
 using amorphie.contract.core.Model.Document;
 using AutoMapper;
 
@@ -19,41 +24,8 @@ namespace amorphie.contract.core.Mapping
             CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
             CreateMap<ContractTag, ContractTag>().ReverseMap();
             CreateMap<ContractValidation, ContractValidation>().ReverseMap();
-            // CreateMap<ContractDefinition, ContractDefinitionViewModel>()
-            //     .ConvertUsing(x => new ContractDefinitionViewModel
-            //     {
-            //         Id = x.Id,
-            //         Code = x.Code,
-            //         Status = x.Status != null ? x.Status.Code : null,
-            //         Tags = x.ContractTags!.Select(a => new TagsView
-            //         {
-            //             Code = a.Tags!.Code,
-            //             Contact = a.Tags!.Contact,
-            //         }).ToList(),
-            //         EntityProperties = x.ContractEntityProperty!.Select(a => new EntityPropertyView
-            //         {
-            //             Code = a.EntityProperty!.Code,
-            //             EntityPropertyValue = a.EntityProperty!.EntityPropertyValue!.Data
-            //         }).ToList(),
-            //         ContractDocumentDetailList = x.ContractDocumentDetails.Select(a => new ContractDocumentDetailView
-            //         {
-            //             UseExisting = ((EUseExisting)a.UseExisting).ToString(),
-            //             Semver = a.Semver,
-            //             Required = a.Required,
-            //             DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
-            //         }).ToList(),
-            //         ContractDocumentGroupDetailLists = x.ContractDocumentGroupDetails.Select(a => new ContractDocumentGroupDetailView
-            //         {
-            //             AtLeastRequiredDocument = a.AtLeastRequiredDocument,
-            //             Required = a.Required,
-            //             DocumentGroup = ObjectMapper.Mapper.Map<DocumentGroupViewModel>(a.DocumentGroup)
-            //         }).ToList(),
-            //         ValidationList = x.ContractValidations!=null?x.ContractValidations.Select(a => new ValidationView
-            //         {
-            //             ValidationDecision = a.Validations!.ValidationDecision!=null ?a.Validations!.ValidationDecision!.Code:null,
-            //             EValidationType = ((EUseExisting)a.Validations.EValidationType).ToString(),
-            //         }).ToList():null
-            //     });
+            #region  ContractDefinitionViewModel
+
             CreateMap<ContractDefinition, ContractDefinitionViewModel>()
     .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.ToString() : null))
     .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
@@ -89,7 +61,52 @@ namespace amorphie.contract.core.Mapping
             ValidationDecision = a.Validations.ValidationDecision != null ? a.Validations.ValidationDecision.Code : null,
             EValidationType = ((EValidationType)a.Validations.EValidationType).ToString(),
         }).ToList() : null));
+            #endregion
 
+            #region ContractInstanceModel
+            CreateMap<ContractDefinition, ContractModel>().
+                ConvertUsing((source, destination, context) => ConvertContractModelToViewModel(source, context.Items["language"]?.ToString()));
+
+
+
+            // CreateMap<ContractDocumentDetail, DocumentModel>().ConstructUsing(x => new DocumentModel
+            // {
+            //     Code = x.DocumentDefinition.Code,
+            //     MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails.Select(a => ObjectMapper.Mapper.Map<MultilanguageTextModel>(a.MultiLanguage)).ToList(),
+            //     // Status = 
+            //     Required = x.Required,
+            //     Render = x.DocumentDefinition.DocumentOnlineSing != null,
+            //     Version = x.DocumentDefinition.Semver,
+            //     OnlineSign = x.DocumentDefinition.DocumentOnlineSing.
+            // });
+            // CreateMap<DocumentOnlineSing, OnlineSignModel>().ConstructUsing(x => new OnlineSignModel
+            // {
+            //     ScaRequired = x.Required,
+            //     DocumentModelTemplate = x.DocumentTemplateDetails.Select(a=>new DocumentModelTemplate{
+            //         MinVersion = a.DocumentTemplate.Version,
+            //         MultilanguageText =  a.DocumentTemplate.
+            //     }).ToList(),
+
+            // });
+
+            #endregion
+
+        }
+        private ContractModel ConvertContractModelToViewModel(ContractDefinition x, string? language)
+        {
+            var viewModel = new ContractModel
+            {
+                Code = x.Code,
+                Status = x.Status.ToString(),// TODO gerek yok modelde enum olsun bakacam
+                 
+                // DocumentModel = x.ContractDocumentDetails.
+                //                 Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x.DocumentDefinition)).ToList(),
+            };
+            if (!string.IsNullOrEmpty(language))
+            {
+                viewModel.Status += language;
+            }
+            return viewModel;
         }
     }
 

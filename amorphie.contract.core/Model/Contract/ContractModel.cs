@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using amorphie.contract.core.Model.Document;
 
 namespace amorphie.contract.core.Model.Contract
 {
+
 
     public class AllowedFormatModel
     {
@@ -46,9 +48,10 @@ namespace amorphie.contract.core.Model.Contract
     {
         public string Code { get; set; }
         public string Title { get; set; }
+        public List<MultilanguageTextModel> MultilanguageText { get; set; }
         public string Status { get; set; }
         public bool Required { get; set; }
-        //public Upload Upload { get; set; }
+        public Upload Upload { get; set; }
         public bool Render { get; set; }
         [JsonPropertyName("online-sign")]
         public OnlineSignModel OnlineSign { get; set; }
@@ -57,12 +60,12 @@ namespace amorphie.contract.core.Model.Contract
 
     public class DocumentGroupModel
     {
-        public string Name { get; set; }
+        public bool Required { get; set; }
         public string Status { get; set; }
         public string Title { get; set; }
         [JsonPropertyName("at-least-required-document")]
         public int AtLeastRequiredDocument { get; set; }
-        public List<DocumentModel> Document { get; set; }
+        public List<DocumentModel> DocumentModel { get; set; }
     }
 
     public class ContractModel
@@ -70,7 +73,7 @@ namespace amorphie.contract.core.Model.Contract
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Status { get; set; }
-        public List<DocumentModel> Document { get; set; }
-        //public List<DocumentGroupModel> DocumentGroups { get; set; }
+        public List<DocumentModel> DocumentModel { get; set; }
+        public List<DocumentGroupModel> DocumentGroups { get; set; }
     }
 }

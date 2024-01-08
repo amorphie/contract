@@ -24,7 +24,6 @@ namespace amorphie.contract.core.Model.Document
         public bool Required { get; set; }
         public DocumentDefinitionViewModel DocumentDefinition { get; set; }
 
-
     }
     public class ContractDocumentGroupDetailView
     {
