@@ -41,7 +41,7 @@ var assemblies = new Assembly[]
                 };
 builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);
-   builder.Services.AddScoped<IContractInstanceService, ContractInstanceService>();
+builder.Services.AddScoped<IContractInstanceService, ContractInstanceService>();
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
 builder.Services.AddCors(options =>

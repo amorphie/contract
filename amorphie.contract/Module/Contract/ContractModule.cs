@@ -116,11 +116,11 @@ public class ContractModule
             Title = a.DocumentGroup.DocumentGroupLanguageDetail
                 .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                 .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
-            Status =  a.AtLeastRequiredDocument >= a.DocumentGroup.DocumentGroupDetails
-            .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count()?EStatus.Completed.ToString():EStatus.InProgress.ToString(),
-            
+            Status = a.AtLeastRequiredDocument >= a.DocumentGroup.DocumentGroupDetails
+            .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count() ? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
+
             AtLeastRequiredDocument = a.AtLeastRequiredDocument,
-            
+
             Required = a.Required,
             DocumentModel = a.DocumentGroup.DocumentGroupDetails
             .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => new DocumentModel

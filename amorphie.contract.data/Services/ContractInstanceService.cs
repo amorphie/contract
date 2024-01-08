@@ -18,7 +18,7 @@ namespace amorphie.contract.data.Services
     public class ContractInstanceService : IContractInstanceService
     {
         private readonly ProjectDbContext _context;
-        private  Contract _data;
+        private Contract _data;
         private string _language;
         public ContractInstanceService(ProjectDbContext context)
         {
@@ -28,10 +28,12 @@ namespace amorphie.contract.data.Services
         private void ControlContractDefinition()
         {
             var query = _context.ContractDefinition.FirstOrDefault(x => x.Code == _data.ContractName);
-            if(query == null){
+            if (query == null)
+            {
                 new Exception("Contract model not found");
             }
-            else{
+            else
+            {
                 contractModel = ObjectMapper.Mapper.Map<ContractModel>(query);
 
             }

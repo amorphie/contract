@@ -15,7 +15,7 @@ namespace amorphie.contract.core.Mapping
         {
             CreateMap<MultiLanguage, MultilanguageTextModel>().ConstructUsing(x => new MultilanguageTextModel
             {
-                Label = x.Name ,
+                Label = x.Name,
                 Language = x.Code
             });
         }

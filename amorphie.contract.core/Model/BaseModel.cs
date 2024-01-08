@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace amorphie.contract.core.Model
 {
-   
-     public class MultilanguageTextModel
+
+    public class MultilanguageTextModel
     {
         public string Language { get; set; } = string.Empty;
 

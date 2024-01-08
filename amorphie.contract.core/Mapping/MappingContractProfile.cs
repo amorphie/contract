@@ -98,7 +98,7 @@ namespace amorphie.contract.core.Mapping
             {
                 Code = x.Code,
                 Status = x.Status.ToString(),// TODO gerek yok modelde enum olsun bakacam
-                 
+
                 // DocumentModel = x.ContractDocumentDetails.
                 //                 Select(x => ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x.DocumentDefinition)).ToList(),
             };
