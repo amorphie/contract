@@ -116,8 +116,8 @@ public class ContractModule
             Title = a.DocumentGroup.DocumentGroupLanguageDetail
                 .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                 .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
-            Status = a.AtLeastRequiredDocument >= a.DocumentGroup.DocumentGroupDetails
-            .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count() ? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
+            Status = a.AtLeastRequiredDocument <=  a.DocumentGroup.DocumentGroupDetails
+            .Where(c => customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count()? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
 
             AtLeastRequiredDocument = a.AtLeastRequiredDocument,
 
@@ -160,8 +160,8 @@ public class ContractModule
 
         contractModel.DocumentGroups = listModelGroup;
 
-        if (contractModel.Document.Count == 0)
-        {
+        if (contractModel.Document.Count == 0  && contractModel.DocumentGroups.Any(x=>x.Status == EStatus.Completed.ToString()))
+        {//bura degişecek groupların zorunluluguna göre kontrol koyacaz
             contractModel.Status = EStatus.Completed.ToString();
         }
 
