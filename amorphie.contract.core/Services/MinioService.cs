@@ -18,6 +18,7 @@ namespace amorphie.contract.core.Services
     {
         Task UploadFile(byte[] data, string objectName, string contentType, string customMetadata);
         Task UploadFile();
+        Task<string> GetDocumentUrl(string objectName, CancellationToken token);
     }
     public class MinioService : IMinioService
     {
@@ -110,6 +111,18 @@ namespace amorphie.contract.core.Services
             }
         }
 
+        public async Task<string> GetDocumentUrl(string objectName, CancellationToken token)
+        {
+            var expiry = TimeSpan.FromHours(1);
+            PresignedGetObjectArgs args = new PresignedGetObjectArgs()
+                                     .WithBucket(bucketName)
+                                     .WithObject(objectName)
+                                     .WithExpiry((int)expiry.TotalSeconds);//TODO: Güvenlik Sorgula
+
+            // Tek kullanımlık URL oluştur
+            var presignedUrl = await minioClient.PresignedGetObjectAsync(args);
+            return presignedUrl;
+        }
         // public async Task<byte[]> DownloadFile(string objectName, CancellationToken token)
         // {
         //     var getObjectArgs = new GetObjectArgs()
