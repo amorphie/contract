@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.data.Contexts;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using amorphie.contract.Extensions;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +39,7 @@ namespace amorphie.contract.Module.Proxy
             {
                 try
                 {
-                    string modelJson = JsonConvert.SerializeObject(requestModel);
+                    string modelJson = JsonSerializer.Serialize(requestModel);
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
@@ -50,7 +50,7 @@ namespace amorphie.contract.Module.Proxy
                         string responseBody = await response.Content.ReadAsStringAsync();
                         TemplateRender renderEntity = new TemplateRender
                         {
-                            RenderData = JsonConvert.SerializeObject(requestModel.RenderData),
+                            RenderData = JsonSerializer.Serialize(requestModel.RenderData),
                             TemplateName = requestModel.Name,
                             RenderType = "Html"
                         };
@@ -62,7 +62,7 @@ namespace amorphie.contract.Module.Proxy
                     else
                     {
                         string exception = await response.Content.ReadAsStringAsync();
-                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        dynamic exObject = Newtonsoft.Json.JsonConvert.DeserializeObject(exception);
                         return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
                     }
                 }
@@ -83,7 +83,7 @@ namespace amorphie.contract.Module.Proxy
             {
                 try
                 {
-                    string modelJson = JsonConvert.SerializeObject(requestModel);
+                    string modelJson = JsonSerializer.Serialize(requestModel);
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
@@ -94,7 +94,7 @@ namespace amorphie.contract.Module.Proxy
                         string responseBody = await response.Content.ReadAsStringAsync();
                         TemplateRender renderEntity = new TemplateRender
                         {
-                            RenderData = JsonConvert.SerializeObject(requestModel.RenderData),
+                            RenderData = JsonSerializer.Serialize(requestModel.RenderData),
                             TemplateName = requestModel.Name,
                             RenderType = "Pdf"
                         };
@@ -106,7 +106,7 @@ namespace amorphie.contract.Module.Proxy
                     else
                     {
                         string exception = await response.Content.ReadAsStringAsync();
-                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        dynamic exObject = Newtonsoft.Json.JsonConvert.DeserializeObject(exception);
                         return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
                     }
                 }
@@ -138,7 +138,7 @@ namespace amorphie.contract.Module.Proxy
                             return Results.NoContent();
                         }
 
-                        Dictionary<string, List<TemplateEngineDefinitionResponseModel>> responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<TemplateEngineDefinitionResponseModel>>>(responseBody);
+                        Dictionary<string, List<TemplateEngineDefinitionResponseModel>> responseDictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, List<TemplateEngineDefinitionResponseModel>>>(responseBody);
                         List<TemplateEngineDefinitionResponseModel> responseList = responseDictionary["templateDefinitionNames"];
 
                         var dbQuery = context!.DocumentTemplate.AsQueryable();
@@ -165,7 +165,7 @@ namespace amorphie.contract.Module.Proxy
                     else
                     {
                         string exception = await response.Content.ReadAsStringAsync();
-                        dynamic exObject = JsonConvert.DeserializeObject(exception);
+                        dynamic exObject = Newtonsoft.Json.JsonConvert.DeserializeObject(exception);
                         return Results.Problem(detail: "Template Engine Render Exception", statusCode: (int)exObject?.status);
                     }
                 }
