@@ -85,7 +85,7 @@ public class ContractModule
                 .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
 
             Code = x.DocumentDefinition.Code,
-            Status =  "not-started",
+            Status = "not-started",
             Required = x.Required,
             Render = x.DocumentDefinition.DocumentOnlineSing != null,
             Version = x.DocumentDefinition.Semver,
@@ -129,7 +129,7 @@ public class ContractModule
                .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
                 Code = x.DocumentDefinition.Code,
-                Status =  "not-started",
+                Status = "not-started",
                 Render = x.DocumentDefinition.DocumentOnlineSing != null,
                 Version = x.DocumentDefinition.Semver,
                 OnlineSign = new OnlineSignModel
@@ -161,9 +161,9 @@ public class ContractModule
         contractModel.DocumentGroups = listModelGroup;
 
         // if (contractModel.Document.Count == 0 && contractModel.DocumentGroups.Any(x => x.Status == EStatus.Completed.ToString()))
-         if (contractModel.Document.Count == 0)
+        if (contractModel.Document.Count == 0)
         {//bura degişecek groupların zorunluluguna göre kontrol koyacaz
-            contractModel.Status =  "valid";
+            contractModel.Status = "valid";
         }
 
 
