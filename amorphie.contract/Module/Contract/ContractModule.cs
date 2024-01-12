@@ -50,7 +50,7 @@ public class ContractModule
             contractModel.Status = "not contract";
             return Results.Ok(contractModel);
         }
-        contractModel.Status = EStatus.InProgress.ToString();
+        contractModel.Status = "in-progress";
         contractModel.Id = query.Id;
         contractModel.Code = query.Code;
 
@@ -85,7 +85,7 @@ public class ContractModule
                 .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
 
             Code = x.DocumentDefinition.Code,
-            Status = EStatus.InProgress.ToString(),
+            Status =  "not-started",
             Required = x.Required,
             Render = x.DocumentDefinition.DocumentOnlineSing != null,
             Version = x.DocumentDefinition.Semver,
@@ -129,7 +129,7 @@ public class ContractModule
                .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
                .FirstOrDefault()?.MultiLanguage?.Name ?? x.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name,
                 Code = x.DocumentDefinition.Code,
-                Status = EStatus.InProgress.ToString(),
+                Status =  "not-started",
                 Render = x.DocumentDefinition.DocumentOnlineSing != null,
                 Version = x.DocumentDefinition.Semver,
                 OnlineSign = new OnlineSignModel
@@ -160,9 +160,10 @@ public class ContractModule
 
         contractModel.DocumentGroups = listModelGroup;
 
-        if (contractModel.Document.Count == 0 && contractModel.DocumentGroups.Any(x => x.Status == EStatus.Completed.ToString()))
+        // if (contractModel.Document.Count == 0 && contractModel.DocumentGroups.Any(x => x.Status == EStatus.Completed.ToString()))
+         if (contractModel.Document.Count == 0)
         {//bura degişecek groupların zorunluluguna göre kontrol koyacaz
-            contractModel.Status = EStatus.Completed.ToString();
+            contractModel.Status =  "valid";
         }
 
 
