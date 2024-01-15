@@ -64,19 +64,8 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
 // db.Database.Migrate();
 // DbInitializer.Initialize(db);
-
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
-
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName.IndexOf("Test") > -1)
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 // app.UseHttpsRedirection();
 
 app.AddRoutes();
