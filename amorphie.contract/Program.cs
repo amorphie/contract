@@ -44,7 +44,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator
 builder.Services.AddScoped<IContractInstanceService, ContractInstanceService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
+    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
