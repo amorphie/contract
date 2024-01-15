@@ -51,11 +51,8 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
 // db.Database.Migrate();
 // sssss
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
