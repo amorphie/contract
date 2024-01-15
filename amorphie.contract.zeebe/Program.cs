@@ -22,7 +22,7 @@ Configuration = builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
+    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -49,7 +49,7 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
-db.Database.Migrate();
+// db.Database.Migrate();
 // sssss
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
