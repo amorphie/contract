@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Service.Minio;
 using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -17,6 +18,12 @@ Configuration = builder
     .AddCommandLine(args)
     .AddUserSecrets<Program>()
     .Build();
+    builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
+(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

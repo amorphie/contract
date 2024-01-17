@@ -13,7 +13,12 @@ using amorphie.contract.data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
-
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
+(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 Configuration = builder
     .Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
