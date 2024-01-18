@@ -6,7 +6,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam facilisis, sem at f
 
 Nullam mollis ex mollis, scelerisque ex id, vehicula lorem. Cras vel porttitor turpis. Cras fringilla erat vel mauris volutpat mattis et convallis quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse ultrices feugiat luctus. Sed ut risus lectus. Duis in mattis magna. Duis in iaculis nisi, vestibulum interdum lorem. Aliquam viverra ornare turpis vitae consequat. Nulla pellentesque libero et sodales mollis. Nullam accumsan, nibh convallis posuere faucibus, ex nunc efficitur magna, in scelerisque enim urna vel augue. Proin venenatis vulputate ornare.
 
-## Amorphie Contract
+## Diagram
 
 ![Amorphie Contract](docs/images/contract_diagram.png)
 
