@@ -17,7 +17,7 @@ You will need the following tools:
 * [Visual Studio Code](https://code.visualstudio.com/download/)
 * [.Net 7.0 or later](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
-* [Dapr] (https://docs.dapr.io/getting-started/install-dapr-cli/)
+* [Dapr](https://docs.dapr.io/getting-started/install-dapr-cli/)
 
 1. Clone repository.
 2. docker-compose up
