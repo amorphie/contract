@@ -6,10 +6,11 @@ using amorphie.contract.core.Mapping;
 using System.Reflection;
 using FluentValidation;
 using System.Text.Json.Serialization;
-using amorphie.contract.Extensions;
 using amorphie.contract.core.Services;
 using amorphie.contract.core;
 using amorphie.contract.data.Services;
+using amorphie.contract.application;
+using amorphie.contract.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -56,6 +57,11 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddApplicationServices();
+
+//Add SeriLog !!!!!
+// builder.AddSeriLog()
+
 var app = builder.Build();
 app.UseCors();
 
@@ -67,7 +73,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.UseSwagger();
 app.UseSwaggerUI();
 // app.UseHttpsRedirection();
-
+app.UseExceptionHandleMiddleware();
 app.AddRoutes();
 
 app.Run();

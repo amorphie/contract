@@ -18,6 +18,7 @@ using amorphie.contract.core.Services;
 using amorphie.contract.core.Entity;
 using System.Buffers.Text;
 using amorphie.contract.core.Enum;
+using amorphie.contract.application;
 
 namespace amorphie.contract;
 
@@ -32,80 +33,24 @@ public class DocumentModule
 
     public override string? UrlFragment => "document";
     async ValueTask<IResult> getAllDocumentFullTextSearch(
-           [FromServices] ProjectDbContext context, [AsParameters] PageComponentSearch dataSearch,
-           CancellationToken cancellationToken
-      )
+           [FromServices] IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch,
+           CancellationToken cancellationToken)
     {
-        try
+        var inputDto = new GetAllDocumentInputDto
         {
+            Keyword = dataSearch.Keyword,
+            Page = dataSearch.Page,
+            PageSize = dataSearch.PageSize
+        };
 
+        var response = await documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
 
-            var query = context!.Document
-                .Skip(dataSearch.Page * dataSearch.PageSize)
-                .Take(dataSearch.PageSize);
+        if (response == null || response.Count == 0)
+            return Results.NoContent();
 
-
-            if (!string.IsNullOrEmpty(dataSearch.Keyword))
-            {
-                query = query.Where(x => x.Status.ToString() == dataSearch.Keyword);
-                // query = query.AsNoTracking().Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery("english", dataSearch.Keyword)));
-            }
-
-            var securityQuestions = await query.ToListAsync(cancellationToken);
-
-            if (securityQuestions.Any())
-            {
-
-                // var response = securityQuestions.Select(x => ObjectMapper.Mapper.Map<RootDocumentModel>(x));
-                var response = securityQuestions.Select(x =>
-                 new RootDocumentModel
-                 {
-                     Id = x.Id.ToString(),
-                     DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                     StatuCode = x.Status.ToString(),
-                     CreatedAt = x.CreatedAt,
-                     DocumentDefinition = new DocumentDefinitionModel
-                     {
-                         Code = x.DocumentDefinition.Code,
-                         MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails!
-                                .Select(a => new MultilanguageText
-                                {
-                                    Label = a.MultiLanguage.Name,
-                                    Language = a.MultiLanguage.LanguageType.Code
-                                }).ToList(),
-                         DocumentOperations = new DocumentOperationsModel
-                         {
-                             DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
-                             DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail!.Select(x => new TagModel
-                             {
-                                 Contact = x.Tags.Contact,
-                                 Code = x.Tags.Code
-                             }).ToList()
-                         }
-                     },
-                     DocumentContent = new DocumentContentModel
-                     {
-                         ContentData = x.DocumentContent.ContentData,
-                         KiloBytesSize = x.DocumentContent.KiloBytesSize,
-                         ContentType = x.DocumentContent.ContentType,
-                         ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
-                         Name = x.DocumentContent.Name,
-                         Id = x.DocumentContent.Id.ToString()
-
-                     }
-                 }).ToList();
-
-
-                return Results.Ok(response);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-
-        return Results.NoContent();
+        return Results.Ok(response);
     }
+    
     async ValueTask<IResult> getAllDocumentAll(
           [FromServices] ProjectDbContext context,
           CancellationToken cancellationToken
