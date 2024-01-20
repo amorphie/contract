@@ -11,5 +11,5 @@ namespace amorphie.contract.application
         // public List<ContractDocumentGroupDetailView>? ContractDocumentGroupDetailLists { get; set; }
         // public List<ValidationView>? ValidationList { get; set; }
     }
-    
+
 }

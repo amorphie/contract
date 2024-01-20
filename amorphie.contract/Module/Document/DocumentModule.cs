@@ -50,7 +50,7 @@ public class DocumentModule
 
         return Results.Ok(response);
     }
-    
+
     async ValueTask<IResult> getAllDocumentAll(
           [FromServices] ProjectDbContext context,
           CancellationToken cancellationToken

@@ -9,5 +9,5 @@ namespace amorphie.contract.application
         public string Name { get; set; }
         public string Id { get; set; }
     }
-    
+
 }

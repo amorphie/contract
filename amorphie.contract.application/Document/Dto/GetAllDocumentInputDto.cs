@@ -4,6 +4,6 @@ namespace amorphie.contract.application
 {
     public class GetAllDocumentInputDto : PagedInputDto
     {
-        
+
     }
 }

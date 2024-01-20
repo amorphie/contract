@@ -7,10 +7,10 @@ namespace amorphie.contract.application
     {
         public required string DocumentDefinitionId { get; set; }
         public required DocumentDefinitionDto DocumentDefinition { get; set; }
-        public DocumentContentDto DocumentContent { get; set; }
-        public required string StatuCode { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }
+    public DocumentContentDto DocumentContent { get; set; }
+    public required string StatuCode { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
 
 
 }

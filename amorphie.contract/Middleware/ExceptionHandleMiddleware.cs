@@ -25,7 +25,7 @@ namespace amorphie.contract.Middleware
 
         private async Task HandleExceptionAsync(Exception ex, HttpContext httpContext)
         {
-            var statusCode = 500; 
+            var statusCode = 500;
             var errorMessage = "Unknown error";
 
             if (ex is InvalidOperationException)
