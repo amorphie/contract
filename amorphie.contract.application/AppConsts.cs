@@ -1,13 +1,13 @@
 namespace amorphie.contract.application
 {
 
-    public class AppConsts
+    public static class AppConsts
     {
 
         /// <summary>
         /// Pass start-status for Contract flow.
         /// </summary>
-        public const string StartStatus = "start-test-mock";
+        public static readonly string StartStatus = "start-test-mock";
 
     }
 }

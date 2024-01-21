@@ -45,7 +45,7 @@ public class DocumentModule
 
         var response = await documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
 
-        if (response == null || response.Count == 0)
+        if (!response.Any())
             return Results.NoContent();
 
         return Results.Ok(response);
