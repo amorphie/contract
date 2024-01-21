@@ -1,0 +1,52 @@
+version: '3.9'
+services:
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ~/minio/data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-contractminio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-contract123456}
+    command: server /data --console-address ":9001"
+    networks:
+      - contract-local
+      #OIDC lazım..
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5442:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-contractdb}
+      POSTGRES_USER: ${POSTGRES_USER:-contractpostgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+    networks:
+      - contract-local
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-contract@amorphie.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-123456}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - postgres
+    networks:
+      - contract-local
+
+networks:
+  contract-local:
+    driver: bridge
+    
+volumes:
+  minio:
+  postgres:
+  pgadmin:
