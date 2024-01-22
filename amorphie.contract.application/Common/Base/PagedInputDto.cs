@@ -4,7 +4,7 @@ namespace amorphie.contract.application;
 
 public class PagedInputDto : DtoSearchBase
 {
-
+    
 }
 
 

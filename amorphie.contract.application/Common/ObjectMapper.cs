@@ -2,7 +2,7 @@ using AutoMapper;
 
 namespace amorphie.contract.application
 {
-    public static class ObjectMapper
+    public static class ObjectMapperApp
     {
         private static readonly Lazy<IMapper> lazy = new(() =>
     {

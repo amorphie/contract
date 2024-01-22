@@ -1,15 +1,14 @@
-using System.Data.SqlTypes;
 using amorphie.contract.data.Contexts;
 using FluentValidation;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using amorphie.contract.core.Model;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Model.Document;
 using amorphie.contract.core.Mapping;
 using amorphie.contract.Extensions;
+using amorphie.contract.application;
 
 namespace amorphie.contract;
 

@@ -15,6 +15,7 @@ using amorphie.contract.core.Mapping;
 using amorphie.contract.core.Model.Document;
 using System.Runtime.CompilerServices;
 using amorphie.contract.Extensions;
+using amorphie.contract.application;
 
 namespace amorphie.contract;
 
