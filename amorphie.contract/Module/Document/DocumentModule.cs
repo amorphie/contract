@@ -29,7 +29,7 @@ public class DocumentModule
         routeGroupBuilder.MapPost("Instance", Instance);
     }
 
-    async ValueTask<IResult> getAllDocumentFullTextSearch([FromServices]IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
+    async ValueTask<IResult> getAllDocumentFullTextSearch([FromServices] IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
     {
         var inputDto = new GetAllDocumentInputDto
         {
@@ -46,7 +46,7 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResult> getAllDocumentAll([FromServices]IDocumentAppService documentAppService, CancellationToken cancellationToken)
+    async ValueTask<IResult> getAllDocumentAll([FromServices] IDocumentAppService documentAppService, CancellationToken cancellationToken)
     {
         var response = await documentAppService.GetAllDocumentAll(cancellationToken);
 
@@ -56,7 +56,7 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResponse> Instance([FromServices]IDocumentAppService documentAppService, CancellationToken token, [FromBody] DocumentInstanceInputDto input)
+    async ValueTask<IResponse> Instance([FromServices] IDocumentAppService documentAppService, CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
 
         var response = await documentAppService.Instance(input);
