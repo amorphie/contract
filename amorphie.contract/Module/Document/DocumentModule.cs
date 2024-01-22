@@ -13,10 +13,8 @@ namespace amorphie.contract;
 public class DocumentModule
     : BaseBBTRoute<RootDocumentDto, Document, ProjectDbContext>
 {
-    private readonly IDocumentAppService _documentAppService;
-    public DocumentModule(WebApplication app, IDocumentAppService documentAppService) : base(app)
+    public DocumentModule(WebApplication app) : base(app)
     {
-        _documentAppService = documentAppService;
     }
 
     public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentContentId" };
@@ -31,7 +29,7 @@ public class DocumentModule
         routeGroupBuilder.MapPost("Instance", Instance);
     }
 
-    async ValueTask<IResult> getAllDocumentFullTextSearch([AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
+    async ValueTask<IResult> getAllDocumentFullTextSearch([FromServices] IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
     {
         var inputDto = new GetAllDocumentInputDto
         {
@@ -40,7 +38,7 @@ public class DocumentModule
             PageSize = dataSearch.PageSize
         };
 
-        var response = await _documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
+        var response = await documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
 
         if (!response.Any())
             return Results.NoContent();
@@ -48,9 +46,9 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResult> getAllDocumentAll(CancellationToken cancellationToken)
+    async ValueTask<IResult> getAllDocumentAll([FromServices] IDocumentAppService documentAppService, CancellationToken cancellationToken)
     {
-        var response = await _documentAppService.GetAllDocumentAll(cancellationToken);
+        var response = await documentAppService.GetAllDocumentAll(cancellationToken);
 
         if (!response.Any())
             return Results.NoContent();
@@ -58,10 +56,10 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResponse> Instance(HttpContext httpContext, CancellationToken token, [FromBody] DocumentInstanceInputDto input)
+    async ValueTask<IResponse> Instance([FromServices] IDocumentAppService documentAppService, CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
 
-        var response = await _documentAppService.Instance(input);
+        var response = await documentAppService.Instance(input);
 
         return new Response
         {
