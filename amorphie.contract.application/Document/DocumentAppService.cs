@@ -112,7 +112,7 @@ namespace amorphie.contract.application
             return new Result(Status.Success, "OK");
         }
 
-        public async Task<List<RootDocumentDto>> GetAllMethod(PagedInputDto pagedInputDto,CancellationToken cancellationToken)
+        public async Task<List<RootDocumentDto>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
             var response = new List<RootDocumentDto>();
