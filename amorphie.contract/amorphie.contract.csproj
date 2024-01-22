@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
+    <ProjectReference Include="..\amorphie.contract.application\amorphie.contract.application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

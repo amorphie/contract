@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Service.Minio;
 using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.application;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -44,6 +45,8 @@ builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 using var scope = app.Services.CreateScope();

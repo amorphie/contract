@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.test", "a
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.zeebe", "amorphie.contract.zeebe\amorphie.contract.zeebe.csproj", "{45A057E2-2089-4A29-A058-30D6B61B0733}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.contract.application", "amorphie.contract.application\amorphie.contract.application.csproj", "{CF08DDCE-8824-4783-B5C1-EA19BC69BE4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{45A057E2-2089-4A29-A058-30D6B61B0733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45A057E2-2089-4A29-A058-30D6B61B0733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45A057E2-2089-4A29-A058-30D6B61B0733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF08DDCE-8824-4783-B5C1-EA19BC69BE4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF08DDCE-8824-4783-B5C1-EA19BC69BE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF08DDCE-8824-4783-B5C1-EA19BC69BE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF08DDCE-8824-4783-B5C1-EA19BC69BE4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
