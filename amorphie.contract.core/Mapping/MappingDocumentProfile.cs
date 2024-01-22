@@ -50,42 +50,42 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
             CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
             #endregion
-            CreateMap<Document, RootDocumentModel>()
-                     .ConstructUsing(x => new RootDocumentModel
-                     {
-                         DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
-                         StatuCode = x.Status.ToString(),
-                         CreatedAt = x.CreatedAt,
-                         DocumentDefinition = new DocumentDefinitionModel
-                         {
-                             Code = x.DocumentDefinition.Code,
-                             MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails
-                                .Select(a => new MultilanguageText
-                                {
-                                    Label = a.MultiLanguage.Name,
-                                    Language = a.MultiLanguage.LanguageType.Code
-                                }).ToList(),
-                             DocumentOperations = new DocumentOperationsModel
-                             {
-                                 DocumentManuelControl = x.DocumentDefinition.DocumentOperations.DocumentManuelControl,
-                                 DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail.Select(x => new TagModel
-                                 {
-                                     Contact = x.Tags.Contact,
-                                     Code = x.Tags.Code
-                                 }).ToList()
-                             }
-                         },
-                         DocumentContent = new DocumentContentModel
-                         {
-                             ContentData = x.DocumentContent.ContentData,
-                             KiloBytesSize = x.DocumentContent.KiloBytesSize,
-                             ContentType = x.DocumentContent.ContentType,
-                             ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
-                             Name = x.DocumentContent.Name,
-                             Id = x.DocumentContent.Id.ToString()
+            // CreateMap<Document, RootDocumentModel>()
+            //          .ConstructUsing(x => new RootDocumentModel
+            //          {
+            //              DocumentDefinitionId = x.DocumentDefinitionId.ToString(),
+            //              StatuCode = x.Status.ToString(),
+            //              CreatedAt = x.CreatedAt,
+            //              DocumentDefinition = new DocumentDefinitionModel
+            //              {
+            //                  Code = x.DocumentDefinition.Code,
+            //                  MultilanguageText = x.DocumentDefinition.DocumentDefinitionLanguageDetails
+            //                     .Select(a => new MultilanguageText
+            //                     {
+            //                         Label = a.MultiLanguage.Name,
+            //                         Language = a.MultiLanguage.LanguageType.Code
+            //                     }).ToList(),
+            //                  DocumentOperations = new DocumentOperationsModel
+            //                  {
+            //                      DocumentManuelControl = x.DocumentDefinition.DocumentOperations.DocumentManuelControl,
+            //                      DocumentOperationsTagsDetail = x.DocumentDefinition.DocumentOperations.DocumentOperationsTagsDetail.Select(x => new TagModel
+            //                      {
+            //                          Contact = x.Tags.Contact,
+            //                          Code = x.Tags.Code
+            //                      }).ToList()
+            //                  }
+            //              },
+            //              DocumentContent = new DocumentContentModel
+            //              {
+            //                  ContentData = x.DocumentContent.ContentData,
+            //                  KiloBytesSize = x.DocumentContent.KiloBytesSize,
+            //                  ContentType = x.DocumentContent.ContentType,
+            //                  ContentTransferEncoding = x.DocumentContent.ContentTransferEncoding,
+            //                  Name = x.DocumentContent.Name,
+            //                  Id = x.DocumentContent.Id.ToString()
 
-                         }
-                     });
+            //              }
+            //          });
 
 
 
