@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace amorphie.contract.core.Model.Document
+namespace amorphie.contract.application
 {
-    public class DocumentInstanceModel
+    public class DocumentInstanceInputDto
     {
         public Guid Id { get; set; }
         [JsonPropertyName("file-type")]
