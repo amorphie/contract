@@ -19,12 +19,31 @@ You will need the following tools:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * [Dapr](https://docs.dapr.io/getting-started/install-dapr-cli/)
 
+    1. Clone repository.
+    2. For VSCode
+        * Open the contract project directory in VS Code
+        * Install plugins: C#, C# Dev Kit, Dapr (from Microsoft)
+        * You can run "amorphie-contract" or "amorphie.contract.zeebee" from the Run and Debug tab.
+    4. API Service: cd amorphie.contract  
+        * dotnet run .
+    5. Zeebe Workflow Service: cd amorphie.contract.zeebe
+        * dotnet run .
+
+### Local Deployment
+
 1. Clone repository.
-2. docker-compose up
-3. API Service: cd amorphie.contract  
-    * dotnet run .
-4. Zeebe Workflow Service: cd amorphie.contract.zeebe
-    * dotnet run .
+2. Run the command `docker-compose -f docker-compose.local.yml up -d` in terminal
+3. You can log in to the `9001` port minio admin panel and the `5050` port pgadmin admin panel with the test users in the `docker-compose.local` file.
+4. Run the amorphie-contract project from VSCode or VisualStudio IDE. Make sure that the appsetting section is in Development.
+5. Migrate the DBContext schema in the project to local db with CodeFirst. Make sure that the Contract project is a startup project.
+    * `dotnet ef database update --startup-project "amorphie.contract/amorphie.contract.csproj" --context ProjectDbContext`
+ 6. If you want to fill some of the test data into the DB, Run the `AutoRun` folder in the default postman collection.
+
+ ## TODO
+
+* Set it to work locally with MinIO OIDC
+* Set TemplateEngine to run locally
+
 
 
 # REST API
