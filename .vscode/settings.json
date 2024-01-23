@@ -2,6 +2,7 @@
     "dotnet.defaultSolution": "contract.sln",
     "cSpell.words": [
         "amorphie",
+        "Burgan",
         "dapr",
         "Expando",
         "jobworker",

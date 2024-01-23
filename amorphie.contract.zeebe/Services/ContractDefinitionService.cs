@@ -149,6 +149,10 @@ namespace amorphie.contract.zeebe.Services
                     }).ToList();
             _ContractDefinition.ContractValidations = list;
         }
+        private void SetContractBankEntity()
+        {
+             
+        }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
             _ContractDefinitionDataModelDynamic = documentDefinitionDataModelDynamic;
@@ -161,6 +165,7 @@ namespace amorphie.contract.zeebe.Services
                 SetContractTag();
                 SetContractEntityProperty();
                 SetContractValidation();
+                // SetContractBankEntity();
                 _dbContext.ContractDefinition.Add(_ContractDefinition);
                 _dbContext.SaveChanges();
             }
