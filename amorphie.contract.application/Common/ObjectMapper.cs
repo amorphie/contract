@@ -1,3 +1,4 @@
+using amorphie.contract.application.Contract;
 using AutoMapper;
 
 namespace amorphie.contract.application
@@ -9,6 +10,7 @@ namespace amorphie.contract.application
         var config = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<DocumentMapProfile>();
+            cfg.AddProfile<ContractMapProfile>();
         });
 
         return config.CreateMapper();
