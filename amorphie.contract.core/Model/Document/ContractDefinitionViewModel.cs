@@ -6,25 +6,18 @@ using System.Threading.Tasks;
 
 namespace amorphie.contract.core.Model.Document
 {
-    public class ContractDefinitionViewModel
-    {
-        public Guid Id { get; set; }
-        public string? Code { get; set; }
-        public string? Status { get; set; }
-        public List<TagsView>? Tags { get; set; }
-        public List<EntityPropertyView>? EntityProperties { get; set; }
-        public List<ContractDocumentDetailView>? ContractDocumentDetailList { get; set; }
-        public List<ContractDocumentGroupDetailView>? ContractDocumentGroupDetailLists { get; set; }
-        public List<ValidationView>? ValidationList { get; set; }
-    }
-    public class ContractDocumentDetailView
-    {
-        public string? UseExisting { get; set; }
-        public string? MinVersion { get; set; }
-        public bool Required { get; set; }
-        public DocumentDefinitionViewModel DocumentDefinition { get; set; }
+    // public class ContractDefinitionViewModel
+    // {
+    //     public Guid Id { get; set; }
+    //     public string? Code { get; set; }
+    //     public string? Status { get; set; }
+    //     // public List<TagDto>? Tags { get; set; }
+    //     // public List<EntityPropertyView>? EntityProperties { get; set; }
+    //     public List<ContractDocumentDetailView>? ContractDocumentDetailList { get; set; }
+    //     public List<ContractDocumentGroupDetailView>? ContractDocumentGroupDetailLists { get; set; }
+    //     public List<ValidationView>? ValidationList { get; set; }
+    // }
 
-    }
     public class ContractDocumentGroupDetailView
     {
         public uint AtLeastRequiredDocument { get; set; }

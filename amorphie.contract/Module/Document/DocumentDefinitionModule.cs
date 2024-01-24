@@ -9,14 +9,17 @@ using amorphie.contract.core.Model.Document;
 using amorphie.contract.core.Mapping;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
+using amorphie.core.Base;
 
 namespace amorphie.contract;
 
 public class DocumentDefinitionModule
-    : BaseBBTContractRoute<DocumentDefinition, DocumentDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<DocumentDefinitionDto, DocumentDefinition, ProjectDbContext>
 {
+
     public DocumentDefinitionModule(WebApplication app) : base(app)
     {
+        
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code", "StatusId" };
@@ -89,40 +92,50 @@ public class DocumentDefinitionModule
     protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
        [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
     {
+        var language = httpContext.Request.Headers["Language"].ToString();
 
-        try
+        var input = new GetAllDocumentDefinitionInputDto
         {
-            var language = httpContext.Request.Headers["Language"].ToString();
-            if (string.IsNullOrEmpty(language))
+            Lang = new LangDto
             {
-                language = "en-EN";
-            }
-            var list = await context.DocumentDefinition.OrderBy(x => x.Code).Skip(page * pageSize)
-                .Take(pageSize).AsNoTracking().ToListAsync(token);
-            var c = list.Select(x =>
-         ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(x)).ToList();
-            foreach (var documentDefinitionViewModel in c)
+                LangCode = language
+            },
+            Page = page,
+            PageSize = pageSize
+        };
+
+        var list = await context.DocumentDefinition.OrderBy(x => x.Code).Skip(input.Page * input.PageSize).Take(input.PageSize).AsNoTracking().ToListAsync(token);
+
+        var responseDtos = ObjectMapperApp.Mapper.Map<List<DocumentDefinitionDto>>(list);
+
+        foreach (var dto in responseDtos)
+        {
+            if (dto.MultilanguageText is not null)
             {
-                var selectedLanguageText = documentDefinitionViewModel?.MultilanguageText
-                    .FirstOrDefault(t => t.Language == language);
+                var selectedLanguageText = dto?.MultilanguageText.FirstOrDefault(t => t.Language == input.Lang.LangCode);
 
                 if (selectedLanguageText != null)
                 {
-                    documentDefinitionViewModel.Name = selectedLanguageText.Label;
+                    dto.Name = selectedLanguageText.Label;
                 }
-                else if (documentDefinitionViewModel.MultilanguageText.Any())
+                else if (dto.MultilanguageText.Any())
                 {
-                    documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
+                    dto.Name = dto.MultilanguageText.First().Label;
                 }
             }
-            return Results.Ok(c);
 
         }
-        catch (Exception ex)
+
+
+
+        if (responseDtos is null)
         {
-            Results.Problem(ex.Message);
+            return Results.NotFound();
         }
-        return Results.NoContent();
+
+        return Results.Ok(responseDtos);
+
+
 
     }
 }

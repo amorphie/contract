@@ -14,7 +14,7 @@ namespace amorphie.contract.core.Mapping
         {
             cfg.AddProfile<MappingCommonProfile>();
             cfg.AddProfile<MappingContractProfile>();
-            cfg.AddProfile<MappingDocumentProfile>();
+            // cfg.AddProfile<MappingDocumentProfile>();
             cfg.AddProfile<MappingEAVProfile>();
         });
 

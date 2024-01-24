@@ -23,11 +23,13 @@ using amorphie.contract.application;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.core.IBase;
+using Microsoft.AspNetCore.Mvc.Razor;
+using amorphie.contract.application.Contract.Dto;
 
 namespace amorphie.contract;
 
 public class ContractModule
-    : BaseBBTRoute<ContractRequest, Contract, ProjectDbContext>
+    : BaseBBTRoute<ContractDefinitionDto, Contract, ProjectDbContext>
 {
     public ContractModule(WebApplication app) : base(app)
     {
@@ -38,16 +40,21 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
     }
-    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, [FromServices] IMapper mapper,
-   HttpContext httpContext, CancellationToken token,
-    [FromBody] ContractRequest data,
-  [FromHeader(Name = "Language")] string? language = "en-EN")
+    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token,
+    [FromBody] ContractInstaceInputDto input, [FromHeader(Name = "Language")] string? language = "en-EN")
     {
-        var response = await contractAppService.Instance(data,language,token);
+        input.Lang = new LangDto
+        {
+            LangCode = language
+        };
+
+        var response = await contractAppService.Instance(input, token);
+        if(response is null)
+        return Results.NotFound();
 
         return Results.Ok(response);
-
     }
+
     public override string[]? PropertyCheckList => new string[] { "Code" };
 
     public override string? UrlFragment => "contract";

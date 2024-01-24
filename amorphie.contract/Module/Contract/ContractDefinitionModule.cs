@@ -15,11 +15,12 @@ using amorphie.contract.core.Model.Document;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
+using amorphie.contract.application.Contract.Dto;
 
 namespace amorphie.contract;
 
 public class ContractDefinitionModule
-    : BaseBBTContractRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<ContractDefinitionDto, ContractDefinition, ProjectDbContext>
 {
     public ContractDefinitionModule(WebApplication app) : base(app)
     {
@@ -42,20 +43,20 @@ public class ContractDefinitionModule
             {
                 language = "en-EN";
             }
-            var query = context!.ContractDefinition!.Select(x => ObjectMapper.Mapper.Map<ContractDefinitionViewModel>(x)).Skip(page)
+            var query = context!.ContractDefinition!.Select(x => ObjectMapper.Mapper.Map<ContractDefinitionDto>(x)).Skip(page)
                 .Take(pageSize).AsNoTracking().AsSplitQuery();
             var list = await query.ToListAsync(token);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(a => a.DocumentGroup.DocumentDefinitionList.ForEach(b =>
-            b.Name = b.MultilanguageText.Any(c => c.Language == language) ? b.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
-            : b.MultilanguageText.First().Label)
-            ));
-            list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(b =>
-            b.DocumentGroup.Name = b.DocumentGroup.MultilanguageText.Any(c => c.Language == language) ? b.DocumentGroup.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
-            : b.DocumentGroup.MultilanguageText.First().Label)
-            );
+            // list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(a => a.DocumentGroup.DocumentDefinitionList.ForEach(b =>
+            // b.Name = b.MultilanguageText.Any(c => c.Language == language) ? b.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
+            // : b.MultilanguageText.First().Label)
+            // ));
+            // list.ForEach(x => x.ContractDocumentGroupDetailLists.ForEach(b =>
+            // b.DocumentGroup.Name = b.DocumentGroup.MultilanguageText.Any(c => c.Language == language) ? b.DocumentGroup.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
+            // : b.DocumentGroup.MultilanguageText.First().Label)
+            // );
             // list.ForEach(x => x.ContractDocumentDetailList?.ForEach(b =>
             // b.DocumentDefinition.Name = b.DocumentDefinition.MultilanguageText.Any(c => c.Language == language) ? b.DocumentDefinition.MultilanguageText.FirstOrDefault(c => c.Language == language).Label
             // : b.DocumentDefinition.MultilanguageText.First().Label)

@@ -1,23 +1,14 @@
 ﻿using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Request;
-using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model.Contract;
-using amorphie.contract.core.Services;
 using amorphie.contract.data.Contexts;
-using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace amorphie.contract.application.Contract
 {
     public interface IContractAppService
     {
-        Task<ContractDto> Instance(ContractRequest req, string language, CancellationToken cts);
+        Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts);
     }
     public class ContractAppService : IContractAppService
     {
@@ -27,16 +18,13 @@ namespace amorphie.contract.application.Contract
             _dbContext = dbContext;
         }
 
-        public async Task<ContractDto> Instance(ContractRequest req, string language, CancellationToken cts)
+        public async Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)
             {
-                return new ContractDto { Status = "not contract" };
+                return new ContractDefinitionDto { Status = "not contract" };
             }
-            //contractModel.Status = "in-progress";
-            //contractModel.Id = query.Id;
-            //contractModel.Code = query.Code;
 
             var documentList = contractDefinition.ContractDocumentDetails
                 .Select(x => x.DocumentDefinitionId)
@@ -46,6 +34,7 @@ namespace amorphie.contract.application.Contract
                 .SelectMany(x => x.DocumentGroup.DocumentGroupDetails)
                 .Select(a => a.DocumentDefinitionId)
                 .ToList();
+
 
             var customerDocument = await _dbContext.Document
                 .Where(x => x.Customer.Reference == req.Reference && documentList.Contains(x.DocumentDefinitionId))
@@ -62,36 +51,37 @@ namespace amorphie.contract.application.Contract
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            var listModel = listDocument.Select(x => ObjectMapperApp.Mapper.Map<DocumentDto>(x)).ToList();
+            var listModel = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
 
-            var listModelGroup = listDocumentGroup.Select(a =>
-                new DocumentGroupDto
-                {
-                    Title = a.DocumentGroup.DocumentGroupLanguageDetail
-                        .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
-                        .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
-                    Status = a.AtLeastRequiredDocument <= a.DocumentGroup.DocumentGroupDetails
-                    .Where(c => customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count() ? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
+            //TODO: Umut - mapping sonra yapılacak.
+            // var listModelGroup = listDocumentGroup.Select(a =>
+            //     new DocumentGroupDto
+            //     {
+            //         Title = a.DocumentGroup.DocumentGroupLanguageDetail
+            //             .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
+            //             .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
+            //         Status = a.AtLeastRequiredDocument <= a.DocumentGroup.DocumentGroupDetails
+            //         .Where(c => customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count() ? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
 
-                    AtLeastRequiredDocument = a.AtLeastRequiredDocument,
+            //         AtLeastRequiredDocument = a.AtLeastRequiredDocument,
 
-                    Required = a.Required,
-                    Document = a.DocumentGroup.DocumentGroupDetails
-                    .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => ObjectMapperApp.Mapper.Map<DocumentDto>(x)).ToList()
-                }
+            //         Required = a.Required,
+            //         Document = a.DocumentGroup.DocumentGroupDetails
+            //         .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => ObjectMapperApp.Mapper.Map<DocumentDto>(x)).ToList()
+            //     }
+            // ).ToList();
 
-            ).ToList();
-            var contractModel = new ContractDto
+            var contractModel = new ContractDefinitionDto
             {
-                Status = "in-progress",
+                Status = AppConsts.InProgress,
                 Id = contractDefinition.Id,
                 Code = contractDefinition.Code,
-                Document = listModel,
-                DocumentGroups = listModelGroup
+                ContractDocumentDetails = listModel,
+                // DocumentGroups = listModelGroup
             };
 
-            if (contractModel.Document.Count == 0)
-                contractModel.Status = "valid";
+            if (contractModel.ContractDocumentDetails.Count == 0)
+                contractModel.Status = AppConsts.Valid;
 
             return contractModel;
         }

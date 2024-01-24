@@ -38,7 +38,7 @@ builder.Services.AddSingleton<IMinioService, MinioService>();
 var assemblies = new Assembly[]
                 {
                       typeof(DocumentDefinitionValidator).Assembly,
-                      typeof(MappingDocumentProfile).Assembly,
+                    //   typeof(MappingDocumentProfile).Assembly,
                 };
 builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);

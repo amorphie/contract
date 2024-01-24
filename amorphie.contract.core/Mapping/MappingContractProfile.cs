@@ -18,54 +18,54 @@ namespace amorphie.contract.core.Mapping
     {
         public MappingContractProfile()
         {
-            CreateMap<ContractDefinition, ContractDefinition>().ReverseMap();
-            CreateMap<ContractDocumentDetail, ContractDocumentDetail>().ReverseMap();
-            CreateMap<ContractDocumentGroupDetail, ContractDocumentGroupDetail>().ReverseMap();
-            CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
-            CreateMap<ContractTag, ContractTag>().ReverseMap();
-            CreateMap<ContractValidation, ContractValidation>().ReverseMap();
-            #region  ContractDefinitionViewModel
+    //         CreateMap<ContractDefinition, ContractDefinition>().ReverseMap();
+    //         CreateMap<ContractDocumentDetail, ContractDocumentDetail>().ReverseMap();
+    //         CreateMap<ContractDocumentGroupDetail, ContractDocumentGroupDetail>().ReverseMap();
+    //         CreateMap<ContractEntityProperty, ContractEntityProperty>().ReverseMap();
+    //         CreateMap<ContractTag, ContractTag>().ReverseMap();
+    //         CreateMap<ContractValidation, ContractValidation>().ReverseMap();
+    //         #region  ContractDefinitionViewModel
 
-            CreateMap<ContractDefinition, ContractDefinitionViewModel>()
-    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.ToString() : null))
-    .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
-        src.ContractTags.Select(a => new TagsView
-        {
-            Code = a.Tags.Code,
-            Contact = a.Tags.Contact,
-        }).ToList()))
-    .ForMember(dest => dest.EntityProperties, opt => opt.MapFrom(src =>
-        src.ContractEntityProperty.Select(a => new EntityPropertyView
-        {
-            Code = a.EntityProperty.Code,
-            EntityPropertyValue = a.EntityProperty.EntityPropertyValue != null ? a.EntityProperty.EntityPropertyValue.Data : null
-        }).ToList()))
-    .ForMember(dest => dest.ContractDocumentDetailList, opt => opt.MapFrom(src =>
-        src.ContractDocumentDetails.Select(a => new ContractDocumentDetailView
-        {
-            UseExisting = ((EUseExisting)a.UseExisting).ToString(),
-            MinVersion = a.DocumentDefinitionId.ToString(),
-            Required = a.Required,
-            DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
-        }).ToList()))
-    .ForMember(dest => dest.ContractDocumentGroupDetailLists, opt => opt.MapFrom(src =>
-        src.ContractDocumentGroupDetails.Select(a => new ContractDocumentGroupDetailView
-        {
-            AtLeastRequiredDocument = a.AtLeastRequiredDocument,
-            Required = a.Required,
-            DocumentGroup = ObjectMapper.Mapper.Map<DocumentGroupViewModel>(a.DocumentGroup)
-        }).ToList()))
-    .ForMember(dest => dest.ValidationList, opt => opt.MapFrom(src =>
-        src.ContractValidations != null ? src.ContractValidations.Select(a => new ValidationView
-        {
-            ValidationDecision = a.Validations.ValidationDecision != null ? a.Validations.ValidationDecision.Code : null,
-            EValidationType = ((EValidationType)a.Validations.EValidationType).ToString(),
-        }).ToList() : null));
-            #endregion
+    //         CreateMap<ContractDefinition, ContractDefinitionViewModel>()
+    // .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.ToString() : null))
+    // .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
+    //     src.ContractTags.Select(a => new TagsView
+    //     {
+    //         Code = a.Tags.Code,
+    //         Contact = a.Tags.Contact,
+    //     }).ToList()))
+    // .ForMember(dest => dest.EntityProperties, opt => opt.MapFrom(src =>
+    //     src.ContractEntityProperty.Select(a => new EntityPropertyView
+    //     {
+    //         Code = a.EntityProperty.Code,
+    //         EntityPropertyValue = a.EntityProperty.EntityPropertyValue != null ? a.EntityProperty.EntityPropertyValue.Data : null
+    //     }).ToList()))
+    // .ForMember(dest => dest.ContractDocumentDetailList, opt => opt.MapFrom(src =>
+    //     src.ContractDocumentDetails.Select(a => new ContractDocumentDetailView
+    //     {
+    //         UseExisting = ((EUseExisting)a.UseExisting).ToString(),
+    //         MinVersion = a.DocumentDefinitionId.ToString(),
+    //         Required = a.Required,
+    //         DocumentDefinition = ObjectMapper.Mapper.Map<DocumentDefinitionViewModel>(a.DocumentDefinition)
+    //     }).ToList()))
+    // .ForMember(dest => dest.ContractDocumentGroupDetailLists, opt => opt.MapFrom(src =>
+    //     src.ContractDocumentGroupDetails.Select(a => new ContractDocumentGroupDetailView
+    //     {
+    //         AtLeastRequiredDocument = a.AtLeastRequiredDocument,
+    //         Required = a.Required,
+    //         DocumentGroup = ObjectMapper.Mapper.Map<DocumentGroupViewModel>(a.DocumentGroup)
+    //     }).ToList()))
+    // .ForMember(dest => dest.ValidationList, opt => opt.MapFrom(src =>
+    //     src.ContractValidations != null ? src.ContractValidations.Select(a => new ValidationView
+    //     {
+    //         ValidationDecision = a.Validations.ValidationDecision != null ? a.Validations.ValidationDecision.Code : null,
+    //         EValidationType = ((EValidationType)a.Validations.EValidationType).ToString(),
+    //     }).ToList() : null));
+    //         #endregion
 
-            #region ContractInstanceModel
-            CreateMap<ContractDefinition, ContractModel>().
-                ConvertUsing((source, destination, context) => ConvertContractModelToViewModel(source, context.Items["language"]?.ToString()));
+    //         #region ContractInstanceModel
+    //         CreateMap<ContractDefinition, ContractModel>().
+    //             ConvertUsing((source, destination, context) => ConvertContractModelToViewModel(source, context.Items["language"]?.ToString()));
 
 
 
@@ -89,7 +89,7 @@ namespace amorphie.contract.core.Mapping
 
             // });
 
-            #endregion
+            // #endregion
 
         }
         private ContractModel ConvertContractModelToViewModel(ContractDefinition x, string? language)

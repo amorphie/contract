@@ -5,15 +5,17 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace amorphie.contract.application.Contract.Dto
+namespace amorphie.contract.application
 {
-    public class DocumentGroupDto
+    public class ContractDocumentGroupDetailDto
     {
         public bool Required { get; set; }
         public string Status { get; set; }
         public string Title { get; set; }
         [JsonPropertyName("at-least-required-document")]
         public int AtLeastRequiredDocument { get; set; }
-        public List<DocumentDto> Document { get; set; }
+
+        //TODO: Umut - Mapping
+        public List<DocumentDefinitionDto> DocumentDefinitions { get; set; }
     }
 }
