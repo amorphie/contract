@@ -44,6 +44,7 @@
           <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
           <zeebe:taskHeaders>
             <zeebe:header key="TARGET_STATE" value="contract-check-sub-state" />
+            <zeebe:header key="PAGE_URL" value="APPROVE_DOCUMENTS" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1pqqnko</bpmn:incoming>

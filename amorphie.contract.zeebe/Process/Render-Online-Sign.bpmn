@@ -46,7 +46,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
           <zeebe:taskHeaders>
-            <zeebe:header key="TARGET_STATE" value="error" />
+            <zeebe:header key="TARGET_STATE" value="default" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1tgs8l5</bpmn:incoming>
@@ -178,7 +178,7 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
         <zeebe:taskHeaders>
-          <zeebe:header key="TARGET_STATE" value="error" />
+          <zeebe:header key="TARGET_STATE" value="default" />
         </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ou83v3</bpmn:incoming>
