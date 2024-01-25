@@ -15,8 +15,6 @@ namespace amorphie.contract.core.Entity.Contract
     public class ContractDocumentGroupDetail : AudiEntity
     {
         [Required]
-
-
         public Guid ContractDefinitionId { get; set; }
         [ForeignKey("ContractDefinitionId")]
 

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 
 namespace amorphie.contract.core.Mapping
@@ -13,7 +9,7 @@ namespace amorphie.contract.core.Mapping
         var config = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<MappingCommonProfile>();
-            cfg.AddProfile<MappingContractProfile>();
+            // cfg.AddProfile<MappingContractProfile>();
             cfg.AddProfile<MappingDocumentProfile>();
             cfg.AddProfile<MappingEAVProfile>();
         });
