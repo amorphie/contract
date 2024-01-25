@@ -4,7 +4,7 @@ namespace amorphie.contract.data.Contexts
     {
         public static void Initialize(ProjectDbContext context)
         {
-            
+
         }
     }
 }

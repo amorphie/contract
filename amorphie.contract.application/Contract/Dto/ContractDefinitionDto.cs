@@ -7,6 +7,6 @@
         public string Status { get; set; }
         public List<ContractDocumentDetailDto> ContractDocumentDetails { get; set; }
 
-       public List<ContractDocumentGroupDetailDto> ContractDocumentGroupDetails { get; set; }
+        public List<ContractDocumentGroupDetailDto> ContractDocumentGroupDetails { get; set; }
     }
 }

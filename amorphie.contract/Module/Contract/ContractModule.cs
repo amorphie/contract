@@ -30,8 +30,8 @@ public class ContractModule
         };
 
         var response = await contractAppService.Instance(input, token);
-        if(response is null)
-        return Results.NotFound();
+        if (response is null)
+            return Results.NotFound();
 
         return Results.Ok(response);
     }

@@ -16,7 +16,7 @@ public class DocumentDefinitionModule
 
     public DocumentDefinitionModule(WebApplication app) : base(app)
     {
-        
+
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code", "StatusId" };

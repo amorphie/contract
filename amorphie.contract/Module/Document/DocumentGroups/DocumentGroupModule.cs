@@ -86,7 +86,7 @@ public class DocumentGroupModule
             }
 
             var list = await context!.DocumentGroup!.Skip(page * pageSize).Take(pageSize).ToListAsync(token);
-           
+
             var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list);
 
             // foreach (var documentGroupViewModel in list)
