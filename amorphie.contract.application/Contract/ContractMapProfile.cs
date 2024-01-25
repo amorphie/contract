@@ -15,12 +15,16 @@ namespace amorphie.contract.application.Contract
                 .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.DocumentDefinition.Semver)).ReverseMap();
 
             CreateMap<ContractDefinition, ContractDefinitionDto>()
-                    .ForMember(dest => dest.ContractDocumentDetails, opt => opt.MapFrom(src => src.ContractDocumentDetails))
+                    .ForPath(dest => dest.ContractDocumentDetails, opt => opt.MapFrom(src => src.ContractDocumentDetails))
+                    .ForPath(dest => dest.ContractDocumentGroupDetails, opt => opt.MapFrom(src => src.ContractDocumentGroupDetails))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
                     .ReverseMap();
 
-            CreateMap<ContractDocumentGroupDetailDto,ContractDocumentGroupDetail>()
-                    .ForMember(dest => dest.DocumentGroup.DocumentGroupDetails.Select(x=> x.DocumentDefinition), opt => opt.MapFrom(src => src.DocumentDefinitions)).ReverseMap();
+            CreateMap<ContractDocumentGroupDetailDto, ContractDocumentGroupDetail>()
+                    .ForMember(dest => dest.DocumentGroup, opt => opt.MapFrom(src => src.ContractDocumentGroup))
+                    .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
+                    .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
+                    .ReverseMap();
 
         }
     }

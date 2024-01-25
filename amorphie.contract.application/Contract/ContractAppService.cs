@@ -35,7 +35,6 @@ namespace amorphie.contract.application.Contract
                 .Select(a => a.DocumentDefinitionId)
                 .ToList();
 
-
             var customerDocument = await _dbContext.Document
                 .Where(x => x.Customer.Reference == req.Reference && documentList.Contains(x.DocumentDefinitionId))
                 .Select(x => x.DocumentDefinitionId)
@@ -51,33 +50,15 @@ namespace amorphie.contract.application.Contract
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            var listModel = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
-
-            //TODO: Umut - mapping sonra yapılacak.
-            // var listModelGroup = listDocumentGroup.Select(a =>
-            //     new DocumentGroupDto
-            //     {
-            //         Title = a.DocumentGroup.DocumentGroupLanguageDetail
-            //             .Where(dl => dl.MultiLanguage.LanguageType.Code == language)
-            //             .FirstOrDefault()?.MultiLanguage?.Name ?? a.DocumentGroup.DocumentGroupLanguageDetail.FirstOrDefault().MultiLanguage.Name,
-            //         Status = a.AtLeastRequiredDocument <= a.DocumentGroup.DocumentGroupDetails
-            //         .Where(c => customerDocumentGroup.Contains(c.DocumentDefinitionId)).Count() ? EStatus.Completed.ToString() : EStatus.InProgress.ToString(),
-
-            //         AtLeastRequiredDocument = a.AtLeastRequiredDocument,
-
-            //         Required = a.Required,
-            //         Document = a.DocumentGroup.DocumentGroupDetails
-            //         .Where(c => !customerDocumentGroup.Contains(c.DocumentDefinitionId)).Select(x => ObjectMapperApp.Mapper.Map<DocumentDto>(x)).ToList()
-            //     }
-            // ).ToList();
+            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
 
             var contractModel = new ContractDefinitionDto
             {
                 Status = AppConsts.InProgress,
                 Id = contractDefinition.Id,
                 Code = contractDefinition.Code,
-                ContractDocumentDetails = listModel,
-                // DocumentGroups = listModelGroup
+                ContractDocumentDetails = contractDocumentDetails,
+                ContractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup)
             };
 
             if (contractModel.ContractDocumentDetails.Count == 0)

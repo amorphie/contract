@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using amorphie.contract.core.Model.Document;
-using amorphie.contract.core.Mapping;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
-using amorphie.core.Base;
 
 namespace amorphie.contract;
 

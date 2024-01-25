@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace amorphie.contract.application
 {
@@ -14,8 +9,6 @@ namespace amorphie.contract.application
         public string Title { get; set; }
         [JsonPropertyName("at-least-required-document")]
         public int AtLeastRequiredDocument { get; set; }
-
-        //TODO: Umut - Mapping
-        public List<DocumentDefinitionDto> DocumentDefinitions { get; set; }
+        public DocumentGroupDto ContractDocumentGroup { get; set; }
     }
 }

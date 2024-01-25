@@ -23,6 +23,11 @@ namespace amorphie.contract.application
                 .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.MultiLanguage.Name))
                 .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.MultiLanguage.LanguageType.Code)).ReverseMap();
 
+            CreateMap<DocumentGroupLanguageDetail, MultilanguageText>()
+                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.MultiLanguage.Name))
+                .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.MultiLanguage.LanguageType.Code)).ReverseMap();
+
+
             CreateMap<DocumentInstanceInputDto, DocumentContent>()
                 .ForMember(dest => dest.ContentData, opt => opt.MapFrom(src => src.FileContext.ToString()))
                 .ForMember(dest => dest.KiloBytesSize, opt => opt.MapFrom(src => src.FileContext.ToString().Length.ToString()))
@@ -70,9 +75,12 @@ namespace amorphie.contract.application
                 .ForMember(dest => dest.DocumentTagsDetails, opt => opt.MapFrom(src => src.Tags))
                 .ReverseMap();
 
-            //TODO: yarım
-            // CreateMap<DocumentGroupDto, DocumentGroup>()
-            //                 .ForMember(dest => dest.DocumentGroupDetails, opt => opt.MapFrom(src => src.DocumentDefinition)).ReverseMap();
+            CreateMap<DocumentGroup, DocumentGroupDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.DocumentDefinitions, opt => opt.MapFrom(src =>
+                    src.DocumentGroupDetails.Select(x => x.DocumentDefinition)))
+                .ForMember(dest => dest.MultilanguageText, opt => opt.MapFrom(src => src.DocumentGroupLanguageDetail))
+                .ReverseMap();
 
         }
     }

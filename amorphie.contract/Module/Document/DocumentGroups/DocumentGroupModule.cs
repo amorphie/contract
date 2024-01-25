@@ -1,19 +1,11 @@
-
-using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
 
 using FluentValidation;
-using amorphie.core.Base;
-using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
-using amorphie.contract.core.Model;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using amorphie.contract.core.Mapping;
-using amorphie.contract.core.Model.Document;
-using System.Runtime.CompilerServices;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
 
@@ -93,46 +85,48 @@ public class DocumentGroupModule
                 language = "en-EN";
             }
 
-            var list = await context!.DocumentGroup!.Select(x => ObjectMapper.Mapper.Map<DocumentGroupViewModel>(x)).Skip(page * pageSize)
-                .Take(pageSize).ToListAsync(token);
-            foreach (var documentGroupViewModel in list)
-            {
+            var list = await context!.DocumentGroup!.Skip(page * pageSize).Take(pageSize).ToListAsync(token);
+           
+            var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list);
 
-                var selectedGroupLanguageText = documentGroupViewModel.MultilanguageText
-                    .FirstOrDefault(t => t.Language == language);
+            // foreach (var documentGroupViewModel in list)
+            // {
 
-                if (selectedGroupLanguageText != null)
-                {
-                    documentGroupViewModel.Name = selectedGroupLanguageText.Label;
-                }
-                else if (documentGroupViewModel.MultilanguageText.Any())
-                {
-                    documentGroupViewModel.Name = documentGroupViewModel.MultilanguageText.First().Label;
-                }
+            //     var selectedGroupLanguageText = documentGroupViewModel.MultilanguageText
+            //         .FirstOrDefault(t => t.Language == language);
 
-                //TODO: Umut - Mapping
-                // Check if DocumentDefinitionViewModels is null or empty before iterating
-                // if (documentGroupViewModel.DocumentDefinitionList != null && documentGroupViewModel.DocumentDefinitionList.Any())
-                // {
-                //     // Apply the logic to each DocumentDefinitionViewModel in the DocumentGroupViewModel
-                //     foreach (var documentDefinitionViewModel in documentGroupViewModel.DocumentDefinitionList)
-                //     {
-                //         var selectedLanguageText = documentDefinitionViewModel.MultilanguageText
-                //             .FirstOrDefault(t => t.Language == language);
+            //     if (selectedGroupLanguageText != null)
+            //     {
+            //         documentGroupViewModel.Name = selectedGroupLanguageText.Label;
+            //     }
+            //     else if (documentGroupViewModel.MultilanguageText.Any())
+            //     {
+            //         documentGroupViewModel.Name = documentGroupViewModel.MultilanguageText.First().Label;
+            //     }
 
-                //         if (selectedLanguageText != null)
-                //         {
-                //             documentDefinitionViewModel.Name = selectedLanguageText.Label;
-                //         }
-                //         else if (documentDefinitionViewModel.MultilanguageText.Any())
-                //         {
-                //             documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
-                //         }
-                //     }
-                // }
-            }
+            //     //TODO: Umut - Mapping
+            //     // Check if DocumentDefinitionViewModels is null or empty before iterating
+            //     // if (documentGroupViewModel.DocumentDefinitionList != null && documentGroupViewModel.DocumentDefinitionList.Any())
+            //     // {
+            //     //     // Apply the logic to each DocumentDefinitionViewModel in the DocumentGroupViewModel
+            //     //     foreach (var documentDefinitionViewModel in documentGroupViewModel.DocumentDefinitionList)
+            //     //     {
+            //     //         var selectedLanguageText = documentDefinitionViewModel.MultilanguageText
+            //     //             .FirstOrDefault(t => t.Language == language);
 
-            return Results.Ok(list);
+            //     //         if (selectedLanguageText != null)
+            //     //         {
+            //     //             documentDefinitionViewModel.Name = selectedLanguageText.Label;
+            //     //         }
+            //     //         else if (documentDefinitionViewModel.MultilanguageText.Any())
+            //     //         {
+            //     //             documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
+            //     //         }
+            //     //     }
+            //     // }
+            // }
+
+            return Results.Ok(response);
 
         }
         catch (Exception ex)

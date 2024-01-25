@@ -7,8 +7,6 @@
         public string Status { get; set; }
         public List<ContractDocumentDetailDto> ContractDocumentDetails { get; set; }
 
-        
-        //TODO: Umut - mapping
-        // public List<DocumentGroupDto> DocumentGroups { get; set; }
+       public List<ContractDocumentGroupDetailDto> ContractDocumentGroupDetails { get; set; }
     }
 }

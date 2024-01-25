@@ -1,21 +1,13 @@
-using System.Security.Cryptography.X509Certificates;
-
-using amorphie.core.Module.minimal_api;
 using amorphie.contract.data.Contexts;
-
-using FluentValidation;
-using amorphie.core.Base;
-using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Mapping;
 using AutoMapper;
-using amorphie.contract.core.Model.Document;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System.Diagnostics;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application;
 
 namespace amorphie.contract;
 
@@ -43,9 +35,13 @@ public class ContractDefinitionModule
             {
                 language = "en-EN";
             }
-            var query = context!.ContractDefinition!.Select(x => ObjectMapper.Mapper.Map<ContractDefinitionDto>(x)).Skip(page)
+            var query = context!.ContractDefinition!.Skip(page)
                 .Take(pageSize).AsNoTracking().AsSplitQuery();
+
+
             var list = await query.ToListAsync(token);
+
+            var respose = ObjectMapperApp.Mapper.Map<List<ContractDefinitionDto>>(list);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -63,7 +59,7 @@ public class ContractDefinitionModule
             // );
             stopwatch.Stop();
             TimeSpan elapsed = stopwatch.Elapsed;
-            return Results.Ok(list);
+            return Results.Ok(respose);
 
         }
         catch (Exception ex)
