@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
+using amorphie.core.Extension;
 
 namespace amorphie.contract;
 
@@ -73,10 +74,8 @@ public class DocumentGroupModule
         return Results.NoContent();
     }
 
-    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-           [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
-
         try
         {
             var language = httpContext.Request.Headers["Language"].ToString();
@@ -134,8 +133,8 @@ public class DocumentGroupModule
             Results.Problem(ex.Message);
         }
         return Results.NoContent();
-
     }
+
     private void MultiLanguageTextToNameByLanguage(string language)
     {
 

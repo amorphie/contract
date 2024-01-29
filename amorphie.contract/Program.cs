@@ -12,6 +12,7 @@ using amorphie.contract.data.Services;
 using amorphie.contract.application;
 using amorphie.contract.Middleware;
 
+
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
 
@@ -59,8 +60,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplicationServices();
 
-//Add SeriLog !!!!!
-// builder.AddSeriLog()
+// await builder.AddSeriLog("Contract", "contract-{0:yyyy.MM}");
 
 var app = builder.Build();
 app.UseCors();

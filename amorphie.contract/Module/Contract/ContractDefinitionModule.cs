@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application;
+using amorphie.core.Extension;
 
 namespace amorphie.contract;
 
@@ -23,11 +24,8 @@ public class ContractDefinitionModule
 
     public override string? UrlFragment => "contract-definition";
 
-
-    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-           [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    protected  async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
-
         try
         {
             var language = httpContext.Request.Headers["Language"].ToString();
@@ -67,7 +65,6 @@ public class ContractDefinitionModule
             Results.Problem(ex.Message);
         }
         return Results.NoContent();
-
     }
 }
 
