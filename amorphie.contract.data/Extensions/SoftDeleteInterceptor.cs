@@ -2,7 +2,7 @@ using amorphie.contract.core.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace amorphie.contract.data
+namespace amorphie.contract.data.Extensions
 {
     public class SoftDeleteInterceptor : SaveChangesInterceptor
     {
