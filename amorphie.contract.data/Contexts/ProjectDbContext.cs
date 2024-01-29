@@ -12,6 +12,7 @@ using amorphie.contract.core.Entity;
 using System.Linq.Expressions;
 using amorphie.contract.core.Entity.Base;
 using Microsoft.EntityFrameworkCore.Query;
+using amorphie.contract.data.Extensions;
 
 namespace amorphie.contract.data.Contexts;
 
