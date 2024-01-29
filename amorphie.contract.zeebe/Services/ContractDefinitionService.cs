@@ -151,7 +151,7 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractBankEntity()
         {
-             
+
         }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {

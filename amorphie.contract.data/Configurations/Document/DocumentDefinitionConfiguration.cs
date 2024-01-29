@@ -31,7 +31,7 @@ namespace amorphie.contract.data.Configurations.Definition
                 c.Code,
                 c.Semver
             });
-             builder.HasIndex(e => new {e.Code,e.Semver}).IsUnique();
+            builder.HasIndex(e => new { e.Code, e.Semver }).IsUnique();
         }
 
     }

@@ -49,14 +49,14 @@ namespace amorphie.contract.zeebe.Modules
             operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
             return operation;
         });
-          app.MapPost("/StartContract-ui", StartContractUI)
-        .Produces(StatusCodes.Status200OK)
-        .WithOpenApi(operation =>
-        {
-            operation.Summary = "Maps ErrorContract service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
-            return operation;
-        });
+            app.MapPost("/StartContract-ui", StartContractUI)
+          .Produces(StatusCodes.Status200OK)
+          .WithOpenApi(operation =>
+          {
+              operation.Summary = "Maps ErrorContract service worker on Zeebe";
+              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              return operation;
+          });
         }
 
         static IResult StartContractUI(
