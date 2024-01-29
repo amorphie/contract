@@ -1,47 +1,19 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Common;
-using Microsoft.EntityFrameworkCore.Design;
-using amorphie.core.Identity;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.core.Entity;
-using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
+using amorphie.contract.core.Entity.Base;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace amorphie.contract.data.Contexts;
-
-// class ProjectDbContextFactory : IDesignTimeDbContextFactory<ProjectDbContext>
-// {
-//     //lazy loading true
-//     //lazy loading false, eğer alt bileşenleri getirmek istiyorsak include kullanmamız lazım,eager loading
-//     private readonly IConfiguration _configuration;
-
-//     public ProjectDbContextFactory() { }
-
-//     public ProjectDbContextFactory(IConfiguration configuration)
-//     {
-//         _configuration = configuration;
-//     }
-
-//     // public ProjectDbContext CreateDbContext(string[] args)
-//     // {
-//     //     var builder = new DbContextOptionsBuilder<ProjectDbContext>();
-//     //     // var test = _configuration["STATE_STORE"];
-//     //     // System.Console.WriteLine("Test: " + test);
-
-
-//     //     var connStr = "Host=localhost:5432;Database=contract;Username=postgres;Password=123321";
-//     //     builder.UseNpgsql(connStr);
-//     //     builder.EnableSensitiveDataLogging();
-//     //     return new ProjectDbContext(builder.Options,null,null);
-//     // }
-// }
 
 public class ProjectDbContext : DbContext
 {
@@ -133,25 +105,25 @@ public class ProjectDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        // modelBuilder.Entity<DocumentDefinition>().Navigation(s => s.BaseStatus).AutoInclude();
+
+
+        Expression<Func<ISoftDelete, bool>> filterExpr = x => !x.IsDeleted;
+        foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (mutableEntityType.ClrType.GetInterfaces().Contains(typeof(ISoftDelete)))
+            {
+                var parameter = Expression.Parameter(mutableEntityType.ClrType);
+                var body = ReplacingExpressionVisitor.Replace(filterExpr.Parameters.First(), parameter, filterExpr.Body);
+                var lambdaExpression = Expression.Lambda(body, parameter);
+                mutableEntityType.SetQueryFilter(lambdaExpression);
+            }
+        }
 
         base.OnModelCreating(modelBuilder);
-
     }
 
-    // public override int SaveChanges()
-    // {
-    //     if (ChangeTracker.Entries(). == EntityState.Deleted{
-    //     DefaultValues();
-
-    //     }
-    //     return base.SaveChanges();
-    // }
-
-    // public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    // {
-    //     DefaultValues();
-    //     return base.SaveChangesAsync(cancellationToken);
-    // }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+         => optionsBuilder
+             .AddInterceptors(new SoftDeleteInterceptor());
 
 }
