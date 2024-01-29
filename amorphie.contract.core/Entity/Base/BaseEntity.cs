@@ -16,9 +16,16 @@ namespace amorphie.contract.core.Entity.Base
         public string Code { get; set; } = default!;
 
     }
-    public class AudiEntity : EntityBase
+    public class AudiEntity : EntityBase, ISoftDelete
+    {
+        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; }
+    }
+
+    public interface ISoftDelete
     {
         public bool IsDeleted { get; set; }
-        public bool IsActive { get; set; } = true;
+        // public DateTime? DeletedAt { get; set; }
+
     }
 }
