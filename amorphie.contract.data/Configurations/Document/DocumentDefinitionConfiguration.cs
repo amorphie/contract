@@ -25,7 +25,7 @@ namespace amorphie.contract.data.Configurations.Definition
                 "DocumentOperations",
             };
             NavigationBuilderAutoInclude(builder, list);
-//
+            //
         }
 
     }
