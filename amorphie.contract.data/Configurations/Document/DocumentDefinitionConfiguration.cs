@@ -25,13 +25,7 @@ namespace amorphie.contract.data.Configurations.Definition
                 "DocumentOperations",
             };
             NavigationBuilderAutoInclude(builder, list);
-            // builder
-            // .HasKey(c => new
-            // {
-            //     c.Code,
-            //     c.Semver
-            // });
-            // builder.HasIndex(e => new { e.Code, e.Semver }).IsUnique();
+         
         }
 
     }
