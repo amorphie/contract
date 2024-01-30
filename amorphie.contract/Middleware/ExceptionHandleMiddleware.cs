@@ -44,7 +44,7 @@ namespace amorphie.contract.Middleware
 
             await httpContext.Response.WriteAsJsonAsync(new Response
             {
-                Result = new Result(amorphie.core.Enums.Status.Error, errorMessage)
+                Result = new Result(amorphie.core.Enums.Status.Error, errorMessage, ex.Message)
             });
 
         }
