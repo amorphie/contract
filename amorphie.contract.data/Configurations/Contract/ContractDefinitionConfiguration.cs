@@ -21,6 +21,7 @@ namespace amorphie.contract.data.Configurations.Contract
                 "ContractValidations",
             };
             NavigationBuilderAutoInclude(builder, list);
+            //
         }
     }
 }
