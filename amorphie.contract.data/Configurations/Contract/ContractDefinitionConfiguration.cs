@@ -21,7 +21,13 @@ namespace amorphie.contract.data.Configurations.Contract
                 "ContractValidations",
             };
             NavigationBuilderAutoInclude(builder, list);
-      
+        //     builder
+        //   .HasKey(c => new
+        //   {
+        //       c.Code,
+        //       c.BankEntity
+        //   });
+            // builder.HasIndex(e => new { e.Code, e.BankEntity }).IsUnique();
         }
     }
 }
