@@ -19,7 +19,7 @@ namespace amorphie.contract.data.Configurations.Contract
             };
             NavigationBuilderAutoInclude(builder, list);
 
-
+            //
         }
     }
 }
