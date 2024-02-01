@@ -14,6 +14,7 @@ namespace amorphie.contract.data.Configurations.Contract
         {
             var list = new List<string>
             {
+                "ContractDefinitionLanguageDetails",
                 "ContractDocumentDetails",
                 "ContractDocumentGroupDetails",
                 "ContractTag",
