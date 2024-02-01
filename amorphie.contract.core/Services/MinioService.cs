@@ -6,5 +6,8 @@ namespace amorphie.contract.core.Services
         Task UploadFile();
         Task<string> GetDocumentUrl(string objectName, CancellationToken token);
 
+        //TODO: Daha sonra tek bir interface altında toplanacak. (Zeebe)
+        Task UploadFile(byte[] data, string objectName, string contentType);
+
     }
 }
