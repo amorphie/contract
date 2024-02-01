@@ -22,7 +22,7 @@ namespace amorphie.contract.application.Contract
         public async Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition
-                .AnyAsync(x => x.Code == req.Code && x.BankEntity == req.EBankEntity, cts);
+                .AnyAsync(x=>x.Code==req.Code && x.BankEntity == req.EBankEntity,cts);
             return contractDefinition;
         }
 

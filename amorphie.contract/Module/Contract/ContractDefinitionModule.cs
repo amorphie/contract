@@ -69,14 +69,10 @@ public class ContractDefinitionModule
         return Results.NoContent();
     }
 
-    async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromQuery] string? code, [FromQuery] EBankEntity? eBankEntity)
+    async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractGetExistInputDto input)
     {
-        var req = new ContractGetExistInputDto()
-        {
-            Code = code,
-            EBankEntity = (EBankEntity)eBankEntity
-        };
-        var response = await contractAppService.GetExist(req, token);
+
+        var response = await contractAppService.GetExist(input,token);
 
         return Results.Ok(response);
     }
