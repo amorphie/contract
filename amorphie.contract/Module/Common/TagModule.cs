@@ -29,7 +29,7 @@ public class TagModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("getallHeaders", getallHeaders);
     }
-    
+
     async ValueTask<IResult> getallHeaders(HttpContext httpContext)
     {
         Dictionary<string, string> requestHeaders = new Dictionary<string, string>();
