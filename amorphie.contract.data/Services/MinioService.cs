@@ -108,27 +108,31 @@ namespace amorphie.contract.data.Services
             var presignedUrl = await minioClient.PresignedGetObjectAsync(args);
             return presignedUrl;
         }
-        // public async Task<byte[]> DownloadFile(string objectName, CancellationToken token)
-        // {
-        //     var getObjectArgs = new GetObjectArgs()
-        //         .WithBucket(bucketName)
-        //         .WithObject(objectName);
 
-        //     using (var stream = new MemoryStream())
-        //     {
-        //         var task =  minioClient.GetObjectAsync(getObjectArgs,  (s,token) =>
-        //         {
-        //             // Başka bir değişken kullanarak içerik akışını işleyin
-        //             var innerStream = new MemoryStream();
-        //             s.Content.CopyTo(innerStream);
-        //             return Task.CompletedTask;
-        //         });
+        public async Task UploadFile(byte[] data, string objectName, string contentType)
+        {
+            MemoryStream stream = new MemoryStream(data);
+            var headers = new Dictionary<string, string>
+                {
+                    { "x-amz-meta-custom-metadata", "customMetadata" }
+                };
 
-        //         task.Wait(token);  // veya .Result
+            var putObjectArgs = new PutObjectArgs()
+                             .WithBucket(bucketName)
+                             .WithObject(objectName)
 
-        //         return stream.ToArray();
-        //     }
-        // }
+                             // .WithFileName(filePath)
+                             .WithStreamData(stream)
+                             .WithObjectSize(stream.Length)
+                             .WithContentType(contentType)
+                             .WithHeaders(headers);
+
+
+
+
+            await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
+            Console.WriteLine("Successfully uploaded " + objectName);
+        }
     }
 
 }
