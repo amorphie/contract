@@ -3,7 +3,7 @@ using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using amorphie.contract.zeebe.Services.Interfaces;
+using amorphie.contract.zeebe.Services;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {

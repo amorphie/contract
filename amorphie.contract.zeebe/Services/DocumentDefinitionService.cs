@@ -6,13 +6,16 @@ using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
-using amorphie.contract.zeebe.Services.Interfaces;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.zeebe.Services
 {
+    public interface IDocumentDefinitionService
+    {
+        Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic documentDefinitionDataDynamic, Guid id);
+    }
     public class DocumentDefinitionService : IDocumentDefinitionService
     {
         ProjectDbContext _dbContext;

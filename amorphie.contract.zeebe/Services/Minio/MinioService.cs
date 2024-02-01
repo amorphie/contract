@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using amorphie.contract.zeebe.Services.Interfaces;
 using amorphie.contract.zeebe.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -15,6 +14,12 @@ using Minio.DataModel.Tags;
 using Minio.Exceptions;
 namespace amorphie.contract.zeebe.Service.Minio
 {
+
+    public interface IMinioService
+    {
+        Task UploadFile(byte[] data, string objectName, string contentType);
+        Task UploadFile();
+    }
     public class MinioService : IMinioService
     {
         private IMinioClient minioClient;

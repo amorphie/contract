@@ -4,7 +4,6 @@ using amorphie.contract.zeebe.Modules;
 using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
 using amorphie.contract.zeebe.Service.Minio;
 using amorphie.contract.zeebe.Services;
-using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.application;
 

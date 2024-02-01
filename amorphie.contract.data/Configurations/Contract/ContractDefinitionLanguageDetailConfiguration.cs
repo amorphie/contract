@@ -1,4 +1,4 @@
-﻿using amorphie.contract.core;
+﻿using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.data.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

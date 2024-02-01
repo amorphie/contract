@@ -1,6 +1,5 @@
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.data.Contexts;
-using amorphie.contract.zeebe.Services.Interfaces;
 using Newtonsoft.Json;
 using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;
@@ -10,6 +9,10 @@ using amorphie.contract.core;
 
 namespace amorphie.contract.zeebe.Services
 {
+    public interface IContractDefinitionService
+    {
+        Task<ContractDefinition> DataModelToContractDefinition(dynamic contractDefinitionDataDynamic, Guid id);
+    }
     public class ContractDefinitionService : IContractDefinitionService
     {
         ProjectDbContext _dbContext;

@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Models;
 using System.ComponentModel;
 using Google.Protobuf;
 using amorphie.contract.zeebe.Services;
-using amorphie.contract.zeebe.Services.Interfaces;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 
