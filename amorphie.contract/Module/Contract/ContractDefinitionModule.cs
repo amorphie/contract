@@ -13,6 +13,7 @@ using amorphie.core.IBase;
 using amorphie.core.Base;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -72,10 +73,13 @@ public class ContractDefinitionModule
         return Results.NoContent();
     }
 
-    async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractGetExistInputDto input)
+    async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromQuery] string? code, [FromQuery] EBankEntity? eBankEntity)
     {
-
-        var response = await contractAppService.GetExist(input,token);
+        var req = new ContractGetExistInputDto(){
+            Code=code,
+            EBankEntity= (EBankEntity)eBankEntity
+        };
+        var response = await contractAppService.GetExist(req,token);
 
         return Results.Ok(response);
     }
