@@ -30,7 +30,7 @@ public class ContractModule
 
         input.EBankEntity = headerModels.EBankEntity;
         input.LangCode = headerModels.LangCode;
-        
+     
         var response = await contractAppService.Instance(input, token);
         if (response is null)
             return Results.NotFound();
