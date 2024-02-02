@@ -8,6 +8,6 @@ namespace amorphie.contract.core.Enum
         public static readonly string ClientId = "ClientId";
         public static readonly string Language = "Language";
         public static readonly string HeaderFilterModel = "HeaderFilterModel";
-        
+
     }
 }
