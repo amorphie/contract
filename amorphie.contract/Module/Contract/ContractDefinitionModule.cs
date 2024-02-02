@@ -76,7 +76,8 @@ public class ContractDefinitionModule
             Code=code,
             EBankEntity= (EBankEntity)eBankEntity
         };
-        var response = await contractAppService.GetExist(req,token);
+        
+        var response = await contractAppService.GetExist(req, token);
 
         return Results.Ok(response);
     }
