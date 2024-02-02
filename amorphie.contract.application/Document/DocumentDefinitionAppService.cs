@@ -27,7 +27,7 @@ namespace amorphie.contract.application
             foreach (var documentDefinitionDto in responseDtos)
             {
                 var selectedLanguageText = documentDefinitionDto?.MultilanguageText
-                    .FirstOrDefault(t => t.Language == input.Lang.LangCode);
+                    .FirstOrDefault(t => t.Language == input.LangCode);
 
                 if (selectedLanguageText != null)
                 {

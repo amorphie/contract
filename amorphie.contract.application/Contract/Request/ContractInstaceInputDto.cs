@@ -1,11 +1,13 @@
-﻿namespace amorphie.contract.application.Contract.Request
+﻿using amorphie.contract.core.Enum;
+
+namespace amorphie.contract.application.Contract.Request
 {
     public class ContractInstaceInputDto
     {
         public string ContractName { get; set; }
         public string Reference { get; set; }
-        public LangDto Lang { get; set; } = new LangDto();
-
+        public string LangCode { get; set; }
+        public EBankEntity EBankEntity { get; set; }
         //public string Owner { get; set; }
         //public string CallbackName { get; set; }
         //public Guid ProcessId { get; set; }
