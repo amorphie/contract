@@ -3,6 +3,7 @@
   <bpmn:process id="Contract" name="Contrac" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_1mvjt3h</bpmn:incoming>
+      <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
       <bpmn:outgoing>Flow_0ou83v3</bpmn:outgoing>
       <bpmn:startEvent id="Event_0clot0e" name="Start">
         <bpmn:outgoing>Flow_0angrvf</bpmn:outgoing>
@@ -153,16 +154,15 @@
       <bpmn:incoming>Flow_1ivuvub</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1ivuvub" sourceRef="Activity_12zt0hi" targetRef="Event_1opa7u1" />
-    <bpmn:intermediateCatchEvent id="Event_1eyq1q7">
-      <bpmn:incoming>Flow_1143gtd</bpmn:incoming>
-      <bpmn:outgoing>Flow_1mvjt3h</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1r2braw" messageRef="Message_2n60jlh" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:sequenceFlow id="Flow_1mvjt3h" sourceRef="Event_1eyq1q7" targetRef="Activity_1t3gbcf" />
     <bpmn:startEvent id="Event_05mmkbk">
-      <bpmn:outgoing>Flow_1143gtd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1dj8duy</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_1143gtd" sourceRef="Event_05mmkbk" targetRef="Event_1eyq1q7" />
+    <bpmn:sequenceFlow id="Flow_1mvjt3h" sourceRef="Event_1eyq1q7" targetRef="Activity_1t3gbcf" />
+    <bpmn:sequenceFlow id="Flow_1dj8duy" sourceRef="Event_05mmkbk" targetRef="Activity_1t3gbcf" />
+    <bpmn:startEvent id="Event_1eyq1q7">
+      <bpmn:outgoing>Flow_1mvjt3h</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1vmr7d8" messageRef="Message_2n60jlh" />
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmn:message id="Message_0dem2ek" name="DeleteContractDefinition">
     <bpmn:extensionElements>
@@ -193,11 +193,8 @@
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Contract">
-      <bpmndi:BPMNShape id="Event_0znv8n3_di" bpmnElement="Event_1eyq1q7">
-        <dc:Bounds x="272" y="247" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_05mmkbk_di" bpmnElement="Event_05mmkbk">
-        <dc:Bounds x="152" y="247" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_0etpq4g_di" bpmnElement="Event_1eyq1q7">
+        <dc:Bounds x="152" y="322" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
         <dc:Bounds x="380" y="80" width="1430" height="390" />
@@ -366,6 +363,9 @@
           <dc:Bounds x="1800" y="665" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05mmkbk_di" bpmnElement="Event_05mmkbk">
+        <dc:Bounds x="152" y="247" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_007onoc_di" bpmnElement="Event_10vsyet">
         <dc:Bounds x="1557" y="452" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -410,12 +410,12 @@
         <di:waypoint x="1792" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1mvjt3h_di" bpmnElement="Flow_1mvjt3h">
-        <di:waypoint x="308" y="265" />
-        <di:waypoint x="380" y="265" />
+        <di:waypoint x="188" y="340" />
+        <di:waypoint x="380" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1143gtd_di" bpmnElement="Flow_1143gtd">
+      <bpmndi:BPMNEdge id="Flow_1dj8duy_di" bpmnElement="Flow_1dj8duy">
         <di:waypoint x="188" y="265" />
-        <di:waypoint x="272" y="265" />
+        <di:waypoint x="380" y="265" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

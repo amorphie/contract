@@ -22,7 +22,7 @@ public class ContractModule
         routeGroupBuilder.MapPost("Instance", Instance);
     }
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [FromBody] ContractInstaceInputDto input, [FromHeader(Name = "Language")] string? language = "en-EN")
+    [FromBody] ContractInstanceInputDto input, [FromHeader(Name = "Language")] string? language = "en-EN")
     {
         input.Lang = new LangDto
         {

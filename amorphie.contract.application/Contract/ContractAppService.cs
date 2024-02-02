@@ -8,7 +8,7 @@ namespace amorphie.contract.application.Contract
 {
     public interface IContractAppService
     {
-        Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts);
+        Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
     }
     public class ContractAppService : IContractAppService
     {
@@ -18,7 +18,7 @@ namespace amorphie.contract.application.Contract
             _dbContext = dbContext;
         }
 
-        public async Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts)
+        public async Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)

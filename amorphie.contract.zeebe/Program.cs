@@ -7,6 +7,7 @@ using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.application;
+using amorphie.contract.application.Contract;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -42,9 +43,10 @@ StaticValuesExtensions.SetStaticValues(settings);
 
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
-builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
-builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
-builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+// builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
+// builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
+// builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+builder.Services.AddScoped<IContractAppService, ContractAppService>();
 
 builder.Services.AddApplicationServices();
 
@@ -67,6 +69,7 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+app.MapZeebeContractInstanceEndpoints();
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>

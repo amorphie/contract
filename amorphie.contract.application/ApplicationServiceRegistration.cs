@@ -9,7 +9,7 @@ namespace amorphie.contract.application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddTransient<IDocumentAppService, DocumentAppService>();
+            // services.AddTransient<IDocumentAppService, DocumentAppService>();
             services.AddTransient<IDocumentDefinitionAppService, DocumentDefinitionAppService>();
             services.AddTransient<IContractAppService, ContractAppService>();
 
