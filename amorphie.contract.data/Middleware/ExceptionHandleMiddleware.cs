@@ -30,6 +30,9 @@ namespace amorphie.contract.data.Middleware
                         "B" => EBankEntity.burgan,
                         _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
                     };
+                }else
+                {
+                    //TODO: Boş gelirse hata verdirmeli miyiz? Daha sonra konuşulacak.
                 }
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
