@@ -36,9 +36,12 @@ namespace amorphie.contract.data.Middleware
                     model.LangCode = lang.FirstOrDefault();
                 else
                     model.LangCode = "en-EN";
-                
-                httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model; 
-                
+
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.ClientId, out var clientId))
+                    model.ClientCode = clientId.FirstOrDefault();
+
+                httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model;
+
                 await _next(httpContext);
             }
             catch (Exception ex)
