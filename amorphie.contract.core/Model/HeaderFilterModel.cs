@@ -1,0 +1,14 @@
+using amorphie.contract.core.Enum;
+
+namespace amorphie.contract.core.Model
+{
+
+    public class HeaderFilterModel
+    {
+
+        public EBankEntity EBankEntity { get; set; }
+
+        public string LangCode { get; set; }
+
+    }
+}

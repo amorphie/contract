@@ -10,6 +10,7 @@ using amorphie.core.Extension;
 using Elastic.Apm.NetCoreAll;
 using amorphie.contract.core.Services;
 using amorphie.contract.data.Services;
+using amorphie.contract.data.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -63,6 +64,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // sssss
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseExceptionHandleMiddleware();
 
 app.UseHttpsRedirection();
 

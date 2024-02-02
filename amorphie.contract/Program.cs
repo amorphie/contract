@@ -10,8 +10,8 @@ using amorphie.contract.core.Services;
 using amorphie.contract.core;
 using amorphie.contract.data.Services;
 using amorphie.contract.application;
-using amorphie.contract.Middleware;
 using Elastic.Apm.NetCoreAll;
+using amorphie.contract.data.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);

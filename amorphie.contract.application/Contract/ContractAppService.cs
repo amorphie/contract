@@ -20,7 +20,7 @@ namespace amorphie.contract.application.Contract
 
         public async Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts)
         {
-            var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
+            var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName && x.BankEntity == req.EBankEntity, cts);
             if (contractDefinition == null)
             {
                 return new ContractDefinitionDto { Status = "not contract" };
