@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.core;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.OpenApi.Models;
 
 namespace amorphie.contract.zeebe.Modules
@@ -14,7 +19,7 @@ namespace amorphie.contract.zeebe.Modules
     {
         public static void MapZeebeRenderOnlineSignEndpoints(this WebApplication app)
         {
-            app.MapPost("/Render", Render)
+            app.MapPost("/render", Render)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -23,7 +28,7 @@ namespace amorphie.contract.zeebe.Modules
                 return operation;
             });
 
-            app.MapPost("/NotValidated", NotValidated)
+            app.MapPost("/notvalidated2", NotValidated)
                  .Produces(StatusCodes.Status200OK)
                  .WithOpenApi(operation =>
                  {
@@ -31,7 +36,7 @@ namespace amorphie.contract.zeebe.Modules
                      operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
                      return operation;
                  });
-            app.MapPost("/Validated", Validated)
+            app.MapPost("/validated2", Validated)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -87,9 +92,40 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
+
+                string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+                string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+
+
+                var contractInstance = body.GetProperty("XContractInstance");
+                if (contractInstance is ContractDefinitionDto contractDto)
+                {
+
+                    var result = contractDto.ContractDocumentDetails
+                            .Select(x => new TemplateRenderRequestModel
+                            {
+                                SemanticVersion = x.MinVersion,
+                                Name = x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails
+                                    .FirstOrDefault(a => a.LanguageType == language)?.Code
+                                    ?? x.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.FirstOrDefault()?.Code,
+                                RenderId = Guid.NewGuid(),
+                                Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
+                                ProcessName = nameof(ZeebeRenderOnlineSign),
+                                Identity = reference
+                            }).FirstOrDefault();
+
+                    if (result != null)
+                    {
+                        HttpSendTemplate(result);//TODO:dapr kullanılacak  yeni ortam kurulunca yapcaz
+
+                        messageVariables.Variables.Add("ApprovedTemplateRenderRequestModel", result);
+                    }
+
+                }
+
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
@@ -103,7 +139,23 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
+        private static async void HttpSendTemplate(TemplateRenderRequestModel requestModel)//TODO:dapr kullanılacak 
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string modelJson = JsonSerializer.Serialize(requestModel);
 
+                HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEnginePdfRenderEndpoint, httpContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                }
+
+            }
+        }
         static IResult NotValidated(
         [FromBody] dynamic body,
        [FromServices] ProjectDbContext dbContext,

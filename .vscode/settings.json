@@ -1,6 +1,7 @@
 {
     "dotnet.defaultSolution": "contract.sln",
     "cSpell.words": [
+        "acceptlanguage",
         "amorphie",
         "Burgan",
         "dapr",

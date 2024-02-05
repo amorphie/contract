@@ -2,7 +2,7 @@
 
 namespace amorphie.contract.application.Contract.Request
 {
-    public class ContractInstaceInputDto
+    public class ContractInstanceInputDto
     {
         public string ContractName { get; set; }
         public string Reference { get; set; }

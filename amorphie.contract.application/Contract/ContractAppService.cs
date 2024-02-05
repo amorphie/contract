@@ -8,8 +8,10 @@ namespace amorphie.contract.application.Contract
 {
     public interface IContractAppService
     {
+
         Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts);
         Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
+
     }
     public class ContractAppService : IContractAppService
     {
@@ -18,6 +20,7 @@ namespace amorphie.contract.application.Contract
         {
             _dbContext = dbContext;
         }
+
 
         public async Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
