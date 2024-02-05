@@ -103,7 +103,7 @@ namespace amorphie.contract.zeebe.Modules
                 var contractInstance = body.GetProperty("XContractInstance");
                 if (contractInstance is ContractDefinitionDto contractDto)
                 {
-                    
+
                     var result = contractDto.ContractDocumentDetails
                             .Select(x => new TemplateRenderRequestModel
                             {

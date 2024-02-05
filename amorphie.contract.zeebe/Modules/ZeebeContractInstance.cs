@@ -59,7 +59,7 @@ namespace amorphie.contract.zeebe.Modules
             operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
             return operation;
         });
-         
+
         }
         static IResult StartContract(
                  [FromBody] dynamic body,
@@ -82,7 +82,7 @@ namespace amorphie.contract.zeebe.Modules
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
-       
+
 
         static IResult ContractInstance(
           [FromBody] dynamic body,
@@ -110,7 +110,7 @@ namespace amorphie.contract.zeebe.Modules
                 messageVariables.TransitionName = "checking-account-opening-start";
                 // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                reference+="1123213";
+                reference += "1123213";
                 string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
                 var contract = new ContractInstanceInputDto
                 {
@@ -121,7 +121,7 @@ namespace amorphie.contract.zeebe.Modules
                 // messageVariables.Variables.Remove("ContractInstance");
                 // messageVariables.Variables.Remove("ContractStatus");
                 messageVariables.Variables.Add("XContractInstance", InstanceDto.Result);
-                 messageVariables.Variables.Add("ContractStatus", "InProgress");
+                messageVariables.Variables.Add("ContractStatus", "InProgress");
                 if (InstanceDto.Result.Status.ToString() == EStatus.Completed.ToString())
                 {
                     messageVariables.Variables.Add("ContractStatus", true);
