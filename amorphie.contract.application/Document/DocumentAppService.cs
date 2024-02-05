@@ -76,7 +76,7 @@ namespace amorphie.contract.application
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
             {
-                cus = new Customer
+                cus = new core.Entity.Customer
                 {
                     Reference = input.Reference,
                     Owner = input.Owner

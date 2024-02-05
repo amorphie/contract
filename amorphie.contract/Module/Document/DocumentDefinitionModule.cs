@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
 using amorphie.core.Extension;
+using amorphie.contract.application.Extensions;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
 using amorphie.core.Extension;
+using amorphie.contract.application.Extensions;
 
 namespace amorphie.contract;
 
