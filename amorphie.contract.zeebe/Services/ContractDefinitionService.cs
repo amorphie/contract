@@ -155,7 +155,7 @@ namespace amorphie.contract.zeebe.Services
                         {
                             return new ContractValidation
                             {
-                                  
+
                                 ContractDefinitionId = _ContractDefinition.Id,
                                 Validations = new Validation
                                 {
