@@ -9,7 +9,7 @@ namespace amorphie.contract.application.Contract
     public interface IContractAppService
     {
 
-        Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts);
+        Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
         Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
 
     }
@@ -29,7 +29,7 @@ namespace amorphie.contract.application.Contract
             return contractDefinition;
         }
 
-        public async Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts)
+        public async Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
             //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
