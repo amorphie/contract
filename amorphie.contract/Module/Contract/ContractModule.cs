@@ -24,6 +24,7 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
     }
+
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractInstaceInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;

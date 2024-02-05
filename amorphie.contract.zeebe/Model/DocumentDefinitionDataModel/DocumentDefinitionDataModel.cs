@@ -11,7 +11,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
     {
         public string format { get; set; }
 
-        [JsonProperty("max-size-kilobytes")]
+        // [JsonProperty("max-size-kilobytes")]
         public string maxsizekilobytes { get; set; }
         public string Format { get; set; }
         public string MaxSizeKilobytes { get; set; }

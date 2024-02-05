@@ -6,12 +6,14 @@ using amorphie.contract.zeebe.Services;
 using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.application;
+
 using amorphie.core.Extension;
 using Elastic.Apm.NetCoreAll;
 using amorphie.contract.core.Services;
 using amorphie.contract.data.Services;
 using amorphie.contract.data.Middleware;
 using amorphie.contract.data.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration;
@@ -55,9 +57,10 @@ StaticValuesExtensions.SetStaticValues(settings);
 
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
-builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
-builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
-builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+// builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
+// builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
+// builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+builder.Services.AddScoped<IContractAppService, ContractAppService>();
 
 builder.Services.AddApplicationServices();
 
@@ -80,5 +83,23 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+
+app.MapZeebeContractInstanceEndpoints();
+app.MapZeebeRenderOnlineSignEndpoints();
+app.MapGet("/weatherforecast", () =>
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+       new WeatherForecast
+       (
+           DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+           Random.Shared.Next(-20, 55),
+           summaries[Random.Shared.Next(summaries.Length)]
+       ))
+        .ToArray();
+    return forecast;
+})
+.WithName("GetWeatherForecast")
+.WithOpenApi();
+
 app.Run();
 
