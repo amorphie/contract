@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -36,14 +37,30 @@ namespace amorphie.contract.zeebe.Services
             _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>
             (test.Replace("{}", "\"\""));
         }
+
+        private void SetContractDefinitionLanguageDetail()
+        {
+            var multiLanguageList = _ContractDefinitionDataModel.Titles.Select(x => new MultiLanguage
+            {
+                Name = x.title,
+                LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
+                Code = _ContractDefinition.Code
+            }).ToList();
+
+            _ContractDefinition.ContractDefinitionLanguageDetails = multiLanguageList.Select(x => new ContractDefinitionLanguageDetail
+            {
+                ContractDefinitionId = _ContractDefinition.Id,
+                MultiLanguage = x
+            }).ToList();
+        }
         private void SetContractDocumentGroupDetail()
         {
-            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName != "" && x.groupName != null))
+            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName.id != "" && x.groupName != null))
             {
                 var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList?.Select(x => new ContractDocumentGroupDetail
                 {
                     ContractDefinitionId = _ContractDefinition.Id,
-                    DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName),
+                    DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName.id),
                     AtLeastRequiredDocument = x.atLeastRequiredDocument,
                     Required = x.required
                 });
@@ -76,12 +93,12 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractEntityProperty()
         {
-            if (_ContractDefinitionDataModel.EntityPropertyList == null)
+            if (_ContractDefinitionDataModel.EntityProperty == null)
             {
                 return;
             }
 
-            var ep = _ContractDefinitionDataModel.EntityPropertyList.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
+            var ep = _ContractDefinitionDataModel.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
                 EEntityPropertyType = (ushort)EEntityPropertyType.str,
                 EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
@@ -138,6 +155,7 @@ namespace amorphie.contract.zeebe.Services
                         {
                             return new ContractValidation
                             {
+                                  
                                 ContractDefinitionId = _ContractDefinition.Id,
                                 Validations = new Validation
                                 {
@@ -160,6 +178,7 @@ namespace amorphie.contract.zeebe.Services
             {
                 DynamicToContractDefinitionDataModel();
                 SetContractDefinitionDefault(id);
+                SetContractDefinitionLanguageDetail();
                 SetContractDocumentGroupDetail();
                 SetContractDocumentDetail();
                 SetContractTag();

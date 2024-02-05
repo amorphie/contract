@@ -10,6 +10,9 @@ using amorphie.contract.application;
 using amorphie.core.Extension;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
+using amorphie.contract.application.Contract;
+using amorphie.contract.application.Contract.Request;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -21,10 +24,11 @@ public class ContractDefinitionModule
 
     }
 
-    public override string[]? PropertyCheckList => new string[] { "Code" };
-
-    public override string? UrlFragment => "contract-definition";
-
+    public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
+    {
+        base.AddRoutes(routeGroupBuilder);
+        routeGroupBuilder.MapGet("GetExistContract", GetExist);
+    }
     protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
         try
@@ -65,5 +69,19 @@ public class ContractDefinitionModule
         }
         return Results.NoContent();
     }
+
+    async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromQuery] string? code, [FromQuery] EBankEntity? eBankEntity)
+    {
+        var req = new ContractGetExistInputDto(){
+            Code=code,
+            EBankEntity= (EBankEntity)eBankEntity
+        };
+        var response = await contractAppService.GetExist(req,token);
+
+        return Results.Ok(response);
+    }
+    public override string[]? PropertyCheckList => new string[] { "Code" };
+
+    public override string? UrlFragment => "contract-definition";
 }
 
