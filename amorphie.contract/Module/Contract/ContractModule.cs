@@ -6,6 +6,9 @@ using amorphie.contract.application;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.Extensions;
+using amorphie.contract.core.Model;
+using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -21,13 +24,12 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
     }
-    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [FromBody] ContractInstaceInputDto input, [FromHeader(Name = "Language")] string? language = "en-EN")
+    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractInstaceInputDto input, HttpContext httpContext)
     {
-        input.Lang = new LangDto
-        {
-            LangCode = language
-        };
+        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+
+        input.EBankEntity = headerModels.EBankEntity;
+        input.LangCode = headerModels.LangCode;
 
         var response = await contractAppService.Instance(input, token);
         if (response is null)

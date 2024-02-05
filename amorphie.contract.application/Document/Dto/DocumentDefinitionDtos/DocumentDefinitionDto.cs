@@ -77,8 +77,7 @@ namespace amorphie.contract.application
 
     public class GetAllDocumentDefinitionInputDto : PagedInputDto
     {
-        public LangDto Lang { get; set; } = new LangDto();
-
+        public string LangCode { get; set; }
     }
 
 }

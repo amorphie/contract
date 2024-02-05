@@ -10,8 +10,9 @@ using amorphie.contract.core.Services;
 using amorphie.contract.core;
 using amorphie.contract.data.Services;
 using amorphie.contract.application;
-using amorphie.contract.Middleware;
 using Elastic.Apm.NetCoreAll;
+using amorphie.contract.data.Middleware;
+using amorphie.contract.data.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,10 @@ Configuration = builder
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<AddRequiredHeaderParameter>();
+});
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
