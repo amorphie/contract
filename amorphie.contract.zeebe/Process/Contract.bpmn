@@ -51,7 +51,7 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractStatus="Completed"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1pqqnko" sourceRef="Gateway_107e6j2" targetRef="Activity_0bjgurb">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractStatus="InProgress"</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractStatus = "InProgress"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0t3tpr9" sourceRef="Activity_0jowvcz" targetRef="Gateway_107e6j2" />
       <bpmn:callActivity id="Activity_04az109" name="Render-Online-Sign">
@@ -193,9 +193,6 @@
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Contract">
-      <bpmndi:BPMNShape id="Event_0etpq4g_di" bpmnElement="Event_1eyq1q7">
-        <dc:Bounds x="152" y="322" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
         <dc:Bounds x="380" y="80" width="1430" height="390" />
       </bpmndi:BPMNShape>
@@ -365,6 +362,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05mmkbk_di" bpmnElement="Event_05mmkbk">
         <dc:Bounds x="152" y="247" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0etpq4g_di" bpmnElement="Event_1eyq1q7">
+        <dc:Bounds x="152" y="322" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_007onoc_di" bpmnElement="Event_10vsyet">
         <dc:Bounds x="1557" y="452" width="36" height="36" />

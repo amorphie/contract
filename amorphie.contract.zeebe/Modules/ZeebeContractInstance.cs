@@ -107,7 +107,7 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 // messageVariables.LastTransition = "contract-start-StartContract";
-                messageVariables.TransitionName = "contract-start-StartContract";
+                messageVariables.TransitionName = "checking-account-opening-start";
                 // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 reference+="1123213";

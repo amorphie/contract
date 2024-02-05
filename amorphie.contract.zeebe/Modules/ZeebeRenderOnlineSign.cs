@@ -28,7 +28,7 @@ namespace amorphie.contract.zeebe.Modules
                 return operation;
             });
 
-            app.MapPost("/notvalidated", NotValidated)
+            app.MapPost("/notvalidated2", NotValidated)
                  .Produces(StatusCodes.Status200OK)
                  .WithOpenApi(operation =>
                  {
@@ -36,7 +36,7 @@ namespace amorphie.contract.zeebe.Modules
                      operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
                      return operation;
                  });
-            app.MapPost("/validated", Validated)
+            app.MapPost("/validated2", Validated)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -92,16 +92,18 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
+                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+                // string reference = entityData.GetProperty("reference").ToString();
 
                 string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+                string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
 
 
                 var contractInstance = body.GetProperty("XContractInstance");
-                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
                 if (contractInstance is ContractDefinitionDto contractDto)
                 {
+                    
                     var result = contractDto.ContractDocumentDetails
                             .Select(x => new TemplateRenderRequestModel
                             {

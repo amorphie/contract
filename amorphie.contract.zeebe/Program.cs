@@ -70,6 +70,7 @@ app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
 app.MapZeebeContractInstanceEndpoints();
+app.MapZeebeRenderOnlineSignEndpoints();
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
