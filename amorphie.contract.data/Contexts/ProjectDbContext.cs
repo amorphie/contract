@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using amorphie.contract.core.Entity.Base;
 using Microsoft.EntityFrameworkCore.Query;
 using amorphie.contract.data.Extensions;
+using amorphie.contract.core;
 
 namespace amorphie.contract.data.Contexts;
 
@@ -54,6 +55,7 @@ public class ProjectDbContext : DbContext
 
     public DbSet<ContractDefinition> ContractDefinition { get; set; }
     public DbSet<ContractDocumentDetail> ContractDocumentDetail { get; set; }
+    public DbSet<ContractDefinitionLanguageDetail> ContractDefinitionLanguageDetail { get; set; }
     public DbSet<ContractDocumentGroupDetail> ContractDocumentGroupDetail { get; set; }
     public DbSet<ContractEntityProperty> ContractEntityProperty { get; set; }
     public DbSet<ContractTag> ContractTag { get; set; }

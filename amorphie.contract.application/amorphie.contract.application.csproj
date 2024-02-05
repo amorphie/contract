@@ -6,6 +6,18 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Customer\" />
+    <None Remove="Customer\Dto\" />
+    <None Remove="Customer\Request\" />
+    <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Customer\" />
+    <Folder Include="Customer\Dto\" />
+    <Folder Include="Customer\Request\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

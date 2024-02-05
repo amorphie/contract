@@ -7,6 +7,10 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Extensions;
 using amorphie.contract.application;
+using amorphie.core.Extension;
+using amorphie.contract.application.Extensions;
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract;
 
@@ -86,17 +90,14 @@ public class DocumentDefinitionModule
         return Results.NoContent();
     }
 
-    protected override async ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-       [FromQuery][Range(0, 100)] int page, [FromQuery][Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token)
+    protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
-        var language = httpContext.Request.Headers["Language"].ToString();
+
+        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
 
         var input = new GetAllDocumentDefinitionInputDto
         {
-            Lang = new LangDto
-            {
-                LangCode = language
-            },
+            LangCode = headerModels.LangCode,
             Page = page,
             PageSize = pageSize
         };
@@ -109,7 +110,7 @@ public class DocumentDefinitionModule
         {
             if (dto.MultilanguageText is not null)
             {
-                var selectedLanguageText = dto?.MultilanguageText.FirstOrDefault(t => t.Language == input.Lang.LangCode);
+                var selectedLanguageText = dto?.MultilanguageText.FirstOrDefault(t => t.Language == input.LangCode);
 
                 if (selectedLanguageText != null)
                 {
@@ -132,8 +133,8 @@ public class DocumentDefinitionModule
 
         return Results.Ok(responseDtos);
 
-
-
     }
+
+
 }
 

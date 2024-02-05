@@ -8,7 +8,10 @@ namespace amorphie.contract.application.Contract
 {
     public interface IContractAppService
     {
-        Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
+
+        Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts);
+        Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
+
     }
     public class ContractAppService : IContractAppService
     {
@@ -18,8 +21,17 @@ namespace amorphie.contract.application.Contract
             _dbContext = dbContext;
         }
 
-        public async Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
+
+        public async Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
+            var contractDefinition = await _dbContext.ContractDefinition
+                .AnyAsync(x => x.Code == req.Code && x.BankEntity == req.EBankEntity, cts);
+            return contractDefinition;
+        }
+
+        public async Task<ContractDefinitionDto> Instance(ContractInstaceInputDto req, CancellationToken cts)
+        {
+            //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)
             {
