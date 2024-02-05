@@ -9,8 +9,6 @@ namespace amorphie.contract.application
         public static readonly string Valid = "valid";
         public static readonly string NotValid = "not-valid";
 
-
-
         #endregion
     }
 }

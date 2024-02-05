@@ -2,13 +2,14 @@ using amorphie.contract.data.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Contract;
-using amorphie.contract.core.Mapping;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application;
 using amorphie.core.Extension;
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract;
 
@@ -28,11 +29,9 @@ public class ContractDefinitionModule
     {
         try
         {
-            var language = httpContext.Request.Headers["Language"].ToString();
-            if (string.IsNullOrEmpty(language))
-            {
-                language = "en-EN";
-            }
+            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+
+
             var query = context!.ContractDefinition!.Skip(page)
                 .Take(pageSize).AsNoTracking().AsSplitQuery();
 

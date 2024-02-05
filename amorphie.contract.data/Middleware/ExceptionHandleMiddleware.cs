@@ -1,6 +1,11 @@
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 using amorphie.core.Base;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
-namespace amorphie.contract.Middleware
+namespace amorphie.contract.data.Middleware
 {
     public class ExceptionHandleMiddleware
     {
@@ -15,6 +20,32 @@ namespace amorphie.contract.Middleware
         {
             try
             {
+                var model = new HeaderFilterModel();
+
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Application, out var application))
+                {
+                    model.EBankEntity = application.FirstOrDefault() switch
+                    {
+                        "X" => EBankEntity.on,
+                        "B" => EBankEntity.burgan,
+                        _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
+                    };
+                }
+                else
+                {
+                    //TODO: Boş gelirse hata verdirmeli miyiz? Daha sonra konuşulacak.
+                }
+
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
+                    model.LangCode = lang.FirstOrDefault();
+                else
+                    model.LangCode = "en-EN";
+
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.ClientId, out var clientId))
+                    model.ClientCode = clientId.FirstOrDefault();
+
+                httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model;
+
                 await _next(httpContext);
             }
             catch (Exception ex)
