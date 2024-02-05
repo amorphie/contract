@@ -6,8 +6,10 @@ using amorphie.contract.application.Customer.Request;
 using amorphie.contract.application.Extensions;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.data.Services;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using static amorphie.contract.application.Customer.CustomerAppService;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace amorphie.contract.application.Customer
@@ -15,6 +17,7 @@ namespace amorphie.contract.application.Customer
 	public interface ICustomerAppService
 	{
         Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
+        Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
     }
 
 	public class CustomerAppService : ICustomerAppService
@@ -168,8 +171,48 @@ namespace amorphie.contract.application.Customer
             public string MinioUrl { get; set; }
             public Guid DocumentDefinitionId { get; set; }
         }
-    }
 
-    
+        public async Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        {
+            var documentsQuery = _dbContext!.Document.Where(x => x.Customer.Reference == inputDto.Reference).AsQueryable();
+
+            //documentsQuery = ContractHelperExtensions.LikeWhere(documentsQuery, inputDto.Code);
+
+            if (inputDto.StartDate.HasValue)
+            {
+                documentsQuery = documentsQuery.Where(x => x.CreatedAt > inputDto.StartDate.Value);
+            }
+
+            if (inputDto.EndDate.HasValue)
+            {
+                documentsQuery = documentsQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
+            }
+
+            IDocumentService documentService = new DocumentService();
+            var documents = await documentsQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToListAsync(token);
+
+            var response = documents.Select(x => new DocumentObject
+            {
+                Code = x.DocumentDefinition.Code,
+                Semver = x.DocumentDefinition.Semver,
+                Status = x.Status.ToString(),
+                MinioUrl = documentService.GetDocumentPath(x.DocumentContent.MinioObjectName, token).GetAwaiter().GetResult(),
+                MinioObjectName = x.DocumentContent.MinioObjectName,
+                Reference = x.Customer.Reference
+            }).ToList();
+
+            return response;
+        }
+
+        public class DocumentObject
+        {
+            public string Code { get; set; }
+            public string Semver { get; set; }
+            public string Status { get; set; }
+            public string MinioUrl { get; set; }
+            public string MinioObjectName { get; set; }
+            public string Reference { get; set; }
+        }
+    }
 }
 

@@ -86,22 +86,11 @@ namespace amorphie.contract.Module.Customer
             //    return Results.Ok(contractModels);
         }
 
-        async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-                    HttpContext httpContext, CancellationToken token, string reference)
-            {
-                IDocumentService documentService = new DocumentService();
-                var documents = await context.Document.Where(x => x.Customer.Reference == reference)
-                .Select(x => new
-                {
-                    x.DocumentDefinition.Code,
-                    x.DocumentDefinition.Semver,
-                    status = "valid",
-                    MinioUrl = documentService.GetDocumentPath(x.DocumentContent.MinioObjectName, token),
-                    x.DocumentContent.MinioObjectName,
-                    x.Customer.Reference
-                }).ToListAsync(token);
+        async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
+        {
+            var response = await customerAppService.GetAllDocuments(inputDto, token);
 
-                return Results.Ok(documents);
+            return Results.Ok(response);
         }
     }
 }
