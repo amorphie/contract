@@ -8,7 +8,7 @@ using amorphie.contract.core.Entity.Document.DocumentGroups;
 
 namespace amorphie.contract.application.Customer.Dto
 {
-	public class CustomerMapProfile : Profile
+    public class CustomerMapProfile : Profile
     {
         public CustomerMapProfile()
         {

@@ -4,7 +4,7 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.application.Customer.Dto
 {
-	public class CustomerContractDocumentDto
+    public class CustomerContractDocumentDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

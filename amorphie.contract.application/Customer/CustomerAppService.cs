@@ -14,13 +14,13 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace amorphie.contract.application.Customer
 {
-	public interface ICustomerAppService
-	{
+    public interface ICustomerAppService
+    {
         Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
     }
 
-	public class CustomerAppService : ICustomerAppService
+    public class CustomerAppService : ICustomerAppService
     {
         private readonly ProjectDbContext _dbContext;
         private readonly IDocumentService _documentService;
@@ -36,7 +36,7 @@ namespace amorphie.contract.application.Customer
             var contractQuery = _dbContext!.ContractDefinition.AsQueryable();
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == inputDto.Reference).AsQueryable();
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
-            
+
 
             if (inputDto.StartDate.HasValue)
             {
