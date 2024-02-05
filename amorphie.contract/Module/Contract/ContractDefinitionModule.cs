@@ -72,11 +72,12 @@ public class ContractDefinitionModule
     async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromQuery] string? code, [FromQuery] EBankEntity? eBankEntity)
     {
         //TODO: header model den alınacak.
-        var req = new ContractGetExistInputDto(){
-            Code=code,
-            EBankEntity= (EBankEntity)eBankEntity
+        var req = new ContractGetExistInputDto()
+        {
+            Code = code,
+            EBankEntity = (EBankEntity)eBankEntity
         };
-        
+
         var response = await contractAppService.GetExist(req, token);
 
         return Results.Ok(response);
