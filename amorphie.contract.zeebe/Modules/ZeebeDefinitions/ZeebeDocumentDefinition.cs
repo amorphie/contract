@@ -16,7 +16,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Render service worker on Zeebe";
-                                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
 
                 return operation;
             });
@@ -26,7 +26,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps Render service worker on Zeebe";
-                              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
 
               return operation;
           });
@@ -35,7 +35,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps Render service worker on Zeebe";
-                              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
 
               return operation;
           });
@@ -44,7 +44,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps Render service worker on Zeebe";
-                              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
 
               return operation;
           });

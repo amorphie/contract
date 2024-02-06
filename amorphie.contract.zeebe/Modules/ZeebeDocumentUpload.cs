@@ -17,14 +17,14 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeDocumentUploadEndpoints(this WebApplication app)
         {
-       
+
             #region  map-post
             app.MapPost("/uploaded", Uploaded)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps uploaded service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
                 return operation;
             });
             app.MapPost("/autocontrol", AutoControl)
@@ -32,8 +32,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps AutoControl service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-              
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
               return operation;
           });
             app.MapPost("/waitingcontrol", WaitingControl)
@@ -41,8 +41,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps WaitingControl service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-              
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
               return operation;
           });
             app.MapPost("/notvalidated", NotValidated)
@@ -50,8 +50,8 @@ namespace amorphie.contract.zeebe.Modules
                  .WithOpenApi(operation =>
                  {
                      operation.Summary = "Maps NotValidated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-                     
+                     operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
                      return operation;
                  });
             app.MapPost("/validated2", Validated)
@@ -59,8 +59,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-                
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
                 return operation;
             });
 
@@ -70,8 +70,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-            
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
             return operation;
         });
             app.MapPost("/deleteprocessuploaded", DeleteProcessUploaded)
@@ -79,8 +79,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteProcessUploaded service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-            
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
             return operation;
         });
             app.MapPost("/erroruploaded", ErrorUploaded)
@@ -88,8 +88,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorUploaded service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
-            
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUpload) } };
+
             return operation;
         });
             #endregion

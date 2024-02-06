@@ -25,8 +25,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps errordocumentgroupdefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
-              
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
             app.MapPost("/deletedocumentgroupdefinition", deletedocumentgroupdefinition)
@@ -34,8 +34,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps deletedocumentgroupdefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
-              
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
             app.MapPost("/timeoutdocumentgroupdefinition", timeoutdocumentgroupdefinition)
@@ -43,8 +43,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps timeoutdocumentgroupdefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
-              
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
 

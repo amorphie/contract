@@ -31,7 +31,7 @@ namespace amorphie.contract.zeebe.Modules
                       .WithOpenApi(operation =>
                       {
                           operation.Summary = "Maps ContractInstance service worker on Zeebe";
-                           operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+                          operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                           return operation;
                       });
 
@@ -40,7 +40,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps TimeoutContract service worker on Zeebe";
-             operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
             app.MapPost("/deletecontract", DeleteContract)
@@ -48,7 +48,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteContract service worker on Zeebe";
-             operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
             app.MapPost("/errorcontract", ErrorContract)
@@ -56,7 +56,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorContract service worker on Zeebe";
-             operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
 
@@ -122,7 +122,8 @@ namespace amorphie.contract.zeebe.Modules
                 // messageVariables.Variables.Remove("ContractStatus");
                 messageVariables.Variables.Add("XContractInstance", InstanceDto);
 
-                if(InstanceDto.Status.ToString()==EStatus.Completed.ToString()){
+                if (InstanceDto.Status.ToString() == EStatus.Completed.ToString())
+                {
                     //  messageVariables.TransitionName = "contract-start-StartContract";
                 }
 
