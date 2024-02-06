@@ -6,6 +6,7 @@ using amorphie.contract.application.Customer.Request;
 using amorphie.contract.application.Extensions;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.data.Services;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -48,8 +49,15 @@ namespace amorphie.contract.application.Customer
                 documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
             }
 
-            var contracts = await contractQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToListAsync(token);
-            var documents = await documentQuery.ToListAsync(token);
+            var contractModels = await contractQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize)
+                .AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
+            var documents = await documentQuery.Select(x => new
+            {
+                x.Id,
+                x.DocumentDefinitionId,
+                x.Status,
+                x.DocumentContent.MinioObjectName
+            }).AsSplitQuery().ToListAsync(token);
 
             //List<ContractDefinitionDto> contractModels = contracts.Select(x => new ContractDefinitionDto
             //{
@@ -58,7 +66,7 @@ namespace amorphie.contract.application.Customer
             //    Status = "inProgress"
             //}).ToList();
 
-            List<CustomerContractDto> contractModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contracts);
+            //List<CustomerContractDto> contractModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contracts);
 
             foreach (var model in contractModels)
             {
@@ -135,8 +143,8 @@ namespace amorphie.contract.application.Customer
 
                     minioDocuments = minioDocuments.GroupBy(x => x.DocumentDefinitionId).Select(x => x.First()).ToList();
 
-                    minioDocuments.ForEach(x => x.MinioUrl = _documentService.GetDocumentPath(
-                        documents.FirstOrDefault(z => z.DocumentDefinitionId == x.DocumentDefinitionId).DocumentContent.MinioObjectName, token).GetAwaiter().GetResult());
+                    minioDocuments.ForEach(async x => x.MinioUrl = await _documentService.GetDocumentPath(
+                        documents.FirstOrDefault(z => z.DocumentDefinitionId == x.DocumentDefinitionId).MinioObjectName, token));
 
                     model.CustomerContractDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
 
@@ -191,17 +199,21 @@ namespace amorphie.contract.application.Customer
             IDocumentService documentService = new DocumentService();
             var documents = await documentsQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToListAsync(token);
 
-            var response = documents.Select(x => new DocumentObject
+            var responseTasks = documents.Select(async x =>
             {
-                Code = x.DocumentDefinition.Code,
-                Semver = x.DocumentDefinition.Semver,
-                Status = x.Status.ToString(),
-                MinioUrl = documentService.GetDocumentPath(x.DocumentContent.MinioObjectName, token).GetAwaiter().GetResult(),
-                MinioObjectName = x.DocumentContent.MinioObjectName,
-                Reference = x.Customer.Reference
-            }).ToList();
+                var minioUrl = await documentService.GetDocumentPath(x.DocumentContent.MinioObjectName, token);
+                return new DocumentObject
+                {
+                    Code = x.DocumentDefinition.Code,
+                    Semver = x.DocumentDefinition.Semver,
+                    Status = x.Status.ToString(),
+                    MinioUrl = minioUrl,
+                    MinioObjectName = x.DocumentContent.MinioObjectName,
+                    Reference = x.Customer.Reference
+                };
+            });
 
-            return response;
+            return (await Task.WhenAll(responseTasks)).ToList();
         }
 
         public class DocumentObject
