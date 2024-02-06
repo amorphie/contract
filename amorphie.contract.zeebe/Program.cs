@@ -2,8 +2,6 @@ using amorphie.contract.data.Contexts;
 using amorphie.contract.core;
 using amorphie.contract.zeebe.Modules;
 using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
-using amorphie.contract.zeebe.Services;
-using amorphie.contract.zeebe.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.application;
 
@@ -14,6 +12,7 @@ using amorphie.contract.data.Services;
 using amorphie.contract.data.Middleware;
 using amorphie.contract.data.Extensions;
 using amorphie.contract.application.Contract;
+using System.Text.Json;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +51,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddDaprClient();
 
 builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configuration);
+
+// builder.Services.Configure<JsonSerializerOptions>(options =>
+// {
+//     options.PropertyNameCaseInsensitive = true;
+// });
+
+ 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
@@ -63,8 +69,12 @@ builder.Services.AddSingleton<IMinioService, MinioService>();
 // builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 builder.Services.AddScoped<IContractAppService, ContractAppService>();
 
-builder.Services.AddApplicationServices();
 
+builder.Services.AddApplicationServices();
+builder.Services.Configure<JsonSerializerOptions>(options =>
+{
+    options.PropertyNameCaseInsensitive = true;
+});
 
 var app = builder.Build();
 using var scope = app.Services.CreateScope();

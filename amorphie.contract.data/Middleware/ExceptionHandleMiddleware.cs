@@ -34,6 +34,7 @@ namespace amorphie.contract.data.Middleware
                 else
                 {
                     //TODO: Boş gelirse hata verdirmeli miyiz? Daha sonra konuşulacak.
+                    model.EBankEntity  = EBankEntity.on;
                 }
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))

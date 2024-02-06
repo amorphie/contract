@@ -83,6 +83,8 @@ namespace amorphie.contract.application
                 };
 
                 _dbContext.Customer.Add(cus);
+                _dbContext.SaveChanges();
+
             }
 
             var document = new Document
@@ -101,6 +103,10 @@ namespace amorphie.contract.application
             if (input.FileContextType == "byte")
             {
                 fileByteArray = input.FileContext.Split(',').Select(byte.Parse).ToArray();
+            }
+            else if (input.FileContextType == "TemplateEngine")
+            {
+                fileByteArray = Convert.FromBase64String(input.FileContext);//TODO: SubFlow için düzenle
             }
             else
             {

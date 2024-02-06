@@ -123,7 +123,6 @@
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_0q5yxog" sourceRef="Event_02zlf8t" targetRef="Activity_0nnjgg4" />
     <bpmn:subProcess id="Activity_12zt0hi">
-      <bpmn:incoming>Flow_1szozyt</bpmn:incoming>
       <bpmn:outgoing>Flow_1ivuvub</bpmn:outgoing>
       <bpmn:startEvent id="Event_1nslimr" name="Start">
         <bpmn:outgoing>Flow_16f7d70</bpmn:outgoing>
@@ -145,11 +144,6 @@
       <bpmn:incoming>Flow_0113df2</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0113df2" sourceRef="Activity_0nnjgg4" targetRef="Event_12dc3lo" />
-    <bpmn:sequenceFlow id="Flow_1szozyt" sourceRef="Event_10vsyet" targetRef="Activity_12zt0hi" />
-    <bpmn:boundaryEvent id="Event_10vsyet" name="Error" attachedToRef="Activity_1t3gbcf">
-      <bpmn:outgoing>Flow_1szozyt</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_04h3t06" errorRef="Error_0kevwfd" />
-    </bpmn:boundaryEvent>
     <bpmn:endEvent id="Event_1opa7u1" name="End">
       <bpmn:incoming>Flow_1ivuvub</bpmn:incoming>
     </bpmn:endEvent>
@@ -366,12 +360,6 @@
       <bpmndi:BPMNShape id="Event_0etpq4g_di" bpmnElement="Event_1eyq1q7">
         <dc:Bounds x="152" y="322" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_007onoc_di" bpmnElement="Event_10vsyet">
-        <dc:Bounds x="1557" y="452" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1564" y="495" width="25" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_164xep2_di" bpmnElement="Event_02zlf8t">
         <dc:Bounds x="1107" y="452" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -400,10 +388,6 @@
       <bpmndi:BPMNEdge id="Flow_0113df2_di" bpmnElement="Flow_0113df2">
         <di:waypoint x="1300" y="640" />
         <di:waypoint x="1332" y="640" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1szozyt_di" bpmnElement="Flow_1szozyt">
-        <di:waypoint x="1575" y="488" />
-        <di:waypoint x="1575" y="540" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ivuvub_di" bpmnElement="Flow_1ivuvub">
         <di:waypoint x="1750" y="640" />
