@@ -19,7 +19,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
                 return operation;
             });
             app.MapPost("/amorphie-workflow-set-state", AutoControl)
@@ -27,7 +28,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps AutoControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
               return operation;
           });
             app.MapPost("/WaitingControl", WaitingControl)
@@ -35,7 +37,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps WaitingControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
               return operation;
           });
             app.MapPost("/NotValidated", NotValidated)
@@ -43,7 +46,8 @@ namespace amorphie.contract.zeebe.Modules
                  .WithOpenApi(operation =>
                  {
                      operation.Summary = "Maps NotValidated service worker on Zeebe";
-                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                     operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
                      return operation;
                  });
             app.MapPost("/Validated2", Validated)
@@ -51,7 +55,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
                 return operation;
             });
 
@@ -61,7 +66,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
             return operation;
         });
             app.MapPost("/DeleteProcessUploaded", DeleteProcessUploaded)
@@ -69,7 +75,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
             return operation;
         });
             app.MapPost("/ErrorUploaded", ErrorUploaded)
@@ -77,7 +84,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentUploadRenderWetSignUpload) } };
+
             return operation;
         });
         }

@@ -26,7 +26,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Render service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
                 return operation;
             });
 
@@ -35,7 +36,8 @@ namespace amorphie.contract.zeebe.Modules
                  .WithOpenApi(operation =>
                  {
                      operation.Summary = "Maps NotValidated service worker on Zeebe";
-                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                     operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
                      return operation;
                  });
             app.MapPost("/render-online-sign-validated", Validated)
@@ -43,7 +45,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
                 return operation;
             });
 
@@ -53,7 +56,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps TimeoutRenderOnlineSign service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
             return operation;
         });
             app.MapPost("/DeleteRenderOnlineSign", DeleteRenderOnlineSign)
@@ -61,7 +65,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteRenderOnlineSign service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
             return operation;
         });
             app.MapPost("/ErrorRenderOnlineSign", ErrorRenderOnlineSign)
@@ -69,7 +74,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorRenderOnlineSign service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
             return operation;
         });
         }
@@ -100,7 +106,7 @@ namespace amorphie.contract.zeebe.Modules
                 string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-                messageVariables.TransitionName = "checking-account-opening-start";
+                // messageVariables.TransitionName = "checking-account-opening-start";
 
                 var contractInstance = body.GetProperty("XContractInstance");
                 JsonSerializerOptions options = new JsonSerializerOptions

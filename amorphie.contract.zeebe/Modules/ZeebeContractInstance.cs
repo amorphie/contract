@@ -22,7 +22,7 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps ContractInstance service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                 return operation;
             });
 
@@ -31,7 +31,7 @@ namespace amorphie.contract.zeebe.Modules
                       .WithOpenApi(operation =>
                       {
                           operation.Summary = "Maps ContractInstance service worker on Zeebe";
-                          operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+                          operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                           return operation;
                       });
 
@@ -40,7 +40,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps TimeoutContract service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
             app.MapPost("/deletecontract", DeleteContract)
@@ -48,7 +48,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteContract service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
             app.MapPost("/errorcontract", ErrorContract)
@@ -56,7 +56,7 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorContract service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+            operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
 
@@ -107,7 +107,7 @@ namespace amorphie.contract.zeebe.Modules
             try
             {
                 // messageVariables.LastTransition = "contract-start-StartContract";
-                messageVariables.TransitionName = "checking-account-opening-start";
+                // messageVariables.TransitionName = "checking-account-opening-start";
                 // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 // reference += "102";//TODO Unutma kaldırcan Test için var
@@ -121,6 +121,12 @@ namespace amorphie.contract.zeebe.Modules
                 // messageVariables.Variables.Remove("ContractInstance");
                 // messageVariables.Variables.Remove("ContractStatus");
                 messageVariables.Variables.Add("XContractInstance", InstanceDto);
+
+                if (InstanceDto.Status.ToString() == EStatus.Completed.ToString())
+                {
+                    //  messageVariables.TransitionName = "contract-start-StartContract";
+                }
+
                 messageVariables.Variables.Add("ContractStatus", InstanceDto.Status);
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));

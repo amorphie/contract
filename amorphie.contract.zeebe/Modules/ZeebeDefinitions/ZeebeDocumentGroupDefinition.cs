@@ -3,7 +3,7 @@ using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using amorphie.contract.zeebe.Services.Interfaces;
+using amorphie.contract.zeebe.Services;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
@@ -16,7 +16,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps documentgroupdefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe documentgroupdefinition" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
                 return operation;
             });
 
@@ -25,7 +25,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps errordocumentgroupdefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe errordocumentgroupdefinition" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
             app.MapPost("/deletedocumentgroupdefinition", deletedocumentgroupdefinition)
@@ -33,7 +34,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps deletedocumentgroupdefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe deletedocumentgroupdefinition" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
             app.MapPost("/timeoutdocumentgroupdefinition", timeoutdocumentgroupdefinition)
@@ -41,7 +43,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps timeoutdocumentgroupdefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe timeoutdocumentgroupdefinition" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentGroupDefinition) } };
+
               return operation;
           });
 

@@ -3,7 +3,7 @@ using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using amorphie.contract.zeebe.Services.Interfaces;
+using amorphie.contract.zeebe.Services;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
@@ -16,7 +16,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps contractdefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeeb contractdefinition" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
                 return operation;
             });
 
@@ -25,7 +25,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps errorcontractdefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe errorcontractdefinition" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+
               return operation;
           });
             app.MapPost("/deletecontractdefinition", deletecontractdefinition)
@@ -33,7 +34,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps deletecontractdefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe deletecontractdefinition" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+
               return operation;
           });
             app.MapPost("/timeoutcontractdefinition", timeoutcontractdefinition)
@@ -41,7 +43,8 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe" } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+
               return operation;
           });
 
