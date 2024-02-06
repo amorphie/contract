@@ -68,6 +68,8 @@ builder.Services.AddApplicationServices();
 builder.AddSeriLog();
 
 var app = builder.Build();
+app.UseAllElasticApm(builder.Configuration);
+
 app.UseCors();
 
 using var scope = app.Services.CreateScope();
@@ -80,7 +82,6 @@ app.UseSwaggerUI();
 // app.UseHttpsRedirection();
 app.UseExceptionHandleMiddleware();
 app.AddRoutes();
-app.UseAllElasticApm(builder.Configuration);
 
 app.Run();
 

@@ -67,6 +67,8 @@ builder.Services.AddApplicationServices();
 
 
 var app = builder.Build();
+app.UseAllElasticApm(builder.Configuration);
+
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
@@ -78,7 +80,6 @@ app.UseExceptionHandleMiddleware();
 
 app.UseHttpsRedirection();
 
-app.UseAllElasticApm(builder.Configuration);
 
 app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
