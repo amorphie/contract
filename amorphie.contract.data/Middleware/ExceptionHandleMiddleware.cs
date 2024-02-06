@@ -32,10 +32,19 @@ namespace amorphie.contract.data.Middleware
                 }
                 else model.EBankEntity = EBankEntity.on;
 
-                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.AcceptLanguage, out var aLang))
+                {
+                    string langCode = aLang.FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(langCode))
+                    {
+                        int commaIndex = langCode.IndexOf(',');
+                        model.LangCode = commaIndex != -1 ? langCode.Substring(0, commaIndex) : langCode;
+                    }
+                }
+                else if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
                     model.LangCode = lang.FirstOrDefault();
-                else
-                    model.LangCode = "en-EN";
+                else model.LangCode = "en-EN";
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.ClientId, out var clientId))
                     model.ClientCode = clientId.FirstOrDefault();
