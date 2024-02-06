@@ -11,5 +11,7 @@ namespace amorphie.contract.core.Model
 
         public string ClientCode { get; set; }
 
+        public string UserReference { get; set; }
+
     }
 }

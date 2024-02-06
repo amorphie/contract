@@ -22,19 +22,15 @@ namespace amorphie.contract.data.Middleware
             {
                 var model = new HeaderFilterModel();
 
-                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Application, out var application))
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.BusinessLine, out var businessLine))
                 {
-                    model.EBankEntity = application.FirstOrDefault() switch
-                    {
-                        "X" => EBankEntity.on,
-                        "B" => EBankEntity.burgan,
-                        _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
-                    };
+                    model.EBankEntity = GetBankEntity(businessLine.FirstOrDefault());
                 }
-                else
+                else if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Application, out var application))
                 {
-                    //TODO: Boş gelirse hata verdirmeli miyiz? Daha sonra konuşulacak.
+                    model.EBankEntity = GetBankEntity(application.FirstOrDefault());
                 }
+                else model.EBankEntity = EBankEntity.on;
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
                     model.LangCode = lang.FirstOrDefault();
@@ -43,6 +39,9 @@ namespace amorphie.contract.data.Middleware
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.ClientId, out var clientId))
                     model.ClientCode = clientId.FirstOrDefault();
+
+                if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.UserReference, out var userReference))
+                    model.UserReference = userReference.FirstOrDefault();
 
                 httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model;
 
@@ -78,6 +77,16 @@ namespace amorphie.contract.data.Middleware
                 Result = new Result(amorphie.core.Enums.Status.Error, errorMessage, ex.Message)
             });
 
+        }
+
+        private EBankEntity GetBankEntity(string businessLine)
+        {
+            return businessLine switch
+            {
+                "X" => EBankEntity.on,
+                "B" => EBankEntity.burgan,
+                _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
+            };
         }
     }
 

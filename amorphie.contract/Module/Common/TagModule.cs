@@ -27,20 +27,6 @@ public class TagModule
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
         base.AddRoutes(routeGroupBuilder);
-        routeGroupBuilder.MapGet("getallHeaders", getallHeaders);
     }
-
-    async ValueTask<IResult> getallHeaders(HttpContext httpContext)
-    {
-        Dictionary<string, string> requestHeaders = new Dictionary<string, string>();
-        foreach (var header in httpContext.Request.Headers)
-        {
-            requestHeaders.Add(header.Key, header.Value);
-        }
-
-        return Results.Ok(requestHeaders);
-    }
-
-
 }
 
