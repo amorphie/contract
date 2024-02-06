@@ -349,7 +349,6 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-*.yaml 
 *.Development.json
 
 amorphie.contract/appsettings.Development.json

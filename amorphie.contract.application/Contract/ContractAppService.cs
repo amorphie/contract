@@ -1,5 +1,6 @@
 ﻿using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Request;
+using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace amorphie.contract.application.Contract
         {
             //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
+            // var ss = await _dbContext.ContractDefinition.Include(x=>x.ContractDocumentDetails).FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)
             {
                 return new ContractDefinitionDto { Status = "not contract" };
@@ -66,7 +68,7 @@ namespace amorphie.contract.application.Contract
 
             var contractModel = new ContractDefinitionDto
             {
-                Status = AppConsts.InProgress,
+                Status = EStatus.InProgress.ToString(),
                 Id = contractDefinition.Id,
                 Code = contractDefinition.Code,
                 ContractDocumentDetails = contractDocumentDetails,
@@ -74,7 +76,7 @@ namespace amorphie.contract.application.Contract
             };
 
             if (contractModel.ContractDocumentDetails.Count == 0)
-                contractModel.Status = AppConsts.Valid;
+                contractModel.Status = EStatus.Completed.ToString();
 
             return contractModel;
         }

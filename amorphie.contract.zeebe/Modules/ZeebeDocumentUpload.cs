@@ -64,7 +64,7 @@ namespace amorphie.contract.zeebe.Modules
                      operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
                      return operation;
                  });
-            app.MapPost("/validated", Validated)
+            app.MapPost("/validated2", Validated)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {

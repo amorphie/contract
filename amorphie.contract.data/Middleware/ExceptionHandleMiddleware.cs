@@ -28,7 +28,9 @@ namespace amorphie.contract.data.Middleware
                 }
                 else if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Application, out var application))
                 {
+
                     model.EBankEntity = GetBankEntity(application.FirstOrDefault());
+
                 }
                 else model.EBankEntity = EBankEntity.on;
 
