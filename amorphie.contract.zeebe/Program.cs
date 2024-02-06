@@ -13,6 +13,7 @@ using amorphie.contract.data.Middleware;
 using amorphie.contract.data.Extensions;
 using amorphie.contract.application.Contract;
 using System.Text.Json;
+using amorphie.contract.zeebe.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,9 +65,9 @@ StaticValuesExtensions.SetStaticValues(settings);
 
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
-// builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
-// builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
-// builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
+builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
+builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
+builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 builder.Services.AddScoped<IContractAppService, ContractAppService>();
 
 

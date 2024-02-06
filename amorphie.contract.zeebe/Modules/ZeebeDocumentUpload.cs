@@ -8,6 +8,7 @@ using amorphie.contract.zeebe.Services;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Services;
+using Microsoft.Diagnostics.Tracing.Stacks;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -16,28 +17,14 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeDocumentUploadEndpoints(this WebApplication app)
         {
-            #region auto-map
-            //  var  mapList = new List<string>{"Uploaded","AutoControl","WaitingControl",
-            // "NotValidated","Validated","TimeoutUploaded","DeleteProcessUploaded","ErrorUploaded"};
-            // foreach (var item in mapList)
-            // {
-            //     app.MapPost("/"+item,new Delegate)
-            //                 .Produces(StatusCodes.Status200OK)
-            //                 .WithOpenApi(operation =>
-            //                 {
-            //                     operation.Summary = string.Format("_summary",item);
-            //                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
-            //                     return operation;
-            //                 });
-            // }
-            #endregion
+       
             #region  map-post
             app.MapPost("/uploaded", Uploaded)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps uploaded service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
                 return operation;
             });
             app.MapPost("/autocontrol", AutoControl)
@@ -45,7 +32,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps AutoControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+              
               return operation;
           });
             app.MapPost("/waitingcontrol", WaitingControl)
@@ -53,7 +41,8 @@ namespace amorphie.contract.zeebe.Modules
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps WaitingControl service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+              
               return operation;
           });
             app.MapPost("/notvalidated", NotValidated)
@@ -61,7 +50,8 @@ namespace amorphie.contract.zeebe.Modules
                  .WithOpenApi(operation =>
                  {
                      operation.Summary = "Maps NotValidated service worker on Zeebe";
-                     operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+                     
                      return operation;
                  });
             app.MapPost("/validated2", Validated)
@@ -69,7 +59,8 @@ namespace amorphie.contract.zeebe.Modules
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps Validated service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+                
                 return operation;
             });
 
@@ -79,7 +70,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps Validated service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+            
             return operation;
         });
             app.MapPost("/deleteprocessuploaded", DeleteProcessUploaded)
@@ -87,7 +79,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps DeleteProcessUploaded service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+            
             return operation;
         });
             app.MapPost("/erroruploaded", ErrorUploaded)
@@ -95,7 +88,8 @@ namespace amorphie.contract.zeebe.Modules
         .WithOpenApi(operation =>
         {
             operation.Summary = "Maps ErrorUploaded service worker on Zeebe";
-            operation.Tags = new List<OpenApiTag> { new() { Name = "Zeebe Contract Document Upload" } };
+                operation.Tags = new List<OpenApiTag> { new() { Name =nameof(ZeebeDocumentUpload) } };
+            
             return operation;
         });
             #endregion
