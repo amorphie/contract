@@ -57,7 +57,7 @@ builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configurat
 //     options.PropertyNameCaseInsensitive = true;
 // });
 
- 
+
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);

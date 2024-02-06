@@ -112,26 +112,26 @@ namespace amorphie.contract.zeebe.Modules
                 if (contractDto != null)
                 {
                     var contractDocument = contractDto.ContractDocumentDetails.FirstOrDefault();
-                    var templateRequest =  new TemplateRenderRequestModel
-                            {
-                                SemanticVersion = contractDocument.MinVersion,
-                                Name = contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails
+                    var templateRequest = new TemplateRenderRequestModel
+                    {
+                        SemanticVersion = contractDocument.MinVersion,
+                        Name = contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails
                                     .FirstOrDefault(a => a.LanguageType == language)?.Code
                                     ?? contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.FirstOrDefault()?.Code,
-                                RenderId = Guid.NewGuid(),
-                                RenderData = JsonSerializer.Serialize(new { x = "a" }),
-                                RenderDataForLog = JsonSerializer.Serialize(new { x = "a" }),
-                                // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
-                                ProcessName = nameof(ZeebeRenderOnlineSign),
-                                Identity = reference
-                            };
+                        RenderId = Guid.NewGuid(),
+                        RenderData = JsonSerializer.Serialize(new { x = "a" }),
+                        RenderDataForLog = JsonSerializer.Serialize(new { x = "a" }),
+                        // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
+                        ProcessName = nameof(ZeebeRenderOnlineSign),
+                        Identity = reference
+                    };
                     if (contractDocument != null)
                     {
                         HttpSendTemplate(templateRequest);//TODO:dapr kullanılacak  yeni ortam kurulunca yapcaz
 
                         messageVariables.Variables.Add("ApprovedTemplateRenderRequestModel", templateRequest);
                         messageVariables.Variables.Add("ContractDocument", contractDocument);
-                    } 
+                    }
                 }
 
                 messageVariables.Success = true;
@@ -208,7 +208,7 @@ namespace amorphie.contract.zeebe.Modules
         HttpRequest request,
         HttpContext httpContext,
         [FromServices] DaprClient client
-        , IConfiguration configuration,CancellationToken token
+        , IConfiguration configuration, CancellationToken token
     )
         {
             var messageVariables = new MessageVariables();
@@ -223,26 +223,27 @@ namespace amorphie.contract.zeebe.Modules
 
             try
             {
-                  string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                 var contractDocument = body.GetProperty("ContractDocument");
-                 var renderId  = body.GetProperty("ApprovedTemplateRenderRequestModel").GetProperty("render-id").ToString();
+                string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                var contractDocument = body.GetProperty("ContractDocument");
+                var renderId = body.GetProperty("ApprovedTemplateRenderRequestModel").GetProperty("render-id").ToString();
                 JsonSerializerOptions options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 };
                 var contractDocumentModel = JsonSerializer.Deserialize<ContractDocumentDetailDto>(contractDocument, options) as ContractDocumentDetailDto;
-                 var input = new DocumentInstanceInputDto{
+                var input = new DocumentInstanceInputDto
+                {
                     Id = ZeebeMessageHelper.StringToGuid(renderId),
                     DocumentCode = contractDocumentModel.DocumentDefinition.Code,
                     DocumentVersion = contractDocumentModel.DocumentDefinition.Semver,
                     Reference = reference,
                     Owner = reference,
-                    FileName = contractDocumentModel.DocumentDefinition.Code +".pdf", //TODO: Degişecek,
+                    FileName = contractDocumentModel.DocumentDefinition.Code + ".pdf", //TODO: Degişecek,
                     FileType = "application/pdf",
                     FileContextType = "TemplateEngine",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
                     FileContext = "RmF0aWggw5ZaVMOcUks="
-                 };
-                 var response =  documentAppService.Instance(input).Result;
+                };
+                var response = documentAppService.Instance(input).Result;
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
