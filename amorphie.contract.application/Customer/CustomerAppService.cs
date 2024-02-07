@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using static amorphie.contract.application.Customer.CustomerAppService;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Elastic.Apm.Api;
 
 namespace amorphie.contract.application.Customer
 {
@@ -50,7 +51,7 @@ namespace amorphie.contract.application.Customer
             }
 
             var contractModels = await contractQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize)
-                .AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
+                 .AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
             var documents = await documentQuery.Select(x => new
             {
                 x.Id,
@@ -58,7 +59,6 @@ namespace amorphie.contract.application.Customer
                 x.Status,
                 x.DocumentContent.MinioObjectName
             }).AsSplitQuery().ToListAsync(token);
-
             //List<ContractDefinitionDto> contractModels = contracts.Select(x => new ContractDefinitionDto
             //{
             //    Id = x.Id,
@@ -67,95 +67,109 @@ namespace amorphie.contract.application.Customer
             //}).ToList();
 
             //List<CustomerContractDto> contractModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contracts);
-
-            foreach (var model in contractModels)
-            {
-                var contractDocuments = model.CustomerContractDocuments;
-                var contractDocumentGroups = model.CustomerContractDocumentGroups;
-
-                var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.EStatus.Completed).ToList();
-                var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.EStatus.Completed).ToList();
-
-                contractDocuments.Where(x => customerCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
-                    .ForEach(x =>
-                    {
-                        x.DocumentStatus = AppConsts.Valid;
-                        model.ContractStatus = AppConsts.InProgress;
-                    });
-
-                contractDocuments.Where(x => customerNotCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
-                    .ForEach(x =>
-                    {
-                        x.DocumentStatus = AppConsts.InProgress;
-                    });
-
-                foreach (var contractDocGroup in contractDocumentGroups)
-                {
-                    int validDocCount = 0;
-                    contractDocGroup.CustomerContractGroupDocuments.Where(x => customerCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
-                    .ForEach(x =>
-                    {
-                        x.DocumentStatus = AppConsts.Valid;
-                        model.ContractStatus = AppConsts.InProgress;
-                        validDocCount++;
-                    });
-
-                    contractDocGroup.CustomerContractGroupDocuments.Where(x => customerNotCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
-                    .ForEach(x =>
-                    {
-                        x.DocumentStatus = AppConsts.InProgress;
-                    });
-
-                    if (contractDocGroup.AtLeastRequiredDocument <= validDocCount)
-                    {
-                        contractDocGroup.DocumentGroupStatus = AppConsts.Valid;
-                    }
-                    else if (validDocCount > 0 && validDocCount < contractDocGroup.AtLeastRequiredDocument)
-                    {
-                        contractDocGroup.DocumentGroupStatus = AppConsts.InProgress;
-                    }
-                }
-
-                bool anyNotValidDocument = model.CustomerContractDocuments.Where(x => x.Required).Any(x => x.DocumentStatus != AppConsts.Valid);
-                bool anyNotValidDocumentGroup = model.CustomerContractDocumentGroups.Where(x => x.Required).Any(x => x.DocumentGroupStatus != AppConsts.Valid);
-
-                if (!anyNotValidDocument && !anyNotValidDocumentGroup)
-                {
-                    model.ContractStatus = AppConsts.Valid;
-                }
-
-                if (model.ContractStatus == AppConsts.Valid || model.ContractStatus == AppConsts.InProgress)
-                {
-                    var minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
-                    {
-                        DocumentDefinitionId = x.Id,
-                        MinioUrl = ""
-                    }).ToList();
-
-                    model.CustomerContractDocumentGroups.ForEach(x =>
-                    {
-                        minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
-                        {
-                            DocumentDefinitionId = x.Id,
-                            MinioUrl = ""
-                        }).ToList());
-                    });
-
-                    minioDocuments = minioDocuments.GroupBy(x => x.DocumentDefinitionId).Select(x => x.First()).ToList();
-
-                    minioDocuments.ForEach(async x => x.MinioUrl = await _documentService.GetDocumentPath(
-                        documents.FirstOrDefault(z => z.DocumentDefinitionId == x.DocumentDefinitionId).MinioObjectName, token));
-
-                    model.CustomerContractDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
-
-                    foreach (var contractGroup in model.CustomerContractDocumentGroups)
-                    {
-                        contractGroup.CustomerContractGroupDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
-                    }
-                }
-            }
+            Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("For.contractModels", ApiConstants.ActionExec, ()
+                =>
+             {
 
 
+
+                 foreach (var model in contractModels)
+                 {
+                     var contractDocuments = model.CustomerContractDocuments;
+                     var contractDocumentGroups = model.CustomerContractDocumentGroups;
+
+                     var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.EStatus.Completed).ToList();
+                     var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.EStatus.Completed).ToList();
+
+                     contractDocuments.Where(x => customerCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
+                         .ForEach(x =>
+                         {
+                             x.DocumentStatus = AppConsts.Valid;
+                             model.ContractStatus = AppConsts.InProgress;
+                         });
+
+                     contractDocuments.Where(x => customerNotCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
+                         .ForEach(x =>
+                         {
+                             x.DocumentStatus = AppConsts.InProgress;
+                         });
+                     Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("For.contractDocumentGroups", ApiConstants.ActionExec, ()
+                         =>
+                      {
+                          foreach (var contractDocGroup in contractDocumentGroups)
+                          {
+                              int validDocCount = 0;
+                              contractDocGroup.CustomerContractGroupDocuments.Where(x => customerCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
+                     .ForEach(x =>
+                     {
+                         x.DocumentStatus = AppConsts.Valid;
+                         model.ContractStatus = AppConsts.InProgress;
+                         validDocCount++;
+                     });
+
+                              contractDocGroup.CustomerContractGroupDocuments.Where(x => customerNotCompletedDocuments.Exists(z => x.Id == z.DocumentDefinitionId)).ToList()
+                     .ForEach(x =>
+                     {
+                         x.DocumentStatus = AppConsts.InProgress;
+                     });
+
+                              if (contractDocGroup.AtLeastRequiredDocument <= validDocCount)
+                              {
+                                  contractDocGroup.DocumentGroupStatus = AppConsts.Valid;
+                              }
+                              else if (validDocCount > 0 && validDocCount < contractDocGroup.AtLeastRequiredDocument)
+                              {
+                                  contractDocGroup.DocumentGroupStatus = AppConsts.InProgress;
+                              }
+                          }
+                      });
+                     bool anyNotValidDocument = model.CustomerContractDocuments.Where(x => x.Required).Any(x => x.DocumentStatus != AppConsts.Valid);
+                     bool anyNotValidDocumentGroup = model.CustomerContractDocumentGroups.Where(x => x.Required).Any(x => x.DocumentGroupStatus != AppConsts.Valid);
+
+                     if (!anyNotValidDocument && !anyNotValidDocumentGroup)
+                     {
+                         model.ContractStatus = AppConsts.Valid;
+                     }
+
+                     Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("If.Valid.InProgress", ApiConstants.ActionExec, ()
+                         =>
+                      {
+
+                          if (model.ContractStatus == AppConsts.Valid || model.ContractStatus == AppConsts.InProgress)
+                          {
+                              var minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                              {
+                                  DocumentDefinitionId = x.Id,
+                                  MinioUrl = ""
+                              }).ToList();
+
+                              model.CustomerContractDocumentGroups.ForEach(x =>
+                              {
+                                  minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                                  {
+                                      DocumentDefinitionId = x.Id,
+                                      MinioUrl = ""
+                                  }).ToList());
+                              });
+
+                              minioDocuments = minioDocuments.GroupBy(x => x.DocumentDefinitionId).Select(x => x.First()).ToList();
+
+                              minioDocuments.ForEach(async x => x.MinioUrl = await _documentService.GetDocumentPath(
+                                  documents.FirstOrDefault(z => z.DocumentDefinitionId == x.DocumentDefinitionId).MinioObjectName, token));
+
+                              model.CustomerContractDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
+
+                              foreach (var contractGroup in model.CustomerContractDocumentGroups)
+                              {
+                                  contractGroup.CustomerContractGroupDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
+                              }
+                          }
+                      });
+
+                 }
+
+
+             });
             //foreach (var model in contractModels)
             //{
             //    var currentContractDocumentDetails = contracts.Where(x => x.Id == model.Id).FirstOrDefault().ContractDocumentDetails;
