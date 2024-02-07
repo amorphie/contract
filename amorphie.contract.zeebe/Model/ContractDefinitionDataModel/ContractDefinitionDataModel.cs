@@ -69,6 +69,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
         public List<DocumentsList>? documentsList { get; set; }
         public List<string> tags { get; set; }
         public List<ValidationList> validationList { get; set; }
+        public EBankEntity registrationType { get; set; }
     }
 
     public class ValidationList
