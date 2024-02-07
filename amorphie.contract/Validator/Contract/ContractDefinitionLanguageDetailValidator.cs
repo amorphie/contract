@@ -2,10 +2,10 @@ using amorphie.contract.core;
 using FluentValidation;
 
 public sealed class ContractDefinitionLanguageDetailValidator : AbstractValidator<ContractDefinitionLanguageDetail>
+{
+    public ContractDefinitionLanguageDetailValidator()
     {
-        public ContractDefinitionLanguageDetailValidator()
-        {
-            // RuleFor(x => x.Name).NotNull();
-            // RuleFor(x => x.Name).MinimumLength(10);
-        }
+        // RuleFor(x => x.Name).NotNull();
+        // RuleFor(x => x.Name).MinimumLength(10);
     }
+}

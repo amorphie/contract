@@ -172,7 +172,7 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractBankEntity()
         {
-            _ContractDefinition.BankEntity= _ContractDefinitionDataModel.registrationType;
+            _ContractDefinition.BankEntity = _ContractDefinitionDataModel.registrationType;
         }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
