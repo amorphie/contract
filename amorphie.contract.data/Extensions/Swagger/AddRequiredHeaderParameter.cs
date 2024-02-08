@@ -31,7 +31,7 @@ namespace amorphie.contract.data.Extensions
 
             operation.Parameters.Add(new OpenApiParameter
             {
-                Name = AppHeaderConsts.Language,
+                Name = AppHeaderConsts.AcceptLanguage,
                 In = ParameterLocation.Header,
                 Required = false,
                 Description = "Indicates client language code."
