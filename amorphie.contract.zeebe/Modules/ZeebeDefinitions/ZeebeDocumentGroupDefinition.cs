@@ -75,7 +75,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 //
                 dynamic? entityData = messageVariables.Data.GetProperty("entityData");
 
-                var _ = IDocumentGroupDefinitionService.DataModelToDocumentGroupDefinition(entityData, messageVariables.RecordIdGuid);
+                var _ = IDocumentGroupDefinitionService.DataModelToDocumentGroupDefinition(entityData, messageVariables.InstanceIdGuid);
 
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
