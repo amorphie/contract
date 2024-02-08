@@ -110,7 +110,6 @@ namespace amorphie.contract.zeebe.Modules
                 // messageVariables.TransitionName = "checking-account-opening-start";
                 // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                // reference += "102";//TODO Unutma kaldırcan Test için var
                 string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
                 var contract = new ContractInstanceInputDto
                 {
@@ -118,8 +117,6 @@ namespace amorphie.contract.zeebe.Modules
                     Reference = reference,
                 };
                 var InstanceDto = contractAppService.Instance(contract, token).Result;
-                // messageVariables.Variables.Remove("ContractInstance");
-                // messageVariables.Variables.Remove("ContractStatus");
                 messageVariables.Variables.Add("XContractInstance", InstanceDto);
 
                 if (InstanceDto.Status.ToString() == EStatus.Completed.ToString())

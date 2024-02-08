@@ -13,5 +13,6 @@ namespace amorphie.contract.zeebe.Model.Static
         public const string RecordId  = "RecordId";
         public const string TriggeredBy  = "TriggeredBy";
         public const string TriggeredByBehalfOf  = "TriggeredByBehalfOf";
+        public const string additionalData  = "additionalData";
     }
 }

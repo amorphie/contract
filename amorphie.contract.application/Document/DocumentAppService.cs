@@ -104,9 +104,9 @@ namespace amorphie.contract.application
             {
                 fileByteArray = input.FileContext.Split(',').Select(byte.Parse).ToArray();
             }
-            else if (input.FileContextType == "TemplateEngine")
+            else if (input.FileContextType == "ZeebeRender")
             {
-                fileByteArray = Convert.FromBase64String(input.FileContext);//TODO: SubFlow için düzenle
+                fileByteArray = Convert.FromBase64String(input.FileContext );//TODO: SubFlow için düzenle
             }
             else
             {

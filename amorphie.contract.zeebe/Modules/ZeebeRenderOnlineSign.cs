@@ -117,8 +117,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 if (contractDto != null)
                 {
-                    var contractDocument = contractDto.ContractDocumentDetails.FirstOrDefault();
-                    var templateRequest = new TemplateRenderRequestModel
+                    var contractDocument = contractDto.ContractDocumentDetails.Select(contractDocument => new ApprovedTemplateRenderRequestModel
                     {
                         SemanticVersion = contractDocument.MinVersion,
                         Name = contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails
@@ -129,15 +128,18 @@ namespace amorphie.contract.zeebe.Modules
                         RenderDataForLog = JsonSerializer.Serialize(new { x = "a" }),
                         // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
                         ProcessName = nameof(ZeebeRenderOnlineSign),
-                        Identity = reference
-                    };
-                    if (contractDocument != null)
-                    {
-                        HttpSendTemplate(templateRequest);//TODO:dapr kullanılacak  yeni ortam kurulunca yapcaz
+                        Identity = reference,
+                        DocumentDefinitionCode = contractDocument.DocumentDefinition.Code,
+                        Approved = false,
 
-                        messageVariables.Variables.Add("ApprovedTemplateRenderRequestModel", templateRequest);
-                        messageVariables.Variables.Add("ContractDocument", contractDocument);
+                    }).ToList();
+                    foreach (TemplateRenderRequestModel cdto in contractDocument)
+                    {
+                        HttpSendTemplate(cdto);//TODO:dapr yok
+
                     }
+                    messageVariables.Variables.Add("ApprovedDocumentList", contractDocument);
+                    messageVariables.additionalData = contractDocument;
                 }
 
                 messageVariables.Success = true;
@@ -165,10 +167,27 @@ namespace amorphie.contract.zeebe.Modules
 
                 if (response.IsSuccessStatusCode)
                 {
-
                 }
 
             }
+        }
+        private static async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // string modelJson = JsonSerializer.Serialize(requestModel);
+
+                // HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response =   await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+
+            }
+            return "Template engine error";
         }
         static IResult NotValidated(
         [FromBody] dynamic body,
@@ -207,7 +226,7 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
-        static IResult Validated(
+        static    IResult Validated(
         [FromBody] dynamic body,
        [FromServices] ProjectDbContext dbContext,
        [FromServices] IDocumentAppService documentAppService,
@@ -217,39 +236,40 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration, CancellationToken token
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
-
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             try
             {
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                var contractDocument = body.GetProperty("ContractDocument");
-                var renderId = body.GetProperty("ApprovedTemplateRenderRequestModel").GetProperty("render-id").ToString();
+                // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
+                var approvedDocumentList = messageVariables.Data.GetProperty("entityData");
+
+                // var renderId = body.GetProperty("ApprovedTemplateRenderRequestModel").GetProperty("render-id").ToString();
                 JsonSerializerOptions options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 };
-                var contractDocumentModel = JsonSerializer.Deserialize<ContractDocumentDetailDto>(contractDocument, options) as ContractDocumentDetailDto;
-                var input = new DocumentInstanceInputDto
+
+                var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedTemplateRenderRequestModel>>(approvedDocumentList, options) as List<ApprovedTemplateRenderRequestModel>;
+                foreach (var i in contractDocumentModel.Where(x=>x.Approved).ToList())
                 {
-                    Id = ZeebeMessageHelper.StringToGuid(renderId),
-                    DocumentCode = contractDocumentModel.DocumentDefinition.Code,
-                    DocumentVersion = contractDocumentModel.DocumentDefinition.Semver,
-                    Reference = reference,
-                    Owner = reference,
-                    FileName = contractDocumentModel.DocumentDefinition.Code + ".pdf", //TODO: Degişecek,
-                    FileType = "application/pdf",
-                    FileContextType = "TemplateEngine",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
-                    FileContext = "RmF0aWggw5ZaVMOcUks="
-                };
-                var response = documentAppService.Instance(input).Result;
+                    
+                    var input = new DocumentInstanceInputDto
+                    {
+                        Id = i.RenderId,
+                        DocumentCode = i.DocumentDefinitionCode,
+                        DocumentVersion = i.SemanticVersion,
+                        Reference = reference,
+                        Owner = reference,
+                        FileName = i.DocumentDefinitionCode + ".pdf", //TODO: Degişecek,
+                        FileType = "application/pdf",
+                        FileContextType = "ZeebeRender",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
+                        FileContext =  GetRenderInstance(i.RenderId.ToString()).Result.ToString().Trim('\"'),
+
+                    };
+                    var response =  documentAppService.Instance(input);
+
+                }
+
                 messageVariables.Success = true;
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
