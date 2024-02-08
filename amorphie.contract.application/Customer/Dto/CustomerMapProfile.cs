@@ -29,7 +29,7 @@ namespace amorphie.contract.application.Customer.Dto
 
             CreateMap<DocumentDefinition, CustomerContractDocumentDto>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
+               //.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Semver))
                .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentOnlineSing != null))

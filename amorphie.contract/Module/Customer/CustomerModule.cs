@@ -3,6 +3,8 @@ using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Request;
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.data.Services;
 using amorphie.core.Module.minimal_api;
@@ -28,6 +30,9 @@ namespace amorphie.contract.Module.Customer
 
         async ValueTask<IResult> GetDocumentsByContracts([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
+            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+            inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity);
+
             var serviceResponse = await customerAppService.GetDocumentsByContracts(inputDto, token);
 
             return Results.Ok(serviceResponse);
