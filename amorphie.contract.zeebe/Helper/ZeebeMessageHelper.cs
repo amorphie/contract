@@ -81,6 +81,7 @@ public static class ZeebeMessageHelper
             RecordIdGuid = messageVariables.RecordIdGuid,
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
+            InstanceIdGuid = messageVariables.InstanceIdGuid
         };
     }
 }
