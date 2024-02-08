@@ -26,6 +26,12 @@ namespace amorphie.contract.data.Configurations.Definition
             };
             NavigationBuilderAutoInclude(builder, list);
             //
+
+            builder.HasIndex(x => new
+                {
+                    x.Code,
+                    x.Semver
+                }).IsUnique();
         }
 
     }

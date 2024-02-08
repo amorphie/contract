@@ -76,7 +76,7 @@ using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 
 // db.Database.Migrate();
-// DbInitializer.Initialize(db);
+// DbInitializer.Initialize(db); // DB INIT MOCK TESTI ÇALIŞTIRILACAKSA BU SATIRI AÇ DEBUG ET.
 app.UseSwagger();
 app.UseSwaggerUI();
 // app.UseHttpsRedirection();
