@@ -1,6 +1,7 @@
 ﻿using System;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.core.Base;
+using System.Text.Json.Serialization;
 
 namespace amorphie.contract.application.Customer.Dto
 {
@@ -16,6 +17,7 @@ namespace amorphie.contract.application.Customer.Dto
         public string MinioUrl { get; set; }
         public DateTime ApprovalDate { get; set; }
         public OnlineSignDto OnlineSign { get; set; }
+        [JsonIgnore]
         public List<MultilanguageText> MultiLanguageText { get; set; }
     }
 }
