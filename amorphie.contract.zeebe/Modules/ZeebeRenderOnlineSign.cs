@@ -179,7 +179,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 // HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response =   await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
+                HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -226,7 +226,7 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
-        static    IResult Validated(
+        static IResult Validated(
         [FromBody] dynamic body,
        [FromServices] ProjectDbContext dbContext,
        [FromServices] IDocumentAppService documentAppService,
@@ -250,9 +250,9 @@ namespace amorphie.contract.zeebe.Modules
                 };
 
                 var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedTemplateRenderRequestModel>>(approvedDocumentList, options) as List<ApprovedTemplateRenderRequestModel>;
-                foreach (var i in contractDocumentModel.Where(x=>x.Approved).ToList())
+                foreach (var i in contractDocumentModel.Where(x => x.Approved).ToList())
                 {
-                    
+
                     var input = new DocumentInstanceInputDto
                     {
                         Id = i.RenderId,
@@ -263,10 +263,10 @@ namespace amorphie.contract.zeebe.Modules
                         FileName = i.DocumentDefinitionCode + ".pdf", //TODO: Degişecek,
                         FileType = "application/pdf",
                         FileContextType = "ZeebeRender",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
-                        FileContext =  GetRenderInstance(i.RenderId.ToString()).Result.ToString().Trim('\"'),
+                        FileContext = GetRenderInstance(i.RenderId.ToString()).Result.ToString().Trim('\"'),
 
                     };
-                    var response =  documentAppService.Instance(input);
+                    var response = documentAppService.Instance(input);
 
                 }
 

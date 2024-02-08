@@ -10,10 +10,10 @@ namespace amorphie.contract.zeebe.Model
         public string Reference { get; set; }
         public string Filetype { get; set; }
     }
-    public class ApprovedTemplateRenderRequestModel:TemplateRenderRequestModel
+    public class ApprovedTemplateRenderRequestModel : TemplateRenderRequestModel
     {
         public bool Approved { get; set; }
-        public string DocumentDefinitionCode {get;set;}
+        public string DocumentDefinitionCode { get; set; }
     }
     public class TemplateRenderRequestModel
     {

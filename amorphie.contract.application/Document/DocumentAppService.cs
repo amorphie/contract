@@ -106,7 +106,7 @@ namespace amorphie.contract.application
             }
             else if (input.FileContextType == "ZeebeRender")
             {
-                fileByteArray = Convert.FromBase64String(input.FileContext );//TODO: SubFlow için düzenle
+                fileByteArray = Convert.FromBase64String(input.FileContext);//TODO: SubFlow için düzenle
             }
             else
             {

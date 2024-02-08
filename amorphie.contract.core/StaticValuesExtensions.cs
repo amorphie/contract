@@ -18,7 +18,7 @@ namespace amorphie.contract.core
         public string PdfRenderEndpoint { get; set; }
         public string GetTemplateEndpoint { get; set; }
         public string RenderInstance { get; set; }
-        
+
     }
     public class Minio
     {
