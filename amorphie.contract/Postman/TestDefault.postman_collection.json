@@ -184,6 +184,74 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Documents by Contracts",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Pre-request script",
+									"console.log(\"Sending request to: \" + request.url.toString());"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Test script",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://test-amorphie-contract.burgan.com.tr/customer/get-documents-by-contracts?Code=test-hesap-acilis&Page=0&PageSize=5&Reference=112233",
+							"protocol": "https",
+							"host": [
+								"test-amorphie-contract",
+								"burgan",
+								"com",
+								"tr"
+							],
+							"path": [
+								"customer",
+								"get-documents-by-contracts"
+							],
+							"query": [
+								{
+									"key": "Code",
+									"value": "test-hesap-acilis"
+								},
+								{
+									"key": "Page",
+									"value": "0"
+								},
+								{
+									"key": "PageSize",
+									"value": "5"
+								},
+								{
+									"key": "Reference",
+									"value": "112233"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"event": [
