@@ -24,7 +24,7 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapPost("InstanceState", InstanceState);
-        
+
     }
 
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
@@ -40,8 +40,8 @@ public class ContractModule
 
         return Results.Ok(response);
     }
-     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token, 
-     [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
+    async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
+    [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
 

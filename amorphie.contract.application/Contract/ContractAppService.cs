@@ -13,7 +13,7 @@ namespace amorphie.contract.application.Contract
 
         Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
         Task<bool> InstanceState(ContractInstanceInputDto req, CancellationToken cts);
-        
+
         Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
 
     }
