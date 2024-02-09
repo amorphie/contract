@@ -15,6 +15,7 @@ namespace amorphie.contract.application.Contract.Request
     }
     public class ContractInstanceSoftInputDto
     {
+        //
         public string ContractName { get; set; }
         public string Reference { get; set; }
 
