@@ -41,14 +41,18 @@ public class ContractModule
         return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
+    [AsParameters] ContractInstanceSoftInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var inputQ = new ContractInstanceInputDto
+        {
+            ContractName = input.ContractName,
+            Reference = input.Reference,
+            EBankEntity = headerModels.EBankEntity,
+            LangCode = headerModels.LangCode
+        };
 
-        input.EBankEntity = headerModels.EBankEntity;
-        input.LangCode = headerModels.LangCode;
-
-        var response = await contractAppService.InstanceState(input, token);
+        var response = await contractAppService.InstanceState(inputQ, token);
         return Results.Ok(response);
     }
 
