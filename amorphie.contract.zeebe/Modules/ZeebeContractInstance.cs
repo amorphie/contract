@@ -17,7 +17,7 @@ namespace amorphie.contract.zeebe.Modules
     {
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
-            app.MapPost("/StartContract", StartContract)
+            app.MapPost("/startcontract", StartContract)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -26,7 +26,7 @@ namespace amorphie.contract.zeebe.Modules
                 return operation;
             });
 
-            app.MapPost("/contractInstance", ContractInstance)
+            app.MapPost("/contractinstance", ContractInstance)
                       .Produces(StatusCodes.Status200OK)
                       .WithOpenApi(operation =>
                       {
