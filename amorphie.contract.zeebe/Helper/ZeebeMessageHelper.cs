@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using amorphie.contract.zeebe.Model;
 using amorphie.contract.zeebe.Model.Static;
+using MongoDB.Bson;
 
 
 public static class ZeebeMessageHelper
@@ -27,12 +30,15 @@ public static class ZeebeMessageHelper
             messageVariables.Variables.Add("Status", "NOTOK");
         }
         dynamic targetObject = new System.Dynamic.ExpandoObject();
-        targetObject.Data = messageVariables.Data;
         targetObject.TriggeredBy = messageVariables.TriggeredBy;
         targetObject.TriggeredByBehalfOf = messageVariables.TriggeredByBehalfOf;
 
+        var data = JsonSerializer.Deserialize<ExpandoObject>(messageVariables.Data);
+        data.additionalData = messageVariables.additionalData;
+        targetObject.Data = data;
 
-        messageVariables.Variables.Add($"TRX-{messageVariables.TransitionName}", targetObject);
+        var TransitionNameR = messageVariables.TransitionName.Replace("-", "");
+        messageVariables.Variables.Add($"TRX{TransitionNameR}", targetObject);
         return messageVariables.Variables;
     }
     public static Guid StringToGuid(string data)
@@ -49,11 +55,14 @@ public static class ZeebeMessageHelper
     {
         var messageVariables = new MessageVariables();
         var transitionName = body.GetProperty(MessageProp.LastTransition).ToString();
+        var transitionNameR = body.GetProperty(MessageProp.LastTransition).ToString().Replace("-", "");
         var instanceIdAsString = body.GetProperty(MessageProp.InstanceId).ToString();
-        var data = body.GetProperty($"TRX-{transitionName}").GetProperty(MessageProp.Data);
+
+        var data = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.Data);
+        var AdditionalData = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.Data).GetProperty(MessageProp.additionalData);
         var recordIdAsString = body.GetProperty(MessageProp.RecordId).ToString();
-        string triggeredByAsString = body.GetProperty($"TRX-{transitionName}").GetProperty(MessageProp.TriggeredBy).ToString();
-        string triggeredByBehalfOfAsString = body.GetProperty($"TRX-{transitionName}").GetProperty(MessageProp.TriggeredByBehalfOf).ToString();
+        string triggeredByAsString = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.TriggeredBy).ToString();
+        string triggeredByBehalfOfAsString = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.TriggeredByBehalfOf).ToString();
         try
         {
 
@@ -81,7 +90,11 @@ public static class ZeebeMessageHelper
             RecordIdGuid = messageVariables.RecordIdGuid,
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
+
+            additionalData = AdditionalData
+
             InstanceIdGuid = messageVariables.InstanceIdGuid
+
         };
     }
 }
