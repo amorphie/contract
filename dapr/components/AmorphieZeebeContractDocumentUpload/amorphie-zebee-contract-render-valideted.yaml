@@ -9,7 +9,7 @@ spec:
   - name: jobType
     value: render-online-sign-validated
   - name: gatewayAddr
-    value: localhost:26500
+    value: 10.180.141.16:30499
   - name: gatewayKeepAlive
     value: 45s
   - name: usePlainTextConnection
