@@ -6,8 +6,8 @@ namespace amorphie.contract.application.Contract.Request
     {
         public string ContractName { get; set; }
         public string Reference { get; set; }
-        public string? LangCode { get; set; }
-        public EBankEntity? EBankEntity { get; set; }
+        public string LangCode { get; set; }
+        public EBankEntity EBankEntity { get; set; }
         //public string Owner { get; set; }
         //public string CallbackName { get; set; }
         //public Guid ProcessId { get; set; }
