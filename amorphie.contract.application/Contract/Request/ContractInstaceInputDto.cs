@@ -13,4 +13,11 @@ namespace amorphie.contract.application.Contract.Request
         //public Guid ProcessId { get; set; }
         //public ContractProcess Process { get; set; } = default!;
     }
+    public class ContractInstanceSoftInputDto
+    {
+        //
+        public string ContractName { get; set; }
+        public string Reference { get; set; }
+
+    }
 }
