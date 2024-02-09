@@ -23,7 +23,7 @@ public class ContractModule
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
-        routeGroupBuilder.MapPost("InstanceState", InstanceState);
+        routeGroupBuilder.MapGet("InstanceState", InstanceState);
 
     }
 
@@ -41,7 +41,7 @@ public class ContractModule
         return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
+    [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
 
