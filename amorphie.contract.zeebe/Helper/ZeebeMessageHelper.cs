@@ -91,7 +91,7 @@ public static class ZeebeMessageHelper
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
 
-            additionalData = AdditionalData
+            additionalData = AdditionalData,
 
             InstanceIdGuid = messageVariables.InstanceIdGuid
 
