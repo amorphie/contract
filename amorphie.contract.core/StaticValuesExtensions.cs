@@ -17,6 +17,8 @@ namespace amorphie.contract.core
         public string HtmlRenderEndpoint { get; set; }
         public string PdfRenderEndpoint { get; set; }
         public string GetTemplateEndpoint { get; set; }
+        public string RenderInstance { get; set; }
+
     }
     public class Minio
     {
@@ -33,6 +35,7 @@ namespace amorphie.contract.core
         public static string TemplateEngineHtmlRenderEndpoint { get; set; }
         public static string TemplateEnginePdfRenderEndpoint { get; set; }
         public static string TemplateEngineGetTemplateEndpoint { get; set; }
+        public static string TemplateEngineRenderInstance { get; set; }
 
 
         public static string MinioUrl { get; set; }
@@ -48,6 +51,7 @@ namespace amorphie.contract.core
             TemplateEngineHtmlRenderEndpoint = settings.TemplateEngine.HtmlRenderEndpoint;
             TemplateEnginePdfRenderEndpoint = settings.TemplateEngine.PdfRenderEndpoint;
             TemplateEngineGetTemplateEndpoint = settings.TemplateEngine.GetTemplateEndpoint;
+            TemplateEngineRenderInstance = settings.TemplateEngine.RenderInstance;
 
             MinioUrl = settings.minio.Url;
             MinioBucketName = settings.minio.BucketName;

@@ -16,7 +16,7 @@ namespace amorphie.contract.zeebe.Model
         public dynamic? Body { get; set; }
         public string? TransitionName { get; set; }
         public string? LastTransition { get; set; }
-
+        public dynamic? additionalData { get; set; }
         public string? TriggeredBy { get; set; }
         public string? TriggeredByBehalfOf { get; set; }
         public string? Message { get; set; }

@@ -1,13 +1,13 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: StartContract
+  name: startcontract
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: StartContract
+    value: startcontract
   - name: gatewayAddr
     value: localhost:26500
   - name: gatewayKeepAlive
