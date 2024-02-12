@@ -14,7 +14,6 @@ using amorphie.contract.core.Enum;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractDefinition", Schema = "Cont")]
-    [Index(nameof(Code), IsUnique = true)]
     public class ContractDefinition : BaseEntity
     {
         // [Required]
