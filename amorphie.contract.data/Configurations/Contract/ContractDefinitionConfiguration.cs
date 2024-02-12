@@ -24,10 +24,10 @@ namespace amorphie.contract.data.Configurations.Contract
             NavigationBuilderAutoInclude(builder, list);
             //
             builder.HasIndex(x => new
-                {
-                    x.Code,
-                    x.BankEntity
-                }).IsUnique();
+            {
+                x.Code,
+                x.BankEntity
+            }).IsUnique();
         }
     }
 }

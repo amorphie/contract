@@ -9,10 +9,10 @@ namespace amorphie.contract.data.Contexts
         private static DocumentDefinition MockDocumentDefinition(string code, string semver)
         {
             var mockDocumentDefinition = new DocumentDefinition
-                {
-                    Code = code,
-                    Semver = semver
-                };
+            {
+                Code = code,
+                Semver = semver
+            };
             return mockDocumentDefinition;
         }
 

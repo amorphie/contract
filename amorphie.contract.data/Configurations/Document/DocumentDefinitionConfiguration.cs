@@ -28,10 +28,10 @@ namespace amorphie.contract.data.Configurations.Definition
             //
 
             builder.HasIndex(x => new
-                {
-                    x.Code,
-                    x.Semver
-                }).IsUnique();
+            {
+                x.Code,
+                x.Semver
+            }).IsUnique();
         }
 
     }
