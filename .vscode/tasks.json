@@ -25,10 +25,9 @@
         //    "type": "shell",
         //    "command": "docker rm -f amorphie-contract-mocks"
         //},
-        
         {
             "label": "build-amorphie-contract",
-        //    "dependsOn": "init-mocks",
+            //    "dependsOn": "init-mocks",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -39,18 +38,6 @@
             ],
             "problemMatcher": "$msCompile"
         },
-        // {
-        //     "label": "build-amorphie-contract-hub",
-        //     "command": "dotnet",
-        //     "type": "process",
-        //     "args": [
-        //         "dotnet",
-        //         "${workspaceFolder}/amorphie.contract.hub/amorphie.contract.hub.csproj",
-        //         "/property:GenerateFullPaths=true",
-        //         "/consoleloggerparameters:NoSummary"
-        //     ],
-        //     "problemMatcher": "$msCompile"
-        // },
         {
             "label": "build-amorphie-contract-zeebe",
             "command": "dotnet",
@@ -71,17 +58,7 @@
             "label": "dapr-debug-amorphie-contract",
             "type": "dapr",
             "dependsOn": "build-amorphie-contract",
-            "componentsPath": "Dapr/Components"
-        },
-        {
-            "appId": "amorphie-contract-hub",
-            "appPort": 4200,
-            "httpPort": 4201,
-            "grpcPort": 4202,
-            "label": "dapr-debug-amorphie-contract-hub",
-            "type": "dapr",
-            "dependsOn": "build-amorphie-contract-hub",
-            "componentsPath": "Dapr/Components"
+            "config": "dapr/config.yaml",
         },
         {
             "appId": "amorphie-contract-zeebe",

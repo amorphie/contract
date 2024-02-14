@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+    
         {
             "name": "amorphie-contract",
             "type": "coreclr",
@@ -15,9 +16,8 @@
                 "ASPNETCORE_URLS": "http://localhost:4300",
                 "DAPR_HTTP_PORT": "4301",
                 "DAPR_GRPC_PORT": "4302",
-                "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
-                "DAPR_STATE_STORE_NAME" : "transaction-cache"
-
+                "DAPR_SECRET_STORE_NAME" : "amorphie-secretstore",
+                "DAPR_STATE_STORE_NAME": "statestore"
             },
             "postDebugTask": "daprd-down-amorphie-contract",
             "serverReadyAction": {
@@ -41,7 +41,7 @@
                 "DAPR_HTTP_PORT": "4201",
                 "DAPR_GRPC_PORT": "4202",
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
-                "DAPR_STATE_STORE_NAME" : "transaction-cache"
+                "DAPR_STATE_STORE_NAME" : "statestore"
             },
             "postDebugTask": "daprd-down-amorphie-contract-hub",
             "serverReadyAction": {
@@ -65,7 +65,7 @@
                 "DAPR_HTTP_PORT": "4501",
                 "DAPR_GRPC_PORT": "4502",
                 "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
-                "DAPR_STATE_STORE_NAME" : "transaction-cache"
+                "DAPR_STATE_STORE_NAME" : "statestore"
             },
             "postDebugTask": "daprd-down-amorphie-contract-zeebe",
             "serverReadyAction": {

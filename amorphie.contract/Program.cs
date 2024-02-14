@@ -66,6 +66,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddApplicationServices();
 
 builder.AddSeriLog();
+builder.Services.AddDaprClient();
 
 var app = builder.Build();
 app.UseAllElasticApm(builder.Configuration);
