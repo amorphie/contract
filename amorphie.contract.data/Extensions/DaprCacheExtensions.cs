@@ -5,12 +5,12 @@ namespace amorphie.contract.data.Extensions
     public static class DaprCacheExtensions
     {
 
-        public static async Task<TModel> CacheRead<TModel>(this DaprClient daprClient, string cacheStoreName, string cacheKey)
+        public static async Task<TModel> CacheReadAsync<TModel>(this DaprClient daprClient, string cacheStoreName, string cacheKey)
         {
             return await daprClient.GetStateAsync<TModel>(cacheStoreName, cacheKey);
         }
 
-        public static async Task<TModel> CacheGetOrSet<TModel>(this DaprClient daprClient, Func<Task<TModel>> readAction, string cacheStoreName, string cacheKey, int TTLSeconds)
+        public static async Task<TModel> CacheGetOrSetAsync<TModel>(this DaprClient daprClient, Func<Task<TModel>> readAction, string cacheStoreName, string cacheKey, int TTLSeconds)
         {
             TModel result = await daprClient.GetStateAsync<TModel>(cacheStoreName, cacheKey);
 
@@ -29,7 +29,7 @@ namespace amorphie.contract.data.Extensions
             return result;
         }
 
-        public static async Task CacheDelete(this DaprClient daprClient, string cacheStoreName, string cacheKey)
+        public static async Task CacheDeleteAsync(this DaprClient daprClient, string cacheStoreName, string cacheKey)
         {
             await daprClient.DeleteStateAsync(cacheStoreName, cacheKey);
 

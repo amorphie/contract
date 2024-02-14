@@ -111,7 +111,7 @@ namespace amorphie.contract.data.Services
         {
             string storeName = _configuration[AppEnvConst.DaprStateStoreName];
 
-            var cachedPresignedUrl = await _daprClient.CacheGetOrSet<string>(async () =>
+            var cachedPresignedUrl = await _daprClient.CacheGetOrSetAsync<string>(async () =>
             {
                 var expiry = TimeSpan.FromHours(1);
                 PresignedGetObjectArgs args = new PresignedGetObjectArgs()

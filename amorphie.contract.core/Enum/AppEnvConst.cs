@@ -1,7 +1,6 @@
-namespace amorphie.contract.core.Enum
+namespace amorphie.contract.core.Enum;
+
+public static class AppEnvConst
 {
-    public static class AppEnvConst
-    {
-        public static readonly string DaprStateStoreName = "DAPR_STATE_STORE_NAME";
-    }
+    public const string DaprStateStoreName = "DAPR_STATE_STORE_NAME";
 }
