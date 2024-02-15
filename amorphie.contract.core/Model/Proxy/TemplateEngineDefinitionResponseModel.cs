@@ -13,7 +13,7 @@ namespace amorphie.contract.Models.Proxy
         public class SemanticVersionData
         {
             public string SemanticVersion { get; set; }
-            public List<object> DynamicData { get; set; }
+            public List<string> DynamicData { get; set; }
         }
 
     }
