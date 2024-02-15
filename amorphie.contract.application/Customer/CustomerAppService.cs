@@ -37,7 +37,7 @@ namespace amorphie.contract.application.Customer
             _minioService = minioService;
         }
 
-        private string FindTitle(List<MultilanguageText> texts, string language)
+        public string FindTitle(List<MultilanguageText> texts, string language)
         {
             var lang = texts.FirstOrDefault(x => x.Language == language);
             return lang != null ?
@@ -79,87 +79,84 @@ namespace amorphie.contract.application.Customer
             //}).ToList();
 
             //List<CustomerContractDto> contractModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contracts);
-            Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("For.contractModels", ApiConstants.ActionExec, ()
-                =>
-             {
 
-                 foreach (var model in contractModels)
+            foreach (var model in contractModels)
+            {
+                model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
+
+                var contractDocuments = model.CustomerContractDocuments;
+                var contractDocumentGroups = model.CustomerContractDocumentGroups;
+
+                var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.EStatus.Completed).ToList();
+                var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.EStatus.Completed).ToList();
+
+                foreach (var contDocument in contractDocuments)
+                {
+                    contDocument.Title = FindTitle(contDocument.MultiLanguageText, inputDto.GetLanguageCode());
+                    if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
+                    {
+                        contDocument.DocumentStatus = AppConsts.Valid;
+                        model.ContractStatus = AppConsts.InProgress;
+                    }
+                    else if (customerNotCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
+                    {
+                        contDocument.DocumentStatus = AppConsts.InProgress;
+                    }
+                }
+
+                Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("For.contractDocumentGroups", ApiConstants.ActionExec, ()
+                    =>
                  {
-                     model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
-
-                     var contractDocuments = model.CustomerContractDocuments;
-                     var contractDocumentGroups = model.CustomerContractDocumentGroups;
-
-                     var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.EStatus.Completed).ToList();
-                     var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.EStatus.Completed).ToList();
-
-                     foreach (var contDocument in contractDocuments)
+                     foreach (var contractDocGroup in contractDocumentGroups)
                      {
-                         contDocument.Title = FindTitle(contDocument.MultiLanguageText, inputDto.GetLanguageCode());
-                         if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
+                         contractDocGroup.Title = FindTitle(contractDocGroup.MultiLanguageText, inputDto.GetLanguageCode());
+
+                         int validDocCount = 0;
+
+                         foreach (var groupDocument in contractDocGroup.CustomerContractGroupDocuments)
                          {
-                             contDocument.DocumentStatus = AppConsts.Valid;
-                             model.ContractStatus = AppConsts.InProgress;
+                             groupDocument.Title = FindTitle(groupDocument.MultiLanguageText, inputDto.GetLanguageCode());
+
+                             if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
+                             {
+                                 groupDocument.DocumentStatus = AppConsts.Valid;
+                                 model.ContractStatus = AppConsts.InProgress;
+                                 validDocCount++;
+                             }
+                             else if (customerNotCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
+                             {
+                                 groupDocument.DocumentStatus = AppConsts.InProgress;
+                             }
                          }
-                         else if (customerNotCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
+
+                         if (contractDocGroup.AtLeastRequiredDocument <= validDocCount)
                          {
-                             contDocument.DocumentStatus = AppConsts.InProgress;
+                             contractDocGroup.DocumentGroupStatus = AppConsts.Valid;
+                         }
+                         else if (validDocCount > 0 && validDocCount < contractDocGroup.AtLeastRequiredDocument)
+                         {
+                             contractDocGroup.DocumentGroupStatus = AppConsts.InProgress;
                          }
                      }
+                 });
+                bool anyNotValidDocument = model.CustomerContractDocuments.Any(x => x.Required && x.DocumentStatus != AppConsts.Valid);
+                bool anyNotValidDocumentGroup = model.CustomerContractDocumentGroups.Any(x => x.Required && x.DocumentGroupStatus != AppConsts.Valid);
 
-                     Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("For.contractDocumentGroups", ApiConstants.ActionExec, ()
-                         =>
-                      {
-                          foreach (var contractDocGroup in contractDocumentGroups)
-                          {
-                              contractDocGroup.Title = FindTitle(contractDocGroup.MultiLanguageText, inputDto.GetLanguageCode());
+                if (!anyNotValidDocument && !anyNotValidDocumentGroup)
+                {
+                    model.ContractStatus = AppConsts.Valid;
+                }
 
-                              int validDocCount = 0;
-
-                              foreach (var groupDocument in contractDocGroup.CustomerContractGroupDocuments)
-                              {
-                                  groupDocument.Title = FindTitle(groupDocument.MultiLanguageText, inputDto.GetLanguageCode());
-
-                                  if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
-                                  {
-                                      groupDocument.DocumentStatus = AppConsts.Valid;
-                                      model.ContractStatus = AppConsts.InProgress;
-                                      validDocCount++;
-                                  }
-                                  else if (customerNotCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
-                                  {
-                                      groupDocument.DocumentStatus = AppConsts.InProgress;
-                                  }
-                              }
-
-                              if (contractDocGroup.AtLeastRequiredDocument <= validDocCount)
-                              {
-                                  contractDocGroup.DocumentGroupStatus = AppConsts.Valid;
-                              }
-                              else if (validDocCount > 0 && validDocCount < contractDocGroup.AtLeastRequiredDocument)
-                              {
-                                  contractDocGroup.DocumentGroupStatus = AppConsts.InProgress;
-                              }
-                          }
-                      });
-                     bool anyNotValidDocument = model.CustomerContractDocuments.Any(x => x.Required && x.DocumentStatus != AppConsts.Valid);
-                     bool anyNotValidDocumentGroup = model.CustomerContractDocumentGroups.Any(x => x.Required && x.DocumentGroupStatus != AppConsts.Valid);
-
-                     if (!anyNotValidDocument && !anyNotValidDocumentGroup)
+                Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("If.Valid.InProgress", ApiConstants.ActionExec, ()
+                    =>
+                 {
+                     if (model.ContractStatus == AppConsts.Valid || model.ContractStatus == AppConsts.InProgress)
                      {
-                         model.ContractStatus = AppConsts.Valid;
+                         GetMinioUrl(model, documents, token);
                      }
+                 });
+            }
 
-                     Elastic.Apm.Agent.Tracer.CurrentTransaction.CaptureSpan("If.Valid.InProgress", ApiConstants.ActionExec, ()
-                         =>
-                      {
-                          if (model.ContractStatus == AppConsts.Valid || model.ContractStatus == AppConsts.InProgress)
-                          {
-                              GetMinioUrl(model, documents, token);
-                          }
-                      });
-                 }
-             });
 
             return contractModels;
         }
