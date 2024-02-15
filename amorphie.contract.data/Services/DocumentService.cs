@@ -8,16 +8,16 @@ namespace amorphie.contract.data.Services
 {
     public interface IDocumentService
     {
-        Task<string> GetDocumentPath(string objectName, CancellationToken cancellationToken);
+        // Task<string> GetDocumentPath(string objectName, CancellationToken cancellationToken);
 
     }
     public class DocumentService : IDocumentService
     {
-        public async Task<string> GetDocumentPath(string objectName, CancellationToken token)
-        {
-            amorphie.contract.core.Services.IMinioService minioService = new MinioService();
-            return await minioService.GetDocumentUrl(objectName, token);
-        }
+        // public async Task<string> GetDocumentPath(string objectName, CancellationToken token)
+        // {
+        //     amorphie.contract.core.Services.IMinioService minioService = new MinioService();
+        //     return await minioService.GetDocumentUrl(objectName, token);
+        // }
 
     }
 }

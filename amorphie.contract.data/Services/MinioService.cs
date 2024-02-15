@@ -1,21 +1,32 @@
 using amorphie.contract.core;
 using amorphie.contract.core.Services;
+using Dapr.Client;
 using Minio;
 using Minio.DataModel.Args;
+using Microsoft.Extensions.Configuration;
+using amorphie.contract.core.Enum;
+using amorphie.contract.data.Extensions;
 
 namespace amorphie.contract.data.Services
 {
     public class MinioService : IMinioService
     {
+        private readonly int TTLSeconds = 120;
+        private readonly string BucketName = "contract-management";
+
         private IMinioClient minioClient;
-        private string bucketName = "contract-management";
-        public MinioService()
+        private readonly DaprClient _daprClient;
+        private readonly IConfiguration _configuration;
+        public MinioService(DaprClient daprClient, IConfiguration configuration)
         {
+            _daprClient = daprClient;
+            _configuration = configuration;
+
             ////TODO: :vault dan al 
             var endpoint = StaticValuesExtensions.MinioEndPoint;
             var accessKey = StaticValuesExtensions.AccessKey;
             var secretKey = StaticValuesExtensions.SecretKey;
-            bucketName = StaticValuesExtensions.MinioBucketName;
+            BucketName = StaticValuesExtensions.MinioBucketName;
 
             minioClient = new MinioClient()
                            .WithEndpoint(endpoint)
@@ -33,7 +44,7 @@ namespace amorphie.contract.data.Services
                 };
 
             var putObjectArgs = new PutObjectArgs()
-                             .WithBucket(bucketName)
+                             .WithBucket(BucketName)
                              .WithObject(objectName)
 
                              // .WithFileName(filePath)
@@ -65,18 +76,18 @@ namespace amorphie.contract.data.Services
             try
             {
 
-                bool isExist = await IsBucketExist(bucketName);
+                bool isExist = await IsBucketExist(BucketName);
                 Console.WriteLine(isExist);
 
                 if (!isExist)
-                    await CreateBucket(bucketName);
+                    await CreateBucket(BucketName);
 
                 byte[] data = System.Text.Encoding.UTF8.GetBytes("hello world");
                 MemoryStream stream = new MemoryStream(data);
 
                 var objectName = "golden-oldies.txt";
                 var putObjectArgs = new PutObjectArgs()
-                                 .WithBucket(bucketName)
+                                 .WithBucket(BucketName)
                                  .WithObject(objectName)
 
                                  // .WithFileName(filePath)
@@ -98,15 +109,22 @@ namespace amorphie.contract.data.Services
 
         public async Task<string> GetDocumentUrl(string objectName, CancellationToken token)
         {
-            var expiry = TimeSpan.FromHours(1);
-            PresignedGetObjectArgs args = new PresignedGetObjectArgs()
-                                     .WithBucket(bucketName)
-                                     .WithObject(objectName)
-                                     .WithExpiry((int)expiry.TotalSeconds);//TODO: Güvenlik Sorgula
+            string storeName = _configuration[AppEnvConst.DaprStateStoreName];
 
-            // Tek kullanımlık URL oluştur
-            var presignedUrl = await minioClient.PresignedGetObjectAsync(args);
-            return presignedUrl;
+            var cachedPresignedUrl = await _daprClient.CacheGetOrSetAsync<string>(async () =>
+            {
+                var expiry = TimeSpan.FromHours(1);
+                PresignedGetObjectArgs args = new PresignedGetObjectArgs()
+                                         .WithBucket(BucketName)
+                                         .WithObject(objectName)
+                                         .WithExpiry((int)expiry.TotalSeconds);//TODO: Güvenlik Sorgula
+
+                // Tek kullanımlık URL oluştur
+                return await minioClient.PresignedGetObjectAsync(args);
+
+            }, storeName, objectName, TTLSeconds);
+
+            return cachedPresignedUrl;
         }
 
         public async Task UploadFile(byte[] data, string objectName, string contentType)
@@ -118,7 +136,7 @@ namespace amorphie.contract.data.Services
                 };
 
             var putObjectArgs = new PutObjectArgs()
-                             .WithBucket(bucketName)
+                             .WithBucket(BucketName)
                              .WithObject(objectName)
 
                              // .WithFileName(filePath)
