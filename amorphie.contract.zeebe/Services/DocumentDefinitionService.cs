@@ -15,6 +15,7 @@ namespace amorphie.contract.zeebe.Services
     public interface IDocumentDefinitionService
     {
         Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic documentDefinitionDataDynamic, Guid id);
+        Task<DocumentDefinition> DataModelToDocumentDefinitionUpdate(dynamic documentDefinitionDataDynamic, Guid id);
     }
     public class DocumentDefinitionService : IDocumentDefinitionService
     {
@@ -247,7 +248,26 @@ namespace amorphie.contract.zeebe.Services
             _documentDefinitionDataModel.data = JsonConvert.DeserializeObject<Data>(_documentDefinitionDataDynamic);
         }
 
-
+        public static int CompareVersions(string version1, string version2)
+        {
+            string[] parts1 = version1.Split('.');
+            string[] parts2 = version2.Split('.');
+            int length = Math.Max(parts1.Length, parts2.Length);
+            for (int i = 0; i < length; i++)
+            {
+                int num1 = (i < parts1.Length) ? int.Parse(parts1[i]) : 0;
+                int num2 = (i < parts2.Length) ? int.Parse(parts2[i]) : 0;
+                if (num1 < num2)
+                {
+                    return -1;
+                }
+                else if (num1 > num2)
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
         public async Task<DocumentDefinition> DataModelToDocumentDefinition(dynamic documentDefinitionDataDynamic, Guid id)
         {
             _documentDefinitionDataDynamic = documentDefinitionDataDynamic;
@@ -255,10 +275,18 @@ namespace amorphie.contract.zeebe.Services
             {
                 DynamicToDocumentDefinitionDataModel();
 
+                var highestVersion = _dbContext.DocumentDefinition
+                    .Select(e => e.Semver)
+                    .OrderDescending()
+                    .FirstOrDefault();
+                    
+                if (CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
+                {
+                    throw new Exception($"Versiyon {highestVersion} dan daha büyük olmalı");
+                }
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
-                    // _documentdef = documentDefinition;
                     throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
                 }
                 else
@@ -309,5 +337,9 @@ namespace amorphie.contract.zeebe.Services
 
         }
 
+        public Task<DocumentDefinition> DataModelToDocumentDefinitionUpdate(dynamic documentDefinitionDataDynamic, Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

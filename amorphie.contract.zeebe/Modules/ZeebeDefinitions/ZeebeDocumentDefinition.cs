@@ -21,6 +21,16 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
 
+            app.MapPost("/updatedefinitionupload", DefinitionUpdate)
+            .Produces(StatusCodes.Status200OK)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Maps Render service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeDocumentDefinition) } };
+
+                return operation;
+            });
+
             app.MapPost("/ErrorDefinitionUpload", ErrorDefinitionUpload)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
@@ -92,6 +102,47 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             }
         }
 
+        static IResult DefinitionUpdate(
+          [FromBody] dynamic body,
+         [FromServices] ProjectDbContext dbContext,
+          HttpRequest request,
+          HttpContext httpContext,
+          [FromServices] DaprClient client
+          , IConfiguration configuration,
+           [FromServices] IDocumentDefinitionService IDocumentDefinitionService
+      )
+        {
+            var messageVariables = new MessageVariables();
+            try
+            {
+                messageVariables = ZeebeMessageHelper.VariablesControl(body);
+
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+
+            try
+            {
+
+                dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
+
+                var _ = IDocumentDefinitionService.DataModelToDocumentDefinition(entityData, messageVariables.InstanceIdGuid);
+
+                messageVariables.Success = true;
+                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
+
+            catch (Exception ex)
+            {
+                messageVariables.Success = true;
+                messageVariables.Message = ex.Message;
+                messageVariables.LastTransition = "ErrorDefinition";
+
+                return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
+        }
         static IResult TimeoutDefinitionUpload(
         [FromBody] dynamic body,
         [FromServices] ProjectDbContext dbContext,
