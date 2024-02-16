@@ -58,7 +58,7 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractDocumentGroupDetail()
         {
-            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName.id != "" && x.groupName != null))
+            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName?.id != "" && x.groupName != null))
             {
                 var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList?.Select(x => new ContractDocumentGroupDetail
                 {
