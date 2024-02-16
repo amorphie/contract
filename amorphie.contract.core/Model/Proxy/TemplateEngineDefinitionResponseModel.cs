@@ -8,7 +8,13 @@ namespace amorphie.contract.Models.Proxy
         }
 
         public string Name { get; set; }
-        public List<string> SemanticVersions { get; set; }
+        public List<SemanticVersionData> SemanticVersionsData { get; set; }
+
+        public class SemanticVersionData
+        {
+            public string SemanticVersion { get; set; }
+            public List<string> DynamicData { get; set; }
+        }
 
     }
 }
