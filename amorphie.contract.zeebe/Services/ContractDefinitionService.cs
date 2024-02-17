@@ -7,6 +7,7 @@ using amorphie.contract.core.Enum;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity.Base;
+using amorphie.contract.core.Entity.EAV;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -97,7 +98,7 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetContractDocumentGroupDetail()
         {
-            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName.id != "" && x.groupName != null))
+            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName?.id != "" && x.groupName != null))
             {
                 var contractDocumentGroupDetails = _ContractDefinitionDataModel.documentGroupList?.Select(x => new ContractDocumentGroupDetail
                 {
@@ -192,7 +193,7 @@ namespace amorphie.contract.zeebe.Services
                     epdb.EntityPropertyValue = i.EntityPropertyValue;
                 }
                 epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                var dep = _dbContext.DocumentEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
+                var dep = _dbContext.ContractEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
                 if (dep == null)
                 {
                     _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
@@ -203,6 +204,76 @@ namespace amorphie.contract.zeebe.Services
                 }
             }
         }
+        
+        private List<EntityPropertyValue> MapEntityPropertyValue()
+        {
+            if(_ContractDefinitionDataModel.EntityProperty != null)
+            {
+                return _ContractDefinitionDataModel.EntityProperty
+                .Select(entityProperty => 
+                    new EntityPropertyValue
+                    {
+                        Data = entityProperty.value
+                    }
+                ).ToList();
+            }
+            return null;
+        }
+        private List<core.Entity.EAV.EntityProperty> MapEntityProperty(List<EntityPropertyValue> entityPropertyValues)
+        {
+            if(_ContractDefinitionDataModel.EntityProperty != null)
+            {
+                return _ContractDefinitionDataModel.EntityProperty
+                .Select(entityProperty => 
+                {
+                    var property = new core.Entity.EAV.EntityProperty
+                    {
+                        EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                        //EntityPropertyValueId = EntityPropertyValueId,
+                        Code = entityProperty.PropertyName
+                    };
+                    return property;
+                }).ToList();
+            }
+            return null;
+        }
+
+        // private void SetContractEntityProperty()
+        // {
+        //     if (_ContractDefinitionDataModel.EntityProperty == null)
+        //     {
+        //         return;
+        //     }
+        //     foreach (var propertyModel in _ContractDefinitionDataModel.EntityProperty)
+        //     {
+        //         var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+        //         {
+        //             EEntityPropertyType = (ushort)EEntityPropertyType.str,
+        //             EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = propertyModel.value },
+        //             Code = propertyModel.PropertyName
+        //         };
+        //         var existingProperty = _dbContext.EntityProperty.FirstOrDefault(x => x.Code == entityProperty.Code);
+        //         if (existingProperty != null)
+        //         {
+        //             entityProperty = existingProperty;
+        //         }
+        //         var existingPropertyValue = _dbContext.EntityPropertyValue.FirstOrDefault(x => x.Data == entityProperty.EntityPropertyValue.Data);
+        //         if (existingPropertyValue != null)
+        //         {
+        //             entityProperty.EntityPropertyValue = existingPropertyValue;
+        //         }
+        //         entityProperty.EEntityPropertyType = (ushort)EEntityPropertyType.str;
+        //         var documentEntityProperty = _dbContext.ContractEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == entityProperty.Code);
+        //         if (documentEntityProperty == null)
+        //         {
+        //             _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
+        //             {
+        //                 ContractDefinitionId = _ContractDefinition.Id,
+        //                 EntityProperty = entityProperty,
+        //             });
+        //         }
+        //     }
+        // }
 
         private ValidationDecision MapValidationDecision(ValidationList validationList)
         {
@@ -303,12 +374,31 @@ namespace amorphie.contract.zeebe.Services
 
         }
 
-        public void UpdateRelationships<T>(ICollection<T> existingItems, ICollection<T> updatedItems,
-                                   Func<T, T, bool> condition)
+        public List<T> UpdateRelationships<T>(ICollection<T> existingItems, ICollection<T> updatedItems,
+                                        Func<T, T, bool> condition) where T : class
         {
-            var itemsToRemove = existingItems.Where(existing => !updatedItems.Any(updated => condition(existing, updated)));
-            var itemsToAdd = updatedItems.Where(updated => !existingItems.Any(existing => condition(existing, updated)));
-            var itemsToUpdate = updatedItems.Where(updated => existingItems.Any(existing => condition(existing, updated)));
+            existingItems ??= new List<T>();
+            updatedItems ??= new List<T>();
+
+            var itemsToRemove = existingItems.Where(existing => updatedItems.All(updated => !condition(existing, updated))).ToList();
+            var itemsToAdd = updatedItems.Where(updated => existingItems.All(existing => !condition(existing, updated))).ToList();
+            var itemsToUpdate = updatedItems
+                .Except(itemsToAdd)
+                .Select(updated =>
+                {
+                    var existingItem = existingItems.FirstOrDefault(existing => condition(existing, updated));
+                    if (existingItem != null)
+                    {
+                        // Id'yi güncelleme
+                        var propertyInfo = typeof(T).GetProperty("Id");
+                        if (propertyInfo != null)
+                        {
+                            propertyInfo.SetValue(updated, propertyInfo.GetValue(existingItem));
+                        }
+                    }
+                    return updated;
+                })
+                .ToList();
 
             if (itemsToRemove.Any())
             {
@@ -324,6 +414,8 @@ namespace amorphie.contract.zeebe.Services
             {
                 _dbContext.AddRange(itemsToAdd);
             }
+            _dbContext.SaveChanges();
+            return itemsToAdd;
         }
 
         // private void UpdateNestedRelationships<TMain, TIntermediate, TDetail>(
@@ -358,13 +450,14 @@ namespace amorphie.contract.zeebe.Services
         //     }
         // }
 
-        public async Task<ContractDefinition> DataModelToContractDefinitionUpdate(dynamic contractDefinitionDataDynamic, Guid id)
+        public async Task<ContractDefinition> DataModelToContractDefinitionUpdate(dynamic contractDefinitionDataUpdateDynamic, Guid id)
         {
+            _ContractDefinitionDataModelDynamic = contractDefinitionDataUpdateDynamic;
             try
             {
                 DynamicToContractDefinitionDataModel();
-
-                var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x=>x.Id == _ContractDefinition.Id);
+                SetContractDefinitionDefault(id);
+                var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x=>x.Id == _ContractDefinition.Id);
                 if (contractDefinition==null)
                 {
                     throw new Exception("Güncellemek istediğiniz döküman bulunmamakta.");
@@ -374,15 +467,26 @@ namespace amorphie.contract.zeebe.Services
                 // Eski veriyi yenisiyle güncellemesi işlemi yapılacak
 
                 // ContractDefinition tablosundaki alanları güncelle
-                contractDefinition.Status = _ContractDefinition.Status;
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
-                contractDefinition.Code = _ContractDefinition.Code;
                 contractDefinition.BankEntity = _ContractDefinition.BankEntity;
-                
+
+                //ENTITY PROPERTY UPDATE
+                var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();
+                var newEntityPropertValueContract = MapEntityPropertyValue();
+                Func<EntityPropertyValue,EntityPropertyValue,bool> conditionEntityPropertyValue = (exist,update) => exist.Data == update.Data;
+                var entityPropertyValue = UpdateRelationships(oldEntityPropertyValueContract,newEntityPropertValueContract,conditionEntityPropertyValue);
+                if(entityPropertyValue.Any())
+                {
+                    var oldEntityPropertyContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty).ToList();
+                    var newEntityPropertyContract = MapEntityProperty(entityPropertyValue);
+                    Func<core.Entity.EAV.EntityProperty,core.Entity.EAV.EntityProperty,bool> conditionEntityProperty = (exist,update) => exist.Code == update.Code;
+                    UpdateRelationships(oldEntityPropertyContract,newEntityPropertyContract,conditionEntityProperty);
+                }
+
                 // TAG UPDATE
                 var oldTags = contractDefinition.ContractTags;
                 var newTags = MapContractTag();
-                Func<ContractTag, ContractTag, bool> conditionTag = (exist,update) => exist.Id == update.Id;
+                Func<ContractTag, ContractTag, bool> conditionTag = (exist,update) => exist.TagId == update.TagId;
                 UpdateRelationships(oldTags,newTags,conditionTag);
                 // VALIDATION UPDATE
 
@@ -399,7 +503,7 @@ namespace amorphie.contract.zeebe.Services
                 UpdateRelationships(oldDocGroup,newDocGroup,conditionDocGrupDetail);
 
                 //TITLE UPDATE
-                var oldMultiLang = _dbContext.MultiLanguage.Where(x=>x.Code == _ContractDefinition.Code).ToList();
+                var oldMultiLang = contractDefinition.ContractDefinitionLanguageDetails.Select(x=>x.MultiLanguage).ToList();
                 var newMultiLang = MapContractDefinitionLanguage();
                 Func<MultiLanguage,MultiLanguage,bool> conditionMultiLanguage = (exist,update) => exist.Code == update.Code && exist.LanguageType == update.LanguageType;
                 UpdateRelationships(oldMultiLang,newMultiLang,conditionMultiLanguage);
@@ -410,7 +514,11 @@ namespace amorphie.contract.zeebe.Services
                 UpdateRelationships(oldMultiLangDetail,newMultiLangDetail,conditionMultiLanguageDetail);
 
                 //VALIDATION UPDATE
-                if(_ContractDefinitionDataModel.validationList)
+                //var contractValidation = _ContractDefinitionDataModel.validationList.First();
+                //var newValidationDecision = MapValidationDecision(_ContractDefinitionDataModel.validationList.First());
+                
+                
+
 
                 await _dbContext.SaveChangesAsync();
 
