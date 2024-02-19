@@ -9,6 +9,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
+using amorphie.contract.zeebe.Helper;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -256,10 +257,18 @@ namespace amorphie.contract.zeebe.Services
             {
                 DynamicToDocumentDefinitionDataModel();
 
+                var highestVersion = _dbContext.DocumentDefinition
+                    .Select(e => e.Semver)
+                    .OrderDescending()
+                    .FirstOrDefault();
+
+                if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
+                {
+                    throw new Exception($"Versiyon {highestVersion} dan daha büyük olmalı");
+                }
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
-                    // _documentdef = documentDefinition;
                     throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
                 }
                 else

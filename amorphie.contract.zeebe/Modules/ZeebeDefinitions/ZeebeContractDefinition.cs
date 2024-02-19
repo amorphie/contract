@@ -11,6 +11,15 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
     {
         public static void MapZeebeContractDefinitionEndpoints(this WebApplication app)
         {
+            app.MapPost("/contractdefinitionupdate", contractdefinitionupdate)
+            .Produces(StatusCodes.Status200OK)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Maps contractdefinition service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+                return operation;
+            });
+
             app.MapPost("/contractdefinition", contractdefinition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
@@ -48,6 +57,48 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
               return operation;
           });
 
+        }
+
+        static IResult contractdefinitionupdate(
+          [FromBody] dynamic body,
+         [FromServices] ProjectDbContext dbContext,
+          HttpRequest request,
+          HttpContext httpContext,
+          [FromServices] DaprClient client
+          , IConfiguration configuration,
+           [FromServices] IContractDefinitionService IContractDefinitionService
+      )
+        {
+            var messageVariables = new MessageVariables();
+            try
+            {
+                messageVariables = ZeebeMessageHelper.VariablesControl(body);
+
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+
+            try
+            {
+
+                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+
+                var _ = IContractDefinitionService.DataModelToContractDefinitionUpdate(entityData, messageVariables.InstanceIdGuid);
+
+                messageVariables.Success = true;
+                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
+
+            catch (Exception ex)
+            {
+                messageVariables.Success = true;
+                messageVariables.Message = ex.Message;
+                messageVariables.LastTransition = "ErrorDefinition";
+
+                return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
         }
         static IResult contractdefinition(
           [FromBody] dynamic body,

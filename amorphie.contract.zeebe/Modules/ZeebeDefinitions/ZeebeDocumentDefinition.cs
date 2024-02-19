@@ -21,7 +21,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
 
-            app.MapPost("/definitionupdate", DefinitionUpdate)
+            app.MapPost("/updatedefinitionupload", DefinitionUpdate)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -105,13 +105,17 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
         static IResult DefinitionUpdate(
           [FromBody] dynamic body,
          [FromServices] ProjectDbContext dbContext,
+          HttpRequest request,
+          HttpContext httpContext,
+          [FromServices] DaprClient client
+          , IConfiguration configuration,
            [FromServices] IDocumentDefinitionService IDocumentDefinitionService
       )
         {
             var messageVariables = new MessageVariables();
             try
             {
-                //messageVariables = ZeebeMessageHelper.VariablesControl(body);
+                messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
             }
             catch (Exception ex)
@@ -139,7 +143,6 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
         }
-
         static IResult TimeoutDefinitionUpload(
         [FromBody] dynamic body,
         [FromServices] ProjectDbContext dbContext,
