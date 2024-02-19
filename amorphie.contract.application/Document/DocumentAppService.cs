@@ -133,7 +133,7 @@ namespace amorphie.contract.application
             return response;
         }
 
-        private List<RootDocumentDto> mapToRootDocumentDto(List<core.Entity.Document.Document> documents)
+        private List<RootDocumentDto> mapToRootDocumentDto(List<Document> documents)
         {
             return documents.Select(x =>
                          new RootDocumentDto
@@ -156,6 +156,25 @@ namespace amorphie.contract.application
                          }).ToList();
 
         }
+
+        public async Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
+        {
+            string userReference = inputDto.GetUserReference();
+
+            var hasDocumentCustomer = await _dbContext.Customer
+                 .Where(c => c.DocumentList != null &&
+                             c.Reference == userReference &&
+                             c.DocumentList.Any(d => d.DocumentContent.MinioObjectName == inputDto.ObjectName))
+                 .AnyAsync();
+
+            if (!hasDocumentCustomer)
+            {
+                throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
+            }
+
+            using var res = await _minioService.DownloadFile(inputDto.ObjectName, cancellationToken);
+            return res;
+        }
     }
 
     public interface IDocumentAppService
@@ -163,5 +182,6 @@ namespace amorphie.contract.application
         public Task<List<RootDocumentDto>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
         public Task<List<RootDocumentDto>> GetAllDocumentAll(CancellationToken cancellationToken);
         Task<Result> Instance(DocumentInstanceInputDto input);
+        Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
     }
 }

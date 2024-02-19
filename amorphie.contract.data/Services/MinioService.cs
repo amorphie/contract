@@ -6,6 +6,7 @@ using Minio.DataModel.Args;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Enum;
 using amorphie.contract.data.Extensions;
+using Minio.DataModel;
 
 namespace amorphie.contract.data.Services
 {
@@ -151,6 +152,36 @@ namespace amorphie.contract.data.Services
             await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
             Console.WriteLine("Successfully uploaded " + objectName);
         }
-    }
 
+        public async Task<ReleaseableFileStreamModel> DownloadFile(string objectName, CancellationToken cancellationToken)
+        {
+
+            bool found = await IsBucketExist(BucketName);
+            if (!found)
+            {
+                throw new FileNotFoundException($"Bucket '{BucketName}' not found.");
+            }
+
+            var statArgs = new StatObjectArgs()
+            .WithObject(objectName)
+            .WithBucket(BucketName);
+            var stat = await minioClient.StatObjectAsync(statArgs, cancellationToken);
+
+            var res = new ReleaseableFileStreamModel
+            {
+                ContentType = stat.ContentType,
+                FileName = objectName,
+            };
+
+            var getArgs = new GetObjectArgs()
+                .WithObject(objectName)
+                .WithBucket(BucketName)
+                .WithCallbackStream(res.SetStreamAsync);
+
+            await res.HandleAsync(minioClient.GetObjectAsync(getArgs, cancellationToken));
+
+            return res;
+
+        }
+    }
 }

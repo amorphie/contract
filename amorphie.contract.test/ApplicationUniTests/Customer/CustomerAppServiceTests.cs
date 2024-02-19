@@ -15,6 +15,7 @@ public class CustomerAppServiceTests
     public CustomerAppServiceTests()
     {
         Environment.SetEnvironmentVariable("ELASTIC_APM_ACTIVE", "false");
+        Environment.SetEnvironmentVariable("EnableApm", "false");
     }
 
     [Fact]
@@ -31,7 +32,7 @@ public class CustomerAppServiceTests
         context.Database.OpenConnection();
         context.Database.EnsureCreated();
 
-        var customerAppService = new CustomerAppService(context, minioServiceMock.Object);
+        var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
 
         var texts = new List<MultilanguageText>
             {
@@ -57,7 +58,7 @@ public class CustomerAppServiceTests
 
         using var context = new ProjectDbContext(options, null);
 
-        var customerAppService = new CustomerAppService(context, minioServiceMock.Object);
+        var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
 
 
         var texts = new List<MultilanguageText>
@@ -88,7 +89,7 @@ public class CustomerAppServiceTests
         context.Database.OpenConnection();
         context.Database.EnsureCreated();
 
-        var customerAppService = new CustomerAppService(context, minioServiceMock.Object);
+        var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
 
         var inputDto = new GetCustomerDocumentsByContractInputDto
         {

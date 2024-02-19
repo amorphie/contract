@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -10,23 +10,23 @@
  <ItemGroup>
     <PackageReference Include="Dapr.Client" Version="1.12.0" />
     <PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
-    <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
     <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
     <ProjectReference Include="..\amorphie.contract.application\amorphie.contract.application.csproj" />
-    <PackageReference Include="amorphie.core" Version="1.1.25" />
-    <PackageReference Include="amorphie.core.security" Version="1.0.0" />
-    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.16.1" />
+    <PackageReference Include="amorphie.core" Version="1.1.28" />
+    <PackageReference Include="amorphie.core.security" Version="1.0.1" />
+    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.25.3" />
 
   </ItemGroup>
 
