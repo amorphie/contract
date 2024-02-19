@@ -173,7 +173,7 @@ namespace amorphie.contract.application
                     throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
                 }
 
-                using var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
+                var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
                 return res;
 
             }
