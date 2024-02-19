@@ -6,8 +6,6 @@ using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.application.Customer.Request;
-using amorphie.contract.core.Entity.Contract;
-using amorphie.contract.core.Entity.Document;
 
 namespace amorphie.contract.test;
 public class CustomerAppServiceTests
