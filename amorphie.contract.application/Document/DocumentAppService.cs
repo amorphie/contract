@@ -168,13 +168,10 @@ namespace amorphie.contract.application
             var userReference = inputDto.GetUserReference();
 
             var customerDoc = await _dbContext.Document.FirstOrDefaultAsync(
-               c => c.Customer != null && c.Customer.Reference == userReference && c.DocumentContentId == contentId
-            );
+               c => c.Customer != null && c.Customer.Reference == userReference && c.DocumentContentId == contentId);
 
             if (customerDoc is null)
-            {
                 throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
-            }
 
             var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
             return res;
