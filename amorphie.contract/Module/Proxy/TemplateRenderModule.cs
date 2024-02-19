@@ -1,13 +1,9 @@
-﻿using System;
-using System.Net.Http.Json;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.data.Contexts;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
-using amorphie.contract.Extensions;
-using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Models.Proxy;
 using amorphie.contract.core;

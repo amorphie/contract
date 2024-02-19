@@ -25,18 +25,7 @@ namespace amorphie.contract.Module.Customer
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
             routeGroupBuilder.MapGet("get-documents-by-contracts", GetDocumentsByContracts);
-            routeGroupBuilder.MapGet("get-documents-by-contracts2", GetDocumentsByContracts2);
             routeGroupBuilder.MapGet("get-all-documents", GetDocuments);
-        }
-
-        async ValueTask<IResult> GetDocumentsByContracts2([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
-        {
-            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-            inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity);
-
-            var serviceResponse = await customerAppService.GetDocumentsByContracts2(inputDto, token);
-
-            return Results.Ok(serviceResponse);
         }
 
         async ValueTask<IResult> GetDocumentsByContracts([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)

@@ -3,10 +3,11 @@ using amorphie.contract.data.Contexts;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using amorphie.contract.application;
 using amorphie.core.IBase;
+using amorphie.contract.core.Services;
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract;
 
@@ -27,6 +28,8 @@ public class DocumentModule
         routeGroupBuilder.MapGet("search", getAllDocumentFullTextSearch);
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
         routeGroupBuilder.MapPost("Instance", Instance);
+        routeGroupBuilder.MapGet("download", DownloadDocument);
+
     }
 
     async ValueTask<IResult> getAllDocumentFullTextSearch([FromServices] IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
@@ -65,6 +68,16 @@ public class DocumentModule
         {
             Result = response
         };
+    }
+
+    async ValueTask DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
+    {
+        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        inputDto.SetUserReference(headerModels.UserReference);
+
+        var doc = await documentAppService.DownloadDocument(inputDto, token);
+        httpContext.Response.ContentType = doc.ContentType;
+        await doc.Stream.CopyToAsync(httpContext.Response.Body);
     }
 }
 

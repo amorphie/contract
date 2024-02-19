@@ -337,9 +337,64 @@ namespace amorphie.contract.zeebe.Services
 
         }
 
-        public Task<DocumentDefinition> DataModelToDocumentDefinitionUpdate(dynamic documentDefinitionDataDynamic, Guid id)
+        public async Task<DocumentDefinition> DataModelToDocumentDefinitionUpdate(dynamic documentDefinitionDataDynamic, Guid id)
         {
-            throw new NotImplementedException();
+            _documentDefinitionDataDynamic = documentDefinitionDataDynamic;
+            try
+            {
+                DynamicToDocumentDefinitionDataModel();
+
+                var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
+                if (documentDefinition != null)
+                {
+                    throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
+                }
+                else
+                {
+                    _documentdef = new DocumentDefinition
+                    {
+                        Id = id,
+                        Code = _documentDefinitionDataModel.data.Code,
+                        Status = EStatus.OnHold,
+                        BaseStatus = EStatus.OnHold,
+                        Semver = _documentDefinitionDataModel.data.versiyon
+
+                    };
+                }
+
+                SetDocumentDefinitionLanguageDetail();
+                SetDocumentTagsDetails();
+                SetDocumentOptimize();
+                SetDocumentOperation();
+                SetDocumentEOV();
+
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                {
+                    SetDocumentOnlineSing();
+
+                }
+                else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
+                {
+                    SetDocumentOnlineSing();
+                    SetDocumentUpload();
+                }
+                else
+                {
+                    SetDocumentUpload();
+                }
+
+                _documentdef.Status = EStatus.Active;
+                _documentdef.BaseStatus = EStatus.Active;
+
+                _dbContext.DocumentDefinition.Add(_documentdef);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _documentdef;
         }
     }
 }

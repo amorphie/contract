@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 
 RUN adduser -u 5679 --disabled-password --gecos "" amorphie-contract-zeebe-user && chown -R amorphie-contract-zeebe-user:amorphie-contract-zeebe-user /app
 USER amorphie-contract-zeebe-user
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["./amorphie.contract.zeebe/amorphie.contract.zeebe.csproj", "."]
 RUN dotnet restore "./amorphie.contract.zeebe.csproj"
