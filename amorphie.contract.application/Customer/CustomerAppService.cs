@@ -73,16 +73,10 @@ namespace amorphie.contract.application.Customer
                 Id = x.Id,
                 DocumentDefinitionId = x.DocumentDefinitionId,
                 Status = x.Status,
-                MinioObjectName = x.DocumentContent.MinioObjectName
-            }).AsSplitQuery().ToListAsync(token);
-            //List<ContractDefinitionDto> contractModels = contracts.Select(x => new ContractDefinitionDto
-            //{
-            //    Id = x.Id,
-            //    Code = x.Code,
-            //    Status = "inProgress"
-            //}).ToList();
-
-            //List<CustomerContractDto> contractModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contracts);
+                DocumentContentId = x.DocumentContent.Id.ToString()
+            })
+            .AsSplitQuery()
+            .ToListAsync(token);
 
             foreach (var model in contractModels)
             {
@@ -191,8 +185,7 @@ namespace amorphie.contract.application.Customer
                 var documentDefinition = documents.FirstOrDefault(z => z.DocumentDefinitionId == minioDoc.DocumentDefinitionId);
                 if (documentDefinition != null)
                 {
-                    string minioObjectName = documentDefinition.MinioObjectName;
-                    string minioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectName={minioObjectName}";
+                    string minioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectName={documentDefinition.DocumentContentId}";
 
                     minioDoc.MinioUrl = minioUrl;
                 }
@@ -217,7 +210,7 @@ namespace amorphie.contract.application.Customer
             public Guid Id { get; set; }
             public Guid DocumentDefinitionId { get; set; }
             public EStatus Status { get; set; }
-            public string MinioObjectName { get; set; }
+            public string DocumentContentId { get; set; }
         }
 
         public async Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
