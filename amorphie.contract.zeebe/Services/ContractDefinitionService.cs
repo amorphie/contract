@@ -43,10 +43,10 @@ namespace amorphie.contract.zeebe.Services
             _ContractDefinitionDataModel = new ContractDefinitionDataModel();
             _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>
             (test.Replace("{}", "\"\""));
-        }  
+        }
         private void UpdateContractDefinitionLanguage(List<MultiLanguage> multiLanguages)
         {
-            var removedMultiLang = multiLanguages.Where(x=> !_ContractDefinitionDataModel.Titles.Any(y=> ZeebeMessageHelper.StringToGuid(y.language)== x.LanguageTypeId)).ToList();
+            var removedMultiLang = multiLanguages.Where(x => !_ContractDefinitionDataModel.Titles.Any(y => ZeebeMessageHelper.StringToGuid(y.language) == x.LanguageTypeId)).ToList();
             var addedMultiLang = _ContractDefinitionDataModel.Titles
                                 .Where(x => !multiLanguages.Any(y => y.LanguageTypeId == ZeebeMessageHelper.StringToGuid(x.language)))
                                 .Select(x => new ContractDefinitionLanguageDetail
@@ -97,11 +97,11 @@ namespace amorphie.contract.zeebe.Services
 
         private void UpdateContractDocumentGroupDetail(List<ContractDocumentGroupDetail> contractDocumentGroupDetails)
         {
-            if (_ContractDefinitionDataModel.documentGroupList.Any(x=> x.groupName != null && x.groupName?.id != ""))
+            if (_ContractDefinitionDataModel.documentGroupList.Any(x => x.groupName != null && x.groupName?.id != ""))
             {
-                var removedItems = contractDocumentGroupDetails.Where(x=> !_ContractDefinitionDataModel.documentGroupList.Any(y=>x.DocumentGroupId == ZeebeMessageHelper.StringToGuid(y.groupName.id))).ToList();
-                var addedItems = _ContractDefinitionDataModel.documentGroupList.Where(x=> !contractDocumentGroupDetails.Any(y => ZeebeMessageHelper.StringToGuid(x.groupName.id) == y.DocumentGroupId))
-                                .Select(x=> new ContractDocumentGroupDetail
+                var removedItems = contractDocumentGroupDetails.Where(x => !_ContractDefinitionDataModel.documentGroupList.Any(y => x.DocumentGroupId == ZeebeMessageHelper.StringToGuid(y.groupName.id))).ToList();
+                var addedItems = _ContractDefinitionDataModel.documentGroupList.Where(x => !contractDocumentGroupDetails.Any(y => ZeebeMessageHelper.StringToGuid(x.groupName.id) == y.DocumentGroupId))
+                                .Select(x => new ContractDocumentGroupDetail
                                 {
                                     ContractDefinitionId = _ContractDefinition.Id,
                                     DocumentGroupId = ZeebeMessageHelper.StringToGuid(x.groupName.id),
@@ -136,11 +136,11 @@ namespace amorphie.contract.zeebe.Services
 
         private void UpdateContractDocumentDetail(List<ContractDocumentDetail> contractDocumentDetails)
         {
-            var removedItems = contractDocumentDetails.Where(x=> !_ContractDefinitionDataModel.documentsList
-                            .Any(y=>x.DocumentDefinition.Code == y.name.code && x.DocumentDefinition.Semver == y.minVersiyon)).ToList();
-            var addedItems = _ContractDefinitionDataModel.documentsList.Where(x=> !contractDocumentDetails
-                            .Any(y=>x.minVersiyon == y.DocumentDefinition.Semver && x.name.code == y.DocumentDefinition.Code))
-                            .Select(x=> new ContractDocumentDetail
+            var removedItems = contractDocumentDetails.Where(x => !_ContractDefinitionDataModel.documentsList
+                            .Any(y => x.DocumentDefinition.Code == y.name.code && x.DocumentDefinition.Semver == y.minVersiyon)).ToList();
+            var addedItems = _ContractDefinitionDataModel.documentsList.Where(x => !contractDocumentDetails
+                            .Any(y => x.minVersiyon == y.DocumentDefinition.Semver && x.name.code == y.DocumentDefinition.Code))
+                            .Select(x => new ContractDocumentDetail
                             {
                                 ContractDefinitionId = _ContractDefinition.Id,
                                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.name.code).Select(y => y.Id).FirstOrDefault(),
@@ -172,9 +172,9 @@ namespace amorphie.contract.zeebe.Services
 
         private void UpdateContractTag(List<ContractTag> contractTags)
         {
-            var removedItems = contractTags.Where(x=> !_ContractDefinitionDataModel.tags.Any(y=> ZeebeMessageHelper.StringToGuid(y)==x.TagId)).ToList();
-            var addedItems = _ContractDefinitionDataModel.tags.Where(x=> !contractTags.Any(y=> y.TagId == ZeebeMessageHelper.StringToGuid(x)))
-                            .Select(x=> new ContractTag
+            var removedItems = contractTags.Where(x => !_ContractDefinitionDataModel.tags.Any(y => ZeebeMessageHelper.StringToGuid(y) == x.TagId)).ToList();
+            var addedItems = _ContractDefinitionDataModel.tags.Where(x => !contractTags.Any(y => y.TagId == ZeebeMessageHelper.StringToGuid(x)))
+                            .Select(x => new ContractTag
                             {
                                 ContractDefinitionId = _ContractDefinition.Id,
                                 TagId = ZeebeMessageHelper.StringToGuid(x)
@@ -251,12 +251,12 @@ namespace amorphie.contract.zeebe.Services
         private void UpdateEntityProperty(List<core.Entity.EAV.EntityProperty> oldEntityProperties)
         {
             if (_ContractDefinitionDataModel.EntityProperty == null)
-             {
-                  return;
-             }
-            var removedItems = oldEntityProperties.Where(x => _ContractDefinitionDataModel.EntityProperty.Any(y=>y.PropertyName == x.Code)).ToList();
-            var addedItems = _ContractDefinitionDataModel.EntityProperty.Where(x=> !oldEntityProperties.Any(y=>y.Code == x.PropertyName))
-                            .Select(x=> new ContractEntityProperty
+            {
+                return;
+            }
+            var removedItems = oldEntityProperties.Where(x => _ContractDefinitionDataModel.EntityProperty.Any(y => y.PropertyName == x.Code)).ToList();
+            var addedItems = _ContractDefinitionDataModel.EntityProperty.Where(x => !oldEntityProperties.Any(y => y.Code == x.PropertyName))
+                            .Select(x => new ContractEntityProperty
                             {
                                 ContractDefinitionId = _ContractDefinition.Id,
                                 EntityProperty = new core.Entity.EAV.EntityProperty
@@ -269,7 +269,7 @@ namespace amorphie.contract.zeebe.Services
             foreach (var oldEntityProperty in oldEntityProperties)
             {
                 var matchingEntityProperty = _ContractDefinitionDataModel.EntityProperty.FirstOrDefault(y => y.PropertyName == oldEntityProperty.Code);
-                
+
                 if (matchingEntityProperty != null)
                 {
                     oldEntityProperty.EntityPropertyValue.Data = matchingEntityProperty.value;
@@ -403,8 +403,8 @@ namespace amorphie.contract.zeebe.Services
             {
                 DynamicToContractDefinitionDataModel();
                 SetContractDefinitionDefault(id);
-                var contractDefinition  = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == _ContractDefinition.Id);
-                if (_ContractDefinition==null)
+                var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == _ContractDefinition.Id);
+                if (_ContractDefinition == null)
                 {
                     throw new Exception("Güncellemek istediğiniz döküman bulunmamakta.");
                 }
@@ -415,11 +415,11 @@ namespace amorphie.contract.zeebe.Services
                 UpdateContractDocumentGroupDetail(contractDefinition.ContractDocumentGroupDetails.ToList());
                 UpdateContractDocumentDetail(contractDefinition.ContractDocumentDetails.ToList());
                 UpdateContractTag(contractDefinition.ContractTags.ToList());
-                UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty).ToList());
+                UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x => x.EntityProperty).ToList());
                 await _dbContext.SaveChangesAsync();
 
                 #region GENERIC_UPDATER
-                                // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();
+                // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();
                 // var newEntityPropertValueContract = MapEntityPropertyValue();
                 // Func<EntityPropertyValue,EntityPropertyValue,bool> conditionEntityPropertyValue = (exist,update) => exist.Data == update.Data;
                 // var entityPropertyValue = UpdateRelationships(oldEntityPropertyValueContract,newEntityPropertValueContract,conditionEntityPropertyValue);
@@ -470,7 +470,7 @@ namespace amorphie.contract.zeebe.Services
             }
             catch (System.Exception ex)
             {
-                
+
                 throw ex;
             }
             return _ContractDefinition;

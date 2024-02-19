@@ -260,7 +260,7 @@ namespace amorphie.contract.zeebe.Services
                     .Select(e => e.Semver)
                     .OrderDescending()
                     .FirstOrDefault();
-                    
+
                 if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
                 {
                     throw new Exception($"Versiyon {highestVersion} dan daha büyük olmalı");
