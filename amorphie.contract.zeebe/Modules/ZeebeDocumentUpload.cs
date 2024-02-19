@@ -8,7 +8,6 @@ using amorphie.contract.zeebe.Services;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Services;
-using Microsoft.Diagnostics.Tracing.Stacks;
 
 namespace amorphie.contract.zeebe.Modules
 {
