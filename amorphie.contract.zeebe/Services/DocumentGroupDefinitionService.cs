@@ -16,7 +16,8 @@ namespace amorphie.contract.zeebe.Services
 {
     public interface IDocumentGroupDefinitionService
     {
-        Task<DocumentGroup> DataModelToDocumentGroupDefinition(dynamic documentDefinitionGroupDataDynamic, Guid id);
+        Task<DocumentGroup> CreateGroup(dynamic documentDefinitionGroupDataDynamic, Guid id);
+        Task<DocumentGroup> UpdateGroup(dynamic documentDefinitionGroupDataDynamic, Guid id);
     }
     public class DocumentGroupDefinitionService : IDocumentGroupDefinitionService
     {
@@ -24,6 +25,7 @@ namespace amorphie.contract.zeebe.Services
         DocumentGroupDataModel _documentDefinitionDataModel;
         DocumentGroup _documentGroup;
         dynamic? _documentDefinitionDataModelDynamic;
+
         public DocumentGroupDefinitionService(ProjectDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -34,6 +36,7 @@ namespace amorphie.contract.zeebe.Services
             _documentDefinitionDataModel = new DocumentGroupDataModel();
             _documentDefinitionDataModel = JsonConvert.DeserializeObject<DocumentGroupDataModel>(_documentDefinitionDataModelDynamic.ToString());
         }
+
         private void SetDocumentGroupLanguageDetail()
         {
             var multiLanguageList = _documentDefinitionDataModel.titles.Select(x => new MultiLanguage
@@ -49,14 +52,9 @@ namespace amorphie.contract.zeebe.Services
             }).ToList();
 
         }
+
         private void SetDocumentGroupDetail()
         {
-            // var documentGroupDetail = _documentDefinitionDataModel.documents.Select(x => new DocumentGroupDetail
-            // {
-            //     DocumentDefinitionId = x.document.Id,
-            //     DocumentGroupId = _documentGroup.Id,
-            // });
-
             var documentGroupDetail = _documentDefinitionDataModel.documents.Select(x => new DocumentGroupDetail
             {
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.document.code).Select(y => y.Id).FirstOrDefault(),
@@ -64,8 +62,8 @@ namespace amorphie.contract.zeebe.Services
             });
 
             _documentGroup.DocumentGroupDetails = documentGroupDetail.ToList();
-
         }
+
         private void SetDocumentGroupDefault(Guid id)
         {
             _documentGroup = new DocumentGroup();
@@ -76,26 +74,62 @@ namespace amorphie.contract.zeebe.Services
 
         }
 
-        public async Task<DocumentGroup> DataModelToDocumentGroupDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
+        private void DataModelToDocumentGroupDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
             _documentDefinitionDataModelDynamic = documentDefinitionDataModelDynamic;
             try
             {
                 DynamicToDocumentDefinitionDataModel();
                 SetDocumentGroupDefault(id);
-
                 SetDocumentGroupLanguageDetail();
                 SetDocumentGroupDetail();
-                _dbContext.DocumentGroup.Add(_documentGroup);
-                _dbContext.SaveChanges();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return _documentGroup;
-
         }
 
+        public async Task<DocumentGroup> CreateGroup(dynamic documentDefinitionDataModelDynamic, Guid id)
+        {
+            DataModelToDocumentGroupDefinition(documentDefinitionDataModelDynamic, id);
+            _dbContext.DocumentGroup.Add(_documentGroup);
+            _dbContext.SaveChanges();
+
+            return _documentGroup;
+        }
+
+        public async Task<DocumentGroup> UpdateGroup(dynamic documentDefinitionDataModelDynamic, Guid id)
+        {
+            DataModelToDocumentGroupDefinition(documentDefinitionDataModelDynamic, id);
+            var documentGroup = _dbContext.DocumentGroup.AsSplitQuery().FirstOrDefault(x => x.Id == id);
+
+            documentGroup.Code = _documentGroup.Code;
+
+            foreach (var detailObject in _documentGroup.DocumentGroupLanguageDetail)
+            {
+                var multiLangObject = detailObject.MultiLanguage;
+                var entity = documentGroup.DocumentGroupLanguageDetail.Where(x => x.MultiLanguage.LanguageTypeId == multiLangObject.LanguageTypeId).FirstOrDefault();
+
+                if (entity is not null)
+                {
+                    entity.MultiLanguage.Name = multiLangObject.Name;
+                    entity.MultiLanguage.Code = multiLangObject.Code;
+                }
+                else
+                {
+                    _dbContext.Entry(detailObject).State = EntityState.Added;
+                    _dbContext.Entry(multiLangObject).State = EntityState.Added;
+                    documentGroup.DocumentGroupLanguageDetail.Add(detailObject);
+                }
+            }
+
+            var removeLanguages = documentGroup.DocumentGroupLanguageDetail.Where(x => !_documentGroup.DocumentGroupLanguageDetail.Select(z => z.MultiLanguage.LanguageTypeId).ToList().Contains(x.MultiLanguage.LanguageTypeId)).ToList();
+            documentGroup.DocumentGroupLanguageDetail = documentGroup.DocumentGroupLanguageDetail.Except(removeLanguages).ToList();
+
+            _dbContext.SaveChanges();
+
+            return _documentGroup;
+        }
     }
 }
