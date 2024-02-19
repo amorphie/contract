@@ -329,7 +329,7 @@ namespace amorphie.contract.zeebe.Services
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
-                    throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
+                    throw new ArgumentException("Ayni Dokuman tanımı daha önce yapılmıs");
                 }
                 else
                 {

@@ -101,35 +101,42 @@ namespace amorphie.contract.zeebe.Services
 
         public async Task<DocumentGroup> UpdateGroup(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
-            DataModelToDocumentGroupDefinition(documentDefinitionDataModelDynamic, id);
-            var documentGroup = _dbContext.DocumentGroup.AsSplitQuery().FirstOrDefault(x => x.Id == id);
-
-            documentGroup.Code = _documentGroup.Code;
-
-            foreach (var detailObject in _documentGroup.DocumentGroupLanguageDetail)
+            try
             {
-                var multiLangObject = detailObject.MultiLanguage;
-                var entity = documentGroup.DocumentGroupLanguageDetail.Where(x => x.MultiLanguage.LanguageTypeId == multiLangObject.LanguageTypeId).FirstOrDefault();
+                DataModelToDocumentGroupDefinition(documentDefinitionDataModelDynamic, id);
+                var documentGroup = _dbContext.DocumentGroup.AsSplitQuery().FirstOrDefault(x => x.Id == id);
 
-                if (entity is not null)
+                documentGroup.Code = _documentGroup.Code;
+
+                foreach (var detailObject in _documentGroup.DocumentGroupLanguageDetail)
                 {
-                    entity.MultiLanguage.Name = multiLangObject.Name;
-                    entity.MultiLanguage.Code = multiLangObject.Code;
+                    var multiLangObject = detailObject.MultiLanguage;
+                    var entity = documentGroup.DocumentGroupLanguageDetail.Where(x => x.MultiLanguage.LanguageTypeId == multiLangObject.LanguageTypeId).FirstOrDefault();
+
+                    if (entity is not null)
+                    {
+                        entity.MultiLanguage.Name = multiLangObject.Name;
+                        entity.MultiLanguage.Code = multiLangObject.Code;
+                    }
+                    else
+                    {
+                        _dbContext.Entry(detailObject).State = EntityState.Added;
+                        _dbContext.Entry(multiLangObject).State = EntityState.Added;
+                        documentGroup.DocumentGroupLanguageDetail.Add(detailObject);
+                    }
                 }
-                else
-                {
-                    _dbContext.Entry(detailObject).State = EntityState.Added;
-                    _dbContext.Entry(multiLangObject).State = EntityState.Added;
-                    documentGroup.DocumentGroupLanguageDetail.Add(detailObject);
-                }
+
+                var removeLanguages = documentGroup.DocumentGroupLanguageDetail.Where(x => !_documentGroup.DocumentGroupLanguageDetail.Select(z => z.MultiLanguage.LanguageTypeId).ToList().Contains(x.MultiLanguage.LanguageTypeId)).ToList();
+                documentGroup.DocumentGroupLanguageDetail = documentGroup.DocumentGroupLanguageDetail.Except(removeLanguages).ToList();
+
+                _dbContext.SaveChanges();
+
+                return _documentGroup;
             }
-
-            var removeLanguages = documentGroup.DocumentGroupLanguageDetail.Where(x => !_documentGroup.DocumentGroupLanguageDetail.Select(z => z.MultiLanguage.LanguageTypeId).ToList().Contains(x.MultiLanguage.LanguageTypeId)).ToList();
-            documentGroup.DocumentGroupLanguageDetail = documentGroup.DocumentGroupLanguageDetail.Except(removeLanguages).ToList();
-
-            _dbContext.SaveChanges();
-
-            return _documentGroup;
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
