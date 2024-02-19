@@ -406,7 +406,7 @@ namespace amorphie.contract.zeebe.Services
                 var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == _ContractDefinition.Id);
                 if (_ContractDefinition == null)
                 {
-                    throw new Exception("Güncellemek istediğiniz döküman bulunmamakta.");
+                    throw new ArgumentException("Güncellemek istediğiniz döküman bulunmamakta.");
                 }
 
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
@@ -470,7 +470,6 @@ namespace amorphie.contract.zeebe.Services
             }
             catch (System.Exception ex)
             {
-
                 throw ex;
             }
             return _ContractDefinition;
