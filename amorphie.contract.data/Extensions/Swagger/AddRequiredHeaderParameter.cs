@@ -15,7 +15,7 @@ namespace amorphie.contract.data.Extensions
 
             operation.Parameters.Add(new OpenApiParameter
             {
-                Name = AppHeaderConsts.Application,
+                Name = AppHeaderConsts.BusinessLine,
                 In = ParameterLocation.Header,
                 Required = false,
                 Description = "Indicates Mobile ON or Mobile Burgan separation."
@@ -35,6 +35,14 @@ namespace amorphie.contract.data.Extensions
                 In = ParameterLocation.Header,
                 Required = false,
                 Description = "Indicates client language code."
+            });
+
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = AppHeaderConsts.UserReference,
+                In = ParameterLocation.Header,
+                Required = false,
+                Description = "Indicates user reference."
             });
         }
     }

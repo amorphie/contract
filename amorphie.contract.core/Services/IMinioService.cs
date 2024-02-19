@@ -9,5 +9,7 @@ namespace amorphie.contract.core.Services
         //TODO: Daha sonra tek bir interface altında toplanacak. (Zeebe)
         Task UploadFile(byte[] data, string objectName, string contentType);
 
+        Task<ReleaseableFileStreamModel> DownloadFile(string objectName, CancellationToken cancellationToken);
+
     }
 }
