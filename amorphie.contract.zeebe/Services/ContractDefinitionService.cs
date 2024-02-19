@@ -286,6 +286,7 @@ namespace amorphie.contract.zeebe.Services
             }
         }
 
+        #region VALIDATION
         // private Validation MapContractValidation()
         // {
         //     var list = _ContractDefinitionDataModel.validationList.Select(x =>
@@ -316,6 +317,7 @@ namespace amorphie.contract.zeebe.Services
         //             }).ToList();
         //     _ContractDefinition.ContractValidations = list;
         // }
+        #endregion
         private void SetContractValidation()
         {
             var list = _ContractDefinitionDataModel.validationList.Select(x =>
@@ -416,10 +418,8 @@ namespace amorphie.contract.zeebe.Services
                 UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty).ToList());
                 await _dbContext.SaveChangesAsync();
 
-                //ENTITY PROPERTY UPDATE
-                // var oldEntityProperty = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty).ToList();
-
-                // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();
+                #region GENERIC_UPDATER
+                                // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();
                 // var newEntityPropertValueContract = MapEntityPropertyValue();
                 // Func<EntityPropertyValue,EntityPropertyValue,bool> conditionEntityPropertyValue = (exist,update) => exist.Data == update.Data;
                 // var entityPropertyValue = UpdateRelationships(oldEntityPropertyValueContract,newEntityPropertValueContract,conditionEntityPropertyValue);
@@ -464,6 +464,8 @@ namespace amorphie.contract.zeebe.Services
                 //VALIDATION UPDATE
                 //var contractValidation = _ContractDefinitionDataModel.validationList.First();
                 //var newValidationDecision = MapValidationDecision(_ContractDefinitionDataModel.validationList.First());
+                #endregion
+
 
             }
             catch (System.Exception ex)
