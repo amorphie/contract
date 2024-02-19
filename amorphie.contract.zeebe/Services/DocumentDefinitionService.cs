@@ -9,6 +9,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
+using amorphie.contract.zeebe.Helper;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -260,7 +261,7 @@ namespace amorphie.contract.zeebe.Services
                     .Select(e => e.Semver)
                     .OrderDescending()
                     .FirstOrDefault();
-
+                    
                 if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
                 {
                     throw new Exception($"Versiyon {highestVersion} dan daha büyük olmalı");
