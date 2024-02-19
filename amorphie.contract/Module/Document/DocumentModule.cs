@@ -74,7 +74,7 @@ public class DocumentModule
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         inputDto.SetUserReference(headerModels.UserReference);
-        
+
         var doc = await documentAppService.DownloadDocument(inputDto, token);
         httpContext.Response.ContentType = doc.ContentType;
         await doc.Stream.CopyToAsync(httpContext.Response.Body);
