@@ -7,7 +7,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dapr-debug-amorphie-contract",
-            "program": "${workspaceFolder}/amorphie.contract/bin/Debug/net7.0/amorphie.contract.dll",
+            "program": "${workspaceFolder}/amorphie.contract/bin/Debug/net8.0/amorphie.contract.dll",
             "args": [],
             "cwd": "${workspaceFolder}/amorphie.contract",
             "stopAtEntry": false,
@@ -24,14 +24,15 @@
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
                 "uriFormat": "%s/swagger/"
-            }
+            },
+            "requireExactSource" : false
         },
         {
             "name": "amorphie-contract-hub",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dapr-debug-amorphie-contract-hub",
-            "program": "${workspaceFolder}/amorphie.contract.hub/bin/Debug/net7.0/amorphie.contract.hub.dll",
+            "program": "${workspaceFolder}/amorphie.contract.hub/bin/Debug/net8.0/amorphie.contract.hub.dll",
             "args": [],
             "cwd": "${workspaceFolder}/amorphie.contract.hub",
             "stopAtEntry": false,
@@ -55,7 +56,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dapr-debug-amorphie-contract-zeebe",
-            "program": "${workspaceFolder}/amorphie.contract.zeebe/bin/Debug/net7.0/amorphie.contract.zeebe.dll",
+            "program": "${workspaceFolder}/amorphie.contract.zeebe/bin/Debug/net8.0/amorphie.contract.zeebe.dll",
             "args": [],
             "cwd": "${workspaceFolder}/amorphie.contract.zeebe",
             "stopAtEntry": false,

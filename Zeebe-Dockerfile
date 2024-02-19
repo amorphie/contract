@@ -6,6 +6,8 @@ USER amorphie-contract-zeebe-user
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+ENV DOTNET_NUGET_SIGNATURE_VERIFICATION=false
+
 COPY ["./amorphie.contract.zeebe/amorphie.contract.zeebe.csproj", "."]
 RUN dotnet restore "./amorphie.contract.zeebe.csproj"
 COPY . .

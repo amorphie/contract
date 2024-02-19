@@ -159,21 +159,27 @@ namespace amorphie.contract.application
 
         public async Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
         {
-            string userReference = inputDto.GetUserReference();
 
-            var hasDocumentCustomer = await _dbContext.Customer
-                 .Where(c => c.DocumentList != null &&
-                             c.Reference == userReference &&
-                             c.DocumentList.Any(d => d.DocumentContent.MinioObjectName == inputDto.ObjectName))
-                 .AnyAsync();
-
-            if (!hasDocumentCustomer)
+            if (Guid.TryParse(inputDto.ObjectName, out Guid contentId))
             {
-                throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
-            }
+                var userReference = inputDto.GetUserReference();
 
-            using var res = await _minioService.DownloadFile(inputDto.ObjectName, cancellationToken);
-            return res;
+                var customerDoc = await _dbContext.Document.FirstOrDefaultAsync(
+                   c => c.Customer != null && c.Customer.Reference == userReference && c.DocumentContentId == contentId
+                );
+
+                if (customerDoc is null)
+                {
+                    throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
+                }
+
+                var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
+                return res;
+
+            }
+            else
+                throw new FormatException("ObjectName is not in a valid Guid format.");
+
         }
     }
 
