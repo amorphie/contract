@@ -4,6 +4,7 @@ using amorphie.core.Base;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace amorphie.contract.data.Middleware
 {
@@ -79,6 +80,8 @@ namespace amorphie.contract.data.Middleware
                 statusCode = 400;
                 errorMessage = "Invalid argument";
             }
+
+            Log.Error(ex, "An unhandled exception has occurred. Message: {Message} Request path: {Path}, Query string: {QueryString}", ex.Message, httpContext.Request.Path, httpContext.Request.QueryString);
 
             httpContext.Response.StatusCode = statusCode;
 
