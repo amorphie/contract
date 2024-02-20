@@ -17,6 +17,7 @@ namespace amorphie.contract.application.Customer
     {
         Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
+        Task<bool> DeleteAllDocuments(string reference, CancellationToken cts);
     }
 
     public class CustomerAppService : ICustomerAppService
@@ -246,6 +247,30 @@ namespace amorphie.contract.application.Customer
             });
 
             return (await Task.WhenAll(responseTasks)).ToList();
+        }
+
+        public async Task<bool> DeleteAllDocuments(string reference, CancellationToken cts)
+        {
+            try
+            {
+                var customerIdsToDelete = await _dbContext.Customer
+                                        .Where(c => c.Reference == reference)
+                                        .Select(c => c.Id)
+                                        .ToListAsync();
+
+                var documentsToDelete = await _dbContext.Document
+                                        .Where(d => customerIdsToDelete.Contains(d.CustomerId))
+                                        .ToListAsync();
+
+                _dbContext.Document.RemoveRange(documentsToDelete);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                return false;
+            }
+
         }
 
         public class DocumentObject
