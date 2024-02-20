@@ -8,16 +8,19 @@ namespace amorphie.contract.application.Customer.Request
         public string? Code { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-        public string Reference { get; set; }
         private string? _lang;
         private EBankEntity _bankEntity;
 
-        public void SetHeaderParameters(string langCode, EBankEntity bankEntity)
+        private string _userReference;
+
+        public void SetHeaderParameters(string langCode, EBankEntity bankEntity, string userReference)
         {
+            if (String.IsNullOrEmpty(userReference))
+                throw new ArgumentNullException("User_Reference cannot be null");
+
             _lang = langCode;
             _bankEntity = bankEntity;
+            _userReference = userReference;
         }
 
         public string GetLanguageCode()
@@ -28,6 +31,11 @@ namespace amorphie.contract.application.Customer.Request
         public EBankEntity GetBankEntityCode()
         {
             return _bankEntity;
+        }
+
+        public string GetUserReference()
+        {
+            return _userReference;
         }
     }
 }

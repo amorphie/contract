@@ -91,13 +91,10 @@ public class CustomerAppServiceTests
 
         var inputDto = new GetCustomerDocumentsByContractInputDto
         {
-            Code = "test",
-            Reference = "123456",
-            Page = 0,
-            PageSize = 10
+            Code = "test"
         };
 
-        inputDto.SetHeaderParameters("tr-TR", core.Enum.EBankEntity.on);
+        inputDto.SetHeaderParameters("tr-TR", core.Enum.EBankEntity.on, "123");
 
         var cancellationToken = new CancellationToken();
 

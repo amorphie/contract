@@ -51,8 +51,10 @@ namespace amorphie.contract.application.Customer
 
         public async Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
+            var userReference = inputDto.GetUserReference();
+
             var contractQuery = _dbContext!.ContractDefinition.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).AsQueryable();
-            var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == inputDto.Reference).AsQueryable();
+            var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
 
 
@@ -66,8 +68,8 @@ namespace amorphie.contract.application.Customer
                 documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
             }
 
-            var contractModels = await contractQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize)
-                 .AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
+            var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
+
             var documents = await documentQuery.Select(x => new DocumentForMinioObject
             {
                 Id = x.Id,
@@ -215,9 +217,7 @@ namespace amorphie.contract.application.Customer
 
         public async Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
-            var documentsQuery = _dbContext!.Document.Where(x => x.Customer.Reference == inputDto.Reference).AsQueryable();
-
-            //documentsQuery = ContractHelperExtensions.LikeWhere(documentsQuery, inputDto.Code);
+            var documentsQuery = _dbContext!.Document.Where(x => x.Customer.Reference == inputDto.GetUserReference()).AsQueryable();
 
             if (inputDto.StartDate.HasValue)
             {
@@ -229,7 +229,7 @@ namespace amorphie.contract.application.Customer
                 documentsQuery = documentsQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
             }
 
-            var documents = await documentsQuery.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToListAsync(token);
+            var documents = await documentsQuery.ToListAsync(token);
 
             var responseTasks = documents.Select(async x =>
             {

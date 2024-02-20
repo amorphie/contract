@@ -31,7 +31,7 @@ namespace amorphie.contract.Module.Customer
         async ValueTask<IResult> GetDocumentsByContracts([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
             var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-            inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity);
+            inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity, headerModels.UserReference);
 
             var serviceResponse = await customerAppService.GetDocumentsByContracts(inputDto, token);
 
@@ -40,6 +40,9 @@ namespace amorphie.contract.Module.Customer
 
         async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
+            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+            inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity, headerModels.UserReference);
+
             var response = await customerAppService.GetAllDocuments(inputDto, token);
 
             return Results.Ok(response);
