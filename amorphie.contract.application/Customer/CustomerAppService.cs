@@ -261,7 +261,7 @@ namespace amorphie.contract.application.Customer
                 var documentsToDelete = await _dbContext.Document
                                         .Where(d => customerIdsToDelete.Contains(d.CustomerId))
                                         .ToListAsync();
-                
+
                 _dbContext.Document.RemoveRange(documentsToDelete);
                 await _dbContext.SaveChangesAsync();
                 return true;
@@ -270,7 +270,7 @@ namespace amorphie.contract.application.Customer
             {
                 return false;
             }
-            
+
         }
 
         public class DocumentObject
