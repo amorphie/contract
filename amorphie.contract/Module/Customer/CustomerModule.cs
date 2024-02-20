@@ -26,6 +26,7 @@ namespace amorphie.contract.Module.Customer
         {
             routeGroupBuilder.MapGet("get-documents-by-contracts", GetDocumentsByContracts);
             routeGroupBuilder.MapGet("get-all-documents", GetDocuments);
+            routeGroupBuilder.MapDelete("delete-all-documents",DeleteDocuments);
         }
 
         async ValueTask<IResult> GetDocumentsByContracts([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
@@ -41,6 +42,13 @@ namespace amorphie.contract.Module.Customer
         async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
             var response = await customerAppService.GetAllDocuments(inputDto, token);
+
+            return Results.Ok(response);
+        }
+
+        async ValueTask<IResult> DeleteDocuments([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [FromQuery] string reference)
+        {
+            var response = await customerAppService.DeleteAllDocuments(reference,token);
 
             return Results.Ok(response);
         }
