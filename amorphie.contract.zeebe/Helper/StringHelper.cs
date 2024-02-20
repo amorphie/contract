@@ -22,5 +22,24 @@ namespace amorphie.contract.zeebe.Helper
             }
             return 0;
         }
+
+        public static string GetHighestVersion(string[] versions)
+        {
+            if (versions == null || versions.Length == 0)
+            {
+                throw new ArgumentException("Version list cannot be null or empty.");
+            }
+
+            string highestVersion = versions[0];
+            foreach (var version in versions)
+            {
+                if (CompareVersions(version, highestVersion) > 0)
+                {
+                    highestVersion = version;
+                }
+            }
+
+            return highestVersion;
+        }
     }
 }
