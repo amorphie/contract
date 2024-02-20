@@ -316,9 +316,9 @@ namespace amorphie.contract.zeebe.Services
             {
                 DynamicToDocumentDefinitionDataModel();
                 var versionList = _dbContext.DocumentDefinition
-                                    .Select(x=>x.Semver)
+                                    .Select(x => x.Semver)
                                     .ToArray();
-                
+
                 var highestVersion = StringHelper.GetHighestVersion(versionList);
 
                 if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
