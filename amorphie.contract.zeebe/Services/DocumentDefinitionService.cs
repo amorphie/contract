@@ -256,16 +256,6 @@ namespace amorphie.contract.zeebe.Services
             try
             {
                 DynamicToDocumentDefinitionDataModel();
-
-                var highestVersion = _dbContext.DocumentDefinition
-                    .Select(e => e.Semver)
-                    .OrderDescending()
-                    .FirstOrDefault();
-
-                if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
-                {
-                    throw new Exception($"Versiyon {highestVersion} dan daha büyük olmalı");
-                }
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
@@ -325,7 +315,16 @@ namespace amorphie.contract.zeebe.Services
             try
             {
                 DynamicToDocumentDefinitionDataModel();
+                var versionList = _dbContext.DocumentDefinition
+                                    .Select(x=>x.Semver)
+                                    .ToArray();
+                
+                var highestVersion = StringHelper.GetHighestVersion(versionList);
 
+                if (StringHelper.CompareVersions(_documentDefinitionDataModel.data.versiyon, highestVersion) <= 0)
+                {
+                    throw new ArgumentException($"Versiyon {highestVersion} dan daha büyük olmalı");
+                }
                 var documentDefinition = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == _documentDefinitionDataModel.data.Code && x.Semver == _documentDefinitionDataModel.data.versiyon);
                 if (documentDefinition != null)
                 {
