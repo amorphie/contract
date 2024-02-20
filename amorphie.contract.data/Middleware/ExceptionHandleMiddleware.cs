@@ -54,6 +54,9 @@ namespace amorphie.contract.data.Middleware
 
                 if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.UserReference, out var userReference))
                     model.UserReference = userReference.FirstOrDefault();
+                else
+                    throw new ArgumentNullException($"{AppHeaderConsts.UserReference} cannot be null");
+                    
 
                 httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model;
 
