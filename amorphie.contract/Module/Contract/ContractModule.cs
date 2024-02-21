@@ -27,12 +27,12 @@ public class ContractModule
 
     }
 
-    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, 
+    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
     CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
-        
+
 
         var response = await contractAppService.Instance(input, token);
         if (response is null)

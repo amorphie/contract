@@ -18,13 +18,15 @@ namespace amorphie.contract.application
         public string DocumentVersion { get; set; }
         public string? Reference { get; private set; }
         public string? Owner { get; private set; }
-        public void SetHeaderParameters(HeaderFilterModel headerFilterModel){
-            Reference =headerFilterModel.UserReference;
-            Owner =headerFilterModel.UserReference;
+        public void SetHeaderParameters(HeaderFilterModel headerFilterModel)
+        {
+            Reference = headerFilterModel.UserReference;
+            Owner = headerFilterModel.UserReference;
         }
-         public void SetHeaderParameters(string userReference){
-            Reference =userReference;
-            Owner =userReference;
+        public void SetHeaderParameters(string userReference)
+        {
+            Reference = userReference;
+            Owner = userReference;
         }
         public override string ToString()
         {

@@ -115,7 +115,7 @@ namespace amorphie.contract.application
             {
                 // var content = _templateEngineService.GetRenderInstance(input.FileContext).Result.ToString().Trim('\"');
                 var content = await GetRenderInstance(input.FileContext);
-                content=  content.Trim('\"');
+                content = content.Trim('\"');
                 fileByteArray = Convert.FromBase64String(content);//TODO: SubFlow için düzenle
             }
             else

@@ -10,11 +10,13 @@ namespace amorphie.contract.application.Contract.Request
         public string? LangCode { get; private set; }
 
         public EBankEntity? EBankEntity { get; private set; }
-        public void SetHeaderParameters(string userReference){
-            Reference =userReference;
+        public void SetHeaderParameters(string userReference)
+        {
+            Reference = userReference;
         }
-        public void SetHeaderParameters(HeaderFilterModel headerFilterModel){
-            Reference =headerFilterModel.UserReference;
+        public void SetHeaderParameters(HeaderFilterModel headerFilterModel)
+        {
+            Reference = headerFilterModel.UserReference;
             LangCode = headerFilterModel.LangCode;
             EBankEntity = headerFilterModel.EBankEntity;
         }
@@ -23,5 +25,5 @@ namespace amorphie.contract.application.Contract.Request
         //public Guid ProcessId { get; set; }
         //public ContractProcess Process { get; set; } = default!;
     }
-    
+
 }

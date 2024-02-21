@@ -9,7 +9,7 @@ namespace amorphie.contract.core.Model.Proxy
         {
         }
 
- public string Name { get; set; }
+        public string Name { get; set; }
         [Newtonsoft.Json.JsonProperty("render-id")]
         [JsonPropertyName("render-id")]
         public Guid RenderId { get; set; }
