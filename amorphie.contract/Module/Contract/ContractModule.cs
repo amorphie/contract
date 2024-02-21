@@ -27,12 +27,12 @@ public class ContractModule
 
     }
 
-    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
+    async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService, 
+    CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-
-        input.EBankEntity = headerModels.EBankEntity;
-        input.LangCode = headerModels.LangCode;
+        input.SetHeaderParameters(headerModels);
+        
 
         var response = await contractAppService.Instance(input, token);
         if (response is null)
@@ -41,17 +41,15 @@ public class ContractModule
         return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [AsParameters] ContractInstanceSoftInputDto input, HttpContext httpContext)
+    [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
         //
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         var inputQ = new ContractInstanceInputDto
         {
             ContractName = input.ContractName,
-            Reference = input.Reference,
-            EBankEntity = headerModels.EBankEntity,
-            LangCode = headerModels.LangCode
         };
+        inputQ.SetHeaderParameters(headerModels);
 
         var response = await contractAppService.InstanceState(inputQ, token);
         return Results.Ok(response);

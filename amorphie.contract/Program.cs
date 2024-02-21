@@ -13,6 +13,7 @@ using amorphie.contract.application;
 using Elastic.Apm.NetCoreAll;
 using amorphie.contract.data.Middleware;
 using amorphie.contract.data.Extensions;
+using amorphie.contract.application.TemplateEngine;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 builder.Services.AddSingleton<IMinioService, MinioService>();
+builder.Services.AddSingleton<ITemplateEngineService, TemplateEngineService>();
 var assemblies = new Assembly[]
                 {
                       typeof(DocumentDefinitionValidator).Assembly,

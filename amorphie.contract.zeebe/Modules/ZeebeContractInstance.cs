@@ -114,8 +114,8 @@ namespace amorphie.contract.zeebe.Modules
                 var contract = new ContractInstanceInputDto
                 {
                     ContractName = contractName,
-                    Reference = reference,
                 };
+                contract.SetHeaderParameters(reference);;
                 var InstanceDto = contractAppService.Instance(contract, token).Result;
                 messageVariables.Variables.Add("XContractInstance", InstanceDto);
 

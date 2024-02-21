@@ -1,3 +1,5 @@
+using amorphie.contract.application.TemplateEngine;
+using amorphie.contract.core;
 using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Enum;
@@ -15,6 +17,7 @@ namespace amorphie.contract.application
     {
         private readonly ProjectDbContext _dbContext;
         private readonly IMinioService _minioService;
+        private readonly ITemplateEngineService _templateEngineService;
 
         public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService)
         {
@@ -108,6 +111,13 @@ namespace amorphie.contract.application
             {
                 fileByteArray = Convert.FromBase64String(input.FileContext);//TODO: SubFlow için düzenle
             }
+            else if (input.FileContextType == "TemplateRender")
+            {
+                // var content = _templateEngineService.GetRenderInstance(input.FileContext).Result.ToString().Trim('\"');
+                var content = await GetRenderInstance(input.FileContext);
+                content=  content.Trim('\"');
+                fileByteArray = Convert.FromBase64String(content);//TODO: SubFlow için düzenle
+            }
             else
             {
                 fileByteArray = Convert.FromBase64String(input.FileContext);
@@ -116,6 +126,21 @@ namespace amorphie.contract.application
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
 
             return new Result(Status.Success, "OK");
+        }
+        public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
+        {
+            using (HttpClient client = new HttpClient())
+            {
+
+                HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+
+            }
+            return "Template engine error";
         }
 
         public async Task<List<RootDocumentDto>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)

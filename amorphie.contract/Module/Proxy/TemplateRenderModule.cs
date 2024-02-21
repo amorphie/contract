@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using amorphie.contract.Models.Proxy;
 using amorphie.contract.core;
 using amorphie.contract.core.Model.Proxy;
+using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -28,13 +30,30 @@ namespace amorphie.contract.Module.Proxy
 
         async ValueTask<IResult> RenderHtml(
           [FromServices] ProjectDbContext context,
-          [FromBody] TemplateRenderRequestModel requestModel,
+          [FromBody] TemplateRenderRequestModel requestModel, HttpContext httpContext,
           CancellationToken cancellationToken)
         {
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
+                    var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+
+                    if (requestModel.RenderId == Guid.Empty)
+                    {
+                        requestModel.RenderId = Guid.NewGuid();
+                    }
+                    if (string.IsNullOrEmpty(requestModel.RenderData.ToString()))
+                    {
+                        requestModel.RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModels.UserReference + "\"}, \"customerIdentity\":" + headerModels.UserReference + "}";
+                        requestModel.RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModels.UserReference + "\"}, \"customerIdentity\":" + headerModels.UserReference + "}";
+                    }
+                    if (string.IsNullOrEmpty(requestModel.Identity))
+                    {
+                        requestModel.Identity = headerModels.UserReference;
+                    }
+
+
                     string modelJson = JsonSerializer.Serialize(requestModel);
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
@@ -53,7 +72,7 @@ namespace amorphie.contract.Module.Proxy
 
                         await context.TemplateRender.AddAsync(renderEntity);
                         context.SaveChanges();
-                        return Results.Ok(responseBody.Trim('\"'));
+                        return Results.Ok(new { requestModel.RenderId, Content = responseBody.Trim('\"') });
                     }
                     else
                     {
@@ -72,13 +91,28 @@ namespace amorphie.contract.Module.Proxy
 
         async ValueTask<IResult> RenderPdf(
           [FromServices] ProjectDbContext context,
-          [FromBody] TemplateRenderRequestModel requestModel,
+          [FromBody] TemplateRenderRequestModel requestModel, HttpContext httpContext,
           CancellationToken cancellationToken)
         {
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
+                    var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+
+                    if (requestModel.RenderId == Guid.Empty)
+                    {
+                        requestModel.RenderId = Guid.NewGuid();
+                    }
+                    if (requestModel.RenderData == null || string.IsNullOrEmpty(requestModel.RenderData.ToString()))
+                    {
+                        requestModel.RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModels.UserReference + "\"}, \"customerIdentity\":" + headerModels.UserReference + "}";
+                        requestModel.RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModels.UserReference + "\"}, \"customerIdentity\":" + headerModels.UserReference + "}";
+                    }
+                    if (string.IsNullOrEmpty(requestModel.Identity))
+                    {
+                        requestModel.Identity = headerModels.UserReference;
+                    }
                     string modelJson = JsonSerializer.Serialize(requestModel);
 
                     HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
@@ -97,7 +131,7 @@ namespace amorphie.contract.Module.Proxy
 
                         await context.TemplateRender.AddAsync(renderEntity);
                         context.SaveChanges();
-                        return Results.Ok(responseBody.Trim('\"'));
+                        return Results.Ok(new { TemplateRenderRequestModel = requestModel, Content = responseBody.Trim('\"') });
                     }
                     else
                     {

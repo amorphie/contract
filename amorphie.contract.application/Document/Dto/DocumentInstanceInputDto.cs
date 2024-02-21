@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.application
 {
@@ -15,8 +16,16 @@ namespace amorphie.contract.application
         public string FileName { get; set; }
         public string DocumentCode { get; set; }
         public string DocumentVersion { get; set; }
-        public string Reference { get; set; }
-        public string Owner { get; set; }
+        public string? Reference { get; private set; }
+        public string? Owner { get; private set; }
+        public void SetHeaderParameters(HeaderFilterModel headerFilterModel){
+            Reference =headerFilterModel.UserReference;
+            Owner =headerFilterModel.UserReference;
+        }
+         public void SetHeaderParameters(string userReference){
+            Reference =userReference;
+            Owner =userReference;
+        }
         public override string ToString()
         {
             return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + FileName;
