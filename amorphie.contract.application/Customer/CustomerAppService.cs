@@ -54,8 +54,8 @@ namespace amorphie.contract.application.Customer
         {
             var userReference = inputDto.GetUserReference();
 
-            var contractQuery = _dbContext!.ContractDefinition.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).AsQueryable();
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
+            var contractQuery = _dbContext!.ContractDefinition.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).AsQueryable();
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
 
 
@@ -69,8 +69,6 @@ namespace amorphie.contract.application.Customer
                 documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
             }
 
-            var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
-
             var documents = await documentQuery.Select(x => new DocumentForMinioObject
             {
                 Id = x.Id,
@@ -80,6 +78,12 @@ namespace amorphie.contract.application.Customer
             })
             .AsSplitQuery()
             .ToListAsync(token);
+
+            contractQuery = contractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+            ||
+            x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
+
+            var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
 
             foreach (var model in contractModels)
             {
