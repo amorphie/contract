@@ -67,6 +67,7 @@ public class ProjectDbContext : DbContext
 
     #region Document
     public DbSet<Document> Document { get; set; }
+    public DbSet<DocumentInstanceEntityProperty> DocumentInstanceEntityProperty {get; set;}
     public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
     public DbSet<DocumentAllowedClientDetail> DocumentAllowedClientDetail { get; set; }
 

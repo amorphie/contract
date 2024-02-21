@@ -17,6 +17,7 @@ namespace amorphie.contract.data.Configurations.Definition
             NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "DocumentDefinition",
+                "DocumentInstanceEntityPropertys",
                 "DocumentContent",
                 "Status",
                 "Customer",

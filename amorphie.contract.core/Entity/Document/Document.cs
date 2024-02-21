@@ -28,6 +28,7 @@ namespace amorphie.contract.core.Entity.Document
         // [ForeignKey("StatusId")]
 
         public EStatus Status { get; set; } = default!;
+        public ICollection<DocumentInstanceEntityProperty>? DocumentInstanceEntityPropertys { get; set; } = new List<DocumentInstanceEntityProperty>();
         // [Required]
         // public Guid StatusId { get; set; }
         public Guid CustomerId { get; set; }
