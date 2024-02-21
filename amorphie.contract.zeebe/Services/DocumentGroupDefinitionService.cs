@@ -55,6 +55,9 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetDocumentGroupDetail()
         {
+            var asd = _dbContext.DocumentDefinition.ToList();
+            var tt = _dbContext.DocumentDefinition.Where(y => y.Semver == "1.0.0" && y.Code == "doc-kvkk-test").Select(y => y.Id).FirstOrDefault();
+
             var documentGroupDetail = _documentDefinitionDataModel.documents.Select(x => new DocumentGroupDetail
             {
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.document.code).Select(y => y.Id).FirstOrDefault(),
@@ -126,14 +129,28 @@ namespace amorphie.contract.zeebe.Services
                     }
                 }
 
+                foreach (var detailObject in _documentGroup.DocumentGroupDetails)
+                {
+                    var entity = documentGroup.DocumentGroupDetails.Where(x => x.DocumentDefinitionId == detailObject.DocumentDefinitionId).FirstOrDefault();
+
+                    if (entity is null)
+                    {
+                        _dbContext.Entry(detailObject).State = EntityState.Added;
+                        documentGroup.DocumentGroupDetails.Add(detailObject);
+                    }
+                }
+
                 var removeLanguages = documentGroup.DocumentGroupLanguageDetail.Where(x => !_documentGroup.DocumentGroupLanguageDetail.Select(z => z.MultiLanguage.LanguageTypeId).ToList().Contains(x.MultiLanguage.LanguageTypeId)).ToList();
                 documentGroup.DocumentGroupLanguageDetail = documentGroup.DocumentGroupLanguageDetail.Except(removeLanguages).ToList();
+
+                var removeDetails = documentGroup.DocumentGroupDetails.Where(x => !_documentGroup.DocumentGroupDetails.Select(z => z.DocumentDefinitionId).ToList().Contains(x.DocumentDefinitionId)).ToList();
+                documentGroup.DocumentGroupDetails = documentGroup.DocumentGroupDetails.Except(removeDetails).ToList();
 
                 _dbContext.SaveChanges();
 
                 return _documentGroup;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
