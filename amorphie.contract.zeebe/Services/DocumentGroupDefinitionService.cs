@@ -55,9 +55,6 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetDocumentGroupDetail()
         {
-            var asd = _dbContext.DocumentDefinition.ToList();
-            var tt = _dbContext.DocumentDefinition.Where(y => y.Semver == "1.0.0" && y.Code == "doc-kvkk-test").Select(y => y.Id).FirstOrDefault();
-
             var documentGroupDetail = _documentDefinitionDataModel.documents.Select(x => new DocumentGroupDetail
             {
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.document.code).Select(y => y.Id).FirstOrDefault(),
