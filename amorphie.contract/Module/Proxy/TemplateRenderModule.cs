@@ -72,7 +72,7 @@ namespace amorphie.contract.Module.Proxy
 
                         await context.TemplateRender.AddAsync(renderEntity);
                         context.SaveChanges();
-                       return Results.Ok(new
+                        return Results.Ok(new
                         {
                             Data = new { TemplateRenderRequestModel = requestModel, Content = responseBody.Trim('\"') },
                             Success = true,

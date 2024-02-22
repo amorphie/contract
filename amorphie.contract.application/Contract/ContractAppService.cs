@@ -41,7 +41,7 @@ namespace amorphie.contract.application.Contract
             // var ss = await _dbContext.ContractDefinition.Include(x=>x.ContractDocumentDetails).FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)
             {
-                throw new ArgumentNullException("not contract" );
+                throw new ArgumentNullException("not contract");
             }
 
             var documentList = contractDefinition.ContractDocumentDetails

@@ -34,12 +34,13 @@ public class ContractModule
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
-        var response =   await contractAppService.Instance(input, token);
-       
-        return Results.Ok( new {
+        var response = await contractAppService.Instance(input, token);
+
+        return Results.Ok(new
+        {
             Data = response,
             Success = true,
-            ErrorMessage="",
+            ErrorMessage = "",
         });
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
@@ -54,10 +55,11 @@ public class ContractModule
         inputQ.SetHeaderParameters(headerModels);
 
         var response = await contractAppService.InstanceState(inputQ, token);
-          return Results.Ok( new {
+        return Results.Ok(new
+        {
             Data = response,
             Success = true,
-            ErrorMessage="",
+            ErrorMessage = "",
         });
     }
 

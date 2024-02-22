@@ -66,10 +66,11 @@ public class DocumentModule
         input.SetHeaderParameters(headerModels);
         var response = await documentAppService.Instance(input);
 
-           return Results.Ok( new {
+        return Results.Ok(new
+        {
             Data = response,
             Success = true,
-            ErrorMessage="",
+            ErrorMessage = "",
         });
     }
 

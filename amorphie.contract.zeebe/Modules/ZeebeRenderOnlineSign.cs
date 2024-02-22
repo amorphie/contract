@@ -122,8 +122,8 @@ namespace amorphie.contract.zeebe.Modules
                         SemanticVersion = contractDocument.MinVersion,
                         Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
                         RenderId = Guid.NewGuid(),
-                        RenderData = "{\"customer\":{\"customerIdentity\":\""+reference+"\"}, \"customerIdentity\":"+reference+"}",
-                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\""+reference+"\"}, \"customerIdentity\":"+reference+"}",
+                        RenderData = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
+                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
                         // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
                         ProcessName = nameof(ZeebeRenderOnlineSign),
                         Identity = reference,
@@ -235,20 +235,20 @@ namespace amorphie.contract.zeebe.Modules
     )
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            
+
             string reference = "";
-            if (body.ToString().IndexOf("ContractInstance") !=-1)
+            if (body.ToString().IndexOf("ContractInstance") != -1)
             {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference")!=-1)
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
                 {
                     reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 }
             }
             if (string.IsNullOrEmpty(reference))
             {
-                if (body.ToString().IndexOf("Headers") !=-1)
+                if (body.ToString().IndexOf("Headers") != -1)
                 {
-                    if (body.GetProperty("Headers").ToString().IndexOf("user_reference")!=-1)
+                    if (body.GetProperty("Headers").ToString().IndexOf("user_reference") != -1)
                     {
                         reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
                     }
