@@ -17,6 +17,8 @@ namespace amorphie.contract.application
         public string DocumentVersion { get; set; }
         public string Reference { get; set; }
         public string Owner { get; set; }
+
+        public List<EntityPropertyDto>? EntityPropertyDtos { get; set; }
         public override string ToString()
         {
             return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + FileName;

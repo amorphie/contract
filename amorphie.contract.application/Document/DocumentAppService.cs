@@ -96,6 +96,40 @@ namespace amorphie.contract.application
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
 
+            if(input.EntityPropertyDtos is not null)
+            {
+                var entityProperty = new core.Entity.EAV.EntityProperty();
+                foreach (var incomingEntityProperty in input.EntityPropertyDtos)
+                {
+                    if(string.IsNullOrEmpty(incomingEntityProperty.Code) || string.IsNullOrEmpty(incomingEntityProperty.EntityPropertyValue))
+                    {
+                        continue;
+                    }
+                    var existEntityProperty = _dbContext.EntityProperty.FirstOrDefault(x=>x.Code == incomingEntityProperty.Code);
+                    if(existEntityProperty is null)
+                        entityProperty.Code = incomingEntityProperty.Code;
+                    else
+                        entityProperty.Code = existEntityProperty.Code;
+                    var existEntityPropertyValue = _dbContext.EntityPropertyValue.FirstOrDefault(x=>x.Data == incomingEntityProperty.EntityPropertyValue);
+                    if(existEntityPropertyValue is null)
+                    {
+                        entityProperty.EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue{
+                             Data = incomingEntityProperty.EntityPropertyValue
+                        };
+                    }
+                    else
+                        entityProperty.EntityPropertyValue = existEntityPropertyValue;
+                    var documentInstanceEntityProperty = _dbContext.DocumentInstanceEntityProperty.FirstOrDefault(x=> x.EntityProperty.Code == incomingEntityProperty.Code);
+                    if(documentInstanceEntityProperty is null)
+                    {
+                        document.DocumentInstanceEntityPropertys.Add( new DocumentInstanceEntityProperty{
+                            DocumentId = document.Id,
+                            EntityProperty = entityProperty
+                        });
+                    }
+                }
+            }
+
             _dbContext.Document.Add(document);
             _dbContext.SaveChanges();
 
