@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 using amorphie.contract.data.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
@@ -82,8 +83,39 @@ namespace amorphie.contract.zeebe.Modules
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
+        static IResult ContractInstanceState(
+     [FromBody] dynamic body,
+    [FromServices] ProjectDbContext dbContext,
+     HttpRequest request,
+     HttpContext httpContext,
+     [FromServices] DaprClient client
+     , IConfiguration configuration,
+     [FromServices] IContractAppService contractAppService, CancellationToken token
+ )
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var contractName = body.GetProperty("ContractInstanceState").GetProperty("contractName").ToString();
+            var reference = body.GetProperty("ContractInstanceState").GetProperty("reference").ToString();
+            var language = body.GetProperty("ContractInstanceState").GetProperty("language").ToString();
+            string bankEntity = body.GetProperty("ContractInstanceState").GetProperty("bankEntity").ToString();
+            var contract = new ContractInstanceInputDto
+            {
+                ContractName = contractName,
+            };
+            contract.SetHeaderParameters(new HeaderFilterModel
+            {
+                UserReference = reference,
+                LangCode = language,
+                EBankEntity = EBankEntity.on
+            });
 
 
+            var response = contractAppService.InstanceState(contract, token);
+            messageVariables.Variables.Add("ContractInstanceStateResult", response);
+
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
         static IResult ContractInstance(
           [FromBody] dynamic body,
          [FromServices] ProjectDbContext dbContext,
@@ -111,11 +143,19 @@ namespace amorphie.contract.zeebe.Modules
                 // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
                 string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                string bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
                 var contract = new ContractInstanceInputDto
                 {
                     ContractName = contractName,
-                    Reference = reference,
                 };
+                contract.SetHeaderParameters(new HeaderFilterModel
+                {
+                    UserReference = reference,
+                    LangCode = language,
+                    EBankEntity = EBankEntity.on
+                });
+
                 var InstanceDto = contractAppService.Instance(contract, token).Result;
                 messageVariables.Variables.Add("XContractInstance", InstanceDto);
 

@@ -258,14 +258,15 @@ namespace amorphie.contract.zeebe.Modules
                         Id = i.RenderId,
                         DocumentCode = i.DocumentDefinitionCode,
                         DocumentVersion = i.SemanticVersion,
-                        Reference = reference,
-                        Owner = reference,
+                        // Reference = reference,
+                        // Owner = reference,
                         FileName = i.DocumentDefinitionCode + ".pdf", //TODO: Degişecek,
                         FileType = "application/pdf",
                         FileContextType = "ZeebeRender",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
                         FileContext = GetRenderInstance(i.RenderId.ToString()).Result.ToString().Trim('\"'),
 
                     };
+                    input.SetHeaderParameters(reference);
                     var response = documentAppService.Instance(input);
 
                 }
