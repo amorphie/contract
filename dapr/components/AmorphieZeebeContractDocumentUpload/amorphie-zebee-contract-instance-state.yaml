@@ -9,7 +9,7 @@ spec:
   - name: jobType
     value: contractinstancestate
   - name: gatewayAddr
-    value: 10.180.141.16:30499 
+    value: localhost:26500
   - name: gatewayKeepAlive
     value: 45s
   - name: usePlainTextConnection
