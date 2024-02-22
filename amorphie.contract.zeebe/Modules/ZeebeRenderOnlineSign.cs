@@ -113,23 +113,21 @@ namespace amorphie.contract.zeebe.Modules
                 {
                     PropertyNameCaseInsensitive = true,
                 };
-                ContractDefinitionDto contractDto = JsonSerializer.Deserialize<ContractDefinitionDto>(contractInstance, options);
+                ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options);
 
                 if (contractDto != null)
                 {
-                    var contractDocument = contractDto.ContractDocumentDetails.Select(contractDocument => new ApprovedTemplateRenderRequestModel
+                    var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateRenderRequestModel
                     {
                         SemanticVersion = contractDocument.MinVersion,
-                        Name = contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails
-                                    .FirstOrDefault(a => a.LanguageType == language)?.Code
-                                    ?? contractDocument.DocumentDefinition.DocumentOnlineSing.DocumentTemplateDetails.FirstOrDefault()?.Code,
+                        Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
                         RenderId = Guid.NewGuid(),
                         RenderData = JsonSerializer.Serialize(new { x = "a" }),
                         RenderDataForLog = JsonSerializer.Serialize(new { x = "a" }),
                         // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
                         ProcessName = nameof(ZeebeRenderOnlineSign),
                         Identity = reference,
-                        DocumentDefinitionCode = contractDocument.DocumentDefinition.Code,
+                        DocumentDefinitionCode = contractDocument.Code,
                         Approved = false,
 
                     }).ToList();

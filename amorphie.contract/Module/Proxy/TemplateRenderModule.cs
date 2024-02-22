@@ -72,7 +72,12 @@ namespace amorphie.contract.Module.Proxy
 
                         await context.TemplateRender.AddAsync(renderEntity);
                         context.SaveChanges();
-                        return Results.Ok(new { requestModel.RenderId, Content = responseBody.Trim('\"') });
+                       return Results.Ok(new
+                        {
+                            Data = new { TemplateRenderRequestModel = requestModel, Content = responseBody.Trim('\"') },
+                            Success = true,
+                            ErrorMessage = "",
+                        });
                     }
                     else
                     {
@@ -131,7 +136,12 @@ namespace amorphie.contract.Module.Proxy
 
                         await context.TemplateRender.AddAsync(renderEntity);
                         context.SaveChanges();
-                        return Results.Ok(new { TemplateRenderRequestModel = requestModel, Content = responseBody.Trim('\"') });
+                        return Results.Ok(new
+                        {
+                            Data = new { TemplateRenderRequestModel = requestModel, Content = responseBody.Trim('\"') },
+                            Success = true,
+                            ErrorMessage = "",
+                        });
                     }
                     else
                     {

@@ -59,17 +59,18 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResponse> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
+    async ValueTask<IResult> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
     CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
         var response = await documentAppService.Instance(input);
 
-        return new Response
-        {
-            Result = response
-        };
+           return Results.Ok( new {
+            Data = response,
+            Success = true,
+            ErrorMessage="",
+        });
     }
 
     async ValueTask DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
