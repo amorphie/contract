@@ -66,6 +66,8 @@ namespace amorphie.contract.application
     {
         public string Code { get; set; }
         public string LanguageType { get; set; }
+        public string Version { get; set; } = default!;
+
     }
     public class DocumentFormatDetailDto
     {

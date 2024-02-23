@@ -46,7 +46,8 @@ namespace amorphie.contract.application
 
             CreateMap<DocumentTemplateDetailsDto, DocumentTemplateDetail>()
                 .ForPath(dest => dest.DocumentTemplate.Code, opt => opt.MapFrom(src => src.Code))
-                .ForPath(dest => dest.DocumentTemplate.LanguageType.Code, opt => opt.MapFrom(src => src.LanguageType)).ReverseMap();
+                .ForPath(dest => dest.DocumentTemplate.LanguageType.Code, opt => opt.MapFrom(src => src.LanguageType))
+                .ForPath(dest => dest.DocumentTemplate.Version, opt => opt.MapFrom(src => src.Version)).ReverseMap();
 
             CreateMap<DocumentOnlineSing, DocumentOnlineSingDto>()
                 .ForMember(dest => dest.DocumentAllowedClientDetails, opt => opt.MapFrom(src =>
