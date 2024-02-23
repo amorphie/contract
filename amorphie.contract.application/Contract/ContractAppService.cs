@@ -4,7 +4,6 @@ using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using MongoDB.Driver.Core.Operations;
 
 namespace amorphie.contract.application.Contract
