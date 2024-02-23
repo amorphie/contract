@@ -4,6 +4,7 @@ using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using amorphie.contract.data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using MongoDB.Driver.Core.Operations;
 
 namespace amorphie.contract.application.Contract
@@ -11,7 +12,7 @@ namespace amorphie.contract.application.Contract
     public interface IContractAppService
     {
 
-        Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
+        Task<ContractInstanceDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
         Task<bool> InstanceState(ContractInstanceInputDto req, CancellationToken cts);
 
         Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
@@ -33,14 +34,14 @@ namespace amorphie.contract.application.Contract
             return contractDefinition;
         }
 
-        public async Task<ContractDefinitionDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
+        public async Task<ContractInstanceDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
             //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             // var ss = await _dbContext.ContractDefinition.Include(x=>x.ContractDocumentDetails).FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
             if (contractDefinition == null)
             {
-                return new ContractDefinitionDto { Status = "not contract" };
+                throw new ArgumentNullException("not contract");
             }
 
             var documentList = contractDefinition.ContractDocumentDetails
@@ -81,7 +82,35 @@ namespace amorphie.contract.application.Contract
             if (contractModel.ContractDocumentDetails.Count == 0)
                 contractModel.Status = EStatus.Completed.ToString();
 
-            return contractModel;
+            //TODO: Map ve linq sorgusunu buraya göre düzenle
+            var a = new ContractInstanceDto();
+            a.Code = contractModel.Code;
+            a.Status = contractModel.Status;
+            a.Document = new List<DocumentInstanceDto>();
+            foreach (var i in contractDocumentDetails)
+            {
+                var dto = new DocumentInstanceDto();
+                dto.MinVersion = i.MinVersion;
+                dto.IsRequired = i.Required;
+                dto.UseExisting = i.UseExisting;
+                dto.Code = i.DocumentDefinition.Code;
+                dto.Status = EStatus.InProgress.ToString();
+                dto.Name = i.DocumentDefinition.MultilanguageText.FirstOrDefault(x => x.Language == req.LangCode)?.Label
+           ?? i.DocumentDefinition.MultilanguageText.FirstOrDefault()?.Label;
+
+                dto.DocumentDetail.OnlineSing = new DocumentInstanceOnlineSingDto
+                {
+                    TemplateCode = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Code
+                           ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Code
+                };
+
+
+                a.Document.Add(dto);
+
+            }
+
+
+            return a;
         }
         public async Task<bool> InstanceState(ContractInstanceInputDto req, CancellationToken cts)
         {

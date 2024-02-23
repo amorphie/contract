@@ -89,9 +89,11 @@ namespace amorphie.contract.data.Middleware
             httpContext.Response.StatusCode = statusCode;
 
 
-            await httpContext.Response.WriteAsJsonAsync(new Response
+            await httpContext.Response.WriteAsJsonAsync(new
             {
-                Result = new Result(amorphie.core.Enums.Status.Error, errorMessage, ex.Message)
+                Data = default(string),
+                Success = false,
+                ErrorMessage = ex.Message,
             });
 
         }

@@ -23,12 +23,12 @@ public static class ZeebeMessageHelper
         messageVariables.Variables.Add("LastTransition", messageVariables.TransitionName);
         messageVariables.Variables.Add("Message", messageVariables.Message);
 
-        if (messageVariables.Success)
-            messageVariables.Variables.Add("Status", "OK");
-        else
-        {
-            messageVariables.Variables.Add("Status", "NOTOK");
-        }
+        // if (messageVariables.Success)
+        //     messageVariables.Variables.Add("Status", "OK");
+        // else
+        // {
+        //     messageVariables.Variables.Add("Status", "NOTOK");
+        // }
         dynamic targetObject = new System.Dynamic.ExpandoObject();
         targetObject.TriggeredBy = messageVariables.TriggeredBy;
         targetObject.TriggeredByBehalfOf = messageVariables.TriggeredByBehalfOf;

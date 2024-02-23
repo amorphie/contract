@@ -9,6 +9,8 @@ using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Enum;
+using amorphie.core.Base;
+using Microsoft.VisualBasic;
 
 namespace amorphie.contract;
 
@@ -32,13 +34,14 @@ public class ContractModule
     {
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
-
-
         var response = await contractAppService.Instance(input, token);
-        if (response is null)
-            return Results.NotFound();
 
-        return Results.Ok(response);
+        return Results.Ok(new
+        {
+            Data = response,
+            Success = true,
+            ErrorMessage = "",
+        });
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
     [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
@@ -52,7 +55,12 @@ public class ContractModule
         inputQ.SetHeaderParameters(headerModels);
 
         var response = await contractAppService.InstanceState(inputQ, token);
-        return Results.Ok(response);
+        return Results.Ok(new
+        {
+            Data = response,
+            Success = true,
+            ErrorMessage = "",
+        });
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };

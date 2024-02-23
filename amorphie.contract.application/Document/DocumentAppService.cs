@@ -1,3 +1,4 @@
+using System.Data;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity;
@@ -67,13 +68,13 @@ namespace amorphie.contract.application
             return response;
         }
 
-        public async Task<Result> Instance(DocumentInstanceInputDto input)
+        public async Task<bool> Instance(DocumentInstanceInputDto input)
         {
 
             var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
             if (docdef == null)
             {
-                return new Result(amorphie.core.Enums.Status.Error, "Document Code ve versiyona ait kayit bulunamadi!");
+                throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
@@ -125,7 +126,7 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
 
-            return new Result(Status.Success, "OK");
+            return true;
         }
         public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
         {
@@ -207,7 +208,7 @@ namespace amorphie.contract.application
     {
         public Task<List<RootDocumentDto>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
         public Task<List<RootDocumentDto>> GetAllDocumentAll(CancellationToken cancellationToken);
-        Task<Result> Instance(DocumentInstanceInputDto input);
+        Task<bool> Instance(DocumentInstanceInputDto input);
         Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
     }
 }
