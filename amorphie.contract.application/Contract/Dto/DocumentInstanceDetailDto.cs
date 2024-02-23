@@ -9,6 +9,7 @@
     public class DocumentInstanceOnlineSingDto
     {
         public string TemplateCode { get; set; }
+        public string Version { get; set; }
 
     }
     public class DocumentInstanceUploadDto
