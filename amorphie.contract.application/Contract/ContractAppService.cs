@@ -101,7 +101,7 @@ namespace amorphie.contract.application.Contract
                 {
                     TemplateCode = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Code
                            ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Code,
-                           Version=  i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Version
+                    Version = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Version
                            ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Version,
                 };
 
