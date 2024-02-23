@@ -35,7 +35,14 @@ namespace amorphie.contract.zeebe.Modules
                           operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                           return operation;
                       });
-
+            app.MapPost("/contractinstancestate", ContractInstanceState)
+                                 .Produces(StatusCodes.Status200OK)
+                                 .WithOpenApi(operation =>
+                                 {
+                                     operation.Summary = "Maps ContractInstance service worker on Zeebe";
+                                     operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+                                     return operation;
+                                 });
             app.MapPost("/timeoutcontract", TimeoutContract)
         .Produces(StatusCodes.Status200OK)
         .WithOpenApi(operation =>
@@ -83,15 +90,15 @@ namespace amorphie.contract.zeebe.Modules
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
-        static IResult ContractInstanceState(
-     [FromBody] dynamic body,
-    [FromServices] ProjectDbContext dbContext,
-     HttpRequest request,
-     HttpContext httpContext,
-     [FromServices] DaprClient client
-     , IConfiguration configuration,
-     [FromServices] IContractAppService contractAppService, CancellationToken token
- )
+        static async ValueTask<IResult> ContractInstanceState(
+    [FromBody] dynamic body,
+   [FromServices] ProjectDbContext dbContext,
+    HttpRequest request,
+    HttpContext httpContext,
+    [FromServices] DaprClient client
+    , IConfiguration configuration,
+    [FromServices] IContractAppService contractAppService, CancellationToken token
+)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var contractName = body.GetProperty("ContractInstanceState").GetProperty("contractName").ToString();
@@ -110,7 +117,7 @@ namespace amorphie.contract.zeebe.Modules
             });
 
 
-            var response = contractAppService.InstanceState(contract, token);
+            var response = await contractAppService.InstanceState(contract, token);
             messageVariables.Variables.Add("ContractInstanceStateResult", response);
 
             messageVariables.Success = true;
