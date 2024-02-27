@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using amorphie.contract.data.Extensions.CustomException;
 using amorphie.contract.zeebe.Model;
 using amorphie.contract.zeebe.Model.Static;
 using MongoDB.Bson;
@@ -53,6 +54,7 @@ public static class ZeebeMessageHelper
 
     public static MessageVariables VariablesControl(dynamic body)
     {
+
         var messageVariables = new MessageVariables();
         var transitionName = body.GetProperty(MessageProp.LastTransition).ToString();
         var transitionNameR = body.GetProperty(MessageProp.LastTransition).ToString().Replace("-", "");
@@ -63,23 +65,16 @@ public static class ZeebeMessageHelper
         var recordIdAsString = body.GetProperty(MessageProp.RecordId).ToString();
         string triggeredByAsString = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.TriggeredBy).ToString();
         string triggeredByBehalfOfAsString = body.GetProperty($"TRX{transitionNameR}").GetProperty(MessageProp.TriggeredByBehalfOf).ToString();
-        try
-        {
 
-            messageVariables.InstanceIdGuid = StringToGuid(instanceIdAsString);
 
-            messageVariables.RecordIdGuid = StringToGuid(recordIdAsString);
+        messageVariables.InstanceIdGuid = StringToGuid(instanceIdAsString);
 
-            messageVariables.TriggeredByGuid = StringToGuid(triggeredByAsString);
+        messageVariables.RecordIdGuid = StringToGuid(recordIdAsString);
 
-            messageVariables.TriggeredByBehalfOfGuid = StringToGuid(triggeredByBehalfOfAsString);
-            // messageVariables bunu dön 
+        messageVariables.TriggeredByGuid = StringToGuid(triggeredByAsString);
 
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        messageVariables.TriggeredByBehalfOfGuid = StringToGuid(triggeredByBehalfOfAsString);
+        // messageVariables bunu dön 
         return new MessageVariables
         {
             Body = body,
@@ -96,5 +91,7 @@ public static class ZeebeMessageHelper
             InstanceIdGuid = messageVariables.InstanceIdGuid
 
         };
+
+
     }
 }

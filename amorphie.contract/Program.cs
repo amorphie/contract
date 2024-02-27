@@ -83,7 +83,8 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.UseSwagger();
 app.UseSwaggerUI();
 // app.UseHttpsRedirection();
-app.UseExceptionHandleMiddleware();
+app.UseApiExceptionHandleMiddlewareExtensions();
+app.UseApiHeaderHandleMiddlewareExtensions();
 app.AddRoutes();
 
 app.Run();

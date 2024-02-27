@@ -109,13 +109,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 ContractName = contractName,
             };
-            contract.SetHeaderParameters(new HeaderFilterModel
-            {
-                UserReference = reference,
-                LangCode = language,
-                EBankEntity = EBankEntity.on
-            });
-
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
 
             var response = await contractAppService.InstanceState(contract, token);
             messageVariables.Variables.Add("ContractInstanceStateResult", response);
@@ -134,68 +128,40 @@ namespace amorphie.contract.zeebe.Modules
       )
         {
             var messageVariables = new MessageVariables();
-            try
+            messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+            string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            string bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
+            var contract = new ContractInstanceInputDto
             {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
+                ContractName = contractName,
+            };
+          
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+            var InstanceDto = contractAppService.Instance(contract, token).Result;
+            messageVariables.Variables.Add("XContractInstance", InstanceDto);
+
+            if (InstanceDto.Data.Status.ToString() == EStatus.Completed.ToString())
             {
-                return Results.BadRequest(ex.Message);
-            }
-
-            try
-            {
-                // messageVariables.LastTransition = "contract-start-StartContract";
-                // messageVariables.TransitionName = "checking-account-opening-start";
-                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-                string bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
-                var contract = new ContractInstanceInputDto
-                {
-                    ContractName = contractName,
-                };
-                contract.SetHeaderParameters(new HeaderFilterModel
-                {
-                    UserReference = reference,
-                    LangCode = language,
-                    EBankEntity = EBankEntity.on
-                });
-
-                var InstanceDto = contractAppService.Instance(contract, token).Result;
-                messageVariables.Variables.Add("XContractInstance", InstanceDto);
-
-                if (InstanceDto.Status.ToString() == EStatus.Completed.ToString())
-                {
-                    //  messageVariables.TransitionName = "contract-start-StartContract";
-                }
-
-                messageVariables.Variables.Add("ContractStatus", InstanceDto.Status);
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+                //  messageVariables.TransitionName = "contract-start-StartContract";
             }
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
-
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            messageVariables.Variables.Add("ContractStatus", InstanceDto.Data.Status);
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
 
 
         static IResult TimeoutContract(
-      [FromBody] dynamic body,
-     [FromServices] ProjectDbContext dbContext,
-      HttpRequest request,
-      HttpContext httpContext,
-      [FromServices] DaprClient client
-      , IConfiguration configuration
-  )
+        [FromBody] dynamic body,
+        [FromServices] ProjectDbContext dbContext,
+        HttpRequest request,
+        HttpContext httpContext,
+        [FromServices] DaprClient client
+        , IConfiguration configuration
+        )
         {
             var messageVariables = new MessageVariables();
             try
@@ -227,13 +193,13 @@ namespace amorphie.contract.zeebe.Modules
             }
         }
         static IResult DeleteContract(
-      [FromBody] dynamic body,
-     [FromServices] ProjectDbContext dbContext,
-      HttpRequest request,
-      HttpContext httpContext,
-      [FromServices] DaprClient client
-      , IConfiguration configuration
-  )
+        [FromBody] dynamic body,
+        [FromServices] ProjectDbContext dbContext,
+        HttpRequest request,
+        HttpContext httpContext,
+        [FromServices] DaprClient client
+        , IConfiguration configuration
+        )
         {
             var messageVariables = new MessageVariables();
             try
@@ -265,13 +231,13 @@ namespace amorphie.contract.zeebe.Modules
             }
         }
         static IResult ErrorContract(
-      [FromBody] dynamic body,
-     [FromServices] ProjectDbContext dbContext,
-      HttpRequest request,
-      HttpContext httpContext,
-      [FromServices] DaprClient client
-      , IConfiguration configuration
-  )
+        [FromBody] dynamic body,
+        [FromServices] ProjectDbContext dbContext,
+        HttpRequest request,
+        HttpContext httpContext,
+        [FromServices] DaprClient client
+        , IConfiguration configuration
+        )
         {
             var messageVariables = new MessageVariables();
             try

@@ -87,7 +87,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // sssss
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseExceptionHandleMiddleware();
+app.UseZeebeExceptionHandleMiddlewareExtensions();
 
 app.UseHttpsRedirection();
 

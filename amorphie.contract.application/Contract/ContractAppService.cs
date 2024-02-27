@@ -3,6 +3,7 @@ using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using amorphie.contract.data.Contexts;
+using amorphie.contract.data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Core.Operations;
 
@@ -11,7 +12,7 @@ namespace amorphie.contract.application.Contract
     public interface IContractAppService
     {
 
-        Task<ContractInstanceDto> Instance(ContractInstanceInputDto req, CancellationToken cts);
+         Task<GenericResult<ContractInstanceDto>>  Instance(ContractInstanceInputDto req, CancellationToken cts);
         Task<bool> InstanceState(ContractInstanceInputDto req, CancellationToken cts);
 
         Task<bool> GetExist(ContractGetExistInputDto req, CancellationToken cts);
@@ -33,7 +34,7 @@ namespace amorphie.contract.application.Contract
             return contractDefinition;
         }
 
-        public async Task<ContractInstanceDto> Instance(ContractInstanceInputDto req, CancellationToken cts)
+        public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
             //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
@@ -111,7 +112,7 @@ namespace amorphie.contract.application.Contract
             }
 
 
-            return a;
+            return GenericResult<ContractInstanceDto>.Success(a);
         }
         public async Task<bool> InstanceState(ContractInstanceInputDto req, CancellationToken cts)
         {

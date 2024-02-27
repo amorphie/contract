@@ -10,6 +10,8 @@ using amorphie.contract.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Enum;
 using amorphie.core.Base;
+using amorphie.contract.data.Extensions;
+using amorphie.contract.data.Extensions.CustomException;
 
 namespace amorphie.contract;
 
@@ -31,21 +33,18 @@ public class ContractModule
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
     CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
+        throw new ClientSideException("sdas","InstanceState");
+
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
         var response = await contractAppService.Instance(input, token);
-
-        return Results.Ok(new
-        {
-            Data = response,
-            Success = true,
-            ErrorMessage = "",
-        });
+        
+        return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
     [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
-        //
+        
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         var inputQ = new ContractInstanceInputDto
         {
@@ -54,12 +53,7 @@ public class ContractModule
         inputQ.SetHeaderParameters(headerModels);
 
         var response = await contractAppService.InstanceState(inputQ, token);
-        return Results.Ok(new
-        {
-            Data = response,
-            Success = true,
-            ErrorMessage = "",
-        });
+        return Results.Ok(response);
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };
