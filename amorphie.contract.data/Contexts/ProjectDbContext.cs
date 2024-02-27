@@ -73,6 +73,8 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
     public DbSet<DocumentOnlineSing> DocumentOnlineSing { get; set; }
+    public DbSet<DocumentDefinitionTsizl> DocumentDefinitionTsizls { get; set; }
+    public DbSet<DocumentDefinitionDys> DocumentDefinitionDys { get; set; }
     public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
 
     public DbSet<DocumentEntityProperty> DocumentEntityProperty { get; set; }
