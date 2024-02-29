@@ -43,8 +43,8 @@ public class DocumentModule
 
         var response = await documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
 
-        if (!response.Any())
-            return Results.NoContent();
+        // if (!response.Any())
+        //     return Results.NoContent();
 
         return Results.Ok(response);
     }
@@ -53,8 +53,8 @@ public class DocumentModule
     {
         var response = await documentAppService.GetAllDocumentAll(cancellationToken);
 
-        if (!response.Any())
-            return Results.NoContent();
+        // if (!response.Any())
+        //     return Results.NoContent();
 
         return Results.Ok(response);
     }
@@ -80,8 +80,8 @@ public class DocumentModule
         inputDto.SetUserReference(headerModels.UserReference);
 
         var doc = await documentAppService.DownloadDocument(inputDto, token);
-        httpContext.Response.ContentType = doc.ContentType;
-        await doc.Stream.CopyToAsync(httpContext.Response.Body);
+        httpContext.Response.ContentType = doc.Data.ContentType;
+        await doc.Data.Stream.CopyToAsync(httpContext.Response.Body);
     }
 }
 

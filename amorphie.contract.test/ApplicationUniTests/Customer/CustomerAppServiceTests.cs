@@ -100,7 +100,7 @@ public class CustomerAppServiceTests
 
         var result = await customerAppService.GetDocumentsByContracts(inputDto, cancellationToken);
 
-        Assert.Empty(result);
+        Assert.Empty(result.Data);
 
     }
 }

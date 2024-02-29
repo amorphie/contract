@@ -6,6 +6,7 @@ using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Services;
 using amorphie.contract.data.Contexts;
+using amorphie.contract.data.Extensions;
 using amorphie.core.Base;
 using amorphie.core.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace amorphie.contract.application
             _minioService = minioService;
         }
 
-        public async Task<List<RootDocumentDto>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
+        public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
         {
 
             var response = new List<RootDocumentDto>();
@@ -49,11 +50,11 @@ namespace amorphie.contract.application
                 response = mapToRootDocumentDto(securityQuestions);
             }
 
-            return response;
+            return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
 
-        public async Task<List<RootDocumentDto>> GetAllDocumentAll(CancellationToken cancellationToken)
+        public async Task<GenericResult<List<RootDocumentDto>>>GetAllDocumentAll(CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
             var response = new List<RootDocumentDto>();
@@ -65,10 +66,10 @@ namespace amorphie.contract.application
                 response = mapToRootDocumentDto(securityQuestions);
             }
 
-            return response;
+            return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
-        public async Task<bool> Instance(DocumentInstanceInputDto input)
+        public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
 
             var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
@@ -126,7 +127,7 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
 
-            return true;
+            return GenericResult<bool>.Success(true);
         }
         public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
         {
@@ -144,7 +145,7 @@ namespace amorphie.contract.application
             return "Template engine error";
         }
 
-        public async Task<List<RootDocumentDto>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)
+        public async Task<GenericResult<List<RootDocumentDto>>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
             var response = new List<RootDocumentDto>();
@@ -156,7 +157,7 @@ namespace amorphie.contract.application
                 response = mapToRootDocumentDto(securityQuestions);
             }
 
-            return response;
+            return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
         private List<RootDocumentDto> mapToRootDocumentDto(List<Document> documents)
@@ -183,7 +184,7 @@ namespace amorphie.contract.application
 
         }
 
-        public async Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
+        public async Task<GenericResult<ReleaseableFileStreamModel>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
         {
 
             if (!Guid.TryParse(inputDto.ObjectName, out Guid contentId))
@@ -200,15 +201,15 @@ namespace amorphie.contract.application
                 throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
 
             var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
-            return res;
+            return GenericResult<ReleaseableFileStreamModel>.Success(res);
         }
     }
 
     public interface IDocumentAppService
     {
-        public Task<List<RootDocumentDto>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
-        public Task<List<RootDocumentDto>> GetAllDocumentAll(CancellationToken cancellationToken);
-        Task<bool> Instance(DocumentInstanceInputDto input);
-        Task<ReleaseableFileStreamModel> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
+        public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
+        public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
+        Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input);
+        Task<GenericResult<ReleaseableFileStreamModel>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
     }
 }

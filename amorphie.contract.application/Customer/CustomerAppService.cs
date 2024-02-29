@@ -8,19 +8,19 @@ using static amorphie.contract.application.Customer.CustomerAppService;
 using Elastic.Apm.Api;
 using amorphie.core.Base;
 using amorphie.contract.core.Services;
-using amorphie.contract.core.Enum;
 using Microsoft.Extensions.Configuration;
+using amorphie.contract.data.Extensions;
 
 namespace amorphie.contract.application.Customer
 {
     public interface ICustomerAppService
     {
-        Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
-        Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
-        Task<bool> DeleteAllDocuments(string reference, CancellationToken cts);
+        Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
+        Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
+        Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts);
     }
 
-    public class CustomerAppService : ICustomerAppService
+    public partial class CustomerAppService : ICustomerAppService
     {
         private readonly ProjectDbContext _dbContext;
         private readonly IMinioService _minioService;
@@ -50,7 +50,7 @@ namespace amorphie.contract.application.Customer
                 texts.FirstOrDefault().Label;
         }
 
-        public async Task<List<CustomerContractDto>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
             var userReference = inputDto.GetUserReference();
 
@@ -69,7 +69,7 @@ namespace amorphie.contract.application.Customer
                 documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
             }
 
-            var documents = await documentQuery.Select(x => new DocumentForMinioObject
+            var documents = await documentQuery.Select(x => new DocumentForMinioDto
             {
                 Id = x.Id,
                 DocumentDefinitionId = x.DocumentDefinitionId,
@@ -163,13 +163,13 @@ namespace amorphie.contract.application.Customer
             }
 
 
-            return contractModels;
+            return GenericResult<List<CustomerContractDto>>.Success(contractModels);
         }
 
 
-        private void GetMinioUrl(CustomerContractDto model, List<DocumentForMinioObject> documents, CancellationToken token)
+        private void GetMinioUrl(CustomerContractDto model, List<DocumentForMinioDto> documents, CancellationToken token)
         {
-            var minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+            var minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioDto
             {
                 DocumentDefinitionId = x.Id,
                 MinioUrl = ""
@@ -177,7 +177,7 @@ namespace amorphie.contract.application.Customer
 
             model.CustomerContractDocumentGroups.ForEach(x =>
             {
-                minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioDto
                 {
                     DocumentDefinitionId = x.Id,
                     MinioUrl = ""
@@ -206,21 +206,7 @@ namespace amorphie.contract.application.Customer
             }
         }
 
-        private class MinioObject
-        {
-            public string MinioUrl { get; set; }
-            public Guid DocumentDefinitionId { get; set; }
-        }
-
-        private class DocumentForMinioObject
-        {
-            public Guid Id { get; set; }
-            public Guid DocumentDefinitionId { get; set; }
-            public EStatus Status { get; set; }
-            public string DocumentContentId { get; set; }
-        }
-
-        public async Task<List<DocumentObject>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        public async Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
             var documentsQuery = _dbContext!.Document.Where(x => x.Customer.Reference == inputDto.GetUserReference()).AsQueryable();
 
@@ -239,7 +225,7 @@ namespace amorphie.contract.application.Customer
             var responseTasks = documents.Select(async x =>
             {
                 var minioUrl = await _minioService.GetDocumentUrl(x.DocumentContent.MinioObjectName, token);
-                return new DocumentObject
+                return new DocumentCustomerDto
                 {
                     Code = x.DocumentDefinition.Code,
                     Semver = x.DocumentDefinition.Semver,
@@ -249,42 +235,27 @@ namespace amorphie.contract.application.Customer
                     Reference = x.Customer.Reference
                 };
             });
-
-            return (await Task.WhenAll(responseTasks)).ToList();
+            var response = await Task.WhenAll(responseTasks);
+            return GenericResult<List<DocumentCustomerDto>>.Success(response.ToList());
         }
 
-        public async Task<bool> DeleteAllDocuments(string reference, CancellationToken cts)
+        public async Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts)
         {
-            try
-            {
-                var customerIdsToDelete = await _dbContext.Customer
-                                        .Where(c => c.Reference == reference)
-                                        .Select(c => c.Id)
-                                        .ToListAsync();
 
-                var documentsToDelete = await _dbContext.Document
-                                        .Where(d => customerIdsToDelete.Contains(d.CustomerId))
-                                        .ToListAsync();
+            var customerIdsToDelete = await _dbContext.Customer
+                                    .Where(c => c.Reference == reference)
+                                    .Select(c => c.Id)
+                                    .ToListAsync();
 
-                _dbContext.Document.RemoveRange(documentsToDelete);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (System.Exception e)
-            {
-                return false;
-            }
+            var documentsToDelete = await _dbContext.Document
+                                    .Where(d => customerIdsToDelete.Contains(d.CustomerId))
+                                    .ToListAsync();
 
-        }
+            _dbContext.Document.RemoveRange(documentsToDelete);
+            await _dbContext.SaveChangesAsync();
+            return GenericResult<bool>.Success(true);
 
-        public class DocumentObject
-        {
-            public string Code { get; set; }
-            public string Semver { get; set; }
-            public string Status { get; set; }
-            public string MinioUrl { get; set; }
-            public string MinioObjectName { get; set; }
-            public string Reference { get; set; }
+
         }
     }
 }

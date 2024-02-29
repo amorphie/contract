@@ -72,9 +72,11 @@ builder.Services.AddScoped<IContractAppService, ContractAppService>();
 
 
 builder.Services.AddApplicationServices();
-builder.Services.Configure<JsonSerializerOptions>(options =>
+builder.Services.AddSingleton(new JsonSerializerOptions//TODO: DEV ortamı acilinca dene 
 {
-    options.PropertyNameCaseInsensitive = true;
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    PropertyNameCaseInsensitive = true
+    
 });
 
 var app = builder.Build();

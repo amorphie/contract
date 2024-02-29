@@ -24,19 +24,19 @@ public class GenericResponse
     public object Data { get; set; }
     public string ErrorMessage { get; set; }
 }
-public class GenericResult<T> where T : class, new()
+public class GenericResult<T>  
 {
     private GenericResult() : this(true)
     { }
 
     private GenericResult(bool isSuccess)
-    { IsSuccess = isSuccess; if (!isSuccess) { Data = null; } }
+    { IsSuccess = isSuccess; if (!isSuccess) { Data = default(T); } }
 
 
     [JsonPropertyName("success")]
     public bool IsSuccess { get; init; }
 
-    public T Data { get; private init; } = new();
+    public T Data { get; private init; } = default(T);
 
     // public ProblemDetails ProblemDetails { get; private init; } = new();
     public string ErrorMessage { get; private init; }
