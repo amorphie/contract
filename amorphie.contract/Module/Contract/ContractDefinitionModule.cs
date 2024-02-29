@@ -17,7 +17,7 @@ using amorphie.contract.core.Enum;
 namespace amorphie.contract;
 
 public class ContractDefinitionModule
-    : BaseBBTContractRoute<ContractDefinitionDto, ContractDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
 {
     public ContractDefinitionModule(WebApplication app) : base(app)
     {

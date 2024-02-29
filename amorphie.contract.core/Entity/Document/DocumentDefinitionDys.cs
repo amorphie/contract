@@ -9,8 +9,7 @@ namespace amorphie.contract.core.Entity.Document
     {
         [Required]
         public int ReferenceId { get; set; }
-        [Required]
-        public string ReferenceKey { get; set; }
+        public int ReferenceKey { get; set; }
         [Required]
         public string ReferenceName { get; set; }
         [Required]

@@ -241,6 +241,40 @@ namespace amorphie.contract.zeebe.Services
         // }
         #endregion
 
+        #region Document_Dys
+
+        private void SetDocumentDys()
+        {
+            if(_documentDefinitionDataModel.data.referenceId!=0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
+            {
+                var documentDys = new DocumentDefinitionDys
+                {
+                     ReferenceId = _documentDefinitionDataModel.data.referenceId,
+                     ReferenceName = _documentDefinitionDataModel.data.referenceName,
+                     Fields = "Test"
+                };
+                if(_documentDefinitionDataModel.data.referenceKey!=0)
+                {
+                    documentDys.ReferenceKey=_documentDefinitionDataModel.data.referenceKey;
+                }
+                _documentdef.DocumentDefinitionDys = documentDys;
+            }
+        }
+
+        private void SetDocumentTsizl()
+        {
+            if(!string.IsNullOrEmpty(_documentDefinitionDataModel.data.engangmentKind))
+            {
+                var documentTsizl = new DocumentDefinitionTsizl
+                {
+                    EngagementKind = _documentDefinitionDataModel.data.engangmentKind
+                };
+                _documentdef.DocumentDefinitionTsizl = documentTsizl;
+            }
+        }
+
+        #endregion
+
         private void DynamicToDocumentDefinitionDataModel()
         {
             _documentDefinitionDataModel = new DocumentDefinitionDataModel();
@@ -273,7 +307,8 @@ namespace amorphie.contract.zeebe.Services
 
                     };
                 }
-
+                SetDocumentDys();
+                SetDocumentTsizl();
                 SetDocumentDefinitionLanguageDetail();
                 SetDocumentTagsDetails();
                 SetDocumentOptimize();
