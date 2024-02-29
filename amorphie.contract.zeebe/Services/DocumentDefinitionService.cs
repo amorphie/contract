@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
+using amorphie.contract.application;
+using System.Diagnostics;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -247,17 +249,28 @@ namespace amorphie.contract.zeebe.Services
         {
             if(_documentDefinitionDataModel.data.referenceId!=0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
             {
-                var documentDys = new DocumentDefinitionDys
+                try
                 {
-                     ReferenceId = _documentDefinitionDataModel.data.referenceId,
-                     ReferenceName = _documentDefinitionDataModel.data.referenceName,
-                     Fields = "Test"
-                };
-                if(_documentDefinitionDataModel.data.referenceKey!=0)
-                {
-                    documentDys.ReferenceKey=_documentDefinitionDataModel.data.referenceKey;
+                    // DocumentDefinitionDysAppService documentDefinitionDysAppService = new DocumentDefinitionDysAppService();
+                    // var elements = documentDefinitionDysAppService.GetAllTagsDys(_documentDefinitionDataModel.data.referenceId);
+                    // var tagList = string.Join(",", elements.Select(e => e.ElementID));
+                    var documentDys = new DocumentDefinitionDys
+                    {
+                        ReferenceId = _documentDefinitionDataModel.data.referenceId,
+                        ReferenceName = _documentDefinitionDataModel.data.referenceName,
+                        Fields = "TEST"
+                    };
+                    if(_documentDefinitionDataModel.data.referenceKey!=0)
+                    {
+                        documentDys.ReferenceKey=_documentDefinitionDataModel.data.referenceKey;
+                    }
+                    _documentdef.DocumentDefinitionDys = documentDys;
                 }
-                _documentdef.DocumentDefinitionDys = documentDys;
+                catch (Exception e)
+                {
+                    
+                    throw new ArgumentException(e.Message);
+                }
             }
         }
 

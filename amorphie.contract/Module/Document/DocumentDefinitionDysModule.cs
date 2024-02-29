@@ -25,7 +25,7 @@ namespace amorphie.contract;
         }
 
         async ValueTask<IResult> TagList([FromServices] IDocumentDefinitionDysAppService documentDefinitionDysService, HttpContext httpContext,
-            CancellationToken token, [FromQuery] string referenceId)
+            CancellationToken token, [FromQuery] int referenceId)
         {
             var response = documentDefinitionDysService.GetAllTagsDys(referenceId,token);
 

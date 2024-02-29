@@ -4,7 +4,7 @@ namespace amorphie.contract.application
 {
     public interface IDocumentDefinitionDysAppService
     {
-        List<Element> GetAllTagsDys(string ReferenceId, CancellationToken cancellationToken);
+        List<Element> GetAllTagsDys(int ReferenceId, CancellationToken cancellationToken);
     }
 
     public class DocumentDefinitionDysAppService : IDocumentDefinitionDysAppService
@@ -14,7 +14,7 @@ namespace amorphie.contract.application
         {
         }
 
-        public List<Element> GetAllTagsDys(string ReferenceId, CancellationToken cancellationToken)
+        public List<Element> GetAllTagsDys(int ReferenceId, CancellationToken cancellationToken)
         {
             string xmlString = $@"<?xml version=""1.0"" encoding=""utf-8""?>
                                 <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
@@ -47,16 +47,11 @@ namespace amorphie.contract.application
             List<Element> elements = new List<Element>();
             foreach (XmlNode node in tagListNodes)
             {
-                string elementName = node.SelectSingleNode("ElementName")?.InnerText;
-                string elementID = node.SelectSingleNode("ElementID")?.InnerText;
+                string? elementName = node.SelectSingleNode("ElementName")?.InnerText;
+                string? elementID = node.SelectSingleNode("ElementID")?.InnerText;
                 elements.Add(new Element { ElementName = elementName, ElementID = elementID });
             }
             return elements;
         }
     }
-    public class Element
-        {
-            public string ElementName { get; set; }
-            public string ElementID { get; set; }
-        }
 }
