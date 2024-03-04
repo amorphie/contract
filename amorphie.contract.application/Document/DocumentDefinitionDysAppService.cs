@@ -1,4 +1,5 @@
 using System.Xml;
+using amorphie.contract.core;
 
 namespace amorphie.contract.application
 {
@@ -24,8 +25,7 @@ namespace amorphie.contract.application
                                     </GetTagElementList>
                                 </soap:Body>
                                 </soap:Envelope>";
-            string url = "https://svpredms01.ebt.bank/Intertech.rota.dms.appserver/dmsservice.asmx";
-            var dmsTagElementRequest = new DmsTagElementRequest(url,xmlString);
+            var dmsTagElementRequest = new DmsTagElementRequest(StaticValuesExtensions.DmsUrl,xmlString);
             string response = dmsTagElementRequest.SendRequest();
             var parsedElement = XLMLParser(response);
             return parsedElement;
