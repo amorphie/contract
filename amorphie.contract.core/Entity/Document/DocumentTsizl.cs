@@ -6,8 +6,8 @@ using amorphie.contract.core.Entity.Document;
 
 namespace amorphie.contract.core.Entity.Document
 {
-    [Table("DocumentDefinitionTsizl", Schema = "Doc")]
-    public class DocumentDefinitionTsizl : AudiEntity
+    [Table("DocumentTsizl", Schema = "Doc")]
+    public class DocumentTsizl : AudiEntity
     {
         [Required]
         public string EngagementKind { get; set; }

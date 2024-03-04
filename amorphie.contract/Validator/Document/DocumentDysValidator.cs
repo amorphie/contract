@@ -1,9 +1,9 @@
 using amorphie.contract.core.Entity.Document;
 using FluentValidation;
 
-public sealed class DocumentDefinitionTsizlValidator : AbstractValidator<DocumentDefinitionTsizl>
+public sealed class DocumentDysValidator : AbstractValidator<DocumentDys>
     {
-        public DocumentDefinitionTsizlValidator()
+        public DocumentDysValidator()
         {
             // RuleFor(x => x.Name).NotNull();
             // RuleFor(x => x.Name).MinimumLength(10);

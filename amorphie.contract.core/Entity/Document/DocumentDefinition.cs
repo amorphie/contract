@@ -27,8 +27,8 @@ namespace amorphie.contract.core.Entity.Document
         public ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
         public ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 
-        public DocumentDefinitionDys DocumentDefinitionDys { get; set; } =default!;
-        public DocumentDefinitionTsizl DocumentDefinitionTsizl { get; set; } = default!;
+        public DocumentDys DocumentnDys { get; set; } =default!;
+        public DocumentTsizl DocumentTsizl { get; set; } = default!;
 
         #region documentType
         public Guid? DocumentUploadId { get; set; }

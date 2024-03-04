@@ -12,7 +12,7 @@ namespace amorphie.contract.data.Migrations.Pg
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DocumentDefinitionDys",
+                name: "DocumentDys",
                 schema: "Doc",
                 columns: table => new
                 {
@@ -33,9 +33,9 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentDefinitionDys", x => x.Id);
+                    table.PrimaryKey("PK_DocumentDys", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentDefinitionDys_DocumentDefinition_DocumentDefinition~",
+                        name: "FK_DocumentDys_DocumentDefinition_DocumentDefinitionId",
                         column: x => x.DocumentDefinitionId,
                         principalSchema: "Doc",
                         principalTable: "DocumentDefinition",
@@ -44,7 +44,7 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateTable(
-                name: "DocumentDefinitionTsizl",
+                name: "DocumentTsizl",
                 schema: "Doc",
                 columns: table => new
                 {
@@ -62,9 +62,9 @@ namespace amorphie.contract.data.Migrations.Pg
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentDefinitionTsizl", x => x.Id);
+                    table.PrimaryKey("PK_DocumentTsizl", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentDefinitionTsizl_DocumentDefinition_DocumentDefiniti~",
+                        name: "FK_DocumentTsizl_DocumentDefinition_DocumentDefinitionId",
                         column: x => x.DocumentDefinitionId,
                         principalSchema: "Doc",
                         principalTable: "DocumentDefinition",
@@ -73,16 +73,16 @@ namespace amorphie.contract.data.Migrations.Pg
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentDefinitionDys_DocumentDefinitionId",
+                name: "IX_DocumentDys_DocumentDefinitionId",
                 schema: "Doc",
-                table: "DocumentDefinitionDys",
+                table: "DocumentDys",
                 column: "DocumentDefinitionId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentDefinitionTsizl_DocumentDefinitionId",
+                name: "IX_DocumentTsizl_DocumentDefinitionId",
                 schema: "Doc",
-                table: "DocumentDefinitionTsizl",
+                table: "DocumentTsizl",
                 column: "DocumentDefinitionId",
                 unique: true);
         }
@@ -91,11 +91,11 @@ namespace amorphie.contract.data.Migrations.Pg
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DocumentDefinitionDys",
+                name: "DocumentDys",
                 schema: "Doc");
 
             migrationBuilder.DropTable(
-                name: "DocumentDefinitionTsizl",
+                name: "DocumentTsizl",
                 schema: "Doc");
         }
     }

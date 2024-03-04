@@ -3,15 +3,15 @@ using amorphie.contract.core;
 
 namespace amorphie.contract.application
 {
-    public interface IDocumentDefinitionDysAppService
+    public interface IDocumentDysAppService
     {
         List<Element> GetAllTagsDys(int ReferenceId, CancellationToken cancellationToken);
     }
 
-    public class DocumentDefinitionDysAppService : IDocumentDefinitionDysAppService
+    public class DocumentDysAppService : IDocumentDysAppService
     {
 
-        public DocumentDefinitionDysAppService()
+        public DocumentDysAppService()
         {
         }
 

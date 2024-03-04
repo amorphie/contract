@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace amorphie.contract;
 
-    public class DocumentDefinitionDysModule
-        : BaseBBTRoute<DocumentDefinitionDys, DocumentDefinitionDys, ProjectDbContext>
+    public class DocumentDysModule
+        : BaseBBTRoute<DocumentDys, DocumentDys, ProjectDbContext>
     {
-        public DocumentDefinitionDysModule(WebApplication app) : base(app)
+        public DocumentDysModule(WebApplication app) : base(app)
         {
         }
 
         public override string[]? PropertyCheckList => new string[] {"ReferenceId","DocumentDefinitionId"};
 
-        public override string? UrlFragment => "document-definition-dys";
+        public override string? UrlFragment => "document-dys";
 
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
@@ -24,10 +24,10 @@ namespace amorphie.contract;
 
         }
 
-        async ValueTask<IResult> TagList([FromServices] IDocumentDefinitionDysAppService documentDefinitionDysService, HttpContext httpContext,
+        async ValueTask<IResult> TagList([FromServices] IDocumentDysAppService documentDysService, HttpContext httpContext,
             CancellationToken token, [FromQuery] int referenceId)
         {
-            var response = documentDefinitionDysService.GetAllTagsDys(referenceId,token);
+            var response = documentDysService.GetAllTagsDys(referenceId,token);
 
             return Results.Ok(new
             {

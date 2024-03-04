@@ -1007,7 +1007,52 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.ToTable("DocumentDefinition", "Doc");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionDys", b =>
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionLanguageDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentDefinitionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MultiLanguageId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentDefinitionId");
+
+                    b.HasIndex("MultiLanguageId");
+
+                    b.ToTable("DocumentDefinitionLanguageDetail", "Doc");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDys", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1059,97 +1104,7 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.HasIndex("DocumentDefinitionId")
                         .IsUnique();
 
-                    b.ToTable("DocumentDefinitionDys", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionLanguageDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentDefinitionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("MultiLanguageId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentDefinitionId");
-
-                    b.HasIndex("MultiLanguageId");
-
-                    b.ToTable("DocumentDefinitionLanguageDetail", "Doc");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionTsizl", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentDefinitionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("EngagementKind")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentDefinitionId")
-                        .IsUnique();
-
-                    b.ToTable("DocumentDefinitionTsizl", "Doc");
+                    b.ToTable("DocumentDys", "Doc");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentEntityProperty", b =>
@@ -1817,6 +1772,51 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.ToTable("DocumentTemplateDetail", "Doc");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTsizl", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentDefinitionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EngagementKind")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentDefinitionId")
+                        .IsUnique();
+
+                    b.ToTable("DocumentTsizl", "Doc");
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTypes.DocumentOnlineSing", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2247,17 +2247,6 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("DocumentUpload");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionDys", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
-                        .WithOne("DocumentDefinitionDys")
-                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentDefinitionDys", "DocumentDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DocumentDefinition");
-                });
-
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionLanguageDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
@@ -2277,11 +2266,11 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("MultiLanguage");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinitionTsizl", b =>
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDys", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
-                        .WithOne("DocumentDefinitionTsizl")
-                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentDefinitionTsizl", "DocumentDefinitionId")
+                        .WithOne("DocumentnDys")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentDys", "DocumentDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2470,6 +2459,17 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("DocumentTemplate");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentTsizl", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
+                        .WithOne("DocumentTsizl")
+                        .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentTsizl", "DocumentDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DocumentDefinition");
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.EAV.EntityProperty", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.EAV.EntityPropertyValue", "EntityPropertyValue")
@@ -2503,17 +2503,17 @@ namespace amorphie.contract.data.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinition", b =>
                 {
-                    b.Navigation("DocumentDefinitionDys")
-                        .IsRequired();
-
                     b.Navigation("DocumentDefinitionLanguageDetails");
-
-                    b.Navigation("DocumentDefinitionTsizl")
-                        .IsRequired();
 
                     b.Navigation("DocumentEntityPropertys");
 
                     b.Navigation("DocumentTagsDetails");
+
+                    b.Navigation("DocumentTsizl")
+                        .IsRequired();
+
+                    b.Navigation("DocumentnDys")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentGroups.DocumentGroup", b =>

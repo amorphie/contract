@@ -254,17 +254,17 @@ namespace amorphie.contract.zeebe.Services
                     // DocumentDefinitionDysAppService documentDefinitionDysAppService = new DocumentDefinitionDysAppService();
                     // var elements = documentDefinitionDysAppService.GetAllTagsDys(_documentDefinitionDataModel.data.referenceId);
                     // var tagList = string.Join(",", elements.Select(e => e.ElementID));
-                    var documentDys = new DocumentDefinitionDys
+                    var documentDys = new DocumentDys
                     {
                         ReferenceId = _documentDefinitionDataModel.data.referenceId,
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
-                        Fields = "TEST"
+                        Fields = "test"
                     };
                     if(_documentDefinitionDataModel.data.referenceKey!=0)
                     {
                         documentDys.ReferenceKey=_documentDefinitionDataModel.data.referenceKey;
                     }
-                    _documentdef.DocumentDefinitionDys = documentDys;
+                    _documentdef.DocumentnDys = documentDys;
                 }
                 catch (Exception e)
                 {
@@ -278,11 +278,11 @@ namespace amorphie.contract.zeebe.Services
         {
             if(!string.IsNullOrEmpty(_documentDefinitionDataModel.data.engangmentKind))
             {
-                var documentTsizl = new DocumentDefinitionTsizl
+                var documentTsizl = new DocumentTsizl
                 {
                     EngagementKind = _documentDefinitionDataModel.data.engangmentKind
                 };
-                _documentdef.DocumentDefinitionTsizl = documentTsizl;
+                _documentdef.DocumentTsizl = documentTsizl;
             }
         }
 
