@@ -9,6 +9,7 @@ namespace amorphie.contract.core
     {
         public Minio minio { get; set; }
         public TemplateEngine TemplateEngine { get; set; }
+        public Dms Dms { get; set; }
 
     }
     public class TemplateEngine
@@ -29,8 +30,16 @@ namespace amorphie.contract.core
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }
     }
+
+    public class Dms
+    {
+        public string Url { get; set; }
+    }
     public static class StaticValuesExtensions
     {
+        public static string DmsUrl { get; set; }
+
+
         public static string TemplateEngineUrl { get; set; }
         public static string TemplateEngineHtmlRenderEndpoint { get; set; }
         public static string TemplateEnginePdfRenderEndpoint { get; set; }
@@ -46,6 +55,7 @@ namespace amorphie.contract.core
 
         public static void SetStaticValues(AppSettings settings)
         {
+            DmsUrl = settings.Dms.Url;
 
             TemplateEngineUrl = settings.TemplateEngine.Url;
             TemplateEngineHtmlRenderEndpoint = settings.TemplateEngine.HtmlRenderEndpoint;

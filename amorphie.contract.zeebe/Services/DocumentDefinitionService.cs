@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
+using amorphie.contract.application;
+using System.Diagnostics;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -241,6 +243,51 @@ namespace amorphie.contract.zeebe.Services
         // }
         #endregion
 
+        #region Document_Dys
+
+        private void SetDocumentDys()
+        {
+            if (_documentDefinitionDataModel.data.referenceId != 0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
+            {
+                try
+                {
+                    // DocumentDefinitionDysAppService documentDefinitionDysAppService = new DocumentDefinitionDysAppService();
+                    // var elements = documentDefinitionDysAppService.GetAllTagsDys(_documentDefinitionDataModel.data.referenceId);
+                    // var tagList = string.Join(",", elements.Select(e => e.ElementID));
+                    var documentDys = new DocumentDys
+                    {
+                        ReferenceId = _documentDefinitionDataModel.data.referenceId,
+                        ReferenceName = _documentDefinitionDataModel.data.referenceName,
+                        Fields = "test"
+                    };
+                    if (_documentDefinitionDataModel.data.referenceKey != 0)
+                    {
+                        documentDys.ReferenceKey = _documentDefinitionDataModel.data.referenceKey;
+                    }
+                    _documentdef.DocumentnDys = documentDys;
+                }
+                catch (Exception e)
+                {
+
+                    throw new ArgumentException(e.Message);
+                }
+            }
+        }
+
+        private void SetDocumentTsizl()
+        {
+            if (!string.IsNullOrEmpty(_documentDefinitionDataModel.data.engangmentKind))
+            {
+                var documentTsizl = new DocumentTsizl
+                {
+                    EngagementKind = _documentDefinitionDataModel.data.engangmentKind
+                };
+                _documentdef.DocumentTsizl = documentTsizl;
+            }
+        }
+
+        #endregion
+
         private void DynamicToDocumentDefinitionDataModel()
         {
             _documentDefinitionDataModel = new DocumentDefinitionDataModel();
@@ -273,7 +320,8 @@ namespace amorphie.contract.zeebe.Services
 
                     };
                 }
-
+                SetDocumentDys();
+                SetDocumentTsizl();
                 SetDocumentDefinitionLanguageDetail();
                 SetDocumentTagsDetails();
                 SetDocumentOptimize();

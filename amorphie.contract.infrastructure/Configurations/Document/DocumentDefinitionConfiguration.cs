@@ -23,6 +23,8 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
                 "DocumentOnlineSing",
                 "DocumentOptimize",
                 "DocumentOperations",
+                "DocumentDys",
+                "DocumentTsizl"
             };
             NavigationBuilderAutoInclude(builder, list);
             //
