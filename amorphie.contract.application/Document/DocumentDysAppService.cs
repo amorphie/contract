@@ -34,6 +34,7 @@ namespace amorphie.contract.application
         private List<Element> XLMLParser(string xml)
         {
             XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.XmlResolver = null;
             xmlDoc.LoadXml(xml);
 
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(xmlDoc.NameTable);
