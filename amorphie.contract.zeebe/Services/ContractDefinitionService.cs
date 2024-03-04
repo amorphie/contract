@@ -1,5 +1,5 @@
 using amorphie.contract.core.Entity.Common;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Newtonsoft.Json;
 using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;

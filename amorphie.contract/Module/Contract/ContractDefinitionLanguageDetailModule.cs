@@ -1,5 +1,5 @@
 using amorphie.contract.core;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Module.minimal_api;
 
 namespace amorphie.contract;

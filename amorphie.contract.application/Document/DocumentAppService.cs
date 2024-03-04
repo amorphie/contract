@@ -5,7 +5,7 @@ using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Services;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Base;
 using amorphie.core.Enums;
 using Microsoft.EntityFrameworkCore;

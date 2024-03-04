@@ -1,5 +1,5 @@
 using amorphie.core.Identity;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
 using amorphie.contract.core.Mapping;
@@ -8,12 +8,13 @@ using FluentValidation;
 using System.Text.Json.Serialization;
 using amorphie.contract.core.Services;
 using amorphie.contract.core;
-using amorphie.contract.data.Services;
+using amorphie.contract.infrastructure.Services;
 using amorphie.contract.application;
 using Elastic.Apm.NetCoreAll;
-using amorphie.contract.data.Middleware;
-using amorphie.contract.data.Extensions;
+using amorphie.contract.infrastructure.Middleware;
+using amorphie.contract.infrastructure.Extensions;
 using amorphie.contract.application.TemplateEngine;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,8 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 builder.Services.AddSingleton<IMinioService, MinioService>();
+builder.Services.AddTransient<DysProducer, DysProducer>();
+
 builder.Services.AddSingleton<ITemplateEngineService, TemplateEngineService>();
 var assemblies = new Assembly[]
                 {

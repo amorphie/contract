@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Contract;
