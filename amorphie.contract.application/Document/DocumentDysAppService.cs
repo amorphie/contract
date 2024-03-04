@@ -25,7 +25,7 @@ namespace amorphie.contract.application
                                     </GetTagElementList>
                                 </soap:Body>
                                 </soap:Envelope>";
-            var dmsTagElementRequest = new DmsTagElementRequest(StaticValuesExtensions.DmsUrl,xmlString);
+            var dmsTagElementRequest = new DmsTagElementRequest(StaticValuesExtensions.DmsUrl, xmlString);
             string response = dmsTagElementRequest.SendRequest();
             var parsedElement = XLMLParser(response);
             return parsedElement;
@@ -50,10 +50,10 @@ namespace amorphie.contract.application
                 string? elementName = node.SelectSingleNode("ElementName")?.InnerText;
                 string? elementID = node.SelectSingleNode("ElementID")?.InnerText;
                 var elem = new Element
-                    {
-                        ElementName = elementName,
-                        ElementID = elementID
-                    };
+                {
+                    ElementName = elementName,
+                    ElementID = elementID
+                };
                 elements.Add(elem);
             }
             return elements;

@@ -247,7 +247,7 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetDocumentDys()
         {
-            if(_documentDefinitionDataModel.data.referenceId!=0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
+            if (_documentDefinitionDataModel.data.referenceId != 0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
             {
                 try
                 {
@@ -260,15 +260,15 @@ namespace amorphie.contract.zeebe.Services
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
                         Fields = "test"
                     };
-                    if(_documentDefinitionDataModel.data.referenceKey!=0)
+                    if (_documentDefinitionDataModel.data.referenceKey != 0)
                     {
-                        documentDys.ReferenceKey=_documentDefinitionDataModel.data.referenceKey;
+                        documentDys.ReferenceKey = _documentDefinitionDataModel.data.referenceKey;
                     }
                     _documentdef.DocumentnDys = documentDys;
                 }
                 catch (Exception e)
                 {
-                    
+
                     throw new ArgumentException(e.Message);
                 }
             }
@@ -276,7 +276,7 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetDocumentTsizl()
         {
-            if(!string.IsNullOrEmpty(_documentDefinitionDataModel.data.engangmentKind))
+            if (!string.IsNullOrEmpty(_documentDefinitionDataModel.data.engangmentKind))
             {
                 var documentTsizl = new DocumentTsizl
                 {

@@ -37,7 +37,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
         public string TransformTo { get; set; }
 
-        public string engangmentKind {get;set;}
+        public string engangmentKind { get; set; }
         public int referenceId { get; set; }
         public int referenceKey { get; set; }
         public string referenceName { get; set; }

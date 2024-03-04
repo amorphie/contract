@@ -3,8 +3,8 @@ using FluentValidation;
 
 namespace amorphie.contract;
 public sealed class DocumentDysValidator : AbstractValidator<DocumentDys>
+{
+    public DocumentDysValidator()
     {
-        public DocumentDysValidator()
-        {
-        }
     }
+}

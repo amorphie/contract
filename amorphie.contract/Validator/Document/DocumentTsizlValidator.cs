@@ -3,8 +3,8 @@ using FluentValidation;
 
 namespace amorphie.contract;
 public sealed class DocumentTsizlValidator : AbstractValidator<DocumentTsizl>
+{
+    public DocumentTsizlValidator()
     {
-        public DocumentTsizlValidator()
-        {
-        }
     }
+}
