@@ -8,33 +8,33 @@ namespace amorphie.contract;
 
     public class DocumentDefinitionDysModule
         : BaseBBTRoute<DocumentDefinitionDys, DocumentDefinitionDys, ProjectDbContext>
+{
+    public DocumentDefinitionDysModule(WebApplication app) : base(app)
     {
-        public DocumentDefinitionDysModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"ReferenceId","DocumentDefinitionId"};
-
-        public override string? UrlFragment => "document-definition-dys";
-
-        public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
-        {
-            base.AddRoutes(routeGroupBuilder);
-            routeGroupBuilder.MapGet("DmsTagList", TagList);
-
-        }
-
-        async ValueTask<IResult> TagList([FromServices] IDocumentDefinitionDysAppService documentDefinitionDysService, HttpContext httpContext,
-            CancellationToken token, [FromQuery] int referenceId)
-        {
-            var response = documentDefinitionDysService.GetAllTagsDys(referenceId,token);
-
-            return Results.Ok(new
-            {
-                Data = response,
-                Success = true,
-                ErrorMessage = "",
-            });
-        }
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "ReferenceId", "DocumentDefinitionId" };
+
+    public override string? UrlFragment => "document-definition-dys";
+
+    public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
+    {
+        base.AddRoutes(routeGroupBuilder);
+        routeGroupBuilder.MapGet("DmsTagList", TagList);
+
+    }
+
+    async ValueTask<IResult> TagList([FromServices] IDocumentDefinitionDysAppService documentDefinitionDysService, HttpContext httpContext,
+        CancellationToken token, [FromQuery] int referenceId)
+    {
+        var response = documentDefinitionDysService.GetAllTagsDys(referenceId, token);
+
+        return Results.Ok(new
+        {
+            Data = response,
+            Success = true,
+            ErrorMessage = "",
+        });
+    }
+
+}
