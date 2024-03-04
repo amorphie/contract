@@ -49,7 +49,12 @@ namespace amorphie.contract.application
             {
                 string? elementName = node.SelectSingleNode("ElementName")?.InnerText;
                 string? elementID = node.SelectSingleNode("ElementID")?.InnerText;
-                elements.Add(new Element { ElementName = elementName, ElementID = elementID });
+                var elem = new Element
+                    {
+                        ElementName = elementName,
+                        ElementID = elementID
+                    };
+                elements.Add(elem);
             }
             return elements;
         }
