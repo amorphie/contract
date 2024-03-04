@@ -6,15 +6,15 @@ namespace amorphie.contract;
 
     public class DocumentTsizlModule
         : BaseBBTRoute<DocumentTsizl, DocumentTsizl, ProjectDbContext>
+{
+    public DocumentTsizlModule(WebApplication app) : base(app)
     {
-        public DocumentTsizlModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"EngagementKind","DocumentDefinitionId"};
-
-        public override string? UrlFragment => "document-tsizl";
-
-
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "EngagementKind", "DocumentDefinitionId" };
+
+    public override string? UrlFragment => "document-tsizl";
+
+
+
+}
