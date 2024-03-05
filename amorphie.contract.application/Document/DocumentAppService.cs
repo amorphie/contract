@@ -85,14 +85,12 @@ namespace amorphie.contract.application
 
 
             var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
-            if (entityProperties.Count > 0 && docdef.DocumentEntityPropertys.Any())
+            if (docdef.DocumentEntityPropertys.Any())
             {
                 foreach (var item in docdef.DocumentEntityPropertys)
                 {
-                    // İlgili özellik gereklilikleri karşılıyorsa ve kodu boşsa işlem yapılır
-                    if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.Code))
+                    if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
                     {
-                        // entityProperties içinde ilgili kodu arar
                         var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
                         if (conflictingProperty != null)
                         {
