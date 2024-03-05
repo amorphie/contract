@@ -12,8 +12,8 @@ using amorphie.contract.infrastructure.Contexts;
 namespace amorphie.contract.data.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240304091947_ContractMigrationsv6")]
-    partial class ContractMigrationsv6
+    [Migration("20240304195452_ContractMigrationsv7")]
+    partial class ContractMigrationsv7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1427,6 +1427,51 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.ToTable("DocumentGroupLanguageDetail", "DocGroup");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentInstanceEntityProperty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EntityPropertyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.HasIndex("EntityPropertyId");
+
+                    b.ToTable("DocumentInstanceEntityProperty", "Doc");
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperations", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1937,6 +1982,9 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("Required")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EntityPropertyValueId");
@@ -2379,6 +2427,25 @@ namespace amorphie.contract.data.Migrations.Pg
                     b.Navigation("MultiLanguage");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentInstanceEntityProperty", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Document.Document", "Document")
+                        .WithMany("DocumentInstanceEntityPropertys")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("amorphie.contract.core.Entity.EAV.EntityProperty", "EntityProperty")
+                        .WithMany()
+                        .HasForeignKey("EntityPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Document");
+
+                    b.Navigation("EntityProperty");
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperationsTagsDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentOperations", "DocumentOperations")
@@ -2502,6 +2569,11 @@ namespace amorphie.contract.data.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Customer", b =>
                 {
                     b.Navigation("DocumentList");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.Document", b =>
+                {
+                    b.Navigation("DocumentInstanceEntityPropertys");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDefinition", b =>

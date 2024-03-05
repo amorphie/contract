@@ -3,6 +3,7 @@ using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
@@ -82,6 +83,23 @@ namespace amorphie.contract.application
                 throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
+
+            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
+            if (docdef.DocumentEntityPropertys.Any())
+            {
+                foreach (var item in docdef.DocumentEntityPropertys)
+                {
+                    if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
+                    {
+                        var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
+                        if (conflictingProperty != null)
+                        {
+                            throw new ArgumentException($"Girilmesi zorunlu metadalar bulunmakta {item.EntityProperty.Code}");
+                        }
+                    }
+                }
+            }
+
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
             {
@@ -104,6 +122,17 @@ namespace amorphie.contract.application
                 CustomerId = cus.Id,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
+
+            if (entityProperties.Any())
+            {
+                document.DocumentInstanceEntityPropertys = entityProperties
+                    .Select(item => new DocumentInstanceEntityProperty
+                    {
+                        DocumentId = document.Id,
+                        EntityProperty = item
+                    })
+                    .ToList();
+            }
 
             _dbContext.Document.Add(document);
             await _dbContext.SaveChangesAsync();

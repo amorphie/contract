@@ -107,35 +107,16 @@ namespace amorphie.contract.zeebe.Services
                 Code = x.PropertyName
             }).ToList();
             var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-
             foreach (var i in ep)
             {
-                var epdbf = _dbContext.EntityProperty.FirstOrDefault(x => x.Code == i.Code);
-                if (epdbf != null)
-                {
-                    epdb = epdbf;
-                }
                 epdb.Code = i.Code;
-
-                var epv = _dbContext.EntityPropertyValue.FirstOrDefault(x => x.Data == i.EntityPropertyValue.Data);
-                if (epv != null)
-                {
-                    epdb.EntityPropertyValue = epv;
-                }
-                else
-                {
-                    epdb.EntityPropertyValue = i.EntityPropertyValue;
-                }
+                epdb.EntityPropertyValue = i.EntityPropertyValue;
                 epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                var dep = _dbContext.DocumentEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
-                if (dep == null)
+                _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
                 {
-                    _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
-                    {
-                        DocumentDefinitionId = _documentdef.Id,
-                        EntityProperty = epdb,
-                    });
-                }
+                    DocumentDefinitionId = _documentdef.Id,
+                    EntityProperty = epdb,
+                });
             }
         }
 
@@ -264,7 +245,7 @@ namespace amorphie.contract.zeebe.Services
                     {
                         documentDys.ReferenceKey = _documentDefinitionDataModel.data.referenceKey;
                     }
-                    _documentdef.DocumentnDys = documentDys;
+                    _documentdef.DocumentDys = documentDys;
                 }
                 catch (Exception e)
                 {
