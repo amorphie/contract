@@ -33,7 +33,7 @@ public class ContractModule
     CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext, [FromServices] DysProducer dysProducer)
     {
         await dysProducer.PublishDysData(token);
-        
+
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
         var response = await contractAppService.Instance(input, token);
