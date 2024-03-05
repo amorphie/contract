@@ -207,7 +207,6 @@ namespace amorphie.contract.zeebe.Services
             {
                 return;
             }
-
             var ep = _ContractDefinitionDataModel.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
             {
                 EEntityPropertyType = (ushort)EEntityPropertyType.str,
@@ -215,36 +214,16 @@ namespace amorphie.contract.zeebe.Services
                 Code = x.PropertyName
             }).ToList();
             var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-
-
             foreach (var i in ep)
             {
-                var epdbf = _dbContext.EntityProperty.FirstOrDefault(x => x.Code == i.Code);
-                if (epdbf != null)
-                {
-                    epdb = epdbf;
-                }
                 epdb.Code = i.Code;
-
-                var epv = _dbContext.EntityPropertyValue.FirstOrDefault(x => x.Data == i.EntityPropertyValue.Data);
-                if (epv != null)
-                {
-                    epdb.EntityPropertyValue = epv;
-                }
-                else
-                {
-                    epdb.EntityPropertyValue = i.EntityPropertyValue;
-                }
+                epdb.EntityPropertyValue = i.EntityPropertyValue;
                 epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                var dep = _dbContext.ContractEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
-                if (dep == null)
+                _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
                 {
-                    _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
-                    {
-                        ContractDefinitionId = _ContractDefinition.Id,
-                        EntityProperty = epdb,
-                    });
-                }
+                    ContractDefinitionId = _ContractDefinition.Id,
+                    EntityProperty = epdb,
+                });
             }
         }
 

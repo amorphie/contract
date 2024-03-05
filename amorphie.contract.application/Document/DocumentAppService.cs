@@ -3,6 +3,7 @@ using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Services;
 using amorphie.contract.data.Contexts;
@@ -99,6 +100,19 @@ namespace amorphie.contract.application
                 CustomerId = cus.Id,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
+
+            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
+
+            if(entityProperties.Any())
+            {
+                document.DocumentInstanceEntityPropertys = entityProperties
+                    .Select(item => new DocumentInstanceEntityProperty
+                    {
+                        DocumentId = document.Id,
+                        EntityProperty = item
+                    })
+                    .ToList();
+            }
 
             _dbContext.Document.Add(document);
             _dbContext.SaveChanges();

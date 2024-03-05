@@ -18,6 +18,7 @@ namespace amorphie.contract.application
         public string DocumentVersion { get; set; }
         public string? Reference { get; private set; }
         public string? Owner { get; private set; }
+        public List<EntityPropertyDto>? EntityPropertyDtos { get; set; }
         public void SetHeaderParameters(HeaderFilterModel headerFilterModel)
         {
             Reference = headerFilterModel.UserReference;
