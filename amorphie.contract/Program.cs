@@ -15,6 +15,7 @@ using amorphie.contract.infrastructure.Middleware;
 using amorphie.contract.infrastructure.Extensions;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.infrastructure.Services.Kafka;
+using amorphie.contract.core.Services.Kafka;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,7 +45,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 builder.Services.AddSingleton<IMinioService, MinioService>();
-builder.Services.AddTransient<DysProducer, DysProducer>();
+builder.Services.AddTransient<IDysProducer, DysProducer>();
 
 builder.Services.AddSingleton<ITemplateEngineService, TemplateEngineService>();
 var assemblies = new Assembly[]

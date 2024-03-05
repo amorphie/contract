@@ -14,6 +14,8 @@ using amorphie.contract.infrastructure.Extensions;
 using amorphie.contract.application.Contract;
 using System.Text.Json;
 using amorphie.contract.zeebe.Services;
+using amorphie.contract.core.Services.Kafka;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,6 +71,7 @@ builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 builder.Services.AddScoped<IContractAppService, ContractAppService>();
+builder.Services.AddTransient<IDysProducer, DysProducer>();
 
 
 builder.Services.AddApplicationServices();

@@ -1,4 +1,6 @@
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Services.Kafka;
 using Dapr.Client;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -6,7 +8,7 @@ using Serilog;
 namespace amorphie.contract.infrastructure.Services.Kafka;
 
 
-public class DysProducer
+public class DysProducer : IDysProducer
 {
     private readonly DaprClient _daprClient;
     private readonly IConfiguration _configuration;
@@ -19,7 +21,7 @@ public class DysProducer
         _logger = logger;
     }
 
-    public async Task PublishDysData(CancellationToken cancellationToken)
+    public async Task PublishDysData(DocumentDysRequestModel requestModel)
     {
         var topicName = KafkaConsts.SendDocumentInstanceDataToDYSTopicName;
 
@@ -29,12 +31,7 @@ public class DysProducer
             KafkaConsts.KafkaName,
             topicName);
 
-        // We need to make sure that we pass the concrete type to PublishEventAsync,
-        // which can be accomplished by casting the event to dynamic. This ensures
-        // that all event fields are properly serialized.
-        await _daprClient.PublishEventAsync(KafkaConsts.KafkaName, topicName, "123", cancellationToken);
+        await _daprClient.PublishEventAsync(KafkaConsts.KafkaName, topicName, requestModel);
     }
-
-
 
 }

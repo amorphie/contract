@@ -4,7 +4,9 @@ using amorphie.contract.core;
 using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
+using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Base;
 using amorphie.core.Enums;
@@ -20,10 +22,13 @@ namespace amorphie.contract.application
         private readonly IMinioService _minioService;
         private readonly ITemplateEngineService _templateEngineService;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService)
+        private readonly IDysProducer _dysProducer;
+
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
+            _dysProducer = dysProducer;
         }
 
         public async Task<List<RootDocumentDto>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -125,6 +130,13 @@ namespace amorphie.contract.application
             }
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
+
+            if (docdef.DocumentnDys is not null)
+            {
+                var documentDys = new DocumentDysRequestModel(docdef.DocumentnDys.ReferenceId.ToString(), docdef.Code, input.ToString(), input.FileType, fileByteArray);
+                documentDys.DocumentParameters.Add("test", "test");
+                await _dysProducer.PublishDysData(documentDys);
+            }
 
             return true;
         }
