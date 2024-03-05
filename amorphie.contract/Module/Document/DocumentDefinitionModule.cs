@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using FluentValidation;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;

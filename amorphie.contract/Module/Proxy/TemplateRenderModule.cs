@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using amorphie.contract.core.Entity.Proxy;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

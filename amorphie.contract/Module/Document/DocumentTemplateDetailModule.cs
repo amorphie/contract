@@ -1,6 +1,6 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
@@ -12,16 +12,16 @@ namespace amorphie.contract;
 
     public class DocumentTemplateDetailModule
         : BaseBBTRoute<DocumentTemplateDetail, DocumentTemplateDetail, ProjectDbContext>
+{
+    public DocumentTemplateDetailModule(WebApplication app) : base(app)
     {
-        public DocumentTemplateDetailModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId"};
-
-        public override string? UrlFragment => "document-template-detail";
-
-
-     
     }
+
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId" };
+
+    public override string? UrlFragment => "document-template-detail";
+
+
+
+}
 

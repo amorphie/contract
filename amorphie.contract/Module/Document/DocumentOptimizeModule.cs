@@ -1,6 +1,6 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
@@ -12,15 +12,15 @@ namespace amorphie.contract;
 
     public class DocumentOptimizeModule
         : BaseBBTRoute<DocumentOptimize, DocumentOptimize, ProjectDbContext>
+{
+    public DocumentOptimizeModule(WebApplication app) : base(app)
     {
-        public DocumentOptimizeModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Size","Transform"};
-
-        public override string? UrlFragment => "document-optimize";
-
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Size", "Transform" };
+
+    public override string? UrlFragment => "document-optimize";
+
+
+}
 

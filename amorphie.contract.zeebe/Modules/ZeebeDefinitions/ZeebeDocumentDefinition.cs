@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using amorphie.contract.zeebe.Services;
 using Dapr.Client;

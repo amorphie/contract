@@ -7,7 +7,7 @@
         //     "type": "shell",
         //     "args": [
         //         "dotnet",
-        //         "--project", "${workspaceFolder}/amorphie.contract.data/amorphie.contract.data.csproj"
+        //         "--project", "${workspaceFolder}/amorphie.contract.infrastructure/amorphie.contract.infrastructure.csproj"
         //     ],
         //     "problemMatcher": "$tsc",
         //     "runOptions": {
@@ -59,6 +59,7 @@
             "type": "dapr",
             "dependsOn": "build-amorphie-contract",
             "config": "dapr/config.yaml",
+            "componentsPath": "Dapr/Components/"
         },
         {
             "appId": "amorphie-contract-zeebe",

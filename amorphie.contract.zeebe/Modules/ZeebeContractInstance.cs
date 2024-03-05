@@ -6,7 +6,7 @@ using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
