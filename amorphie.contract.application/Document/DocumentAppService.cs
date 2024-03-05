@@ -123,7 +123,7 @@ namespace amorphie.contract.application
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
 
-            if(entityProperties.Any())
+            if (entityProperties.Any())
             {
                 document.DocumentInstanceEntityPropertys = entityProperties
                     .Select(item => new DocumentInstanceEntityProperty
