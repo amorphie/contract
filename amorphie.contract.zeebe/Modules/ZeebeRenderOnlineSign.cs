@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.core;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;

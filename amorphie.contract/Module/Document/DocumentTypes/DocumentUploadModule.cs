@@ -1,6 +1,6 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
@@ -13,17 +13,17 @@ namespace amorphie.contract.Module.Document.DocumentTypes;
 
     public class DocumentUploadModule
         : BaseBBTRoute<DocumentUpload, DocumentUpload, ProjectDbContext>
+{
+    public DocumentUploadModule(WebApplication app) : base(app)
     {
-        public DocumentUploadModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"Required"};
-
-        public override string? UrlFragment => "document-upload";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "Required" };
+
+    public override string? UrlFragment => "document-upload";
+
+
+
+
+}
 

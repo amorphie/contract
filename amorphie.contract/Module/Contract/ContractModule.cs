@@ -1,5 +1,5 @@
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.application;
@@ -10,6 +10,7 @@ using amorphie.contract.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Enum;
 using amorphie.core.Base;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 namespace amorphie.contract;
 

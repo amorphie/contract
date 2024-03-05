@@ -1,7 +1,7 @@
 ﻿using amorphie.contract.application.Customer.Dto;
 using amorphie.contract.application.Customer.Request;
 using amorphie.contract.application.Extensions;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using static amorphie.contract.application.Customer.CustomerAppService;

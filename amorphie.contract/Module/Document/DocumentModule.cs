@@ -1,5 +1,5 @@
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
