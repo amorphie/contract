@@ -4,6 +4,6 @@ namespace amorphie.contract.core.Enum
     {
         str = 0,
         integer = 1,
-        select=2
+        select = 2
     }
 }
