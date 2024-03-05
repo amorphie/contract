@@ -83,6 +83,24 @@ namespace amorphie.contract.application
                 throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
+
+            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
+
+            if(entityProperties.Any() && docdef.DocumentEntityPropertys.Any())
+            {
+                foreach (var item in docdef.DocumentEntityPropertys)
+                {
+                    if (item.EntityProperty.Required && item.EntityProperty.Code=="")
+                    {
+                        var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
+                        if (conflictingProperty != null)
+                        {
+                            throw new ArgumentException($"Girilmesi zorunlu metadalar bulunmakta {item.EntityProperty.Code}");
+                        }
+                    }
+                }
+            }
+
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
             {
@@ -105,8 +123,6 @@ namespace amorphie.contract.application
                 CustomerId = cus.Id,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
-
-            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
 
             if(entityProperties.Any())
             {

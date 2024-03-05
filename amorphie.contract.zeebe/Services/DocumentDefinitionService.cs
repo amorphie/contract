@@ -245,7 +245,7 @@ namespace amorphie.contract.zeebe.Services
                     {
                         documentDys.ReferenceKey = _documentDefinitionDataModel.data.referenceKey;
                     }
-                    _documentdef.DocumentnDys = documentDys;
+                    _documentdef.DocumentDys = documentDys;
                 }
                 catch (Exception e)
                 {

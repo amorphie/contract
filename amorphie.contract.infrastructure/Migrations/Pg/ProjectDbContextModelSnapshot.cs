@@ -2317,7 +2317,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentDys", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Document.DocumentDefinition", "DocumentDefinition")
-                        .WithOne("DocumentnDys")
+                        .WithOne("DocumentDys")
                         .HasForeignKey("amorphie.contract.core.Entity.Document.DocumentDys", "DocumentDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2584,7 +2584,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("DocumentTsizl")
                         .IsRequired();
 
-                    b.Navigation("DocumentnDys")
+                    b.Navigation("DocumentDys")
                         .IsRequired();
                 });
 
