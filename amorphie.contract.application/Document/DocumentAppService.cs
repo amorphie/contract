@@ -106,7 +106,7 @@ namespace amorphie.contract.application
             };
 
             _dbContext.Document.Add(document);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             byte[] fileByteArray;
             if (input.FileContextType == "byte")
@@ -131,9 +131,9 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
 
-            if (docdef.DocumentnDys is not null)
+            if (docdef.DocumentDys is not null)
             {
-                var documentDys = new DocumentDysRequestModel(docdef.DocumentnDys.ReferenceId.ToString(), docdef.Code, input.ToString(), input.FileType, fileByteArray);
+                var documentDys = new DocumentDysRequestModel(docdef.DocumentDys.ReferenceId.ToString(), docdef.Code, input.ToString(), input.FileType, fileByteArray);
                 documentDys.DocumentParameters.Add("test", "test");
                 await _dysProducer.PublishDysData(documentDys);
             }

@@ -16,6 +16,8 @@ public class DocumentDysRequestModel
         FileName = fileName;
         MimeType = mimeType;
         Content = content;
+        DocumentParameters = new Dictionary<string, string>();
+
     }
 
 }
