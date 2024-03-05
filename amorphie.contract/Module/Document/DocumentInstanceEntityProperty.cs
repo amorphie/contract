@@ -1,12 +1,12 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.infrastructure.Contexts;
 
 namespace amorphie.contract;
 
