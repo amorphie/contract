@@ -13,17 +13,17 @@ namespace amorphie.contract;
 
     public class ContractTagModule
         : BaseBBTRoute<ContractTag, ContractTag, ProjectDbContext>
+{
+    public ContractTagModule(WebApplication app) : base(app)
     {
-        public ContractTagModule(WebApplication app) : base(app)
-        {
-        }
-
-        public override string[]? PropertyCheckList => new string[] {"ContractDefinitionId","TagId "};
-
-        public override string? UrlFragment => "contract-tag";
-
-
-   
-       
     }
+
+    public override string[]? PropertyCheckList => new string[] { "ContractDefinitionId", "TagId " };
+
+    public override string? UrlFragment => "contract-tag";
+
+
+
+
+}
 
