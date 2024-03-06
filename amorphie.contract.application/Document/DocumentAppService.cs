@@ -1,7 +1,6 @@
 using System.Data;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
-using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
@@ -10,7 +9,6 @@ using amorphie.contract.core.Services;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Base;
-using amorphie.core.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -162,13 +160,25 @@ namespace amorphie.contract.application
 
             if (docdef.DocumentDys is not null)
             {
-                var documentDys = new DocumentDysRequestModel(docdef.DocumentDys.ReferenceId.ToString(), docdef.Code, input.ToString(), input.FileType, fileByteArray);
-                documentDys.DocumentParameters.Add("test", "test");
-                await _dysProducer.PublishDysData(documentDys);
+                await SendToDys(docdef, input, fileByteArray);
             }
 
             return true;
         }
+
+        private async Task SendToDys(DocumentDefinition docDef, DocumentInstanceInputDto inputDto, byte[] fileByteArray)
+        {
+            var documentDys = new DocumentDysRequestModel(docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
+            if (inputDto.EntityPropertyDtos is not null)
+            {
+                foreach (var item in inputDto.EntityPropertyDtos)
+                {
+                    documentDys.DocumentParameters.Add(item.Code, item.EntityPropertyValue);
+                }
+            }
+            await _dysProducer.PublishDysData(documentDys);
+        }
+
         public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
         {
             using (HttpClient client = new HttpClient())
