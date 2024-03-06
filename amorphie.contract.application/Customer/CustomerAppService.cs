@@ -183,7 +183,9 @@ namespace amorphie.contract.application.Customer
 
                 var otherDocuments = documents.Where(x => !allContractDocumentIds.Contains(x.DocumentDefinitionId));
 
-                var otherDocumentDefinition = _dbContext.DocumentDefinition.Where(x => otherDocuments.Select(x => x.DocumentDefinitionId).Contains(x.Id)).AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDocumentDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToList();
+                var otherDocumentDefinition = _dbContext.DocumentDefinition
+                                                .IgnoreQueryFilters()
+                                                .Where(x => otherDocuments.Select(x => x.DocumentDefinitionId).Contains(x.Id)).AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDocumentDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToList();
 
                 otherDocumentDefinition.ForEach(x =>
                 {
@@ -193,7 +195,7 @@ namespace amorphie.contract.application.Customer
 
                 CustomerContractDto contractModel = new CustomerContractDto
                 {
-                    Code = "//OtherDocuments",
+                    Code = "Other_idle_docs",
                     Title = inputDto.GetLanguageCode() == "tr-TR" ? "Diğer" : "Other",
                     ContractStatus = "",
                     CustomerContractDocuments = otherDocumentDefinition,
@@ -223,7 +225,7 @@ namespace amorphie.contract.application.Customer
         {
             List<MinioObject> minioDocuments = new List<MinioObject>();
 
-            if (model.Code == "//OtherDocuments")
+            if (model.Code == "Other_idle_docs")
             {
                 minioDocuments = model.CustomerContractDocuments.Select(x => new MinioObject
                 {
