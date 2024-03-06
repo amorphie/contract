@@ -100,23 +100,22 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentEOV()
         {
-            var ep = _documentDefinitionDataModel.data.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
+            foreach (var entityPropertyData in _documentDefinitionDataModel.data.EntityProperty)
             {
-                EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                Code = x.PropertyName
-            }).ToList();
-            var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-            foreach (var i in ep)
-            {
-                epdb.Code = i.Code;
-                epdb.EntityPropertyValue = i.EntityPropertyValue;
-                epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
+                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                {
+                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
+                    Code = entityPropertyData.PropertyName
+                };
+
+                var documentEntityProperty = new DocumentEntityProperty
                 {
                     DocumentDefinitionId = _documentdef.Id,
-                    EntityProperty = epdb,
-                });
+                    EntityProperty = entityProperty
+                };
+
+                _documentdef.DocumentEntityPropertys.Add(documentEntityProperty);
             }
         }
 
