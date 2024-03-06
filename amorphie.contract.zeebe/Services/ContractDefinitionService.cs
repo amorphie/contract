@@ -207,23 +207,23 @@ namespace amorphie.contract.zeebe.Services
             {
                 return;
             }
-            var ep = _ContractDefinitionDataModel.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
+
+            foreach (var propertyData in _ContractDefinitionDataModel.EntityProperty)
             {
-                EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                Code = x.PropertyName
-            }).ToList();
-            var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
-            foreach (var i in ep)
-            {
-                epdb.Code = i.Code;
-                epdb.EntityPropertyValue = i.EntityPropertyValue;
-                epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
+                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                {
+                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = propertyData.value },
+                    Code = propertyData.PropertyName
+                };
+
+                var contractEntityProperty = new ContractEntityProperty
                 {
                     ContractDefinitionId = _ContractDefinition.Id,
-                    EntityProperty = epdb,
-                });
+                    EntityProperty = entityProperty
+                };
+
+                _ContractDefinition.ContractEntityProperty.Add(contractEntityProperty);
             }
         }
 
