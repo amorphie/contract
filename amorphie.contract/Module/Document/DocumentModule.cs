@@ -1,13 +1,13 @@
 using amorphie.core.Module.minimal_api;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.application;
-using amorphie.core.IBase;
-using amorphie.contract.core.Services;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
+using Dapr;
+using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Services;
 
 namespace amorphie.contract;
 
@@ -29,6 +29,7 @@ public class DocumentModule
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("download", DownloadDocument);
+        routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
 
     }
 
@@ -83,6 +84,21 @@ public class DocumentModule
         httpContext.Response.ContentType = doc.ContentType;
         await doc.Stream.CopyToAsync(httpContext.Response.Body);
     }
+
+    [Topic(KafkaConsts.KafkaName, KafkaConsts.SendDocumentInstanceDataToDYSTopicName)]
+    [HttpPost]
+    public async Task<IResult> AddDocumentToDys([FromBody] DocumentDysRequestModel documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
+    {
+        await dysIntegrationService.AddDysDocument(documentDysRequestModel);
+
+        return Results.Ok(new
+        {
+            Data = true,
+            Success = true,
+            ErrorMessage = "",
+        });
+    }
+
 }
 
 

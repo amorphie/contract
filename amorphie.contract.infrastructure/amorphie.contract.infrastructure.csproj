@@ -19,6 +19,9 @@
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
     <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.25.3" />
 
+    <PackageReference Include="System.Private.ServiceModel" Version="4.10.3" />
+    <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
+
   </ItemGroup>
   <ItemGroup>
     <None Remove="Configurations\Proxy\" />
