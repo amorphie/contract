@@ -100,7 +100,7 @@ namespace amorphie.contract.zeebe.Services
             {
                 if (_documentDefinitionDataModel.data.disabledDataMetadata != null && _documentDefinitionDataModel.data.disabledDataMetadata.Any())
                 {
-                    
+
                     var matchedMetadataElement = _documentDefinitionDataModel.data.disabledDataMetadata.FirstOrDefault(metadataElement =>
                         metadataElement.ElementName == entityPropertyData.PropertyName);
 
