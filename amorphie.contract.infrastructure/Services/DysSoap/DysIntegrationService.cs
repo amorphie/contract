@@ -40,16 +40,15 @@ public class DysIntegrationService : IDysIntegrationService
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
     {
-
-        StringBuilder cmdData = new StringBuilder();
+  
+        StringBuilder cmdData = new();
         cmdData.Append("<document>");
         cmdData.Append($"<fileName>{model.FileName}</fileName>");
         cmdData.Append($"<mimeType>{model.MimeType}</mimeType>");
-        cmdData.Append("<ownerID>" + "908" + "</ownerID>");
-        cmdData.Append("<desc>" + "docTitle" + "  </desc>");
+        cmdData.Append("<ownerID>EBT\\CONTRACT</ownerID>");
+        cmdData.Append($"<desc>{model.DocumentCode}</desc>");
         cmdData.Append("<notes>" + "" + "</notes>");
-        cmdData.Append("<channel>" + "AmorphieContract" + "</channel>");
-        cmdData.Append("<wfInstanceID></wfInstanceID>");
+        cmdData.Append("<channel>" + "Contract" + "</channel>");
         cmdData.Append("<tagInfo>");
         cmdData.Append("<tagInfo>");
         cmdData.Append("<tagList>");
@@ -65,6 +64,8 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("</tagInfo>");
         cmdData.Append("</tagInfo>");
         cmdData.Append("</document>");
+
+        _logger.Information("DYS document is creating {cmdData} - {content}", cmdData.ToString(), model.Content);
 
         var dmsdocResult = await dmsServiceSoapClient.AddDocumentAsync(cmdData.ToString(), model.Content);
 

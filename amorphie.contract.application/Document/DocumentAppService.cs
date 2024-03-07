@@ -168,7 +168,7 @@ namespace amorphie.contract.application
 
         private async Task SendToDys(DocumentDefinition docDef, DocumentInstanceInputDto inputDto, byte[] fileByteArray)
         {
-            var documentDys = new DocumentDysRequestModel(docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
+            var documentDys = new DocumentDysRequestModel(inputDto.Owner, inputDto.DocumentCode, docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
             if (inputDto.EntityPropertyDtos is not null)
             {
                 foreach (var item in inputDto.EntityPropertyDtos)
