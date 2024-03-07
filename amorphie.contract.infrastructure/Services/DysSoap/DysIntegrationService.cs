@@ -1,6 +1,6 @@
-using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
+using System.ServiceModel.Security;
 using System.Text;
 using amorphie.contract.core;
 using amorphie.contract.core.Model.Dys;
@@ -14,24 +14,32 @@ public class DysIntegrationService : IDysIntegrationService
 {
     private readonly ILogger _logger;
     private readonly EndpointAddress endpointAddress;
-    private readonly Binding binding;
+    private readonly BasicHttpsBinding binding;
+
+    private readonly DmsServiceSoapClient dmsServiceSoapClient;
 
     public DysIntegrationService(ILogger logger)
     {
-        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-        var binding = new BasicHttpsBinding();
+        binding = new BasicHttpsBinding();
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
         endpointAddress = new EndpointAddress(StaticValuesExtensions.DmsUrl);
+
+        dmsServiceSoapClient = new DmsServiceSoapClient(binding, endpointAddress);
+
+        dmsServiceSoapClient.ChannelFactory.Credentials.ServiceCertificate.SslCertificateAuthentication =
+            dmsServiceSoapClient.ClientCredentials.ServiceCertificate.SslCertificateAuthentication =
+                new X509ServiceCertificateAuthentication
+                {
+                    CertificateValidationMode = X509CertificateValidationMode.None,
+                    RevocationMode = X509RevocationMode.NoCheck,
+                    TrustedStoreLocation = StoreLocation.LocalMachine
+                };
 
         _logger = logger;
     }
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
     {
-        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-        DmsServiceSoapClient dms = new(binding, endpointAddress);
 
         StringBuilder cmdData = new StringBuilder();
         cmdData.Append("<document>");
@@ -58,7 +66,7 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("</tagInfo>");
         cmdData.Append("</document>");
 
-        var dmsdocResult = await dms.AddDocumentAsync(cmdData.ToString(), model.Content);
+        var dmsdocResult = await dmsServiceSoapClient.AddDocumentAsync(cmdData.ToString(), model.Content);
 
         _logger.Information("DYS document was created {cmdData} - {AddDocumentResult}", cmdData.ToString(), dmsdocResult.AddDocumentResult);
 

@@ -1726,15 +1726,15 @@ namespace amorphie.contract.infrastructure
         // {
         // }
 
-        public DmsServiceSoapClient(Binding endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
-                base(endpointConfigurationName, remoteAddress)
-        {
-        }
-
-        // public DmsServiceSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
-        //         base(binding, remoteAddress)
+        // public DmsServiceSoapClient(Binding endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
+        //         base(endpointConfigurationName, remoteAddress)
         // {
         // }
+
+        public DmsServiceSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
+                base(binding, remoteAddress)
+        {
+        }
 
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         AddDocumentResponse DmsServiceSoap.AddDocument(AddDocumentRequest request)
