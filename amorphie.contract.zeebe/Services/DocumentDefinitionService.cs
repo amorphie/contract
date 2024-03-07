@@ -1,17 +1,11 @@
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
-using amorphie.contract.application;
-using System.Diagnostics;
 
 namespace amorphie.contract.zeebe.Services
 {
