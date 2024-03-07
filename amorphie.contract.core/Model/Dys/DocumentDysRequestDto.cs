@@ -4,6 +4,7 @@ namespace amorphie.contract.core.Model.Dys;
 
 public class DocumentDysRequestModel
 {
+    public string DocumentCode { get; set; }
     public string DocumentTypeDMSReferenceId { get; set; }
     public string Description { get; set; }
     public Dictionary<string, string> DocumentParameters { get; set; }
@@ -12,14 +13,20 @@ public class DocumentDysRequestModel
     public byte[] Content { get; set; }
     public DocumentDysRequestModel()
     { }
-    public DocumentDysRequestModel(string dmsReferenceId, string description, string fileName, string mimeType, byte[] content)
+    public DocumentDysRequestModel(string userReference, string documentCode, string dmsReferenceId, string description, string fileName, string mimeType, byte[] content)
     {
+        ArgumentNullException.ThrowIfNull(userReference);
+
+        DocumentCode = documentCode;
         DocumentTypeDMSReferenceId = dmsReferenceId;
         Description = description;
         FileName = fileName;
         MimeType = mimeType;
         Content = content;
-        DocumentParameters = new Dictionary<string, string>();
+        DocumentParameters = new Dictionary<string, string>
+        {
+            { "Field08TCKimlik", userReference }
+        };
     }
 
     public string ConstructDocumentTags()

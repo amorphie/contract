@@ -85,12 +85,6 @@ app.UseRouting();
 app.UseExceptionHandleMiddleware();
 app.MapSubscribeHandler();
 
-// app.UseEndpoints(endpoints =>
-// {
-//     endpoints.MapSubscribeHandler();
-// });
-
-
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
