@@ -78,18 +78,19 @@ builder.AddSeriLog();
 
 
 var app = builder.Build();
-
+app.UseCors();
 app.UseAllElasticApm(app.Configuration);
 app.UseCloudEvents();
 app.UseRouting();
 app.UseExceptionHandleMiddleware();
+app.MapSubscribeHandler();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapSubscribeHandler();
-});
+// app.UseEndpoints(endpoints =>
+// {
+//     endpoints.MapSubscribeHandler();
+// });
 
-app.UseCors();
+
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
