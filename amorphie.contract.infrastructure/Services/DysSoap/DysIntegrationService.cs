@@ -40,7 +40,7 @@ public class DysIntegrationService : IDysIntegrationService
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
     {
-  
+
         StringBuilder cmdData = new();
         cmdData.Append("<document>");
         cmdData.Append($"<fileName>{model.FileName}</fileName>");
