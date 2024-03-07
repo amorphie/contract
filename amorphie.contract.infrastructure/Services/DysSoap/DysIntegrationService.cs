@@ -32,15 +32,16 @@ public class DysIntegrationService : IDysIntegrationService
                 {
                     CertificateValidationMode = X509CertificateValidationMode.None,
                     RevocationMode = X509RevocationMode.NoCheck,
-                    TrustedStoreLocation = StoreLocation.LocalMachine
                 };
 
         _logger = logger;
+
+        _logger.Information("StaticValuesExtensions.DmsUrl {DmsUrl}}", StaticValuesExtensions.DmsUrl);
     }
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
     {
-  
+
         StringBuilder cmdData = new();
         cmdData.Append("<document>");
         cmdData.Append($"<fileName>{model.FileName}</fileName>");
