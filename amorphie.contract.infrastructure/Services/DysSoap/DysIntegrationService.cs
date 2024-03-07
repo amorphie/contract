@@ -1,3 +1,4 @@
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -17,13 +18,19 @@ public class DysIntegrationService : IDysIntegrationService
 
     public DysIntegrationService(ILogger logger)
     {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+        var binding = new BasicHttpsBinding();
+        binding.Security.Mode = BasicHttpsSecurityMode.Transport;
         endpointAddress = new EndpointAddress(StaticValuesExtensions.DmsUrl);
-        binding = new BasicHttpBinding();
+
         _logger = logger;
     }
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
     {
+        ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
         DmsServiceSoapClient dms = new(binding, endpointAddress);
 
         StringBuilder cmdData = new StringBuilder();
