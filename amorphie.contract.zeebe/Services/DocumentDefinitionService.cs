@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
+using Grpc.Core;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -92,10 +93,23 @@ namespace amorphie.contract.zeebe.Services
 
 
         }
-        private void SetDocumentEOV()
+        private List<string> SetDocumentEOV()
         {
+            var dysTagField = new List<string>();
             foreach (var entityPropertyData in _documentDefinitionDataModel.data.EntityProperty)
             {
+                if (_documentDefinitionDataModel.data.disabledDataMetadata != null && _documentDefinitionDataModel.data.disabledDataMetadata.Any())
+                {
+
+                    var matchedMetadataElement = _documentDefinitionDataModel.data.disabledDataMetadata.FirstOrDefault(metadataElement =>
+                        metadataElement.ElementName == entityPropertyData.PropertyName);
+
+                    if (matchedMetadataElement != null)
+                    {
+                        entityPropertyData.PropertyName = matchedMetadataElement.ElementID;
+                        dysTagField.Add(matchedMetadataElement.ElementID);
+                    }
+                }
                 var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
                 {
                     EEntityPropertyType = (ushort)EEntityPropertyType.str,
@@ -111,6 +125,7 @@ namespace amorphie.contract.zeebe.Services
 
                 _documentdef.DocumentEntityPropertys.Add(documentEntityProperty);
             }
+            return dysTagField;
         }
 
 
@@ -219,20 +234,18 @@ namespace amorphie.contract.zeebe.Services
 
         #region Document_Dys
 
-        private void SetDocumentDys()
+        private void SetDocumentDys(List<string> dysMetadata)
         {
             if (_documentDefinitionDataModel.data.referenceId != 0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
             {
                 try
                 {
-                    // DocumentDefinitionDysAppService documentDefinitionDysAppService = new DocumentDefinitionDysAppService();
-                    // var elements = documentDefinitionDysAppService.GetAllTagsDys(_documentDefinitionDataModel.data.referenceId);
-                    // var tagList = string.Join(",", elements.Select(e => e.ElementID));
+                    var tagList = string.Join(",", dysMetadata);
                     var documentDys = new DocumentDys
                     {
                         ReferenceId = _documentDefinitionDataModel.data.referenceId,
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
-                        Fields = "test"
+                        Fields = tagList
                     };
                     if (_documentDefinitionDataModel.data.referenceKey != 0)
                     {
@@ -294,13 +307,13 @@ namespace amorphie.contract.zeebe.Services
 
                     };
                 }
-                SetDocumentDys();
-                SetDocumentTsizl();
                 SetDocumentDefinitionLanguageDetail();
                 SetDocumentTagsDetails();
                 SetDocumentOptimize();
                 SetDocumentOperation();
-                SetDocumentEOV();
+                var dysMetadata = SetDocumentEOV();
+                SetDocumentDys(dysMetadata);
+                SetDocumentTsizl();
 
                 if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
                 {
