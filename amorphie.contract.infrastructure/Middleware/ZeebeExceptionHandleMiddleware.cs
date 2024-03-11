@@ -8,6 +8,7 @@ using amorphie.core.Base;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Npgsql;
 using Serilog;
 
 namespace amorphie.contract.infrastructure.Middleware
@@ -61,6 +62,13 @@ namespace amorphie.contract.infrastructure.Middleware
                     {
                         statusCode = (int)HttpStatusCode.InternalServerError;
                         title = "NotImplementedException Error";
+                        messages.Add(validationExp.Message);
+                        break;
+                    }
+                       case NpgsqlException validationExp:
+                    {
+                        statusCode = (int)HttpStatusCode.InternalServerError;
+                        title = "NpgsqlException Error";
                         messages.Add(validationExp.Message);
                         break;
                     }
