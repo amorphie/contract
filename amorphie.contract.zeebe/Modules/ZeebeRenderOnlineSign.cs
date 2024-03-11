@@ -95,11 +95,10 @@ namespace amorphie.contract.zeebe.Modules
             // messageVariables.TransitionName = "checking-account-opening-start";
 
             var contractInstance = body.GetProperty("XContractInstance");
-            JsonSerializerOptions options = new JsonSerializerOptions
+            ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options: new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options);
+                PropertyNameCaseInsensitive = true
+            });
 
             if (contractDto != null)
             {
@@ -216,13 +215,10 @@ namespace amorphie.contract.zeebe.Modules
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
             var approvedDocumentList = messageVariables.Data.GetProperty("entityData");
 
-            // var renderId = body.GetProperty("ApprovedTemplateRenderRequestModel").GetProperty("render-id").ToString();
-            JsonSerializerOptions options = new JsonSerializerOptions
+            var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedTemplateRenderRequestModel>>(approvedDocumentList, options: new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-            };
-
-            var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedTemplateRenderRequestModel>>(approvedDocumentList, options) as List<ApprovedTemplateRenderRequestModel>;
+                PropertyNameCaseInsensitive = true
+            }) as List<ApprovedTemplateRenderRequestModel>;
             foreach (var i in contractDocumentModel.Where(x => x.Approved).ToList())
             {
 
@@ -243,6 +239,8 @@ namespace amorphie.contract.zeebe.Modules
                 input.SetHeaderParameters(reference);
 
                 var response = await documentAppService.Instance(input);
+
+                messageVariables.Variables.Add("documentAppService.Instance", response);
                 if (!response.IsSuccess)
                 {
                     throw new InvalidOperationException("Document Instance Not Complated");

@@ -75,11 +75,9 @@ builder.Services.AddTransient<IDysProducer, DysProducer>();
 
 
 builder.Services.AddApplicationServices();
-builder.Services.AddSingleton(new JsonSerializerOptions//TODO: DEV ortamı acilinca dene 
+builder.Services.AddSingleton(new JsonSerializerOptions
 {
-    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
-
 });
 
 var app = builder.Build();
