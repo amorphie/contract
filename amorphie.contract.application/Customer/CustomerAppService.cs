@@ -13,7 +13,7 @@ using amorphie.contract.infrastructure.Extensions;
 
 namespace amorphie.contract.application.Customer
 {
-   public interface ICustomerAppService
+    public interface ICustomerAppService
     {
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);

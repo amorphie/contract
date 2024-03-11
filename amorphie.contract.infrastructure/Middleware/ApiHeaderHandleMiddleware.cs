@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace amorphie.contract.infrastructure.Middleware
 {
-      public class ApiHeaderHandleMiddleware
+    public class ApiHeaderHandleMiddleware
     {
         private readonly RequestDelegate _next;
 
