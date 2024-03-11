@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace amorphie.contract.data.Migrations.Pg
+namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     /// <inheritdoc />
     public partial class ContractMigrationsv6 : Migration

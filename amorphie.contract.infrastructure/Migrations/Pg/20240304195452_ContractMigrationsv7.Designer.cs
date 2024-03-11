@@ -9,7 +9,7 @@ using amorphie.contract.infrastructure.Contexts;
 
 #nullable disable
 
-namespace amorphie.contract.data.Migrations.Pg
+namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
     [Migration("20240304195452_ContractMigrationsv7")]

@@ -82,7 +82,7 @@ app.UseCors();
 app.UseAllElasticApm(app.Configuration);
 app.UseCloudEvents();
 app.UseRouting();
-app.UseExceptionHandleMiddleware();
+// app.UseExceptionHandleMiddleware();
 app.MapSubscribeHandler();
 
 
@@ -93,7 +93,13 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // DbInitializer.Initialize(db); // DB INIT MOCK TESTI ÇALIŞTIRILACAKSA BU SATIRI AÇ DEBUG ET.
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// app.UseHttpsRedirection();
+app.UseApiExceptionHandleMiddlewareExtensions();
+app.UseApiHeaderHandleMiddlewareExtensions();
+
 app.UseHttpsRedirection();
+
 app.AddRoutes();
 
 app.Run();

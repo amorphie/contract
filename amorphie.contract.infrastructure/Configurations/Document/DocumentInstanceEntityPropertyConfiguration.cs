@@ -6,7 +6,7 @@ using amorphie.contract.core.Entity.Document;
 using amorphie.contract.infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-namespace amorphie.contract.data.Configurations.Definition
+namespace amorphie.contract.infrastructure.Configurations.Definition
 {
     public class DocumentInstanceEntityPropertyConfiguration : ConfigurationBaseAudiEntity<DocumentInstanceEntityProperty>,
          IEntityTypeConfiguration<DocumentInstanceEntityProperty>
