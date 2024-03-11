@@ -31,7 +31,7 @@ namespace amorphie.contract.core.Model
             {
                 "X" => EBankEntity.on,
                 "B" => EBankEntity.burgan,
-                _ =>  EBankEntity.on
+                _ => EBankEntity.on
                 // _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
             };
         }
