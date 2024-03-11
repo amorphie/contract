@@ -8,12 +8,7 @@ namespace amorphie.contract.core.Model
         public HeaderFilterModel(string businessLine, string langCode, string clientCode, string userReference)
         {
 
-            EBankEntity = businessLine switch
-            {
-                "X" => EBankEntity.on,
-                "B" => EBankEntity.burgan,
-                _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
-            };
+            EBankEntity = GetBankEntity(businessLine);
             if (!string.IsNullOrEmpty(langCode))
             {
                 int commaIndex = langCode.IndexOf(',');
@@ -36,7 +31,8 @@ namespace amorphie.contract.core.Model
             {
                 "X" => EBankEntity.on,
                 "B" => EBankEntity.burgan,
-                _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
+                _ =>  EBankEntity.on
+                // _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
             };
         }
     }
