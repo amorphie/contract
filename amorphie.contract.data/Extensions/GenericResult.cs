@@ -24,7 +24,7 @@ public class GenericResponse
     public object Data { get; set; }
     public string ErrorMessage { get; set; }
 }
-public class GenericResult<T>  
+public class GenericResult<T>
 {
     private GenericResult() : this(true)
     { }

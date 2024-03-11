@@ -33,18 +33,18 @@ public class ContractModule
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
     CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
-        throw new ClientSideException("sdas","InstanceState");
+        throw new ClientSideException("sdas", "InstanceState");
 
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         input.SetHeaderParameters(headerModels);
         var response = await contractAppService.Instance(input, token);
-        
+
         return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
     [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
-        
+
         var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
         var inputQ = new ContractInstanceInputDto
         {

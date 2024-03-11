@@ -54,7 +54,7 @@ namespace amorphie.contract.application
         }
 
 
-        public async Task<GenericResult<List<RootDocumentDto>>>GetAllDocumentAll(CancellationToken cancellationToken)
+        public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
             var response = new List<RootDocumentDto>();

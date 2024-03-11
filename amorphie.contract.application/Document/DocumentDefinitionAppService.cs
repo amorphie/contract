@@ -40,7 +40,7 @@ namespace amorphie.contract.application
                 }
             }
 
-            return  GenericResult<IEnumerable<DocumentDefinitionDto>>.Success(responseDtos);
+            return GenericResult<IEnumerable<DocumentDefinitionDto>>.Success(responseDtos);
 
         }
     }

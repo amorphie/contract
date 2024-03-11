@@ -5,7 +5,7 @@ namespace amorphie.contract.core.Model
 
     public class HeaderFilterModel
     {
-        public HeaderFilterModel(string businessLine, string langCode,string clientCode,string userReference)
+        public HeaderFilterModel(string businessLine, string langCode, string clientCode, string userReference)
         {
 
             EBankEntity = businessLine switch
@@ -15,10 +15,10 @@ namespace amorphie.contract.core.Model
                 _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
             };
             if (!string.IsNullOrEmpty(langCode))
-                {
-                    int commaIndex = langCode.IndexOf(',');
-                    this.LangCode = commaIndex != -1 ? langCode.Substring(0, commaIndex) : langCode;
-                }
+            {
+                int commaIndex = langCode.IndexOf(',');
+                this.LangCode = commaIndex != -1 ? langCode.Substring(0, commaIndex) : langCode;
+            }
             ClientCode = clientCode;
             UserReference = userReference;
 

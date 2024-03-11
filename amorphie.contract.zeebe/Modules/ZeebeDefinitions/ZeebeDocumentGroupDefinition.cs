@@ -131,10 +131,10 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             [FromServices] DaprClient client,
             IConfiguration configuration)
         {
-                var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "ErrorDefinitionUpload";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "ErrorDefinitionUpload";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
     }
 }

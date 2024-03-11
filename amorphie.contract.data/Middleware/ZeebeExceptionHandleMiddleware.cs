@@ -12,7 +12,7 @@ using Serilog;
 
 namespace amorphie.contract.data.Middleware
 {
-   public class ZeebeExceptionHandleMiddleware
+    public class ZeebeExceptionHandleMiddleware
     {
         private readonly RequestDelegate _next;
         private const string UnexpectedErrorMessage = "Beklenmeyen bir hata ile karsilasildi.";
@@ -50,7 +50,7 @@ namespace amorphie.contract.data.Middleware
                         messages.Add(validationExp.Message);
                         break;
                     }
-                    case ArgumentException validationExp:
+                case ArgumentException validationExp:
                     {
                         statusCode = (int)HttpStatusCode.InternalServerError;
                         title = "ArgumentException Error";

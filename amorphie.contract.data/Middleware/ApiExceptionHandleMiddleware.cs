@@ -47,7 +47,7 @@ namespace amorphie.contract.data.Middleware
                         messages.Add(validationExp.Message);
                         break;
                     }
-                    case ArgumentException validationExp:
+                case ArgumentException validationExp:
                     {
                         statusCode = (int)HttpStatusCode.BadRequest;
                         title = "ArgumentException Error";

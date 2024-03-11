@@ -76,7 +76,7 @@ builder.Services.AddSingleton(new JsonSerializerOptions//TODO: DEV ortamı acili
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
-    
+
 });
 
 var app = builder.Build();
