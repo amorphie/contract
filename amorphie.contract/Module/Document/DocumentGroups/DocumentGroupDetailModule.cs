@@ -1,6 +1,6 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
@@ -18,7 +18,7 @@ public class DocumentGroupDetailModule
     {
     }
 
-    public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionId","DocumentGroupId"};
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentGroupId" };
 
     public override string? UrlFragment => "document-group-detail";
 

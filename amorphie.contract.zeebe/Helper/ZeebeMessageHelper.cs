@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using amorphie.contract.data.Extensions.CustomException;
+using amorphie.contract.infrastructure.Extensions.CustomException;
 using amorphie.contract.zeebe.Model;
 using amorphie.contract.zeebe.Model.Static;
 using MongoDB.Bson;

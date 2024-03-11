@@ -1,7 +1,7 @@
 ﻿using amorphie.contract.application.Customer.Dto;
 using amorphie.contract.application.Customer.Request;
 using amorphie.contract.application.Extensions;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using static amorphie.contract.application.Customer.CustomerAppService;
@@ -9,11 +9,11 @@ using Elastic.Apm.Api;
 using amorphie.core.Base;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
-using amorphie.contract.data.Extensions;
+using amorphie.contract.infrastructure.Extensions;
 
 namespace amorphie.contract.application.Customer
 {
-    public interface ICustomerAppService
+   public interface ICustomerAppService
     {
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);

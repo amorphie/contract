@@ -1,14 +1,15 @@
 using System.Data;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
-using amorphie.contract.core.Entity;
 using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
-using amorphie.contract.data.Contexts;
-using amorphie.contract.data.Extensions;
+using amorphie.contract.core.Services.Kafka;
+using amorphie.contract.infrastructure.Contexts;
+using amorphie.contract.infrastructure.Extensions;
 using amorphie.core.Base;
-using amorphie.core.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -21,10 +22,13 @@ namespace amorphie.contract.application
         private readonly IMinioService _minioService;
         private readonly ITemplateEngineService _templateEngineService;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService)
+        private readonly IDysProducer _dysProducer;
+
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
+            _dysProducer = dysProducer;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -78,6 +82,23 @@ namespace amorphie.contract.application
                 throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
+
+            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
+            if (docdef.DocumentEntityPropertys.Any())
+            {
+                foreach (var item in docdef.DocumentEntityPropertys)
+                {
+                    if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
+                    {
+                        var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
+                        if (conflictingProperty != null)
+                        {
+                            throw new ArgumentException($"Girilmesi zorunlu metadalar bulunmakta {item.EntityProperty.Code}");
+                        }
+                    }
+                }
+            }
+
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
             {
@@ -101,8 +122,19 @@ namespace amorphie.contract.application
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
             };
 
+            if (entityProperties.Any())
+            {
+                document.DocumentInstanceEntityPropertys = entityProperties
+                    .Select(item => new DocumentInstanceEntityProperty
+                    {
+                        DocumentId = document.Id,
+                        EntityProperty = item
+                    })
+                    .ToList();
+            }
+
             _dbContext.Document.Add(document);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             byte[] fileByteArray;
             if (input.FileContextType == "byte")
@@ -127,8 +159,27 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
 
+            if (docdef.DocumentDys is not null)
+            {
+                await SendToDys(docdef, input, fileByteArray);
+            }
+
             return GenericResult<bool>.Success(true);
         }
+
+        private async Task SendToDys(DocumentDefinition docDef, DocumentInstanceInputDto inputDto, byte[] fileByteArray)
+        {
+            var documentDys = new DocumentDysRequestModel(inputDto.Owner, inputDto.DocumentCode, docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
+            if (inputDto.EntityPropertyDtos is not null)
+            {
+                foreach (var item in inputDto.EntityPropertyDtos)
+                {
+                    documentDys.DocumentParameters.Add(item.Code, item.EntityPropertyValue);
+                }
+            }
+            await _dysProducer.PublishDysData(documentDys);
+        }
+
         public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
         {
             using (HttpClient client = new HttpClient())

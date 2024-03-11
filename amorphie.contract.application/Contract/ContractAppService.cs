@@ -2,8 +2,9 @@
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
-using amorphie.contract.data.Contexts;
-using amorphie.contract.data.Extensions;
+using amorphie.contract.infrastructure.Extensions;
+using amorphie.contract.infrastructure.Contexts;
+
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Core.Operations;
 

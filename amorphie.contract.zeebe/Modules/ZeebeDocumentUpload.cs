@@ -1,5 +1,5 @@
 using amorphie.contract.core.Entity.Document;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.zeebe.Services;

@@ -1,5 +1,6 @@
-using amorphie.contract.data.Contexts;
-using amorphie.contract.data.Extensions;
+
+using amorphie.contract.infrastructure.Contexts;
+using amorphie.contract.infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 

@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.core;
 using amorphie.contract.zeebe.Modules;
 using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
@@ -8,12 +8,14 @@ using amorphie.contract.application;
 using amorphie.core.Extension;
 using Elastic.Apm.NetCoreAll;
 using amorphie.contract.core.Services;
-using amorphie.contract.data.Services;
-using amorphie.contract.data.Middleware;
-using amorphie.contract.data.Extensions;
+using amorphie.contract.infrastructure.Services;
+using amorphie.contract.infrastructure.Middleware;
+using amorphie.contract.infrastructure.Extensions;
 using amorphie.contract.application.Contract;
 using System.Text.Json;
 using amorphie.contract.zeebe.Services;
+using amorphie.contract.core.Services.Kafka;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,6 +71,7 @@ builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 builder.Services.AddScoped<IContractAppService, ContractAppService>();
+builder.Services.AddTransient<IDysProducer, DysProducer>();
 
 
 builder.Services.AddApplicationServices();

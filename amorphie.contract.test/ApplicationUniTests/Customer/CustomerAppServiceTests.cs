@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Moq;
 using amorphie.contract.core.Services;
 using amorphie.contract.application.Customer;

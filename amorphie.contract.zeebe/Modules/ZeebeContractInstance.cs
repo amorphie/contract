@@ -6,7 +6,7 @@ using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,14 @@ namespace amorphie.contract.zeebe.Modules
                           operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                           return operation;
                       });
+            app.MapPost("/contractinstancestate2", ContractInstanceState2)
+         .Produces(StatusCodes.Status200OK)
+         .WithOpenApi(operation =>
+         {
+             operation.Summary = "Maps ContractInstance service worker on Zeebe";
+             operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+             return operation;
+         });
             app.MapPost("/contractinstancestate", ContractInstanceState)
                                  .Produces(StatusCodes.Status200OK)
                                  .WithOpenApi(operation =>
@@ -102,6 +110,34 @@ namespace amorphie.contract.zeebe.Modules
                 ContractName = contractName,
             };
             contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+
+            var response = await contractAppService.InstanceState(contract, token);
+            messageVariables.Variables.Add("ContractInstanceStateResult", response);
+
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
+        static async ValueTask<IResult> ContractInstanceState2(
+   [FromBody] dynamic body,
+  [FromServices] ProjectDbContext dbContext,
+   HttpRequest request,
+   HttpContext httpContext,
+   [FromServices] DaprClient client
+   , IConfiguration configuration,
+   [FromServices] IContractAppService contractAppService, CancellationToken token
+)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var contractName = body.GetProperty("ContractInstanceState").GetProperty("contractName").ToString();
+            var reference = body.GetProperty("ContractInstanceState").GetProperty("reference").ToString();
+            var language = body.GetProperty("ContractInstanceState").GetProperty("language").ToString();
+            string bankEntity = body.GetProperty("ContractInstanceState").GetProperty("bankEntity").ToString();
+            var contract = new ContractInstanceInputDto
+            {
+                ContractName = contractName,
+            };
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+
 
             var response = await contractAppService.InstanceState(contract, token);
             messageVariables.Variables.Add("ContractInstanceStateResult", response);

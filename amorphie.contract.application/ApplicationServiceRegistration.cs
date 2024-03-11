@@ -1,7 +1,7 @@
 using System.Reflection;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Customer;
-using amorphie.contract.data.Services;
+using amorphie.contract.infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace amorphie.contract.application
@@ -17,6 +17,7 @@ namespace amorphie.contract.application
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<ICustomerAppService, CustomerAppService>();
             services.AddTransient<IDocumentAppService, DocumentAppService>();
+            services.AddTransient<IDocumentDysAppService, DocumentDysAppService>();
 
             return services;
         }

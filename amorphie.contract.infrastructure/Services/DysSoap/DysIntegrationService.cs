@@ -1,0 +1,81 @@
+using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
+using System.ServiceModel.Security;
+using System.Text;
+using amorphie.contract.core;
+using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Services;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+
+namespace amorphie.contract.infrastructure.Services.DysSoap;
+
+
+public class DysIntegrationService : IDysIntegrationService
+{
+    private readonly ILogger _logger;
+    private readonly EndpointAddress endpointAddress;
+    private readonly BasicHttpsBinding binding;
+
+    private readonly DmsServiceSoapClient dmsServiceSoapClient;
+    private readonly IConfiguration _configuration;
+
+    public DysIntegrationService(ILogger logger, IConfiguration configuration)
+    {
+        _configuration = configuration;
+
+        binding = new BasicHttpsBinding();
+        binding.Security.Mode = BasicHttpsSecurityMode.Transport;
+        endpointAddress = new EndpointAddress(_configuration["Dms:Url"]);
+
+        dmsServiceSoapClient = new DmsServiceSoapClient(binding, endpointAddress);
+
+        dmsServiceSoapClient.ChannelFactory.Credentials.ServiceCertificate.SslCertificateAuthentication =
+            dmsServiceSoapClient.ClientCredentials.ServiceCertificate.SslCertificateAuthentication =
+                new X509ServiceCertificateAuthentication
+                {
+                    CertificateValidationMode = X509CertificateValidationMode.None,
+                    RevocationMode = X509RevocationMode.NoCheck,
+                };
+
+        _logger = logger;
+
+        _logger.Information("Configuration.DmsUrl {DmsURL}}", _configuration["Dms:Url"]);
+    }
+
+    public async Task<string> AddDysDocument(DocumentDysRequestModel model)
+    {
+
+        StringBuilder cmdData = new();
+        cmdData.Append("<document>");
+        cmdData.Append($"<fileName>{model.FileName}</fileName>");
+        cmdData.Append($"<mimeType>{model.MimeType}</mimeType>");
+        cmdData.Append("<ownerID>EBT\\CONTRACT</ownerID>");
+        cmdData.Append($"<desc>{model.DocumentCode}</desc>");
+        cmdData.Append("<notes>" + "" + "</notes>");
+        cmdData.Append("<channel>" + "Contract" + "</channel>");
+        cmdData.Append("<tagInfo>");
+        cmdData.Append("<tagInfo>");
+        cmdData.Append("<tagList>");
+        cmdData.Append($"<tag type=\"tag\">{model.DocumentTypeDMSReferenceId}</tag>");
+        cmdData.Append("</tagList>");
+        cmdData.Append("<tagData>");
+        cmdData.Append($"<tag type=\"data\" id=\"{model.DocumentTypeDMSReferenceId}\">");
+        cmdData.Append($"<M{model.DocumentTypeDMSReferenceId}>");
+        cmdData.Append(model.ConstructDocumentTags());
+        cmdData.Append($"</M{model.DocumentTypeDMSReferenceId}>");
+        cmdData.Append("</tag>");
+        cmdData.Append("</tagData>");
+        cmdData.Append("</tagInfo>");
+        cmdData.Append("</tagInfo>");
+        cmdData.Append("</document>");
+
+        _logger.Information("DYS document is creating {cmdData} - {content}", cmdData.ToString(), model.Content);
+
+        var dmsdocResult = await dmsServiceSoapClient.AddDocumentAsync(cmdData.ToString(), model.Content);
+
+        _logger.Information("DYS document was created {cmdData} - {AddDocumentResult}", cmdData.ToString(), dmsdocResult.AddDocumentResult);
+
+        return dmsdocResult.AddDocumentResult;
+    }
+}

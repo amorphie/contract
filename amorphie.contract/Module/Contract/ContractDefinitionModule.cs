@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Contract;
@@ -17,7 +17,7 @@ using amorphie.contract.core.Enum;
 namespace amorphie.contract;
 
 public class ContractDefinitionModule
-    : BaseBBTContractRoute<ContractDefinitionDto, ContractDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
 {
     public ContractDefinitionModule(WebApplication app) : base(app)
     {

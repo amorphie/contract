@@ -17,12 +17,13 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentDefinition, DocumentDefinition>().ReverseMap();
             CreateMap<DocumentDefinitionLanguageDetail, DocumentDefinitionLanguageDetail>().ReverseMap();
             CreateMap<DocumentEntityProperty, DocumentEntityProperty>().ReverseMap();
+            CreateMap<DocumentInstanceEntityProperty, DocumentInstanceEntityProperty>().ReverseMap();
             CreateMap<DocumentFormat, DocumentFormat>().ReverseMap();
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();
             CreateMap<DocumentFormatType, DocumentFormatType>().ReverseMap();
 
-
-
+            CreateMap<DocumentDys, DocumentDys>().ReverseMap();
+            CreateMap<DocumentTsizl, DocumentTsizl>().ReverseMap();
 
             CreateMap<DocumentOperations, DocumentOperations>().ReverseMap();
             CreateMap<DocumentOptimize, DocumentOptimize>().ReverseMap();
