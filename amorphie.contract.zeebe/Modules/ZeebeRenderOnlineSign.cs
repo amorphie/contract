@@ -88,70 +88,47 @@ namespace amorphie.contract.zeebe.Modules
           , IConfiguration configuration
       )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+            string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            // messageVariables.TransitionName = "checking-account-opening-start";
 
-            try
+            var contractInstance = body.GetProperty("XContractInstance");
+            JsonSerializerOptions options = new JsonSerializerOptions
             {
-                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                // string reference = entityData.GetProperty("reference").ToString();
+                PropertyNameCaseInsensitive = true,
+            };
+            ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options);
 
-                string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-                string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-                // messageVariables.TransitionName = "checking-account-opening-start";
-
-                var contractInstance = body.GetProperty("XContractInstance");
-                JsonSerializerOptions options = new JsonSerializerOptions
+            if (contractDto != null)
+            {
+                var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateRenderRequestModel
                 {
-                    PropertyNameCaseInsensitive = true,
-                };
-                ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options);
+                    SemanticVersion = contractDocument.MinVersion,
+                    Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
+                    RenderId = Guid.NewGuid(),
+                    RenderData = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
+                    RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
+                    // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
+                    ProcessName = nameof(ZeebeRenderOnlineSign),
+                    Identity = reference,
+                    DocumentDefinitionCode = contractDocument.Code,
+                    Approved = false,
 
-                if (contractDto != null)
+                }).ToList();
+                foreach (TemplateRenderRequestModel cdto in contractDocument)
                 {
-                    var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateRenderRequestModel
-                    {
-                        SemanticVersion = contractDocument.MinVersion,
-                        Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
-                        RenderId = Guid.NewGuid(),
-                        RenderData = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
-                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
-                        // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
-                        ProcessName = nameof(ZeebeRenderOnlineSign),
-                        Identity = reference,
-                        DocumentDefinitionCode = contractDocument.Code,
-                        Approved = false,
+                    HttpSendTemplate(cdto);//TODO:dapr yok
 
-                    }).ToList();
-                    foreach (TemplateRenderRequestModel cdto in contractDocument)
-                    {
-                        HttpSendTemplate(cdto);//TODO:dapr yok
-
-                    }
-                    messageVariables.Variables.Add("ApprovedDocumentList", contractDocument);
-                    messageVariables.additionalData = contractDocument;
                 }
-
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+                messageVariables.Variables.Add("ApprovedDocumentList", contractDocument);
+                messageVariables.additionalData = contractDocument;
             }
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         private static async void HttpSendTemplate(TemplateRenderRequestModel requestModel)//TODO:dapr kullanılacak 
         {
@@ -196,33 +173,15 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static async ValueTask<IResult> Validated(
         [FromBody] dynamic body,
@@ -284,7 +243,7 @@ namespace amorphie.contract.zeebe.Modules
                 input.SetHeaderParameters(reference);
 
                 var response = await documentAppService.Instance(input);
-                if (!response)
+                if (!response.IsSuccess)
                 {
                     throw new InvalidOperationException("Document Instance Not Complated");
                 }
@@ -307,34 +266,16 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "TimeoutRenderOnlineSign";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "TimeoutRenderOnlineSign";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "TimeoutRenderOnlineSign";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult DeleteRenderOnlineSign(
       [FromBody] dynamic body,
@@ -345,34 +286,16 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "DeleteRenderOnlineSign";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "DeleteRenderOnlineSign";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "DeleteRenderOnlineSign";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult ErrorRenderOnlineSign(
       [FromBody] dynamic body,
@@ -383,34 +306,16 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "ErrorRenderOnlineSign";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorRenderOnlineSign";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "ErrorRenderOnlineSign";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
     }
 }

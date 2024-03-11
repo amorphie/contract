@@ -14,7 +14,7 @@ namespace amorphie.contract.application
             _dbContext = projectDbContext;
         }
 
-        public async Task<IEnumerable<DocumentDefinitionDto>> GetAllDocumentDefinition(GetAllDocumentDefinitionInputDto input, CancellationToken cancellationToken)
+        public async Task<GenericResult<IEnumerable<DocumentDefinitionDto>>> GetAllDocumentDefinition(GetAllDocumentDefinitionInputDto input, CancellationToken cancellationToken)
         {
 
             var list = await _dbContext.DocumentDefinition.OrderBy(x => x.Code).Skip(input.Page * input.PageSize)
@@ -39,13 +39,13 @@ namespace amorphie.contract.application
                 }
             }
 
-            return responseDtos;
+            return GenericResult<IEnumerable<DocumentDefinitionDto>>.Success(responseDtos);
 
         }
     }
 
     public interface IDocumentDefinitionAppService
     {
-        Task<IEnumerable<DocumentDefinitionDto>> GetAllDocumentDefinition(GetAllDocumentDefinitionInputDto input, CancellationToken cancellationToken);
+        Task<GenericResult<IEnumerable<DocumentDefinitionDto>>> GetAllDocumentDefinition(GetAllDocumentDefinitionInputDto input, CancellationToken cancellationToken);
     }
 }

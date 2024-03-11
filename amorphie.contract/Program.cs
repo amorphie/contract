@@ -93,7 +93,9 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // DbInitializer.Initialize(db); // DB INIT MOCK TESTI ÇALIŞTIRILACAKSA BU SATIRI AÇ DEBUG ET.
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+app.UseApiExceptionHandleMiddlewareExtensions();
+app.UseApiHeaderHandleMiddlewareExtensions();
 app.AddRoutes();
 
 app.Run();

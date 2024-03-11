@@ -98,33 +98,17 @@ namespace amorphie.contract.zeebe.Modules
           , IConfiguration configuration
       )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+
         }
         static IResult AutoControl(
         [FromBody] dynamic body,
@@ -135,33 +119,13 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
-
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
-
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult WaitingControl(
         [FromBody] dynamic body,
@@ -172,33 +136,15 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult NotValidated(
         [FromBody] dynamic body,
@@ -209,33 +155,15 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult Validated(
         [FromBody] dynamic body,
@@ -246,33 +174,15 @@ namespace amorphie.contract.zeebe.Modules
         , IConfiguration configuration
     )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
 
 
@@ -285,33 +195,15 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
   )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult DeleteProcessUploaded(
       [FromBody] dynamic body,
@@ -322,33 +214,15 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
   )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "DeleteProcessUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult ErrorUploaded(
       [FromBody] dynamic body,
@@ -359,33 +233,15 @@ namespace amorphie.contract.zeebe.Modules
       , IConfiguration configuration
   )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                string reference = entityData.GetProperty("reference").ToString();
-                string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorUploaded";
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            string reference = entityData.GetProperty("reference").ToString();
+            string deviceId = entityData.GetProperty("deviceId").ToString();
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
     }
 }

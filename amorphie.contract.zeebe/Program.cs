@@ -75,9 +75,11 @@ builder.Services.AddTransient<IDysProducer, DysProducer>();
 
 
 builder.Services.AddApplicationServices();
-builder.Services.Configure<JsonSerializerOptions>(options =>
+builder.Services.AddSingleton(new JsonSerializerOptions//TODO: DEV ortamı acilinca dene 
 {
-    options.PropertyNameCaseInsensitive = true;
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    PropertyNameCaseInsensitive = true
+
 });
 
 var app = builder.Build();
@@ -90,7 +92,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // sssss
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseExceptionHandleMiddleware();
+app.UseZeebeExceptionHandleMiddlewareExtensions();
 
 app.UseHttpsRedirection();
 
