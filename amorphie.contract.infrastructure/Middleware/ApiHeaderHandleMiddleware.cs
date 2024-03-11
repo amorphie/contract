@@ -21,32 +21,30 @@ namespace amorphie.contract.infrastructure.Middleware
             string _businessLine = "";
             string _clientCode = "";
             string _userReference = "";
+            long? _customerNo = null;
+
             if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.BusinessLine, out var businessLine))
-            {
-                _businessLine = businessLine.FirstOrDefault();
-            }
+                _businessLine = businessLine.ToString();
             else if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Application, out var application))
-            {
-                _businessLine = application.FirstOrDefault();
-            }
-            // else model.EBankEntity = EBankEntity.on;//serhat kaldırttı
+                _businessLine = application.ToString();
 
             if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.AcceptLanguage, out var aLang))
-            {
-                _langCode = aLang.FirstOrDefault();
-            }
+                _langCode = aLang.ToString();
             else if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.Language, out var lang))
-                _langCode = lang.FirstOrDefault();
+                _langCode = lang.ToString();
             else _langCode = "tr-TR";
 
+
             if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.ClientId, out var clientId))
-                _clientCode = clientId.FirstOrDefault();
+                _clientCode = clientId.ToString();
 
             if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.UserReference, out var userReference))
-                _userReference = userReference.FirstOrDefault();
-            // else
-            //     throw new ArgumentNullException($"{AppHeaderConsts.UserReference} cannot be null");
-            var model = new HeaderFilterModel(_businessLine, _langCode, _clientCode, _userReference);
+                _userReference = userReference.ToString();
+
+            if (httpContext.Request.Headers.TryGetValue(AppHeaderConsts.CustomerNo, out var customerNo))
+                _customerNo = Convert.ToInt64(customerNo);
+
+            var model = new HeaderFilterModel(_businessLine, _langCode, _clientCode, _userReference, _customerNo);
 
             httpContext.Items[AppHeaderConsts.HeaderFilterModel] = model;
 

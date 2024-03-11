@@ -196,6 +196,7 @@ namespace amorphie.contract.zeebe.Modules
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
             string reference = "";
+            long? customerNo = null;
             if (body.ToString().IndexOf("ContractInstance") != -1)
             {
                 if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
@@ -210,6 +211,11 @@ namespace amorphie.contract.zeebe.Modules
                     if (body.GetProperty("Headers").ToString().IndexOf("user_reference") != -1)
                     {
                         reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
+                    }
+
+                    if (body.GetProperty("Headers").ToString().IndexOf("customer_no") != -1)
+                    {
+                        customerNo = Convert.ToInt64(body.GetProperty("Headers").GetProperty("customer_no").ToString());
                     }
                 }
             }
@@ -240,7 +246,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 };
 
-                input.SetHeaderParameters(reference);
+                input.SetHeaderParameters(reference, customerNo);
 
                 var response = await documentAppService.Instance(input);
                 if (!response.IsSuccess)

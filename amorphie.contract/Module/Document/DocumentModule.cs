@@ -8,6 +8,7 @@ using amorphie.contract.core.Model;
 using Dapr;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract;
 
@@ -63,8 +64,8 @@ public class DocumentModule
     async ValueTask<IResult> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
     CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-        input.SetHeaderParameters(headerModels);
+        var headerModels = HeaderHelper.GetHeader(httpContext);
+        input.SetHeaderParameters(headerModels.UserReference, headerModels.CustomerNo);
         var response = await documentAppService.Instance(input);
 
         return Results.Ok(new
@@ -77,7 +78,7 @@ public class DocumentModule
 
     async ValueTask DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
     {
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         inputDto.SetUserReference(headerModels.UserReference);
 
         var doc = await documentAppService.DownloadDocument(inputDto, token);

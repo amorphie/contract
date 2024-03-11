@@ -9,10 +9,8 @@ using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application;
 using amorphie.core.Extension;
 using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
-using amorphie.contract.core.Enum;
 
 namespace amorphie.contract;
 
@@ -33,9 +31,6 @@ public class ContractDefinitionModule
     {
         try
         {
-            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-
-
             var query = context!.ContractDefinition!.Skip(page)
                 .Take(pageSize).AsNoTracking().AsSplitQuery();
 

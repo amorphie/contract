@@ -105,7 +105,8 @@ namespace amorphie.contract.application
                 cus = new core.Entity.Customer
                 {
                     Reference = input.Reference,
-                    Owner = input.Owner
+                    Owner = input.Owner,
+                    CustomerNo= input.CustomerNo
                 };
 
                 _dbContext.Customer.Add(cus);

@@ -109,7 +109,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 ContractName = contractName,
             };
-            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
 
             var response = await contractAppService.InstanceState(contract, token);
             messageVariables.Variables.Add("ContractInstanceStateResult", response);
@@ -136,7 +136,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 ContractName = contractName,
             };
-            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
 
 
             var response = await contractAppService.InstanceState(contract, token);
@@ -166,7 +166,7 @@ namespace amorphie.contract.zeebe.Modules
                 ContractName = contractName,
             };
 
-            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
+            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
             var InstanceDto = contractAppService.Instance(contract, token).Result;
             messageVariables.Variables.Add("XContractInstance", InstanceDto);
 
