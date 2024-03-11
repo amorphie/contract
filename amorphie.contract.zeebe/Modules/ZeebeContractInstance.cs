@@ -168,7 +168,7 @@ namespace amorphie.contract.zeebe.Modules
 
             contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference));
             var InstanceDto = contractAppService.Instance(contract, token).Result;
-            messageVariables.Variables.Add("XContractInstance",InstanceDto.Data );
+            messageVariables.Variables.Add("XContractInstance", InstanceDto.Data);
 
             messageVariables.Variables.Add("ContractStatus", InstanceDto.Data.Status);
             messageVariables.Success = true;

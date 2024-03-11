@@ -65,7 +65,7 @@ namespace amorphie.contract.infrastructure.Middleware
                         messages.Add(validationExp.Message);
                         break;
                     }
-                       case NpgsqlException validationExp:
+                case NpgsqlException validationExp:
                     {
                         statusCode = (int)HttpStatusCode.InternalServerError;
                         title = "NpgsqlException Error";
