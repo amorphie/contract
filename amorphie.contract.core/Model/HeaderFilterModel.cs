@@ -9,6 +9,7 @@ namespace amorphie.contract.core.Model
         {
 
             EBankEntity = GetBankEntity(businessLine);
+            
             if (!string.IsNullOrEmpty(langCode))
             {
                 int commaIndex = langCode.IndexOf(',');

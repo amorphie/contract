@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.core;
 using amorphie.contract.infrastructure.Contexts;
+using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -204,21 +199,14 @@ namespace amorphie.contract.zeebe.Modules
                     reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
                 }
             }
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+
             if (string.IsNullOrEmpty(reference))
             {
-                if (body.ToString().IndexOf("Headers") != -1)
-                {
-                    if (body.GetProperty("Headers").ToString().IndexOf("user_reference") != -1)
-                    {
-                        reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-                    }
-
-                    if (body.GetProperty("Headers").ToString().IndexOf("customer_no") != -1)
-                    {
-                        customerNo = Convert.ToInt64(body.GetProperty("Headers").GetProperty("customer_no").ToString());
-                    }
-                }
+                reference = headerModel.UserReference;
             }
+            customerNo = headerModel.CustomerNo;
+
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
             var approvedDocumentList = messageVariables.Data.GetProperty("entityData");
 
