@@ -3,7 +3,7 @@ name: Burgan Git Flow Checker
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   check_commits:
