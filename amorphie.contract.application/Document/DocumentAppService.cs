@@ -106,7 +106,7 @@ namespace amorphie.contract.application
                 {
                     Reference = input.Reference,
                     Owner = input.Owner,
-                    CustomerNo= input.CustomerNo
+                    CustomerNo = input.CustomerNo
                 };
 
                 _dbContext.Customer.Add(cus);
