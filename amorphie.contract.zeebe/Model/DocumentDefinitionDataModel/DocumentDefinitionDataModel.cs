@@ -68,6 +68,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string property { get; set; }
         public string value { get; set; }
         public string PropertyName { get; set; }
+        public bool required { get; set; }
     }
 
 

@@ -14,6 +14,8 @@ namespace amorphie.contract.core.Entity.Document
         public string ReferenceName { get; set; }
         [Required]
         public string Fields { get; set; }
+        [Required]
+        public string TitleFields { get; set; }
         public Guid DocumentDefinitionId { get; set; }
         [ForeignKey("DocumentDefinitionId")]
         public DocumentDefinition DocumentDefinition { get; set; } = default!;

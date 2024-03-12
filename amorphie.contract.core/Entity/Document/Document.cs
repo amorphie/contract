@@ -29,6 +29,7 @@ namespace amorphie.contract.core.Entity.Document
 
         public EStatus Status { get; set; } = default!;
         public ICollection<DocumentInstanceEntityProperty>? DocumentInstanceEntityPropertys { get; set; } = new List<DocumentInstanceEntityProperty>();
+        public ICollection<DocumentInstanceNote>? DocumentInstanceNotes { get; set; } = new List<DocumentInstanceNote>();
         // [Required]
         // public Guid StatusId { get; set; }
         public Guid CustomerId { get; set; }

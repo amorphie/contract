@@ -18,6 +18,7 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
             {
                 "DocumentDefinition",
                 "DocumentInstanceEntityPropertys",
+                "DocumentInstanceNotes",
                 "DocumentContent",
                 "Status",
                 "Customer",

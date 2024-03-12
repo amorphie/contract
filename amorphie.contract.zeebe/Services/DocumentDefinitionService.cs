@@ -93,9 +93,9 @@ namespace amorphie.contract.zeebe.Services
 
 
         }
-        private List<string> SetDocumentEOV()
+        private List<MetadataElement> SetDocumentEOV()
         {
-            var dysTagField = new List<string>();
+            var dysTagField = new List<MetadataElement>();
             foreach (var entityPropertyData in _documentDefinitionDataModel.data.EntityProperty)
             {
                 if (_documentDefinitionDataModel.data.disabledDataMetadata != null && _documentDefinitionDataModel.data.disabledDataMetadata.Any())
@@ -107,14 +107,15 @@ namespace amorphie.contract.zeebe.Services
                     if (matchedMetadataElement != null)
                     {
                         entityPropertyData.PropertyName = matchedMetadataElement.ElementID;
-                        dysTagField.Add(matchedMetadataElement.ElementID);
+                        dysTagField.Add(matchedMetadataElement);
                     }
                 }
                 var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
                 {
                     EEntityPropertyType = (ushort)EEntityPropertyType.str,
                     EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
-                    Code = entityPropertyData.PropertyName
+                    Code = entityPropertyData.PropertyName,
+                    Required = entityPropertyData.required
                 };
 
                 var documentEntityProperty = new DocumentEntityProperty
@@ -234,18 +235,20 @@ namespace amorphie.contract.zeebe.Services
 
         #region Document_Dys
 
-        private void SetDocumentDys(List<string> dysMetadata)
+        private void SetDocumentDys(List<MetadataElement> dysMetadata)
         {
             if (_documentDefinitionDataModel.data.referenceId != 0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
             {
                 try
                 {
-                    var tagList = string.Join(",", dysMetadata);
+                    string stringElementName = string.Join(",", dysMetadata.ConvertAll(element => element.ElementName));
+                    string stringElementId = string.Join(",", dysMetadata.ConvertAll(element => element.ElementID));
                     var documentDys = new DocumentDys
                     {
                         ReferenceId = _documentDefinitionDataModel.data.referenceId,
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
-                        Fields = tagList
+                        Fields = stringElementId,
+                        TitleFields = stringElementName
                     };
                     if (_documentDefinitionDataModel.data.referenceKey != 0)
                     {
