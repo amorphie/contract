@@ -97,7 +97,7 @@ namespace amorphie.contract.application
                 throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
-            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
+            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.InstanceMetadata);
             if (docdef.DocumentEntityPropertys.Any() && docdef.DocumentDys!=null)
             {
                 var element = GetDocumentElementDtos(docdef.DocumentDys.Fields,docdef.DocumentDys.TitleFields);
@@ -114,11 +114,12 @@ namespace amorphie.contract.application
                     if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
                     {
                         var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
-                        if (conflictingProperty != null)
+                        if (conflictingProperty == null)
                         {
                             throw new ArgumentException($"Girilmesi zorunlu metadalar bulunmakta {item.EntityProperty.Code}");
                         }
                     }
+                    //Else if(item.EntityProperty.Required) -> tagdan gelecek...
                 }
             }
     
@@ -145,7 +146,7 @@ namespace amorphie.contract.application
                 Status = EStatus.Completed,
                 CustomerId = cus.Id,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input),
-                DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(input.NoteDtos),
+                DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(input.Notes),
             }; //DocumentInstanceNotes dan hata alcak mıyım kontrol et
 
             if (entityProperties.Any())
@@ -196,9 +197,9 @@ namespace amorphie.contract.application
         private async Task SendToDys(DocumentDefinition docDef, DocumentInstanceInputDto inputDto, byte[] fileByteArray)
         {
             var documentDys = new DocumentDysRequestModel(inputDto.Owner, inputDto.DocumentCode, docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
-            if (inputDto.EntityPropertyDtos is not null)
+            if (inputDto.InstanceMetadata is not null)
             {
-                foreach (var item in inputDto.EntityPropertyDtos)
+                foreach (var item in inputDto.InstanceMetadata)
                 {
                     documentDys.DocumentParameters.Add(item.Code, item.EntityPropertyValue);
                 }

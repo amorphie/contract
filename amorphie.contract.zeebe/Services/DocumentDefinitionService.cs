@@ -114,7 +114,8 @@ namespace amorphie.contract.zeebe.Services
                 {
                     EEntityPropertyType = (ushort)EEntityPropertyType.str,
                     EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
-                    Code = entityPropertyData.PropertyName
+                    Code = entityPropertyData.PropertyName,
+                    Required = entityPropertyData.required
                 };
 
                 var documentEntityProperty = new DocumentEntityProperty
@@ -247,7 +248,7 @@ namespace amorphie.contract.zeebe.Services
                         ReferenceId = _documentDefinitionDataModel.data.referenceId,
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
                         Fields = stringElementId,
-                        TitleFields = stringElementId
+                        TitleFields = stringElementName
                     };
                     if (_documentDefinitionDataModel.data.referenceKey != 0)
                     {
