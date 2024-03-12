@@ -44,6 +44,14 @@ namespace amorphie.contract.infrastructure.Extensions
                 Required = false,
                 Description = "Indicates user reference."
             });
+
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = AppHeaderConsts.CustomerNo,
+                In = ParameterLocation.Header,
+                Required = false,
+                Description = "Indicates customer no."
+            });
         }
     }
 

@@ -93,11 +93,11 @@ public class DocumentDefinitionModule
     protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
 
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var langCode = HeaderHelper.GetHeaderLangCode(httpContext);
 
         var input = new GetAllDocumentDefinitionInputDto
         {
-            LangCode = headerModels.LangCode,
+            LangCode = langCode,
             Page = page,
             PageSize = pageSize
         };

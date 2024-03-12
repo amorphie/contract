@@ -34,7 +34,7 @@ public class ContractModule
     {
         // throw new ClientSideException("sdas", "InstanceState");
 
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         input.SetHeaderParameters(headerModels);
         var response = await contractAppService.Instance(input, token);
 
@@ -44,7 +44,7 @@ public class ContractModule
     [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
 
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         var inputQ = new ContractInstanceInputDto
         {
             ContractName = input.ContractName,

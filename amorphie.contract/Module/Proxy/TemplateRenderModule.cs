@@ -10,6 +10,7 @@ using amorphie.contract.core;
 using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -37,7 +38,7 @@ namespace amorphie.contract.Module.Proxy
             {
                 try
                 {
-                    var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+                    var headerModels = HeaderHelper.GetHeader(httpContext);
 
                     if (requestModel.RenderId == Guid.Empty)
                     {
@@ -103,7 +104,7 @@ namespace amorphie.contract.Module.Proxy
             {
                 try
                 {
-                    var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+                    var headerModels = HeaderHelper.GetHeader(httpContext);
 
                     if (requestModel.RenderId == Guid.Empty)
                     {
