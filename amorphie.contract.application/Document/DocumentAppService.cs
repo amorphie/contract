@@ -74,19 +74,19 @@ namespace amorphie.contract.application
         }
 
         private List<DocumentElementDto> GetDocumentElementDtos(string Fields, string TitleFields)
+        {
+            var elementIds = Fields.Split(',').Select(x => x.Trim());
+            var elementTitles = TitleFields.Split(',').Select(x => x.Trim());
+
+            var documentElementDtos = elementIds.Zip(elementTitles, (id, title) =>
+                new DocumentElementDto
                 {
-                    var elementIds = Fields.Split(',').Select(x => x.Trim());
-                    var elementTitles = TitleFields.Split(',').Select(x => x.Trim());
+                    ElementID = id,
+                    ElementName = title
+                }).ToList();
 
-                    var documentElementDtos = elementIds.Zip(elementTitles, (id, title) =>
-                        new DocumentElementDto
-                        {
-                            ElementID = id,
-                            ElementName = title
-                        }).ToList();
-
-                    return documentElementDtos;
-                }
+            return documentElementDtos;
+        }
 
         public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
@@ -98,9 +98,9 @@ namespace amorphie.contract.application
             }
 
             var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.InstanceMetadata);
-            if (docdef.DocumentEntityPropertys.Any() && docdef.DocumentDys!=null)
+            if (docdef.DocumentEntityPropertys.Any() && docdef.DocumentDys != null)
             {
-                var element = GetDocumentElementDtos(docdef.DocumentDys.Fields,docdef.DocumentDys.TitleFields);
+                var element = GetDocumentElementDtos(docdef.DocumentDys.Fields, docdef.DocumentDys.TitleFields);
                 foreach (var entityProperty in entityProperties)
                 {
                     var correspondingElement = element.FirstOrDefault(e => e.ElementName == entityProperty.Code);
@@ -122,7 +122,7 @@ namespace amorphie.contract.application
                     //Else if(item.EntityProperty.Required) -> tagdan gelecek...
                 }
             }
-    
+
 
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
