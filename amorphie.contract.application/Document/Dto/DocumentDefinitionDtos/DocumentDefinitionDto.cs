@@ -49,6 +49,11 @@ namespace amorphie.contract.application
         public string? EntityPropertyValue { get; set; }
     }
 
+    public class NoteDto
+    {
+        public string? Note { get; set; }
+    }
+
     public class DocumentUploadDto
     {
         public bool Required { get; set; }

@@ -73,6 +73,21 @@ namespace amorphie.contract.application
             return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
+        private List<DocumentElementDto> GetDocumentElementDtos(string Fields, string TitleFields)
+                {
+                    var elementIds = Fields.Split(',').Select(x => x.Trim());
+                    var elementTitles = TitleFields.Split(',').Select(x => x.Trim());
+
+                    var documentElementDtos = elementIds.Zip(elementTitles, (id, title) =>
+                        new DocumentElementDto
+                        {
+                            ElementID = id,
+                            ElementName = title
+                        }).ToList();
+
+                    return documentElementDtos;
+                }
+
         public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
 
@@ -82,10 +97,18 @@ namespace amorphie.contract.application
                 throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
             }
 
-
             var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.EntityPropertyDtos);
-            if (docdef.DocumentEntityPropertys.Any())
+            if (docdef.DocumentEntityPropertys.Any() && docdef.DocumentDys!=null)
             {
+                var element = GetDocumentElementDtos(docdef.DocumentDys.Fields,docdef.DocumentDys.TitleFields);
+                foreach (var entityProperty in entityProperties)
+                {
+                    var correspondingElement = element.FirstOrDefault(e => e.ElementName == entityProperty.Code);
+                    if (correspondingElement != null)
+                    {
+                        entityProperty.Code = correspondingElement.ElementID;
+                    }
+                }
                 foreach (var item in docdef.DocumentEntityPropertys)
                 {
                     if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
@@ -98,6 +121,7 @@ namespace amorphie.contract.application
                     }
                 }
             }
+    
 
             var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
             if (cus == null)
@@ -120,8 +144,9 @@ namespace amorphie.contract.application
                 DocumentDefinitionId = docdef.Id,
                 Status = EStatus.Completed,
                 CustomerId = cus.Id,
-                DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input)
-            };
+                DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input),
+                DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(input.NoteDtos),
+            }; //DocumentInstanceNotes dan hata alcak mıyım kontrol et
 
             if (entityProperties.Any())
             {
