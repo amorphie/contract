@@ -39,7 +39,7 @@ public class CustomerIntegrationService : ICustomerIntegrationService
 
         _logger = logger;
     }
-    
+
     public async Task<GenericResult<PusulaCustomerInfoResponseModel>> GetCustomerInfo(long customerNo)
     {
 
