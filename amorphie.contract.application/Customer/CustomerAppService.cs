@@ -4,12 +4,11 @@ using amorphie.contract.application.Extensions;
 using amorphie.contract.infrastructure.Contexts;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using static amorphie.contract.application.Customer.CustomerAppService;
 using Elastic.Apm.Api;
 using amorphie.core.Base;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
-using amorphie.contract.infrastructure.Extensions;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.application.Customer
 {

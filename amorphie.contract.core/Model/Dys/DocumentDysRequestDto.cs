@@ -23,10 +23,13 @@ public class DocumentDysRequestModel
         FileName = fileName;
         MimeType = mimeType;
         Content = content;
-        DocumentParameters = new Dictionary<string, string>
-        {
-            { "Field08TCKimlik", userReference }
-        };
+        DocumentParameters = new Dictionary<string, string>();
+
+        if (userReference.Length != 11)
+            DocumentParameters.Add("Field09VergiNo", userReference);
+        else
+            DocumentParameters.Add("Field08TCKimlik", userReference);
+
     }
 
     public string ConstructDocumentTags()

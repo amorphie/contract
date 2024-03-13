@@ -4,11 +4,12 @@ using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.application;
 using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model;
 using Dapr;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
 using amorphie.contract.Extensions;
+using amorphie.contract.core.Model.Colleteral;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract;
 
@@ -31,6 +32,7 @@ public class DocumentModule
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("download", DownloadDocument);
         routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
+        routeGroupBuilder.MapPost("sendToTSIZL", SendToTSIZL);
 
     }
 
@@ -88,16 +90,29 @@ public class DocumentModule
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.SendDocumentInstanceDataToDYSTopicName)]
     [HttpPost]
-    public async Task<IResult> AddDocumentToDys([FromBody] DocumentDysRequestModel documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
+    public async Task<GenericResult<bool>> AddDocumentToDys([FromBody] DocumentDysRequestModel documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
     {
         await dysIntegrationService.AddDysDocument(documentDysRequestModel);
 
-        return Results.Ok(new
+        return GenericResult<bool>.Success(true);
+    }
+
+    [Topic(KafkaConsts.KafkaName, KafkaConsts.SendEngagementDataToTSIZLTopicName)]
+    [HttpPost]
+    public async Task<GenericResult<bool>> SendToTSIZL([FromBody] DoAutomaticEngagementPlainRequestDto requestModel, [FromServices] IColleteralIntegrationService colleteralIntegrationService, [FromServices] ICustomerIntegrationService customerIntegrationService)
+    {
+        var customerInfo = await customerIntegrationService.GetCustomerInfo(requestModel.AccountNumber);
+
+        if (!customerInfo.IsSuccess)
         {
-            Data = true,
-            Success = true,
-            ErrorMessage = "",
-        });
+            return GenericResult<bool>.Fail(customerInfo.ErrorMessage);
+        }
+
+        requestModel.SetAccountBranchCode(customerInfo.Data.MainBranchCode);
+
+        await colleteralIntegrationService.AddTSIZLDocument(requestModel);
+
+        return GenericResult<bool>.Success(true);
     }
 
 }

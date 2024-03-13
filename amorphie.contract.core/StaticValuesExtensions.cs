@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace amorphie.contract.core
 {
     public class AppSettings
@@ -10,6 +5,7 @@ namespace amorphie.contract.core
         public Minio minio { get; set; }
         public TemplateEngine TemplateEngine { get; set; }
         public Dms Dms { get; set; }
+        public Fora Fora { get; set; }
 
     }
     public class TemplateEngine
@@ -35,6 +31,14 @@ namespace amorphie.contract.core
     {
         public string Url { get; set; }
     }
+
+    public class Fora
+    {
+        public string ColleteralUrl { get; set; }
+        public string UserCode { get; set; }
+
+    }
+
     public static class StaticValuesExtensions
     {
         public static string DmsUrl { get; set; }
@@ -53,6 +57,8 @@ namespace amorphie.contract.core
         public static string AccessKey { get; set; }
         public static string SecretKey { get; set; }
 
+        public static Fora Fora { get; set; }
+
         public static void SetStaticValues(AppSettings settings)
         {
             DmsUrl = settings.Dms.Url;
@@ -68,6 +74,12 @@ namespace amorphie.contract.core
             MinioEndPoint = settings.minio.EndPoint;
             AccessKey = settings.minio.AccessKey;
             SecretKey = settings.minio.SecretKey;
+
+            Fora = new Fora
+            {
+                ColleteralUrl = settings.Fora.ColleteralUrl,
+                UserCode = settings.Fora.UserCode = settings.Fora.UserCode
+            };
         }
     }
 }

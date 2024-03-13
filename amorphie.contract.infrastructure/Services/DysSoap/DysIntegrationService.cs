@@ -39,8 +39,6 @@ public class DysIntegrationService : IDysIntegrationService
                 };
 
         _logger = logger;
-
-        _logger.Information("Configuration.DmsUrl {DmsURL}}", _configuration["Dms:Url"]);
     }
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
@@ -50,7 +48,7 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("<document>");
         cmdData.Append($"<fileName>{model.FileName}</fileName>");
         cmdData.Append($"<mimeType>{model.MimeType}</mimeType>");
-        cmdData.Append("<ownerID>EBT\\CONTRACT</ownerID>");
+        cmdData.Append($"<ownerID>{StaticValuesExtensions.Fora.UserCode}</ownerID>");
         cmdData.Append($"<desc>{model.DocumentCode}</desc>");
         cmdData.Append("<notes>" + "" + "</notes>");
         cmdData.Append("<channel>" + "Contract" + "</channel>");
@@ -69,8 +67,6 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("</tagInfo>");
         cmdData.Append("</tagInfo>");
         cmdData.Append("</document>");
-
-        _logger.Information("DYS document is creating {cmdData} - {content}", cmdData.ToString(), model.Content);
 
         var dmsdocResult = await dmsServiceSoapClient.AddDocumentAsync(cmdData.ToString(), model.Content);
 

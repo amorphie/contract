@@ -1,6 +1,6 @@
 using System.Net;
-using amorphie.contract.infrastructure.Extensions;
-using amorphie.contract.infrastructure.Extensions.CustomException;
+using amorphie.contract.core.CustomException;
+using amorphie.contract.core.Response;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Serilog;
@@ -84,6 +84,7 @@ namespace amorphie.contract.infrastructure.Middleware
                 Detail = string.Join(" ## ", messages.ToArray())
             };
             httpContext.Response.StatusCode = statusCode;
+
             Log.Error(ex, "An unhandled exception has occurred. Message: {Message} Request path: {Path}, Query string: {QueryString}",
                      problemDetails, httpContext.Request.Path, httpContext.Request.QueryString);
             var responseResult = GenericResult<GenericResponse>.Exception(problemDetails);

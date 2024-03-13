@@ -1,6 +1,6 @@
 
+using amorphie.contract.core.Response;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 
