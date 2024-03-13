@@ -30,7 +30,7 @@ namespace amorphie.contract.application.Contract
         {
             var contractDefinition = await _dbContext.ContractDefinition
                 .AnyAsync(x => x.Code == req.Code && x.BankEntity == req.EBankEntity, cts);
-            return GenericResult<bool>.Success(contractDefinition); 
+            return GenericResult<bool>.Success(contractDefinition);
         }
 
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
