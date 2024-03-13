@@ -2,6 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Security;
 using System.Text;
+using amorphie.contract.core;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +48,7 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("<document>");
         cmdData.Append($"<fileName>{model.FileName}</fileName>");
         cmdData.Append($"<mimeType>{model.MimeType}</mimeType>");
-        cmdData.Append("<ownerID>EBT\\CONTRACT</ownerID>");
+        cmdData.Append($"<ownerID>{StaticValuesExtensions.Fora.UserCode}</ownerID>");
         cmdData.Append($"<desc>{model.DocumentCode}</desc>");
         cmdData.Append("<notes>" + "" + "</notes>");
         cmdData.Append("<channel>" + "Contract" + "</channel>");

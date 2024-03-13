@@ -11,9 +11,10 @@ public class DoAutomaticEngagementPlainRequestDto
     public string EngagementKind { get; init; }
     public decimal EngagementAmount { get; init; }
     public string UserCode { get; init; }
-    public DoAutomaticEngagementPlainRequestDto(int accountNumber, string engagementKind)
+    public DoAutomaticEngagementPlainRequestDto(int accountNumber, string engagementKind, string userCode)
     {
         ArgumentException.ThrowIfNullOrEmpty(engagementKind, nameof(engagementKind));
+        ArgumentException.ThrowIfNullOrEmpty(userCode, nameof(userCode));
 
         if (accountNumber <= 0)
             throw new ArgumentException("accountNumber must be greater than zero");
@@ -25,7 +26,7 @@ public class DoAutomaticEngagementPlainRequestDto
         EngagementDate = DateTime.Now;
         EngagementType = "G";
         EngagementAmount = 0.01m;
-        UserCode = "EBT\\CONTRACT";
+        UserCode = userCode;
     }
     public DoAutomaticEngagementPlainRequestDto()
     {

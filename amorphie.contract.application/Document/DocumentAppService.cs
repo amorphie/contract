@@ -12,6 +12,7 @@ using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 
 namespace amorphie.contract.application
@@ -26,6 +27,7 @@ namespace amorphie.contract.application
         private readonly IDysProducer _dysProducer;
 
         private readonly ITSIZLProducer _tsizlProducer;
+
 
         public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer)
         {
@@ -79,9 +81,6 @@ namespace amorphie.contract.application
 
         public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
-            var request2 = new DoAutomaticEngagementPlainRequestDto(Convert.ToInt32("20187037"), "S9");
-            await _tsizlProducer.PublishTSIZLData(request2);
-
             var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
             if (docdef == null)
             {
@@ -173,7 +172,7 @@ namespace amorphie.contract.application
 
             if (docdef.DocumentTsizl is not null)
             {
-                var request = new DoAutomaticEngagementPlainRequestDto(Convert.ToInt32(input.CustomerNo), docdef.DocumentTsizl.EngagementKind);
+                var request = new DoAutomaticEngagementPlainRequestDto(Convert.ToInt32(input.CustomerNo), docdef.DocumentTsizl.EngagementKind, StaticValuesExtensions.Fora.UserCode);
                 await _tsizlProducer.PublishTSIZLData(request);
             }
 
