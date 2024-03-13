@@ -1,12 +1,10 @@
 ﻿using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Request;
-using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
-using amorphie.contract.infrastructure.Extensions;
 using amorphie.contract.infrastructure.Contexts;
 
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.Core.Operations;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.application.Contract
 {
@@ -32,7 +30,7 @@ namespace amorphie.contract.application.Contract
         {
             var contractDefinition = await _dbContext.ContractDefinition
                 .AnyAsync(x => x.Code == req.Code && x.BankEntity == req.EBankEntity, cts);
-            return GenericResult<bool>.Success(contractDefinition); ;
+            return GenericResult<bool>.Success(contractDefinition); 
         }
 
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)

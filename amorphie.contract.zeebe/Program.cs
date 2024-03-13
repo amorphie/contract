@@ -16,6 +16,8 @@ using System.Text.Json;
 using amorphie.contract.zeebe.Services;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Services.Kafka;
+using amorphie.contract.infrastructure.Services.DysSoap;
+using amorphie.contract.infrastructure.Services.PusulaSoap;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,7 +73,12 @@ builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
 builder.Services.AddScoped<IContractAppService, ContractAppService>();
-builder.Services.AddTransient<IDysProducer, DysProducer>();
+builder.Services.AddScoped<IDysProducer, DysProducer>();
+builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
+builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
+builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
+builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
+
 
 
 builder.Services.AddApplicationServices();
@@ -82,6 +89,7 @@ builder.Services.AddSingleton(new JsonSerializerOptions
 
 var app = builder.Build();
 app.UseAllElasticApm(builder.Configuration);
+app.UseZeebeExceptionHandleMiddlewareExtensions();
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
@@ -90,7 +98,6 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // sssss
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseZeebeExceptionHandleMiddlewareExtensions();
 
 app.UseHttpsRedirection();
 

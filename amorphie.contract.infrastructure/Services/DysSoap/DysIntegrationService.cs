@@ -2,7 +2,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Security;
 using System.Text;
-using amorphie.contract.core;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +38,6 @@ public class DysIntegrationService : IDysIntegrationService
                 };
 
         _logger = logger;
-
-        _logger.Information("Configuration.DmsUrl {DmsURL}}", _configuration["Dms:Url"]);
     }
 
     public async Task<string> AddDysDocument(DocumentDysRequestModel model)
@@ -69,8 +66,6 @@ public class DysIntegrationService : IDysIntegrationService
         cmdData.Append("</tagInfo>");
         cmdData.Append("</tagInfo>");
         cmdData.Append("</document>");
-
-        _logger.Information("DYS document is creating {cmdData} - {content}", cmdData.ToString(), model.Content);
 
         var dmsdocResult = await dmsServiceSoapClient.AddDocumentAsync(cmdData.ToString(), model.Content);
 

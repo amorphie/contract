@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Amazon.SecurityToken;
 
-namespace amorphie.contract.infrastructure.Extensions;
+namespace amorphie.contract.core.Response;
 public class ProblemDetails
 {
     public int Status { get; set; }
@@ -14,7 +9,7 @@ public class ProblemDetails
     public string Detail { get; set; }
     public override string ToString()
     {
-        return "Status: " + Status + " Title: " + Title + " Detail: " + Detail;
+        return $"Status: {Status}, Title: {Title}, Detail:{Detail}";
     }
 
 }

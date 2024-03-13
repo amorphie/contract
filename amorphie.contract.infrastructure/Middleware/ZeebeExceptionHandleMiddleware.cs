@@ -1,11 +1,6 @@
 using System.Net;
-using System.Text.Json;
-using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model;
-using amorphie.contract.infrastructure.Extensions;
-using amorphie.contract.infrastructure.Extensions.CustomException;
-using amorphie.core.Base;
-using Google.Protobuf.WellKnownTypes;
+using amorphie.contract.core.CustomException;
+using amorphie.contract.core.Response;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Npgsql;

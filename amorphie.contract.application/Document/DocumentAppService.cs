@@ -4,11 +4,12 @@ using amorphie.contract.core;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.infrastructure.Extensions;
 using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +25,14 @@ namespace amorphie.contract.application
 
         private readonly IDysProducer _dysProducer;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer)
+        private readonly ITSIZLProducer _tsizlProducer;
+
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
             _dysProducer = dysProducer;
+            _tsizlProducer = tsizlProducer;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -75,6 +79,8 @@ namespace amorphie.contract.application
 
         public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
+            var request2 = new DoAutomaticEngagementPlainRequestDto(Convert.ToInt32("20187037"), "S9");
+            await _tsizlProducer.PublishTSIZLData(request2);
 
             var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
             if (docdef == null)
@@ -163,6 +169,12 @@ namespace amorphie.contract.application
             if (docdef.DocumentDys is not null)
             {
                 await SendToDys(docdef, input, fileByteArray);
+            }
+
+            if (docdef.DocumentTsizl is not null)
+            {
+                var request = new DoAutomaticEngagementPlainRequestDto(Convert.ToInt32(input.CustomerNo), docdef.DocumentTsizl.EngagementKind);
+                await _tsizlProducer.PublishTSIZLData(request);
             }
 
             return GenericResult<bool>.Success(true);
