@@ -9,6 +9,7 @@ using amorphie.core.Base;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Response;
+using amorphie.contract.core;
 
 namespace amorphie.contract.application.Customer
 {
@@ -33,8 +34,8 @@ namespace amorphie.contract.application.Customer
             _dbContext = dbContext;
             _minioService = minioService;
 
-            _baseUrl = configuration["Apisix:BaseUrl"];
-            _downloadEndpoint = configuration["Apisix:DownloadEndpoint"];
+            _baseUrl = StaticValuesExtensions.Apisix.BaseUrl;
+            _downloadEndpoint = StaticValuesExtensions.Apisix.DownloadEndpoint;
         }
 
         public string FindTitle(List<MultilanguageText> texts, string language)

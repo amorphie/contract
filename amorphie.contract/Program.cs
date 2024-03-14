@@ -2,8 +2,6 @@ using amorphie.core.Identity;
 using amorphie.contract.infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using amorphie.core.Extension;
-using System.Reflection;
-using FluentValidation;
 using System.Text.Json.Serialization;
 using amorphie.contract.core.Services;
 using amorphie.contract.core;
@@ -17,22 +15,15 @@ using amorphie.contract.infrastructure.Services.Kafka;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
+using System.Reflection;
+using FluentValidation;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+await builder.Configuration.AddVaultSecrets("contract-secretstore", new[] { "contract-secretstore" });
+
 builder.Services.AddDaprClient();
-
-IConfiguration Configuration;
-
-Configuration = builder
-    .Configuration
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
-    .AddEnvironmentVariables()
-    .AddCommandLine(args)
-    .AddUserSecrets<Program>()
-    .Build();
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -44,9 +35,9 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
+
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDysProducer, DysProducer>();
 builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
@@ -63,8 +54,10 @@ var assemblies = new Assembly[]
 builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+    (options => options.UseNpgsql(builder.Configuration["contractdb"]));
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -78,7 +71,12 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplicationServices();
 
-builder.AddSeriLog();
+builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration);
+
+});
 
 
 var app = builder.Build();

@@ -1,10 +1,10 @@
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Security;
+using amorphie.contract.core;
 using amorphie.contract.core.Model.Pusula;
 using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace amorphie.contract.infrastructure.Services.PusulaSoap;
@@ -17,15 +17,12 @@ public class CustomerIntegrationService : ICustomerIntegrationService
     private readonly BasicHttpsBinding binding;
 
     private readonly CustomerServicesSoapClient customerServicesSoapClient;
-    private readonly IConfiguration _configuration;
 
-    public CustomerIntegrationService(ILogger logger, IConfiguration configuration)
+    public CustomerIntegrationService(ILogger logger)
     {
-        _configuration = configuration;
-
         binding = new BasicHttpsBinding();
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
-        endpointAddress = new EndpointAddress(_configuration["Pusula:CustomerServicesUrl"]);
+        endpointAddress = new EndpointAddress(StaticValuesExtensions.Pusula.CustomerServicesUrl);
 
         customerServicesSoapClient = new CustomerServicesSoapClient(binding, endpointAddress);
 

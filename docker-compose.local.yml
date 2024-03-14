@@ -82,6 +82,38 @@ services:
     networks:
       - contract-local
 
+  vault:
+    container_name: contract-vault
+    image: vault:1.13.3
+    restart: on-failure:10
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: 'https://0.0.0.0:8200'
+      VAULT_API_ADDR: 'https://0.0.0.0:8200'
+      VAULT_DEV_ROOT_TOKEN_ID: 'admin'
+      VAULT_TOKEN: 'admin'
+    volumes:
+      - ./file:/vault/file
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      retries: 5
+    command: server -dev -dev-root-token-id="admin"
+    networks:
+      - contract-local
+
+  vault-prepopulate:
+    image: alpine/curl:latest
+    depends_on:
+      - vault
+    volumes:
+      - ./vault.sh:/usr/local/bin/prepopulate_vault.sh
+    command: ["sh", "-c", "/usr/local/bin/prepopulate_vault.sh && /usr/local/bin/prepopulate_vault.sh"]
+    networks:
+       - contract-local
+
+
 networks:
   contract-local:
     driver: bridge
