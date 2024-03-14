@@ -32,6 +32,8 @@ namespace amorphie.contract.application
         public DocumentOnlineSingDto? DocumentOnlineSing { get; set; }
         public DocumentOptimizeDto? DocumentOptimize { get; set; }
         public DocumentOperationsDto? DocumentOperations { get; set; }
+        public DocumentDysDto? DocumentDys { get; set; }
+        public DocumentTsizlDto? DocumentTsizl { get; set; }
 
     }
 
@@ -40,8 +42,6 @@ namespace amorphie.contract.application
         public bool Size { get; set; }
         public string Code { get; set; }
     }
-
-
 
     public class EntityPropertyDto
     {
@@ -52,6 +52,20 @@ namespace amorphie.contract.application
     public class NoteDto
     {
         public string? Note { get; set; }
+    }
+
+    public class DocumentDysDto
+    {
+        public int ReferenceId { get; set; }
+        public int ReferenceKey { get; set; }
+        public string? ReferenceName { get; set; }
+        public string? Fields { get; set; }
+        public string? TitleFields { get; set; }
+    }
+
+    public class DocumentTsizlDto
+    {
+        public string EngagementKind { get; set; }
     }
 
     public class DocumentUploadDto
