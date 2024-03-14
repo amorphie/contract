@@ -77,7 +77,7 @@ namespace amorphie.contract.application
                 .ForMember(dest => dest.Fields, opt => opt.MapFrom(src => src.Fields))
                 .ForMember(dest => dest.TitleFields, opt => opt.MapFrom(src => src.TitleFields))
                 .ReverseMap();
-            
+
             CreateMap<DocumentTsizlDto, DocumentTsizl>()
                 .ForMember(dest => dest.EngagementKind, opt => opt.MapFrom(src => src.EngagementKind))
                 .ReverseMap();
