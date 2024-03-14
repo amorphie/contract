@@ -51,7 +51,7 @@ namespace amorphie.contract.application.Customer
                 texts.FirstOrDefault().Label;
         }
 
-       public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
             bool othersOnly = false;
             if (inputDto.Code == "//OtherDocuments")
