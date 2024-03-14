@@ -26,7 +26,7 @@ public class DoAutomaticEngagementPlainRequestDto
         EngagementDate = DateTime.Now;
         EngagementType = "G";
         EngagementAmount = 0.01m;
-        UserCode = userCode.Replace("\\\\","\\");
+        UserCode = userCode.Replace("\\\\", "\\");
     }
     public DoAutomaticEngagementPlainRequestDto()
     {
