@@ -22,6 +22,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 await builder.Configuration.AddVaultSecrets("contract-zeebe-secretstore", new[] { "contract-secretstore" });
+var postgreSql = builder.Configuration["contractdb"];
 
 builder.Services.AddDaprClient();
 
@@ -40,7 +41,7 @@ builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 });
 
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(builder.Configuration["contractdb"]));
+    (options => options.UseNpgsql(postgreSql));
 
 builder.Services.AddCors(options =>
 {
