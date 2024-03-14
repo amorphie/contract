@@ -26,7 +26,7 @@ public class DoAutomaticEngagementPlainRequestDto
         EngagementDate = DateTime.Now;
         EngagementType = "G";
         EngagementAmount = 0.01m;
-        UserCode = userCode;
+        UserCode = userCode.Replace("\\\\", "\\");
     }
     public DoAutomaticEngagementPlainRequestDto()
     {
@@ -40,7 +40,7 @@ public class DoAutomaticEngagementPlainRequestDto
 
     public override string ToString()
     {
-        return $"{EngagementKind} {AccountNumber} {AccountBranchCode}";
+        return $"{EngagementKind} {AccountNumber} {AccountBranchCode} AccountSuffix: {AccountSuffix} CurrencyCode: {CurrencyCode} CurrencyCode: {CurrencyCode} EngagementDate: {EngagementDate} EngagementAmount:{EngagementAmount} EngagementType:{EngagementType}";
     }
 }
 

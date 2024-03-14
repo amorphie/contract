@@ -45,7 +45,7 @@ public class ColleteralIntegrationService : IColleteralIntegrationService
             throw new ArgumentException("AccountBranchCode must be greater than zero");
         }
 
-        var result = await colleteralServiceSoapClient.DoAutomaticEngagementAsync(model.AccountBranchCode, model.AccountNumber, model.AccountSuffix, model.EngagementDate, model.EngagementType, model.UserCode);
+        var result = await colleteralServiceSoapClient.DoAutomaticEngagementPlainAsync(model.AccountBranchCode, model.AccountNumber, model.AccountSuffix, model.CurrencyCode, model.EngagementDate, model.EngagementType, model.EngagementKind, model.EngagementAmount, model.UserCode);
 
         if (result.HasError)
         {
@@ -53,6 +53,6 @@ public class ColleteralIntegrationService : IColleteralIntegrationService
             throw new Exception(result.ErrorMessage);
         }
 
-        _logger.Information("DoAutomaticEngagement was sent {EngagementModel}", model.ToString());
+        _logger.Information("DoAutomaticEngagementPlain was sent {EngagementModel} {ReferenceNumber}", model.ToString(), result.ReferenceNumber);
     }
 }
