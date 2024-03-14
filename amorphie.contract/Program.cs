@@ -23,6 +23,8 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 await builder.Configuration.AddVaultSecrets("contract-secretstore", new[] { "contract-secretstore" });
 
+var postgreSql = builder.Configuration["contractdb"];
+
 builder.Services.AddDaprClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -56,7 +58,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(builder.Configuration["contractdb"]));
+    (options => options.UseNpgsql(postgreSql));
 
 builder.Services.AddCors(options =>
 {
