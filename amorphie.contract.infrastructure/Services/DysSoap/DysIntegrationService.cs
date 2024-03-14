@@ -5,7 +5,6 @@ using System.Text;
 using amorphie.contract.core;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Services;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace amorphie.contract.infrastructure.Services.DysSoap;
@@ -18,15 +17,12 @@ public class DysIntegrationService : IDysIntegrationService
     private readonly BasicHttpsBinding binding;
 
     private readonly DmsServiceSoapClient dmsServiceSoapClient;
-    private readonly IConfiguration _configuration;
 
-    public DysIntegrationService(ILogger logger, IConfiguration configuration)
+    public DysIntegrationService(ILogger logger)
     {
-        _configuration = configuration;
-
         binding = new BasicHttpsBinding();
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
-        endpointAddress = new EndpointAddress(_configuration["Dms:Url"]);
+        endpointAddress = new EndpointAddress(StaticValuesExtensions.DmsUrl);
 
         dmsServiceSoapClient = new DmsServiceSoapClient(binding, endpointAddress);
 

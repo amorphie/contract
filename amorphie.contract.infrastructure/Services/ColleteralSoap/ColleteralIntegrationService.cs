@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Security;
+using amorphie.contract.core;
 using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
@@ -16,15 +17,13 @@ public class ColleteralIntegrationService : IColleteralIntegrationService
     private readonly BasicHttpsBinding binding;
 
     private readonly ColleteralSoapClient colleteralServiceSoapClient;
-    private readonly IConfiguration _configuration;
 
-    public ColleteralIntegrationService(ILogger logger, IConfiguration configuration)
+    public ColleteralIntegrationService(ILogger logger)
     {
-        _configuration = configuration;
 
         binding = new BasicHttpsBinding();
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
-        endpointAddress = new EndpointAddress(_configuration["Fora:ColleteralUrl"]);
+        endpointAddress = new EndpointAddress(StaticValuesExtensions.Fora.ColleteralUrl);
 
         colleteralServiceSoapClient = new ColleteralSoapClient(binding, endpointAddress);
 

@@ -4,7 +4,6 @@ using amorphie.contract.zeebe.Modules;
 using amorphie.contract.zeebe.Modules.ZeebeDocumentDef;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.application;
-
 using amorphie.core.Extension;
 using Elastic.Apm.NetCoreAll;
 using amorphie.contract.core.Services;
@@ -18,20 +17,14 @@ using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Services.Kafka;
 using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
-IConfiguration Configuration;
+await builder.Configuration.AddVaultSecrets("contract-zeebe-secretstore", new[] { "contract-secretstore" });
 
-Configuration = builder
-    .Configuration
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", false, true)
-    .AddEnvironmentVariables()
-    .AddCommandLine(args)
-    .AddUserSecrets<Program>()
-    .Build();
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDaprClient();
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -39,10 +32,16 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
-builder.AddSeriLog();
+builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration);
+
+});
 
 builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+    (options => options.UseNpgsql(builder.Configuration["contractdb"]));
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -53,17 +52,9 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
-builder.Services.AddDaprClient();
 
 builder.Services.AddSingleton<IConfigurationRoot>(provider => builder.Configuration);
 
-// builder.Services.Configure<JsonSerializerOptions>(options =>
-// {
-//     options.PropertyNameCaseInsensitive = true;
-// });
-
-
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 
