@@ -19,7 +19,7 @@ namespace amorphie.contract.application
         public string? Reference { get; private set; }
         public string? Owner { get; private set; }
         public long? CustomerNo { get; private set; }
-        public List<EntityPropertyDto>? InstanceMetadata { get; set; }
+        public List<DocumentMetadataInputDto>? InstanceMetadata { get; set; }
         public List<NoteDto>? Notes { get; set; }
 
         public void SetHeaderParameters(string userReference, long? customerNo)

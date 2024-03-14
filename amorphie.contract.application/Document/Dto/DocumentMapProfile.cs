@@ -100,6 +100,11 @@ namespace amorphie.contract.application
                 .ForMember(dest => dest.MultilanguageText, opt => opt.MapFrom(src => src.DocumentGroupLanguageDetail))
                 .ReverseMap();
 
+
+            CreateMap<DocumentMetadataInputDto, EntityProperty>()
+                .ForPath(dest => dest.EntityPropertyValue.Data, opt => opt.MapFrom(src => src.EntityPropertyValue))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code)).ReverseMap();
+
         }
     }
 }
