@@ -63,20 +63,34 @@ namespace amorphie.contract.application
                         .ForMember(dest => dest.DocumentAllowedClientDetails, opt => opt.MapFrom(src =>
                            src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code))).ReverseMap();
 
-            CreateMap<EntityPropertyDto, EntityProperty>()
-                .ForPath(dest => dest.EntityPropertyValue.Data, opt => opt.MapFrom(src => src.EntityPropertyValue))
-                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code)).ReverseMap();
+            CreateMap<EntityPropertyDto, DocumentEntityProperty>()
+                .ForPath(dest => dest.EntityProperty.EntityPropertyValue.Data, opt => opt.MapFrom(src => src.EntityPropertyValue))
+                .ForPath(dest => dest.EntityProperty.Code, opt => opt.MapFrom(src => src.Code)).ReverseMap();
 
             CreateMap<NoteDto, DocumentInstanceNote>()
                 .ForMember(dest => dest.Note, opt => opt.MapFrom(src => src.Note)).ReverseMap();
 
+            CreateMap<DocumentDysDto, DocumentDys>()
+                .ForMember(dest => dest.ReferenceName, opt => opt.MapFrom(src => src.ReferenceName))
+                .ForMember(dest => dest.ReferenceId, opt => opt.MapFrom(src => src.ReferenceId))
+                .ForMember(dest => dest.ReferenceKey, opt => opt.MapFrom(src => src.ReferenceKey))
+                .ForMember(dest => dest.Fields, opt => opt.MapFrom(src => src.Fields))
+                .ForMember(dest => dest.TitleFields, opt => opt.MapFrom(src => src.TitleFields))
+                .ReverseMap();
+
+            CreateMap<DocumentTsizlDto, DocumentTsizl>()
+                .ForMember(dest => dest.EngagementKind, opt => opt.MapFrom(src => src.EngagementKind))
+                .ReverseMap();
+
             CreateMap<DocumentDefinitionDto, DocumentDefinition>()
                 .ForMember(dest => dest.DocumentDefinitionLanguageDetails, opt => opt.MapFrom(src => src.MultilanguageText))
-                // .ForMember(dest => dest.DocumentEntityPropertys, opt => opt.MapFrom(src => src.EntityProperties))
+                .ForMember(dest => dest.DocumentEntityPropertys, opt => opt.MapFrom(src => src.EntityProperties))
                 .ForMember(dest => dest.DocumentOperations, opt => opt.MapFrom(src => src.DocumentOperations))
                 .ForMember(dest => dest.DocumentOnlineSing, opt => opt.MapFrom(src => src.DocumentOnlineSing))
                 .ForMember(dest => dest.DocumentUpload, opt => opt.MapFrom(src => src.DocumentUpload))
                 .ForMember(dest => dest.DocumentTagsDetails, opt => opt.MapFrom(src => src.Tags))
+                .ForMember(dest => dest.DocumentDys, opt => opt.MapFrom(src => src.DocumentDys))
+                .ForMember(dest => dest.DocumentTsizl, opt => opt.MapFrom(src => src.DocumentTsizl))
                 .ReverseMap();
 
             CreateMap<DocumentGroup, DocumentGroupDto>()
