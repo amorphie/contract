@@ -1,6 +1,6 @@
 
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 
 using FluentValidation;
 using amorphie.core.Base;
@@ -18,7 +18,7 @@ public class DocumentGroupLanguageDetailModule
     {
     }
 
-    public override string[]? PropertyCheckList => new string[] {"DocumentDefinitionGroupId","MultiLanguageId"};
+    public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionGroupId", "MultiLanguageId" };
 
     public override string? UrlFragment => "document-group-language-detail";
 

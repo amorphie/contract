@@ -36,7 +36,7 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public List<UploadAllowedClient> UploadAllowedClients { get; set; }
         public List<AllowedFormatsUploadList> AllowedFormatsUploadList { get; set; }
         public string TransformTo { get; set; }
-
+        public List<MetadataElement> disabledDataMetadata { get; set; }
         public string engangmentKind { get; set; }
         public int referenceId { get; set; }
         public int referenceKey { get; set; }
@@ -57,11 +57,18 @@ namespace amorphie.contract.zeebe.Model.DocumentDefinitionDataModel
         public string modifiedByBehalfOf { get; set; }
     }
 
+    public class MetadataElement
+    {
+        public string ElementName { get; set; }
+        public string ElementID { get; set; }
+    }
+
     public class EntityProperty
     {
         public string property { get; set; }
         public string value { get; set; }
         public string PropertyName { get; set; }
+        public bool required { get; set; }
     }
 
 

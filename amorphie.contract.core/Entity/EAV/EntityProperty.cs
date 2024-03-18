@@ -21,8 +21,9 @@ namespace amorphie.contract.core.Entity.EAV
         [Required]
         public Guid EntityPropertyValueId { get; set; }
         [ForeignKey("EntityPropertyValueId")]
-
         public EntityPropertyValue EntityPropertyValue { get; set; } = default!;
+        [Required]
+        public bool Required { get; set; }
 
     }
 }

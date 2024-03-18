@@ -1,13 +1,15 @@
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
-using amorphie.core.Base;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.core.Entity.Document;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.application;
-using amorphie.core.IBase;
-using amorphie.contract.core.Services;
 using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model;
+using Dapr;
+using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Services;
+using amorphie.contract.Extensions;
+using amorphie.contract.core.Model.Colleteral;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract;
 
@@ -29,6 +31,8 @@ public class DocumentModule
         routeGroupBuilder.MapGet("getAll", getAllDocumentAll);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("download", DownloadDocument);
+        routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
+        routeGroupBuilder.MapPost("sendToTSIZL", SendToTSIZL);
 
     }
 
@@ -43,8 +47,8 @@ public class DocumentModule
 
         var response = await documentAppService.GetAllDocumentFullTextSearch(inputDto, cancellationToken);
 
-        if (!response.Any())
-            return Results.NoContent();
+        // if (!response.Any())
+        //     return Results.NoContent();
 
         return Results.Ok(response);
     }
@@ -53,8 +57,8 @@ public class DocumentModule
     {
         var response = await documentAppService.GetAllDocumentAll(cancellationToken);
 
-        if (!response.Any())
-            return Results.NoContent();
+        // if (!response.Any())
+        //     return Results.NoContent();
 
         return Results.Ok(response);
     }
@@ -62,8 +66,8 @@ public class DocumentModule
     async ValueTask<IResult> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
     CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
-        input.SetHeaderParameters(headerModels);
+        var headerModels = HeaderHelper.GetHeader(httpContext);
+        input.SetHeaderParameters(headerModels.UserReference, headerModels.CustomerNo);
         var response = await documentAppService.Instance(input);
 
         return Results.Ok(new
@@ -76,13 +80,41 @@ public class DocumentModule
 
     async ValueTask DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
     {
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         inputDto.SetUserReference(headerModels.UserReference);
 
         var doc = await documentAppService.DownloadDocument(inputDto, token);
-        httpContext.Response.ContentType = doc.ContentType;
-        await doc.Stream.CopyToAsync(httpContext.Response.Body);
+        httpContext.Response.ContentType = doc.Data.ContentType;
+        await doc.Data.Stream.CopyToAsync(httpContext.Response.Body);
     }
+
+    [Topic(KafkaConsts.KafkaName, KafkaConsts.SendDocumentInstanceDataToDYSTopicName)]
+    [HttpPost]
+    public async Task<GenericResult<bool>> AddDocumentToDys([FromBody] DocumentDysRequestModel documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
+    {
+        await dysIntegrationService.AddDysDocument(documentDysRequestModel);
+
+        return GenericResult<bool>.Success(true);
+    }
+
+    [Topic(KafkaConsts.KafkaName, KafkaConsts.SendEngagementDataToTSIZLTopicName)]
+    [HttpPost]
+    public async Task<GenericResult<bool>> SendToTSIZL([FromBody] DoAutomaticEngagementPlainRequestDto requestModel, [FromServices] IColleteralIntegrationService colleteralIntegrationService, [FromServices] ICustomerIntegrationService customerIntegrationService)
+    {
+        var customerInfo = await customerIntegrationService.GetCustomerInfo(requestModel.AccountNumber);
+
+        if (!customerInfo.IsSuccess)
+        {
+            return GenericResult<bool>.Fail(customerInfo.ErrorMessage);
+        }
+
+        requestModel.SetAccountBranchCode(customerInfo.Data.MainBranchCode);
+
+        await colleteralIntegrationService.AddTSIZLDocument(requestModel);
+
+        return GenericResult<bool>.Success(true);
+    }
+
 }
 
 
