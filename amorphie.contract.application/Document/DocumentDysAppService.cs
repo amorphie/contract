@@ -5,7 +5,7 @@ namespace amorphie.contract.application
 {
     public interface IDocumentDysAppService
     {
-        List<Element> GetAllTagsDys(int ReferenceId, CancellationToken cancellationToken);
+        List<DocumentElementDto> GetAllTagsDys(int referenceId, CancellationToken cancellationToken);
     }
 
     public class DocumentDysAppService : IDocumentDysAppService
@@ -15,13 +15,13 @@ namespace amorphie.contract.application
         {
         }
 
-        public List<Element> GetAllTagsDys(int ReferenceId, CancellationToken cancellationToken)
+        public List<DocumentElementDto> GetAllTagsDys(int referenceId, CancellationToken cancellationToken)
         {
             string xmlString = $@"<?xml version=""1.0"" encoding=""utf-8""?>
                                 <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
                                 <soap:Body>
                                     <GetTagElementList xmlns=""http://tempuri.org/"">
-                                    <TagID>{ReferenceId}</TagID>
+                                    <TagID>{referenceId}</TagID>
                                     </GetTagElementList>
                                 </soap:Body>
                                 </soap:Envelope>";
@@ -31,7 +31,7 @@ namespace amorphie.contract.application
             return parsedElement;
         }
 
-        private List<Element> XLMLParser(string xml)
+        private List<DocumentElementDto> XLMLParser(string xml)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.XmlResolver = null;
@@ -45,12 +45,12 @@ namespace amorphie.contract.application
 
             XmlNodeList tagListNodes = xmlDoc.SelectNodes("//tempuri:GetTagElementListResult/diffgr:diffgram/NewDataSet/TagList", nsMgr);
 
-            List<Element> elements = new List<Element>();
+            List<DocumentElementDto> elements = new List<DocumentElementDto>();
             foreach (XmlNode node in tagListNodes)
             {
                 string? elementName = node.SelectSingleNode("ElementName")?.InnerText;
                 string? elementID = node.SelectSingleNode("ElementID")?.InnerText;
-                var elem = new Element
+                var elem = new DocumentElementDto
                 {
                     ElementName = elementName,
                     ElementID = elementID

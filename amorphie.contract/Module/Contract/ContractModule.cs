@@ -1,5 +1,5 @@
 using amorphie.core.Module.minimal_api;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.application;
@@ -10,6 +10,7 @@ using amorphie.contract.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Enum;
 using amorphie.core.Base;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 namespace amorphie.contract;
 
@@ -31,22 +32,19 @@ public class ContractModule
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
     CancellationToken token, [FromBody] ContractInstanceInputDto input, HttpContext httpContext)
     {
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+        // throw new ClientSideException("sdas", "InstanceState");
+
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         input.SetHeaderParameters(headerModels);
         var response = await contractAppService.Instance(input, token);
 
-        return Results.Ok(new
-        {
-            Data = response,
-            Success = true,
-            ErrorMessage = "",
-        });
+        return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
     [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
     {
-        //
-        var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+
+        var headerModels = HeaderHelper.GetHeader(httpContext);
         var inputQ = new ContractInstanceInputDto
         {
             ContractName = input.ContractName,
@@ -54,12 +52,7 @@ public class ContractModule
         inputQ.SetHeaderParameters(headerModels);
 
         var response = await contractAppService.InstanceState(inputQ, token);
-        return Results.Ok(new
-        {
-            Data = response,
-            Success = true,
-            ErrorMessage = "",
-        });
+        return Results.Ok(response);
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };

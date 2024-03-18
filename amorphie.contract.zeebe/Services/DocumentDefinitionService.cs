@@ -1,17 +1,12 @@
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System;
 using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
-using amorphie.contract.application;
-using System.Diagnostics;
+using Grpc.Core;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -98,45 +93,40 @@ namespace amorphie.contract.zeebe.Services
 
 
         }
-        private void SetDocumentEOV()
+        private List<MetadataElement> SetDocumentEOV()
         {
-            var ep = _documentDefinitionDataModel.data.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
+            var dysTagField = new List<MetadataElement>();
+            foreach (var entityPropertyData in _documentDefinitionDataModel.data.EntityProperty)
             {
-                EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                Code = x.PropertyName
-            }).ToList();
-            var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
+                if (_documentDefinitionDataModel.data.disabledDataMetadata != null && _documentDefinitionDataModel.data.disabledDataMetadata.Any())
+                {
 
-            foreach (var i in ep)
-            {
-                var epdbf = _dbContext.EntityProperty.FirstOrDefault(x => x.Code == i.Code);
-                if (epdbf != null)
-                {
-                    epdb = epdbf;
-                }
-                epdb.Code = i.Code;
+                    var matchedMetadataElement = _documentDefinitionDataModel.data.disabledDataMetadata.FirstOrDefault(metadataElement =>
+                        metadataElement.ElementName == entityPropertyData.PropertyName);
 
-                var epv = _dbContext.EntityPropertyValue.FirstOrDefault(x => x.Data == i.EntityPropertyValue.Data);
-                if (epv != null)
-                {
-                    epdb.EntityPropertyValue = epv;
-                }
-                else
-                {
-                    epdb.EntityPropertyValue = i.EntityPropertyValue;
-                }
-                epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                var dep = _dbContext.DocumentEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
-                if (dep == null)
-                {
-                    _documentdef.DocumentEntityPropertys.Add(new DocumentEntityProperty
+                    if (matchedMetadataElement != null)
                     {
-                        DocumentDefinitionId = _documentdef.Id,
-                        EntityProperty = epdb,
-                    });
+                        entityPropertyData.PropertyName = matchedMetadataElement.ElementID;
+                        dysTagField.Add(matchedMetadataElement);
+                    }
                 }
+                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                {
+                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
+                    Code = entityPropertyData.PropertyName,
+                    Required = entityPropertyData.required
+                };
+
+                var documentEntityProperty = new DocumentEntityProperty
+                {
+                    DocumentDefinitionId = _documentdef.Id,
+                    EntityProperty = entityProperty
+                };
+
+                _documentdef.DocumentEntityPropertys.Add(documentEntityProperty);
             }
+            return dysTagField;
         }
 
 
@@ -245,26 +235,26 @@ namespace amorphie.contract.zeebe.Services
 
         #region Document_Dys
 
-        private void SetDocumentDys()
+        private void SetDocumentDys(List<MetadataElement> dysMetadata)
         {
             if (_documentDefinitionDataModel.data.referenceId != 0 && !string.IsNullOrEmpty(_documentDefinitionDataModel.data.referenceName))
             {
                 try
                 {
-                    // DocumentDefinitionDysAppService documentDefinitionDysAppService = new DocumentDefinitionDysAppService();
-                    // var elements = documentDefinitionDysAppService.GetAllTagsDys(_documentDefinitionDataModel.data.referenceId);
-                    // var tagList = string.Join(",", elements.Select(e => e.ElementID));
+                    string stringElementName = string.Join(",", dysMetadata.ConvertAll(element => element.ElementName));
+                    string stringElementId = string.Join(",", dysMetadata.ConvertAll(element => element.ElementID));
                     var documentDys = new DocumentDys
                     {
                         ReferenceId = _documentDefinitionDataModel.data.referenceId,
                         ReferenceName = _documentDefinitionDataModel.data.referenceName,
-                        Fields = "test"
+                        Fields = stringElementId,
+                        TitleFields = stringElementName
                     };
                     if (_documentDefinitionDataModel.data.referenceKey != 0)
                     {
                         documentDys.ReferenceKey = _documentDefinitionDataModel.data.referenceKey;
                     }
-                    _documentdef.DocumentnDys = documentDys;
+                    _documentdef.DocumentDys = documentDys;
                 }
                 catch (Exception e)
                 {
@@ -320,13 +310,13 @@ namespace amorphie.contract.zeebe.Services
 
                     };
                 }
-                SetDocumentDys();
-                SetDocumentTsizl();
                 SetDocumentDefinitionLanguageDetail();
                 SetDocumentTagsDetails();
                 SetDocumentOptimize();
                 SetDocumentOperation();
-                SetDocumentEOV();
+                var dysMetadata = SetDocumentEOV();
+                SetDocumentDys(dysMetadata);
+                SetDocumentTsizl();
 
                 if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
                 {

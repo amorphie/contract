@@ -42,10 +42,82 @@ services:
     networks:
       - contract-local
 
+  zookeeper1:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper1
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    networks:
+      - contract-local
+  kafka1:
+    image: confluentinc/cp-kafka
+    container_name: kafka1
+    depends_on:
+      - zookeeper1
+    ports:
+      - "29092:29092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092,PLAINTEXT1://localhost:29092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LOG_DIRS=/var/lib/kafka/data
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP= PLAINTEXT:PLAINTEXT, PLAINTEXT1:PLAINTEXT
+    networks:
+      - contract-local
+  kafka-ui1:
+    container_name: kafka-ui1
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - kafka1
+    environment:
+      - KAFKA_CLUSTERS_0_NAME= local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS= kafka1:9092
+      - DYNAMIC_CONFIG_ENABLED= 'true'
+    networks:
+      - contract-local
+
+  vault:
+    container_name: contract-vault
+    image: vault:1.13.3
+    restart: on-failure:10
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: 'https://0.0.0.0:8200'
+      VAULT_API_ADDR: 'https://0.0.0.0:8200'
+      VAULT_DEV_ROOT_TOKEN_ID: 'admin'
+      VAULT_TOKEN: 'admin'
+    volumes:
+      - ./file:/vault/file
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      retries: 5
+    command: server -dev -dev-root-token-id="admin"
+    networks:
+      - contract-local
+
+  vault-prepopulate:
+    image: alpine/curl:latest
+    depends_on:
+      - vault
+    volumes:
+      - ./vault.sh:/usr/local/bin/prepopulate_vault.sh
+    command: ["sh", "-c", "/usr/local/bin/prepopulate_vault.sh && /usr/local/bin/prepopulate_vault.sh"]
+    networks:
+       - contract-local
+
+
 networks:
   contract-local:
     driver: bridge
-    
+
 volumes:
   minio:
   postgres:

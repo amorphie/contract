@@ -1,5 +1,5 @@
 using amorphie.contract.core.Entity.Common;
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using Newtonsoft.Json;
 using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;
@@ -208,43 +208,22 @@ namespace amorphie.contract.zeebe.Services
                 return;
             }
 
-            var ep = _ContractDefinitionDataModel.EntityProperty.Select(x => new amorphie.contract.core.Entity.EAV.EntityProperty
+            foreach (var propertyData in _ContractDefinitionDataModel.EntityProperty)
             {
-                EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                Code = x.PropertyName
-            }).ToList();
-            var epdb = new amorphie.contract.core.Entity.EAV.EntityProperty();
+                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                {
+                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = propertyData.value },
+                    Code = propertyData.PropertyName
+                };
 
+                var contractEntityProperty = new ContractEntityProperty
+                {
+                    ContractDefinitionId = _ContractDefinition.Id,
+                    EntityProperty = entityProperty
+                };
 
-            foreach (var i in ep)
-            {
-                var epdbf = _dbContext.EntityProperty.FirstOrDefault(x => x.Code == i.Code);
-                if (epdbf != null)
-                {
-                    epdb = epdbf;
-                }
-                epdb.Code = i.Code;
-
-                var epv = _dbContext.EntityPropertyValue.FirstOrDefault(x => x.Data == i.EntityPropertyValue.Data);
-                if (epv != null)
-                {
-                    epdb.EntityPropertyValue = epv;
-                }
-                else
-                {
-                    epdb.EntityPropertyValue = i.EntityPropertyValue;
-                }
-                epdb.EEntityPropertyType = (ushort)EEntityPropertyType.str;
-                var dep = _dbContext.ContractEntityProperty.FirstOrDefault(x => x.EntityProperty.Code == i.Code);
-                if (dep == null)
-                {
-                    _ContractDefinition.ContractEntityProperty.Add(new ContractEntityProperty
-                    {
-                        ContractDefinitionId = _ContractDefinition.Id,
-                        EntityProperty = epdb,
-                    });
-                }
+                _ContractDefinition.ContractEntityProperty.Add(contractEntityProperty);
             }
         }
 

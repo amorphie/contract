@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract", "amorph
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.core", "amorphie.contract.core\amorphie.contract.core.csproj", "{872D1905-7EF9-4580-8D6B-FB82151BC98A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.data", "amorphie.contract.data\amorphie.contract.data.csproj", "{595C7C2E-BCE7-4242-880E-C1063CAB6148}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.infrastructure", "amorphie.contract.infrastructure\amorphie.contract.infrastructure.csproj", "{595C7C2E-BCE7-4242-880E-C1063CAB6148}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.contract.hub", "amorphie.contract.hub\amorphie.contract.hub.csproj", "{1C5A73DF-02AE-4763-B864-C7D2F510DBD9}"
 EndProject

@@ -11,6 +11,9 @@ namespace amorphie.contract.core.Enum
         public static readonly string Language = "Language";
         public static readonly string AcceptLanguage = "Accept-Language";
         public static readonly string UserReference = "User_reference";
+
+        public static readonly string CustomerNo = "Customer_no";
+
         public static readonly string HeaderFilterModel = "HeaderFilterModel";
 
     }
