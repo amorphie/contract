@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
-        <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
+        <ProjectReference Include="..\amorphie.contract.infrastructure\amorphie.contract.infrastructure.csproj" />
 
   </ItemGroup>
 
@@ -17,6 +17,9 @@
     <Folder Include="Customer\Dto\" />
     <Folder Include="Customer\Request\" />
     <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

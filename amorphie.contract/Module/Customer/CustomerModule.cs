@@ -5,8 +5,9 @@ using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Request;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
-using amorphie.contract.data.Contexts;
-using amorphie.contract.data.Services;
+using amorphie.contract.Extensions;
+using amorphie.contract.infrastructure.Contexts;
+using amorphie.contract.infrastructure.Services;
 using amorphie.core.Module.minimal_api;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace amorphie.contract.Module.Customer
 
         async ValueTask<IResult> GetDocumentsByContracts([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
-            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+            var headerModels = HeaderHelper.GetHeader(httpContext);
             inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity, headerModels.UserReference);
 
             var serviceResponse = await customerAppService.GetDocumentsByContracts(inputDto, token);
@@ -41,7 +42,8 @@ namespace amorphie.contract.Module.Customer
 
         async ValueTask<IResult> GetDocuments([FromServices] ProjectDbContext context, [FromServices] ICustomerAppService customerAppService, HttpContext httpContext, CancellationToken token, [AsParameters] GetCustomerDocumentsByContractInputDto inputDto)
         {
-            var headerModels = httpContext.Items[AppHeaderConsts.HeaderFilterModel] as HeaderFilterModel;
+            var headerModels = HeaderHelper.GetHeader(httpContext);
+
             inputDto.SetHeaderParameters(headerModels.LangCode, headerModels.EBankEntity, headerModels.UserReference);
 
             var response = await customerAppService.GetAllDocuments(inputDto, token);

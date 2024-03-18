@@ -26,10 +26,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
     <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.25.3" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\amorphie.contract.data\amorphie.contract.data.csproj" />
+    <ProjectReference Include="..\amorphie.contract.infrastructure\amorphie.contract.infrastructure.csproj" />
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
     <ProjectReference Include="..\amorphie.contract.application\amorphie.contract.application.csproj" />
   </ItemGroup>

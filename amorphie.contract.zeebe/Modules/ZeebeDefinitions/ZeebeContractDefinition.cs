@@ -1,4 +1,4 @@
-using amorphie.contract.data.Contexts;
+using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
@@ -69,36 +69,14 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
            [FromServices] IContractDefinitionService IContractDefinitionService
       )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
 
-            try
-            {
+            var _ = IContractDefinitionService.DataModelToContractDefinitionUpdate(entityData, messageVariables.InstanceIdGuid);
 
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-
-                var _ = IContractDefinitionService.DataModelToContractDefinitionUpdate(entityData, messageVariables.InstanceIdGuid);
-
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
-
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorDefinition";
-
-                return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
         static IResult contractdefinition(
           [FromBody] dynamic body,
@@ -110,36 +88,15 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
            [FromServices] IContractDefinitionService IContractDefinitionService
       )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
 
-            try
-            {
+            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
 
-                dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            var _ = IContractDefinitionService.DataModelToContractDefinition(entityData, messageVariables.InstanceIdGuid);
 
-                var _ = IContractDefinitionService.DataModelToContractDefinition(entityData, messageVariables.InstanceIdGuid);
-
-                messageVariables.Success = true;
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
-
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorDefinition";
-
-                return Results.BadRequest(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
         static IResult timeoutcontractdefinition(
@@ -151,34 +108,12 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
         , IConfiguration configuration
         )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "TimeoutDefinitionUpload";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-            try
-            {
-                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                // string reference = entityData.GetProperty("reference").ToString();
-                // string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "TimeoutDefinitionUpload";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
 
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorDefinitionUpload";
-
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
         }
         static IResult deletecontractdefinition(
         [FromBody] dynamic body,
@@ -189,34 +124,10 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
         , IConfiguration configuration
         )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
-
-            try
-            {
-                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                // string reference = entityData.GetProperty("reference").ToString();
-                // string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "DeleteProcessDefinitionUpload";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
-
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorDefinitionUpload";
-
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "DeleteProcessDefinitionUpload";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
         static IResult errorcontractdefinition(
         [FromBody] dynamic body,
@@ -227,37 +138,13 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
         , IConfiguration configuration
         )
         {
-            var messageVariables = new MessageVariables();
-            try
-            {
-                messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
-
-            try
-            {
-                // dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-                // string reference = entityData.GetProperty("reference").ToString();
-                // string deviceId = entityData.GetProperty("deviceId").ToString();
-                messageVariables.Success = true;
-                messageVariables.LastTransition = "ErrorDefinitionUpload";
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
-
-            catch (Exception ex)
-            {
-                messageVariables.Success = true;
-                messageVariables.Message = ex.Message;
-                messageVariables.LastTransition = "ErrorDefinitionUpload";
-
-                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-            }
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            messageVariables.Success = true;
+            messageVariables.LastTransition = "ErrorDefinitionUpload";
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
+
+
+
     }
-
-
-
 }
