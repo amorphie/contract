@@ -336,15 +336,15 @@ namespace amorphie.contract.zeebe.Services
         private void SetContractDefinitionHistory(ContractDefinition existingContractDefinition)
         {
             var settings = new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                };
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
             string oldContract = JsonConvert.SerializeObject(existingContractDefinition, settings);
             var contractDefinitionHistory = new ContractDefinitionHistory
-                {
-                    History=oldContract,
-                    ContractDefinitionId = _ContractDefinition.Id
-                };
+            {
+                History = oldContract,
+                ContractDefinitionId = _ContractDefinition.Id
+            };
             _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
         }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)

@@ -96,15 +96,15 @@ namespace amorphie.contract.zeebe.Services
         private void SetContractDefinitionHistory(DocumentGroup existingDocumentGroup)
         {
             var settings = new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                };
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
             string oldDocumentGroup = JsonConvert.SerializeObject(existingDocumentGroup, settings);
             var documentGroupHistory = new DocumentGroupHistory
-                {
-                    History=oldDocumentGroup,
-                    DocumentGroupId = _documentGroup.Id
-                };
+            {
+                History = oldDocumentGroup,
+                DocumentGroupId = _documentGroup.Id
+            };
             _dbContext.DocumentGroupHistory.Add(documentGroupHistory);
         }
 
