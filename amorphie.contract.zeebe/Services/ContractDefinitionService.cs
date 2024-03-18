@@ -380,6 +380,7 @@ namespace amorphie.contract.zeebe.Services
             _ContractDefinitionDataModelDynamic = contractDefinitionDataUpdateDynamic;
             try
             {
+
                 DynamicToContractDefinitionDataModel();
                 SetContractDefinitionDefault(id);
                 var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == _ContractDefinition.Id);
@@ -388,6 +389,7 @@ namespace amorphie.contract.zeebe.Services
                     throw new ArgumentException("Güncellemek istediğiniz döküman bulunmamakta.");
                 }
 
+                string jsonData = JsonConvert.SerializeObject(contractDefinition);
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
                 contractDefinition.BankEntity = _ContractDefinition.BankEntity;
                 UpdateContractDefinitionLanguage(contractDefinition.ContractDefinitionLanguageDetails.Select(x => x.MultiLanguage).ToList());

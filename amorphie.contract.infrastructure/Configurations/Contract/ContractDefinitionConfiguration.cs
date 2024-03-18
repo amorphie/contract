@@ -20,6 +20,7 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
                 "ContractTag",
                 "ContractEntityProperty",
                 "ContractValidations",
+                "ContractDefinitionHistories"
             };
             NavigationBuilderAutoInclude(builder, list);
             //

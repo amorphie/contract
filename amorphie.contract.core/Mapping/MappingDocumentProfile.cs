@@ -1,3 +1,4 @@
+using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
@@ -38,6 +39,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentGroup, DocumentGroup>().ReverseMap();
             CreateMap<DocumentGroupDetail, DocumentGroupDetail>().ReverseMap();
             CreateMap<DocumentGroupLanguageDetail, DocumentGroupLanguageDetail>().ReverseMap();
+            CreateMap<DocumentGroupHistory, DocumentGroupHistory>().ReverseMap();
             #endregion
             #region documentType
             CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
