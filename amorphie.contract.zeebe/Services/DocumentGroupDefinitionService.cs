@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.zeebe.Model.DocumentGroupDataModel;
+using amorphie.contract.core.Entity.Contract;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -92,13 +93,28 @@ namespace amorphie.contract.zeebe.Services
             return _documentGroup;
         }
 
+        private void SetContractDefinitionHistory(DocumentGroup existingDocumentGroup)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string oldDocumentGroup = JsonConvert.SerializeObject(existingDocumentGroup, settings);
+            var documentGroupHistory = new DocumentGroupHistory
+            {
+                History = oldDocumentGroup,
+                DocumentGroupId = _documentGroup.Id
+            };
+            _dbContext.DocumentGroupHistory.Add(documentGroupHistory);
+        }
+
         public async Task<DocumentGroup> UpdateGroup(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
             try
             {
                 DataModelToDocumentGroupDefinition(documentDefinitionDataModelDynamic, id);
                 var documentGroup = _dbContext.DocumentGroup.AsSplitQuery().FirstOrDefault(x => x.Id == id);
-
+                SetContractDefinitionHistory(documentGroup);
                 documentGroup.Code = _documentGroup.Code;
 
                 foreach (var detailObject in _documentGroup.DocumentGroupLanguageDetail)
