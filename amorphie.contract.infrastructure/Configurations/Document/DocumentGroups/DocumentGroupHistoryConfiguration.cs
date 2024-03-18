@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Contract
 {
-    public class ContractDefinitionHistoryConfiguration : ConfigurationBaseAudiEntity<ContractDefinitionHistory>,
-     IEntityTypeConfiguration<ContractDefinitionHistory>
+    public class DocumentGroupHistoryConfiguration : ConfigurationBaseAudiEntity<DocumentGroupHistory>,
+     IEntityTypeConfiguration<DocumentGroupHistory>
     {
-        public virtual void Configure(EntityTypeBuilder<ContractDefinitionHistory> builder)
+        public virtual void Configure(EntityTypeBuilder<DocumentGroupHistory> builder)
         {
             builder.Property(x => x.History)
             .HasColumnType("jsonb");

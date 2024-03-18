@@ -9,6 +9,7 @@ using amorphie.contract.core;
 using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Entity.EAV;
 using System.Collections;
+using System.Text.Json;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -331,6 +332,21 @@ namespace amorphie.contract.zeebe.Services
         {
             _ContractDefinition.BankEntity = _ContractDefinitionDataModel.registrationType;
         }
+
+        private void SetContractDefinitionHistory(ContractDefinition existingContractDefinition)
+        {
+            var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+            string oldContract = JsonConvert.SerializeObject(existingContractDefinition, settings);
+            var contractDefinitionHistory = new ContractDefinitionHistory
+                {
+                    History=oldContract,
+                    ContractDefinitionId = _ContractDefinition.Id
+                };
+            _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
+        }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
             _ContractDefinitionDataModelDynamic = documentDefinitionDataModelDynamic;
@@ -388,8 +404,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     throw new ArgumentException("Güncellemek istediğiniz döküman bulunmamakta.");
                 }
-
-                string jsonData = JsonConvert.SerializeObject(contractDefinition);
+                SetContractDefinitionHistory(contractDefinition);
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
                 contractDefinition.BankEntity = _ContractDefinition.BankEntity;
                 UpdateContractDefinitionLanguage(contractDefinition.ContractDefinitionLanguageDetails.Select(x => x.MultiLanguage).ToList());
