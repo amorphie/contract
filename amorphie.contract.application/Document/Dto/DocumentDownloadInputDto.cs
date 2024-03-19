@@ -5,7 +5,7 @@ namespace amorphie.contract.application;
 public class DocumentDownloadInputDto
 {
     [Required]
-    public required string ObjectName { get; set; }
+    public required string ObjectId { get; set; }
 
     private string _userReference;
 

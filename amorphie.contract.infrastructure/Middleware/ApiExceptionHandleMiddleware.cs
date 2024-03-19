@@ -40,6 +40,13 @@ namespace amorphie.contract.infrastructure.Middleware
             //TODO: COmment ds
             switch (ex)
             {
+                case FileNotFoundException fileNotFoundException:
+                    {
+                        statusCode = (int)HttpStatusCode.NotFound;
+                        title = "fileNotFoundException Error";
+                        messages.Add(fileNotFoundException.Message);
+                        break;
+                    }
                 case InvalidOperationException validationExp:
                     {
                         statusCode = (int)HttpStatusCode.BadRequest;
