@@ -85,8 +85,10 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-            string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-            string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+
+            string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
+
+
             // messageVariables.TransitionName = "checking-account-opening-start";
 
             var contractInstance = body.GetProperty("XContractInstance");
@@ -97,9 +99,10 @@ namespace amorphie.contract.zeebe.Modules
 
             if (contractDto != null)
             {
-                var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateRenderRequestModel
+                var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateDocumentList
                 {
-                    SemanticVersion = contractDocument.MinVersion,
+                    DocumentSemanticVersion = contractDocument.MinVersion,
+                    SemanticVersion = contractDocument.DocumentDetail.OnlineSing.Version,
                     Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
                     RenderId = Guid.NewGuid(),
                     RenderData = "{\"customer\":{\"customerIdentity\":\"" + reference + "\"}, \"customerIdentity\":" + reference + "}",
@@ -111,12 +114,15 @@ namespace amorphie.contract.zeebe.Modules
                     Approved = false,
 
                 }).ToList();
-                foreach (TemplateRenderRequestModel cdto in contractDocument)
-                {
-                    HttpSendTemplate(cdto);//TODO:dapr yok
 
+
+                var list = new List<ApprovedDocumentList>();
+                foreach (var cdto in contractDocument)
+                {
+                    HttpSendTemplate(new TemplateRenderRequestModel(cdto));//TODO:dapr yok
+                    list.Add(new ApprovedDocumentList(cdto));
                 }
-                messageVariables.Variables.Add("ApprovedDocumentList", contractDocument);
+                messageVariables.Variables.Add("ApprovedDocumentList", list);
                 messageVariables.additionalData = contractDocument;
             }
 
@@ -189,15 +195,19 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
 
-            string reference = "";
+            // string reference = "";
             long? customerNo = null;
-            if (body.ToString().IndexOf("ContractInstance") != -1)
-            {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
-                {
-                    reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                }
-            }
+            // if (body.ToString().IndexOf("ContractInstance") != -1)
+            // {
+            //     if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+            //     {
+            //         reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            //     }
+            // }
+            string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
+            string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+            string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
+
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             if (string.IsNullOrEmpty(reference))
@@ -209,10 +219,10 @@ namespace amorphie.contract.zeebe.Modules
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
             var approvedDocumentList = messageVariables.Data.GetProperty("entityData");
 
-            var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedTemplateRenderRequestModel>>(approvedDocumentList, options: new JsonSerializerOptions
+            var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedDocumentList>>(approvedDocumentList, options: new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) as List<ApprovedTemplateRenderRequestModel>;
+            }) as List<ApprovedDocumentList>;
             foreach (var i in contractDocumentModel.Where(x => x.Approved).ToList())
             {
 
@@ -220,14 +230,13 @@ namespace amorphie.contract.zeebe.Modules
                 {
                     Id = i.RenderId,
                     DocumentCode = i.DocumentDefinitionCode,
-                    DocumentVersion = i.SemanticVersion,
+                    DocumentVersion = i.DocumentSemanticVersion,
                     // Reference = reference,
                     // Owner = reference,
                     FileName = i.DocumentDefinitionCode + ".pdf", //TODO: Degişecek,
                     FileType = "application/pdf",
                     FileContextType = "TemplateRender",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
                     FileContext = i.RenderId.ToString(),
-
                 };
 
                 input.SetHeaderParameters(reference, customerNo);
@@ -239,7 +248,6 @@ namespace amorphie.contract.zeebe.Modules
                 {
                     throw new InvalidOperationException("Document Instance Not Complated");
                 }
-
             }
             messageVariables.additionalData = contractDocumentModel;
             messageVariables.Success = true;
