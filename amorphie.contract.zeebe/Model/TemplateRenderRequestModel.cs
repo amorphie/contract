@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 namespace amorphie.contract.zeebe.Model
 {
-   
+
     public class ApprovedDocument
     {
         public string DocumentDefinitionCode { get; set; }
