@@ -1,3 +1,5 @@
+using amorphie.contract.core.Model.Minio;
+
 namespace amorphie.contract.core.Services
 {
     public interface IMinioService
@@ -9,7 +11,6 @@ namespace amorphie.contract.core.Services
         //TODO: Daha sonra tek bir interface altında toplanacak. (Zeebe)
         Task UploadFile(byte[] data, string objectName, string contentType);
 
-        Task<ReleaseableFileStreamModel> DownloadFile(string objectName, CancellationToken cancellationToken);
-
+        Task<GetMinioObjectModel> DownloadFile(string objectName, CancellationToken cancellationToken);
     }
 }

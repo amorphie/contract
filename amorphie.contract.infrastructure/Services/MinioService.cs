@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Enum;
 using amorphie.contract.infrastructure.Extensions;
 using Minio.DataModel;
+using amorphie.contract.core.Model.Minio;
 
 namespace amorphie.contract.infrastructure.Services
 {
@@ -153,7 +154,7 @@ namespace amorphie.contract.infrastructure.Services
             Console.WriteLine("Successfully uploaded " + objectName);
         }
 
-        public async Task<ReleaseableFileStreamModel> DownloadFile(string objectName, CancellationToken cancellationToken)
+        public async Task<GetMinioObjectModel> DownloadFile(string objectName, CancellationToken cancellationToken)
         {
 
             bool found = await IsBucketExist(BucketName);
@@ -167,21 +168,33 @@ namespace amorphie.contract.infrastructure.Services
             .WithBucket(BucketName);
             var stat = await minioClient.StatObjectAsync(statArgs, cancellationToken);
 
-            var res = new ReleaseableFileStreamModel
+
+            using (MemoryStream destination = new())
             {
-                ContentType = stat.ContentType,
-                FileName = objectName,
-            };
 
-            var getArgs = new GetObjectArgs()
-                .WithObject(objectName)
-                .WithBucket(BucketName)
-                .WithCallbackStream(res.SetStreamAsync);
+                var getArgs = new GetObjectArgs()
+                    .WithObject(objectName)
+                    .WithBucket(BucketName)
+                    .WithCallbackStream((stream) =>
+                                                {
+                                                    stream.CopyTo(destination);
+                                                });
 
-            await res.HandleAsync(minioClient.GetObjectAsync(getArgs, cancellationToken));
 
-            return res;
+                var getObj = await minioClient.GetObjectAsync(getArgs, cancellationToken);
+                destination.Seek(0, SeekOrigin.Begin);
 
+                var data = Convert.ToBase64String(destination.ToArray());
+
+                var res = new GetMinioObjectModel
+                {
+                    ContentType = stat.ContentType,
+                    FileName = objectName,
+                    FileContent = data
+                };
+
+                return res;
+            }
         }
     }
 }

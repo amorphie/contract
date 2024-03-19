@@ -22,7 +22,6 @@ namespace amorphie.contract.application
     {
         private readonly ProjectDbContext _dbContext;
         private readonly IMinioService _minioService;
-        private readonly ITemplateEngineService _templateEngineService;
 
         private readonly IDysProducer _dysProducer;
 
@@ -273,24 +272,32 @@ namespace amorphie.contract.application
 
         }
 
-        public async Task<GenericResult<ReleaseableFileStreamModel>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
+        public async Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken)
         {
 
-            if (!Guid.TryParse(inputDto.ObjectName, out Guid contentId))
+            if (!Guid.TryParse(inputDto.ObjectId, out Guid contentId))
             {
-                throw new FormatException("ObjectName is not in a valid Guid format.");
+                return GenericResult<DocumentDownloadOutputDto>.Fail("ObjectId is not in a valid Guid format");
             }
 
             var userReference = inputDto.GetUserReference();
 
-            var customerDoc = await _dbContext.Document.FirstOrDefaultAsync(
+            var customerDoc = await _dbContext.Document.AsNoTracking().FirstOrDefaultAsync(
                c => c.Customer != null && c.Customer.Reference == userReference && c.DocumentContentId == contentId);
 
             if (customerDoc is null)
-                throw new FileNotFoundException($"{inputDto.ObjectName} file not found for {userReference}");
+                throw new FileNotFoundException($"{inputDto.ObjectId} file not found for {userReference}");
 
-            var res = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
-            return GenericResult<ReleaseableFileStreamModel>.Success(res);
+            var minioObject = await _minioService.DownloadFile(customerDoc.DocumentContent.MinioObjectName, cancellationToken);
+
+            var res = new DocumentDownloadOutputDto
+            {
+                FileType = minioObject.ContentType,
+                FileContent = minioObject.FileContent,
+                FileName = minioObject.FileName
+            };
+
+            return GenericResult<DocumentDownloadOutputDto>.Success(res);
         }
     }
 
@@ -299,6 +306,6 @@ namespace amorphie.contract.application
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
         Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input);
-        Task<GenericResult<ReleaseableFileStreamModel>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
+        Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
     }
 }

@@ -10,6 +10,7 @@ using amorphie.contract.core.Services;
 using amorphie.contract.Extensions;
 using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Response;
+using amorphie.core.Base;
 
 namespace amorphie.contract;
 
@@ -78,14 +79,14 @@ public class DocumentModule
         });
     }
 
-    async ValueTask DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
+    async Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument([FromServices] IDocumentAppService documentAppService, HttpContext httpContext, [AsParameters] DocumentDownloadInputDto inputDto, CancellationToken token)
     {
         var headerModels = HeaderHelper.GetHeader(httpContext);
         inputDto.SetUserReference(headerModels.UserReference);
 
-        var doc = await documentAppService.DownloadDocument(inputDto, token);
-        httpContext.Response.ContentType = doc.Data.ContentType;
-        await doc.Data.Stream.CopyToAsync(httpContext.Response.Body);
+        var resDocument = await documentAppService.DownloadDocument(inputDto, token);
+
+        return resDocument;
     }
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.SendDocumentInstanceDataToDYSTopicName)]
