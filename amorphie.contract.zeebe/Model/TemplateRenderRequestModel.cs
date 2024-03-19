@@ -3,32 +3,23 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 namespace amorphie.contract.zeebe.Model
 {
-    public class DocumentInstance
+   
+    public class ApprovedDocument
     {
-        public string DocumentCode { get; set; }
-        public string DocumentVersion { get; set; }
-        public string Reference { get; set; }
-        public string Filetype { get; set; }
-    }
-    public class ApprovedDocumentList
-    {
-        public ApprovedDocumentList()
-        {
-
-        }
-        public ApprovedDocumentList(ApprovedTemplateDocumentList approvedDocumentList)
-        {
-            DocumentDefinitionCode = approvedDocumentList.DocumentDefinitionCode;
-            DocumentSemanticVersion = approvedDocumentList.DocumentSemanticVersion;
-            ContractInstanceId = approvedDocumentList.ContractInstanceId;
-            RenderId = approvedDocumentList.RenderId;
-            Approved = approvedDocumentList.Approved;
-        }
         public string DocumentDefinitionCode { get; set; }
         public string DocumentSemanticVersion { get; set; }
         public Guid ContractInstanceId { get; set; }
         public Guid RenderId { get; set; }
         public bool Approved { get; set; }
+    }
+    public class ApprovedDocumentList
+    {
+        public ApprovedDocumentList()
+        {
+            Document = new List<ApprovedDocument>();
+        }
+        public List<ApprovedDocument> Document { get; set; }
+
     }
 
     public class ApprovedTemplateDocumentList
@@ -60,11 +51,12 @@ namespace amorphie.contract.zeebe.Model
             SemanticVersion = approvedDocumentList.SemanticVersion;
             ProcessName = approvedDocumentList.ProcessName;
             Identity = approvedDocumentList.Identity;
+            Name = approvedDocumentList.Name;
         }
 
         public string Name { get; set; }
         [Newtonsoft.Json.JsonProperty("render-id")]
-        [JsonPropertyName("RenderId")]
+        [JsonPropertyName("render-id")]
         public Guid RenderId { get; set; }
         [Newtonsoft.Json.JsonProperty("render-data")]
         [JsonPropertyName("render-data")]

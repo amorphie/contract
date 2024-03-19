@@ -85,6 +85,7 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+            var contractInstanceId = ZeebeMessageHelper.StringToGuid(body.GetProperty("InstanceId").ToString());
 
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
 
@@ -101,6 +102,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 var contractDocument = contractDto.Document.Select(contractDocument => new ApprovedTemplateDocumentList
                 {
+                    ContractInstanceId = contractInstanceId,
                     DocumentSemanticVersion = contractDocument.MinVersion,
                     SemanticVersion = contractDocument.DocumentDetail.OnlineSing.Version,
                     Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
@@ -116,14 +118,22 @@ namespace amorphie.contract.zeebe.Modules
                 }).ToList();
 
 
-                var list = new List<ApprovedDocumentList>();
+                var list = new ApprovedDocumentList();
                 foreach (var cdto in contractDocument)
                 {
                     HttpSendTemplate(new TemplateRenderRequestModel(cdto));//TODO:dapr yok
-                    list.Add(new ApprovedDocumentList(cdto));
+                    list.Document.Add(new ApprovedDocument
+                    {
+                        DocumentDefinitionCode = cdto.DocumentDefinitionCode,
+                        DocumentSemanticVersion = cdto.DocumentSemanticVersion,
+                        ContractInstanceId = cdto.ContractInstanceId,
+                        RenderId = cdto.RenderId,
+                        Approved = cdto.Approved,
+                    });
                 }
+                messageVariables.Variables.Add("ContractDocument", contractDocument);
                 messageVariables.Variables.Add("ApprovedDocumentList", list);
-                messageVariables.additionalData = contractDocument;
+                messageVariables.additionalData = list;
             }
 
             messageVariables.Success = true;
@@ -219,13 +229,12 @@ namespace amorphie.contract.zeebe.Modules
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
             var approvedDocumentList = messageVariables.Data.GetProperty("entityData");
 
-            var contractDocumentModel = JsonSerializer.Deserialize<List<ApprovedDocumentList>>(approvedDocumentList, options: new JsonSerializerOptions
+            var contractDocumentModel = JsonSerializer.Deserialize<ApprovedDocumentList>(approvedDocumentList, options: new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) as List<ApprovedDocumentList>;
-            foreach (var i in contractDocumentModel.Where(x => x.Approved).ToList())
+            }) as ApprovedDocumentList;
+            foreach (var i in contractDocumentModel.Document)
             {
-
                 var input = new DocumentInstanceInputDto
                 {
                     Id = i.RenderId,
