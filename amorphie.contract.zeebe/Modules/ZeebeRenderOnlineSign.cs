@@ -87,7 +87,7 @@ namespace amorphie.contract.zeebe.Modules
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
 
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-          
+
 
             // messageVariables.TransitionName = "checking-account-opening-start";
 
@@ -204,7 +204,7 @@ namespace amorphie.contract.zeebe.Modules
             //         reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
             //     }
             // }
-              string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
+            string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
 
