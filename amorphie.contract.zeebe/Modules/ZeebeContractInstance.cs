@@ -157,10 +157,11 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = new MessageVariables();
             messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            string reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
+            string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
+            string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-            string language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-            string bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
             var contract = new ContractInstanceInputDto
             {
                 ContractName = contractName,
