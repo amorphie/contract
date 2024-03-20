@@ -260,7 +260,7 @@ namespace amorphie.contract.application.Customer
                 var documentDefinition = documents.FirstOrDefault(z => z.DocumentDefinitionId == minioDoc.DocumentDefinitionId);
                 if (documentDefinition != null)
                 {
-                    string minioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectName={documentDefinition.DocumentContentId}";
+                    string minioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectId={documentDefinition.DocumentContentId}";
 
                     minioDoc.MinioUrl = minioUrl;
                 }
