@@ -4,10 +4,14 @@ using Newtonsoft.Json;
 namespace amorphie.contract.zeebe.Model
 {
 
-    public class ApprovedDocument
+    public class DocumentDef
     {
         public string DocumentDefinitionCode { get; set; }
         public string DocumentSemanticVersion { get; set; }
+    }
+    public class ApprovedDocument:DocumentDef
+    {
+      
         public Guid ContractInstanceId { get; set; }
         public Guid RenderId { get; set; }
         public bool Approved { get; set; }
