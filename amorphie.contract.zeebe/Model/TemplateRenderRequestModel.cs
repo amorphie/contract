@@ -9,9 +9,9 @@ namespace amorphie.contract.zeebe.Model
         public string DocumentDefinitionCode { get; set; }
         public string DocumentSemanticVersion { get; set; }
     }
-    public class ApprovedDocument:DocumentDef
+    public class ApprovedDocument : DocumentDef
     {
-      
+
         public Guid ContractInstanceId { get; set; }
         public Guid RenderId { get; set; }
         public bool Approved { get; set; }
