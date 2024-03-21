@@ -1,8 +1,10 @@
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Model.History;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 namespace amorphie.contract.infrastructure.Configurations.Contract
 {
     public class ContractDefinitionHistoryConfiguration : ConfigurationBaseAudiEntity<ContractDefinitionHistory>,
@@ -10,16 +12,16 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
     {
         public virtual void Configure(EntityTypeBuilder<ContractDefinitionHistory> builder)
         {
-            var settings = new JsonSerializerSettings
+            var options = new JsonSerializerOptions
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
             };
 
             builder.Property(e => e.ContractDefinitionHistoryModel)
                 .HasColumnType("jsonb")
                 .HasConversion(
-                    v => JsonConvert.SerializeObject(v, settings),
-                    v => JsonConvert.DeserializeObject<ContractDefinitionHistoryModel>(v) 
+                    v => JsonSerializer.Serialize(v, options),
+                    v => JsonSerializer.Deserialize<ContractDefinitionHistoryModel>(v, options)
                 );
         }
     }

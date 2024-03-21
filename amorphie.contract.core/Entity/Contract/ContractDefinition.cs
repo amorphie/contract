@@ -28,7 +28,6 @@ namespace amorphie.contract.core.Entity.Contract
         public ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();
         public ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
         public ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
-        public ICollection<ContractDefinitionHistory>? ContractDefinitionHistories { get; set; } = new List<ContractDefinitionHistory>();
 
     }
 }

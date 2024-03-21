@@ -12,7 +12,7 @@ using amorphie.contract.infrastructure.Contexts;
 namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240321080848_ContractMigrationsv10")]
+    [Migration("20240321094923_ContractMigrationsv10")]
     partial class ContractMigrationsv10
     {
         /// <inheritdoc />
@@ -436,8 +436,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContractDefinitionId");
-
                     b.ToTable("ContractDefinitionHistory", "Cont");
                 });
 
@@ -771,8 +769,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DocumentGroupId");
 
                     b.ToTable("DocumentGroupHistory", "DocGroup");
                 });
@@ -2261,17 +2257,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("Process");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinitionHistory", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Contract.ContractDefinition", "ContractDefinition")
-                        .WithMany("ContractDefinitionHistories")
-                        .HasForeignKey("ContractDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ContractDefinition");
-                });
-
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDocumentDetail", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Contract.ContractDefinition", "ContractDefinition")
@@ -2365,17 +2350,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("ContractDefinition");
 
                     b.Navigation("Validations");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.DocumentGroupHistory", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Document.DocumentGroups.DocumentGroup", "DocumentGroup")
-                        .WithMany("DocumentGroupHistories")
-                        .HasForeignKey("DocumentGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DocumentGroup");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.Document", b =>
@@ -2725,8 +2699,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinition", b =>
                 {
-                    b.Navigation("ContractDefinitionHistories");
-
                     b.Navigation("ContractDefinitionLanguageDetails");
 
                     b.Navigation("ContractDocumentDetails");
@@ -2770,8 +2742,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentGroups.DocumentGroup", b =>
                 {
                     b.Navigation("DocumentGroupDetails");
-
-                    b.Navigation("DocumentGroupHistories");
 
                     b.Navigation("DocumentGroupLanguageDetail");
                 });
