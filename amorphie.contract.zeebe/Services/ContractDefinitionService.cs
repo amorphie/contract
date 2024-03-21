@@ -10,6 +10,7 @@ using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Entity.EAV;
 using System.Collections;
 using System.Text.Json;
+using amorphie.contract.application;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -335,14 +336,10 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetContractDefinitionHistory(ContractDefinition existingContractDefinition)
         {
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            string oldContract = JsonConvert.SerializeObject(existingContractDefinition, settings);
+            var contractHistory = ObjectMapperApp.Mapper.Map<ContractDefinitionHistoryModel>(existingContractDefinition);
             var contractDefinitionHistory = new ContractDefinitionHistory
             {
-                History = oldContract,
+                 ContractDefinitionHistoryModel = contractHistory,
                 ContractDefinitionId = _ContractDefinition.Id
             };
             _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
