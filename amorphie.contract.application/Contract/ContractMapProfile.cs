@@ -26,6 +26,9 @@ namespace amorphie.contract.application.Contract
                     .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
                     .ReverseMap();
 
+            CreateMap<ContractDefinition, ContractDefinitionHistoryModel>()
+                    .ReverseMap();
+
         }
     }
 

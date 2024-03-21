@@ -105,6 +105,9 @@ namespace amorphie.contract.application
                 .ForPath(dest => dest.EntityPropertyValue.Data, opt => opt.MapFrom(src => src.EntityPropertyValue))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code)).ReverseMap();
 
+            CreateMap<DocumentGroup, DocumentGroupHistoryModel>()
+                    .ReverseMap();
+
         }
     }
 }

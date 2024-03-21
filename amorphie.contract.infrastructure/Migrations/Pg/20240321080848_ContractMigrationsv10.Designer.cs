@@ -12,7 +12,7 @@ using amorphie.contract.infrastructure.Contexts;
 namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20240318215425_ContractMigrationsv10")]
+    [Migration("20240321080848_ContractMigrationsv10")]
     partial class ContractMigrationsv10
     {
         /// <inheritdoc />
@@ -403,6 +403,10 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ContractDefinitionHistoryModel")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<Guid>("ContractDefinitionId")
                         .HasColumnType("uuid");
 
@@ -414,10 +418,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
 
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("History")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -748,12 +748,12 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<Guid?>("CreatedByBehalfOf")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DocumentGroupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("History")
+                    b.Property<string>("DocumentGroupHistoryModel")
                         .IsRequired()
                         .HasColumnType("jsonb");
+
+                    b.Property<Guid>("DocumentGroupId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");

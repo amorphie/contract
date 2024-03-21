@@ -17,7 +17,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    History = table.Column<string>(type: "jsonb", nullable: false),
+                    ContractDefinitionHistoryModel = table.Column<string>(type: "jsonb", nullable: false),
                     ContractDefinitionId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
@@ -46,7 +46,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    History = table.Column<string>(type: "jsonb", nullable: false),
+                    DocumentGroupHistoryModel = table.Column<string>(type: "jsonb", nullable: false),
                     DocumentGroupId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),

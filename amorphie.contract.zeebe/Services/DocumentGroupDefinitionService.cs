@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.zeebe.Model.DocumentGroupDataModel;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.application;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -95,14 +96,10 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetContractDefinitionHistory(DocumentGroup existingDocumentGroup)
         {
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            string oldDocumentGroup = JsonConvert.SerializeObject(existingDocumentGroup, settings);
+            var documentGroupHistoryModel = ObjectMapperApp.Mapper.Map<DocumentGroupHistoryModel>(existingDocumentGroup);
             var documentGroupHistory = new DocumentGroupHistory
             {
-                History = oldDocumentGroup,
+                DocumentGroupHistoryModel=documentGroupHistoryModel,
                 DocumentGroupId = _documentGroup.Id
             };
             _dbContext.DocumentGroupHistory.Add(documentGroupHistory);
