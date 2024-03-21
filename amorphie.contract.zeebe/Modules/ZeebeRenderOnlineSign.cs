@@ -279,7 +279,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 PropertyNameCaseInsensitive = true
             }) as ApprovedDocumentList;
-            foreach (var i in contractDocumentModel.Document)
+            foreach (var i in contractDocumentModel.Document.Where(x => x.Approved))
             {
                 var input = new DocumentInstanceInputDto
                 {
