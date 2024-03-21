@@ -4,6 +4,7 @@ using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
+using amorphie.contract.core.Model.History;
 using amorphie.core.Base;
 using AutoMapper;
 

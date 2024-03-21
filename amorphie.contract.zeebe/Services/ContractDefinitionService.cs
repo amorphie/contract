@@ -11,6 +11,7 @@ using amorphie.contract.core.Entity.EAV;
 using System.Collections;
 using System.Text.Json;
 using amorphie.contract.application;
+using amorphie.contract.core.Model.History;
 
 namespace amorphie.contract.zeebe.Services
 {

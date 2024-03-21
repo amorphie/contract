@@ -6,6 +6,7 @@ using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.zeebe.Model.DocumentGroupDataModel;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.application;
+using amorphie.contract.core.Model.History;
 
 namespace amorphie.contract.zeebe.Services
 {

@@ -31,13 +31,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ContractDefinitionHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ContractDefinitionHistory_ContractDefinition_ContractDefini~",
-                        column: x => x.ContractDefinitionId,
-                        principalSchema: "Cont",
-                        principalTable: "ContractDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,26 +53,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DocumentGroupHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentGroupHistory_DocumentGroup_DocumentGroupId",
-                        column: x => x.DocumentGroupId,
-                        principalSchema: "DocGroup",
-                        principalTable: "DocumentGroup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContractDefinitionHistory_ContractDefinitionId",
-                schema: "Cont",
-                table: "ContractDefinitionHistory",
-                column: "ContractDefinitionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentGroupHistory_DocumentGroupId",
-                schema: "DocGroup",
-                table: "DocumentGroupHistory",
-                column: "DocumentGroupId");
         }
 
         /// <inheritdoc />
