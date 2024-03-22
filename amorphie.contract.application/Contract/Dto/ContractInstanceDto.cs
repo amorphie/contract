@@ -6,6 +6,6 @@
         public string Status { get; set; }
         public List<DocumentInstanceDto> Document { get; set; } = new List<DocumentInstanceDto>();
 
-        // public List<ContractDocumentGroupDetailDto> DocumentGroupDetails { get; set; }
+        public List<DocumentGroupInstanceDto> DocumentGroup { get; set; }
     }
 }
