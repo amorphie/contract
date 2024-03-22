@@ -295,14 +295,8 @@ namespace amorphie.contract.zeebe.Modules
                 };
 
                 input.SetHeaderParameters(reference, customerNo);
+                await documentAppService.Instance(input);
 
-                var response = await documentAppService.Instance(input);
-
-                messageVariables.Variables.Add("documentAppService.Instance", response);
-                if (!response.IsSuccess)
-                {
-                    throw new InvalidOperationException("Document Instance Not Complated");
-                }
             }
             messageVariables.additionalData = contractDocumentModel;
             messageVariables.Success = true;
