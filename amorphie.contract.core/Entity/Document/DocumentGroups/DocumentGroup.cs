@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Entity.Contract;
 
 namespace amorphie.contract.core.Entity.Document.DocumentGroups
 {

@@ -20,6 +20,7 @@ namespace amorphie.contract.infrastructure.Configurations.DocumentGroups
                 "DocumentGroupDetails",
                 "DocumentGroupLanguageDetail",
                 "Status",
+                "DocumentGroupHistories"
             });
         }
     }

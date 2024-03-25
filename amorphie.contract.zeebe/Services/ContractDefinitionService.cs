@@ -9,8 +9,9 @@ using amorphie.contract.core;
 using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Entity.EAV;
 using System.Collections;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Google.Protobuf.WellKnownTypes;
+using System.Text.Json;
+using amorphie.contract.application;
+using amorphie.contract.core.Model.History;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -347,6 +348,17 @@ namespace amorphie.contract.zeebe.Services
         {
             _ContractDefinition.BankEntity = _ContractDefinitionDataModel.registrationType;
         }
+
+        private void SetContractDefinitionHistory(ContractDefinition existingContractDefinition)
+        {
+            var contractHistory = ObjectMapperApp.Mapper.Map<ContractDefinitionHistoryModel>(existingContractDefinition);
+            var contractDefinitionHistory = new ContractDefinitionHistory
+            {
+                 ContractDefinitionHistoryModel = contractHistory,
+                ContractDefinitionId = _ContractDefinition.Id
+            };
+            _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
+        }
         public async Task<ContractDefinition> DataModelToContractDefinition(dynamic documentDefinitionDataModelDynamic, Guid id)
         {
             _ContractDefinitionDataModelDynamic = documentDefinitionDataModelDynamic;
@@ -396,6 +408,7 @@ namespace amorphie.contract.zeebe.Services
             _ContractDefinitionDataModelDynamic = contractDefinitionDataUpdateDynamic;
             try
             {
+
                 DynamicToContractDefinitionDataModel();
                 SetContractDefinitionDefault(id);
                 var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == _ContractDefinition.Id);
@@ -403,7 +416,7 @@ namespace amorphie.contract.zeebe.Services
                 {
                     throw new ArgumentException("Güncellemek istediğiniz döküman bulunmamakta.");
                 }
-
+                SetContractDefinitionHistory(contractDefinition);
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
                 contractDefinition.BankEntity = _ContractDefinition.BankEntity;
                 UpdateContractDefinitionLanguage(contractDefinition.ContractDefinitionLanguageDetails.Select(x => x.MultiLanguage).ToList());
