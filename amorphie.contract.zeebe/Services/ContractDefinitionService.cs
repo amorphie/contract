@@ -91,11 +91,25 @@ namespace amorphie.contract.zeebe.Services
                 Code = _ContractDefinition.Code
             }).ToList();
 
-            _ContractDefinition.ContractDefinitionLanguageDetails = multiLanguageList.Select(x => new ContractDefinitionLanguageDetail
-            {
-                ContractDefinitionId = _ContractDefinition.Id,
-                MultiLanguage = x
-            }).ToList();
+            // _ContractDefinition.ContractDefinitionLanguageDetails = multiLanguageList.Select(x => new ContractDefinitionLanguageDetail
+            // {
+            //     ContractDefinitionId = _ContractDefinition.Id,
+            //     MultiLanguage = x
+            // }).ToList();
+
+            //             _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.Select(s => new Dictionary<string, string>
+            // {
+            //                     { "tr-TR", "12345" },}
+            //                     );
+
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+
+            _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
+
+            var dic = new Dictionary<string, string>{
+                {"sd","sdsd"}
+            };
+
         }
 
         private void UpdateContractDocumentGroupDetail(List<ContractDocumentGroupDetail> contractDocumentGroupDetails)
