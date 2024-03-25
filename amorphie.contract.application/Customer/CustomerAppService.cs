@@ -104,7 +104,9 @@ namespace amorphie.contract.application.Customer
                     allContractDocumentIds.AddRange(group.CustomerContractGroupDocuments.Select(x => x.Id));
                 }
 
+                // It will be used after data migration.
                 model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
+                // model.Title = model.Titles.L(inputDto.GetLanguageCode());
 
                 var contractDocuments = model.CustomerContractDocuments;
                 var contractDocumentGroups = model.CustomerContractDocumentGroups;
