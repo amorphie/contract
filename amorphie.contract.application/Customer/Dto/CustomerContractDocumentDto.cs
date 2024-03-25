@@ -19,6 +19,11 @@ namespace amorphie.contract.application.Customer.Dto
         public OnlineSignDto OnlineSign { get; set; }
         [JsonIgnore]
         public List<MultilanguageText> MultiLanguageText { get; set; }
+
+
+        [JsonIgnore]
+        public Dictionary<string, string> Titles { get; set; } = default!;
+
     }
 }
 
