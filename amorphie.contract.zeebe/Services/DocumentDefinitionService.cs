@@ -41,6 +41,12 @@ namespace amorphie.contract.zeebe.Services
                 DocumentDefinitionId = _documentdef.Id,
                 MultiLanguage = x
             }).ToList();
+
+            //TODO [LANG] yukarıdaki kod refactor edilmeli.
+
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+            _documentdef.Titles = _documentDefinitionDataModel.data.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
+
         }
         private void SetDocumentTagsDetails()
         {

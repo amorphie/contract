@@ -15,6 +15,10 @@ namespace amorphie.contract.application.Customer.Dto
         public List<CustomerContractDocumentDto> CustomerContractGroupDocuments { get; set; }
         [JsonIgnore]
         public List<MultilanguageText> MultiLanguageText { get; set; }
+
+        [JsonIgnore]
+        public Dictionary<string, string> Titles { get; set; } = default!;
+
     }
 }
 
