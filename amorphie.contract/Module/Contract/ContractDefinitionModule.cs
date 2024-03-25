@@ -90,7 +90,14 @@ public class ContractDefinitionModule
             if (item.ContractDefinitionLanguageDetails is null)
                 continue;
 
-            item.Titles = item.ContractDefinitionLanguageDetails.ToDictionary(d => d?.MultiLanguage?.LanguageType?.Code, d => d?.MultiLanguage?.Name);
+            foreach (var detail in item.ContractDefinitionLanguageDetails)
+            {
+                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
+                var languageName = detail?.MultiLanguage?.Name;
+
+                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
+                    item.Titles[languageCode] = languageName;
+            }
         }
 
         //Document Definition
@@ -102,7 +109,14 @@ public class ContractDefinitionModule
             if (item.DocumentDefinitionLanguageDetails is null)
                 continue;
 
-            item.Titles = item.DocumentDefinitionLanguageDetails.ToDictionary(d => d?.MultiLanguage?.LanguageType?.Code, d => d?.MultiLanguage?.Name);
+            foreach (var detail in item.DocumentDefinitionLanguageDetails)
+            {
+                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
+                var languageName = detail?.MultiLanguage?.Name;
+
+                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
+                    item.Titles[languageCode] = languageName;
+            }
         }
 
         //Document Group Definition
@@ -114,8 +128,19 @@ public class ContractDefinitionModule
             if (item.DocumentGroupLanguageDetail is null)
                 continue;
 
-            item.Titles = item.DocumentGroupLanguageDetail.ToDictionary(d => d?.MultiLanguage?.LanguageType?.Code, d => d?.MultiLanguage?.Name);
-       } 
+            foreach (var detail in item.DocumentGroupLanguageDetail)
+            {
+                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
+                var languageName = detail?.MultiLanguage?.Name;
+
+                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
+                    item.Titles[languageCode] = languageName;
+            }
+        }
+
+        context.UpdateRange(contractDefs);
+        context.UpdateRange(documentDefs);
+        context.UpdateRange(documentGroupDefs);
 
         await context.SaveChangesAsync();
 
