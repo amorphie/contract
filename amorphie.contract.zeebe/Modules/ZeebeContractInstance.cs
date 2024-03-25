@@ -160,6 +160,21 @@ namespace amorphie.contract.zeebe.Modules
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
             string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+            if (String.IsNullOrEmpty(reference))
+            {
+                reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            }
+            if (String.IsNullOrEmpty(language))
+            {
+                language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            }
+            if (String.IsNullOrEmpty(bankEntity))
+            {
+                bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
+            }
+
+
+
 
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
             var contract = new ContractInstanceInputDto
