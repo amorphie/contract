@@ -87,6 +87,18 @@ namespace amorphie.contract.zeebe.Modules
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
             string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+            if (String.IsNullOrEmpty(reference))
+            {
+                reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            }
+            if (String.IsNullOrEmpty(language))
+            {
+                language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            }
+            if (String.IsNullOrEmpty(bankEntity))
+            {
+                bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
+            }
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
             if (messageVariables.TransitionName == "render-online-sign-start")
             {
@@ -263,7 +275,18 @@ namespace amorphie.contract.zeebe.Modules
             string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-
+            if (String.IsNullOrEmpty(reference))
+            {
+                reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            }
+            if (String.IsNullOrEmpty(language))
+            {
+                language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            }
+            if (String.IsNullOrEmpty(bankEntity))
+            {
+                bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
+            }
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             if (string.IsNullOrEmpty(reference))
