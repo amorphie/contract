@@ -178,7 +178,7 @@ namespace amorphie.contract.zeebe.Modules
             }
 
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-            
+
             var contract = new ContractInstanceInputDto
             {
                 ContractName = contractName,

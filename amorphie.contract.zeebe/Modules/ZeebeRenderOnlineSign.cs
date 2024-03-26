@@ -168,11 +168,11 @@ namespace amorphie.contract.zeebe.Modules
                         SemanticVersion = contractDocument.DocumentDetail.OnlineSing.Version,
                         Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
                         RenderId = Guid.NewGuid(),
-                        RenderData = "{\"customer\":{\"customerIdentity\":\"" +  headerModel.UserReference + "\"}, \"customerIdentity\":" +  headerModel.UserReference + "}",
-                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" +  headerModel.UserReference + "\"}, \"customerIdentity\":" +  headerModel.UserReference + "}",
+                        RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                         // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
                         ProcessName = nameof(ZeebeRenderOnlineSign),
-                        Identity =  headerModel.UserReference,
+                        Identity = headerModel.UserReference,
                         DocumentDefinitionCode = contractDocument.Code,
                         Approved = false,
 
@@ -277,8 +277,8 @@ namespace amorphie.contract.zeebe.Modules
             //         reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
             //     }
             // }
-             HeaderFilterModel headerModel;
-               headerModel = HeaderHelperZeebe.GetHeader(body);
+            HeaderFilterModel headerModel;
+            headerModel = HeaderHelperZeebe.GetHeader(body);
 
             if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
             {
@@ -293,7 +293,7 @@ namespace amorphie.contract.zeebe.Modules
                 headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
             }
 
-             
+
             customerNo = headerModel.CustomerNo;
 
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");
