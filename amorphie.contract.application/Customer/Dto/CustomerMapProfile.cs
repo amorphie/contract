@@ -1,10 +1,8 @@
-﻿using System;
-using amorphie.contract.core.Entity.Document;
+﻿using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Contract;
 using AutoMapper;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
-using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.core.Base;
 using amorphie.contract.core;
 
@@ -48,6 +46,7 @@ namespace amorphie.contract.application.Customer.Dto
                .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing))
                .ForMember(dest => dest.ApprovalDate, opt => opt.MapFrom(src => src.CreatedAt))
                .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails))
+               .ForMember(dest => dest.Titles, opt => opt.MapFrom(src => src.DocumentDefinition.Titles))
                .ReverseMap();
 
             CreateMap<DocumentOnlineSing, OnlineSignDto>()
