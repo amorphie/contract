@@ -90,18 +90,20 @@ namespace amorphie.contract.zeebe.Modules
             // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             headerModel = HeaderHelperZeebe.GetHeader(body);
-
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+            if (body.ToString().IndexOf("ContractInstance") != -1)
             {
-                headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
-            {
-                headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
-            {
-                headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                {
+                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                {
+                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                {
+                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                }
             }
 
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
@@ -168,11 +170,11 @@ namespace amorphie.contract.zeebe.Modules
                         SemanticVersion = contractDocument.DocumentDetail.OnlineSing.Version,
                         Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
                         RenderId = Guid.NewGuid(),
-                        RenderData = "{\"customer\":{\"customerIdentity\":\"" +  headerModel.UserReference + "\"}, \"customerIdentity\":" +  headerModel.UserReference + "}",
-                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" +  headerModel.UserReference + "\"}, \"customerIdentity\":" +  headerModel.UserReference + "}",
+                        RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                         // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
                         ProcessName = nameof(ZeebeRenderOnlineSign),
-                        Identity =  headerModel.UserReference,
+                        Identity = headerModel.UserReference,
                         DocumentDefinitionCode = contractDocument.Code,
                         Approved = false,
 
@@ -277,23 +279,25 @@ namespace amorphie.contract.zeebe.Modules
             //         reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
             //     }
             // }
-             HeaderFilterModel headerModel;
-               headerModel = HeaderHelperZeebe.GetHeader(body);
+            HeaderFilterModel headerModel;
+            headerModel = HeaderHelperZeebe.GetHeader(body);
+            if (body.ToString().IndexOf("ContractInstance") != -1)
+            {
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                {
+                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                {
+                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                {
+                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                }
+            }
 
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
-            {
-                headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
-            {
-                headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
-            {
-                headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
-            }
 
-             
             customerNo = headerModel.CustomerNo;
 
             // var approvedDocumentList = body.GetProperty("ApprovedDocumentList");

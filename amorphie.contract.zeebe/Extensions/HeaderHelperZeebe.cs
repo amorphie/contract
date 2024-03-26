@@ -44,7 +44,7 @@ public static class HeaderHelperZeebe
         {
             clientId = body.GetProperty(headerTag).GetProperty(AppHeaderConsts.ClientId.ToLower()).ToString();
         }
-        if (!exception)
+        if (exception)
         {
             ArgumentException.ThrowIfNullOrEmpty(reference, nameof(reference));
             ArgumentException.ThrowIfNullOrEmpty(businessLine, nameof(businessLine));
