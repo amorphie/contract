@@ -163,22 +163,24 @@ namespace amorphie.contract.zeebe.Modules
             // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             headerModel = HeaderHelperZeebe.GetHeader(body);
-
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+            if (body.ToString().IndexOf("ContractInstance") != -1)
             {
-                headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
-            {
-                headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-            }
-            if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
-            {
-                headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                {
+                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                {
+                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                }
+                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                {
+                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                }
             }
 
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-            
+
             var contract = new ContractInstanceInputDto
             {
                 ContractName = contractName,
