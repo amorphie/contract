@@ -70,17 +70,6 @@ namespace amorphie.contract.application.Contract
 
             var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
             var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup);
-            // var contractModel = new ContractDefinitionDto
-            // {
-            //     Status = EStatus.InProgress.ToString(),
-            //     Id = contractDefinition.Id,
-            //     Code = contractDefinition.Code,
-            //     ContractDocumentDetails = contractDocumentDetails,
-            //     ContractDocumentGroupDetails = contractDocumentGroupDetails
-            // };
-
-            // if (contractModel.ContractDocumentDetails.Count == 0)
-            //     contractModel.Status = EStatus.Completed.ToString();
 
             ContractRequestHeader.LangCode = req.LangCode ?? "";
             var contractInstanceDto = new ContractInstanceDto()
@@ -94,33 +83,6 @@ namespace amorphie.contract.application.Contract
              if (contractInstanceDto.Document.Count == 0)
                  contractInstanceDto.Status = EStatus.Completed.ToString();
 
-            //     var a = new ContractInstanceDto();
-            //     a.Code = contractModel.Code;
-            //     a.Status = contractModel.Status;
-            //     a.Document = new List<DocumentInstanceDto>();
-            //     foreach (var i in contractDocumentDetails)
-            //     {
-            //         var dto = new DocumentInstanceDto();
-            //         dto.MinVersion = i.MinVersion;
-            //         dto.IsRequired = i.Required;
-            //         dto.UseExisting = i.UseExisting;
-            //         dto.Code = i.DocumentDefinition.Code;
-            //         dto.Status = EStatus.InProgress.ToString();
-            //         dto.Name = i.DocumentDefinition.MultilanguageText.FirstOrDefault(x => x.Language == req.LangCode)?.Label
-            //    ?? i.DocumentDefinition.MultilanguageText.FirstOrDefault()?.Label;
-
-            //         dto.DocumentDetail.OnlineSing = new DocumentInstanceOnlineSingDto
-            //         {
-            //             TemplateCode = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Code
-            //                    ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Code,
-            //             Version = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Version
-            //                    ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Version,
-            //         };
-
-
-            //         a.Document.Add(dto);
-
-            //     }
 
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
         }
