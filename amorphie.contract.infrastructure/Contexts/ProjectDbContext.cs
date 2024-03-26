@@ -60,6 +60,7 @@ public class ProjectDbContext : DbContext
     public DbSet<ContractEntityProperty> ContractEntityProperty { get; set; }
     public DbSet<ContractTag> ContractTag { get; set; }
     public DbSet<ContractValidation> ContractValidation { get; set; }
+    public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
 
 
 
@@ -83,6 +84,7 @@ public class ProjectDbContext : DbContext
     #region  DocumentGroup
     public DbSet<DocumentGroup> DocumentGroup { get; set; }
     public DbSet<DocumentGroupDetail> DocumentGroupDetail { get; set; }
+    public DbSet<DocumentGroupHistory> DocumentGroupHistory { get; set; }
     #endregion
     public DbSet<DocumentFormat> DocumentFormat { get; set; }
     public DbSet<DocumentFormatDetail> DocumentFormatDetail { get; set; }

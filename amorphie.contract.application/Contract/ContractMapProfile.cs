@@ -1,5 +1,6 @@
 ﻿using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Model.History;
 using AutoMapper;
 
 namespace amorphie.contract.application.Contract
@@ -26,7 +27,10 @@ namespace amorphie.contract.application.Contract
                     .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
                     .ReverseMap();
 
+            CreateMap<ContractDefinition, ContractDefinitionHistoryModel>()
+                    .ReverseMap();
+
         }
-    }
+    }  
 
 }
