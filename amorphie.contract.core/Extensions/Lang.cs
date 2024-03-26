@@ -1,19 +1,25 @@
-using amorphie.core.Base;
-
 namespace amorphie.contract.core.Extensions;
 
 public static class Lang
 {
+    private const string DefaultLang = "tr-TR";
+    private const string UndefinedLang = "Undefined_Lang_Key";
+
     public static string L(this Dictionary<string, string> multilanguages, string langCode)
     {
+        if (multilanguages is null || !multilanguages.Any())
+            return UndefinedLang;
+
         if (String.IsNullOrEmpty(langCode))
-            langCode = "tr-TR";
+            langCode = DefaultLang;
 
-        var langLabel = multilanguages?[langCode];
+        string resultValue = String.Empty;
 
-        if (String.IsNullOrEmpty(langLabel))
-            return "Undefined Lang";
+        if (!multilanguages.TryGetValue(langCode, out resultValue))
+        {
+            resultValue = UndefinedLang;
+        }
 
-        return langLabel;
+        return resultValue;
     }
 }
