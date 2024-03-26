@@ -281,7 +281,10 @@ namespace amorphie.contract.zeebe.Modules
             // }
             HeaderFilterModel headerModel;
             headerModel = HeaderHelperZeebe.GetHeader(body);
-            if (body.ToString().IndexOf("ContractInstance") != -1)
+
+
+            if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+
             {
                 if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
                 {
