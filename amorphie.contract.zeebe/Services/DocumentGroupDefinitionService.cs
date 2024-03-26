@@ -47,6 +47,10 @@ namespace amorphie.contract.zeebe.Services
                 MultiLanguage = x
             }).ToList();
 
+            //TODO [LANG] yukarıdaki kod refactor edilmeli.
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+            _documentGroup.Titles = _documentDefinitionDataModel.titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
+
         }
 
         private void SetDocumentGroupDetail()
@@ -100,7 +104,7 @@ namespace amorphie.contract.zeebe.Services
             var documentGroupHistoryModel = ObjectMapperApp.Mapper.Map<DocumentGroupHistoryModel>(existingDocumentGroup);
             var documentGroupHistory = new DocumentGroupHistory
             {
-                DocumentGroupHistoryModel=documentGroupHistoryModel,
+                DocumentGroupHistoryModel = documentGroupHistoryModel,
                 DocumentGroupId = _documentGroup.Id
             };
             _dbContext.DocumentGroupHistory.Add(documentGroupHistory);
@@ -132,6 +136,7 @@ namespace amorphie.contract.zeebe.Services
                         documentGroup.DocumentGroupLanguageDetail.Add(detailObject);
                     }
                 }
+
 
                 foreach (var detailObject in _documentGroup.DocumentGroupDetails)
                 {

@@ -81,6 +81,12 @@ namespace amorphie.contract.zeebe.Services
             {
                 _dbContext.AddRange(addedMultiLang);
             }
+
+            //TODO [LANG] yukarıdaki kod refactor edilmeli.
+
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+            _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
+
         }
         private void SetContractDefinitionLanguageDetail()
         {
@@ -96,6 +102,11 @@ namespace amorphie.contract.zeebe.Services
                 ContractDefinitionId = _ContractDefinition.Id,
                 MultiLanguage = x
             }).ToList();
+
+            //TODO [LANG] yukarıdaki kod refactor edilmeli.
+
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+            _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
         }
 
         private void UpdateContractDocumentGroupDetail(List<ContractDocumentGroupDetail> contractDocumentGroupDetails)
@@ -340,7 +351,7 @@ namespace amorphie.contract.zeebe.Services
             var contractHistory = ObjectMapperApp.Mapper.Map<ContractDefinitionHistoryModel>(existingContractDefinition);
             var contractDefinitionHistory = new ContractDefinitionHistory
             {
-                 ContractDefinitionHistoryModel = contractHistory,
+                ContractDefinitionHistoryModel = contractHistory,
                 ContractDefinitionId = _ContractDefinition.Id
             };
             _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
