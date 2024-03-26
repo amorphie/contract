@@ -7,6 +7,7 @@ using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
+using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
@@ -157,32 +158,33 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = new MessageVariables();
             messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-            string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
-            string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
-            if (String.IsNullOrEmpty(reference))
-            {
-                reference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-            }
-            if (String.IsNullOrEmpty(language))
-            {
-                language = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-            }
-            if (String.IsNullOrEmpty(bankEntity))
-            {
-                bankEntity = body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString();
-            }
+            HeaderFilterModel headerModel;
+            // string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
+            // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
+            // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+            headerModel = HeaderHelperZeebe.GetHeader(body);
 
-
-
+            if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+            {
+                headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+            }
+            if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+            {
+                headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+            }
+            if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+            {
+                headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+            }
 
             string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+
             var contract = new ContractInstanceInputDto
             {
                 ContractName = contractName,
             };
 
-            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
+            contract.SetHeaderParameters(headerModel);
             var InstanceDto = contractAppService.Instance(contract, token).Result;
             messageVariables.Variables.Add("XContractInstance", InstanceDto.Data);
 
