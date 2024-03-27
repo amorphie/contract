@@ -68,16 +68,22 @@ namespace amorphie.contract.application.Contract
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
-            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup);
-
             ContractRequestHeader.LangCode = req.LangCode ?? "";
+
+            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(
+                listDocument
+            );
+            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(
+                listDocumentGroup
+            );
             var contractInstanceDto = new ContractInstanceDto()
             {
                 Code = contractDefinition.Code,
                 Status = EStatus.InProgress.ToString(),
-                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails),
-                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails)
+                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails,
+                opts => opts.Items["LangCode"] = req.LangCode ?? ""),
+                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails,
+                opts => opts.Items["LangCode"] = req.LangCode ?? "")
             };
 
              if (contractInstanceDto.Document.Count == 0)
