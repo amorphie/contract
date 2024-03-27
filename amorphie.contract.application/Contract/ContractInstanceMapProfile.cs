@@ -40,7 +40,11 @@ namespace amorphie.contract.application.Contract
                 .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
                 .ForPath(dest => dest.DocumentGroupDetailInstanceDto.Code, opt => opt.MapFrom(src => src.ContractDocumentGroup.Code))
                 .ForPath(dest => dest.DocumentGroupDetailInstanceDto.DocumentInstances, opt => opt.MapFrom(src => src.ContractDocumentGroup.DocumentDefinitions))
-                .ReverseMap();
+                .ForMember(dest => dest.Title, opt => opt.MapFrom((src, dest, destMember, context) =>
+                        {
+                            return src.ContractDocumentGroup.Titles.L(Convert.ToString(context.Items[Lang.LangCode]));
+                        }
+                ));         
 
             CreateMap<DocumentDefinitionDto, DocumentInstanceDto>()
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))

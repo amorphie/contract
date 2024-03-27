@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using amorphie.core.Base;
 
 namespace amorphie.contract.application
 {
