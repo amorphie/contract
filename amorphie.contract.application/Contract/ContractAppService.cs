@@ -74,40 +74,13 @@ namespace amorphie.contract.application.Contract
             {
                 Code = contractDefinition.Code,
                 Status = EStatus.InProgress.ToString(),
-                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails),
-                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails)
+                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
+                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };
 
             if (contractInstanceDto.Document.Count == 0)
                 contractInstanceDto.Status = EStatus.Completed.ToString();
 
-            //     var a = new ContractInstanceDto();
-            //     a.Code = contractModel.Code;
-            //     a.Status = contractModel.Status;
-            //     a.Document = new List<DocumentInstanceDto>();
-            //     foreach (var i in contractDocumentDetails)
-            //     {
-            //         var dto = new DocumentInstanceDto();
-            //         dto.MinVersion = i.MinVersion;
-            //         dto.IsRequired = i.Required;
-            //         dto.UseExisting = i.UseExisting;
-            //         dto.Code = i.DocumentDefinition.Code;
-            //         dto.Status = EStatus.InProgress.ToString();
-            //         dto.Name = i.DocumentDefinition.MultilanguageText.FirstOrDefault(x => x.Language == req.LangCode)?.Label
-            //    ?? i.DocumentDefinition.MultilanguageText.FirstOrDefault()?.Label;
-
-            //         dto.DocumentDetail.OnlineSing = new DocumentInstanceOnlineSingDto
-            //         {
-            //             TemplateCode = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Code
-            //                    ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Code,
-            //             Version = i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == req.LangCode)?.Version
-            //                    ?? i.DocumentDefinition.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.Version,
-            //         };
-
-
-            //         a.Document.Add(dto);
-
-            //     }
 
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
         }

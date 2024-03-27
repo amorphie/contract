@@ -1,4 +1,5 @@
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.core.Extensions;
 using AutoMapper;
 
 namespace amorphie.contract.application.Contract
@@ -18,13 +19,20 @@ namespace amorphie.contract.application.Contract
                 .ForPath(dest => dest.DocumentDetail.OnlineSing, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing));
 
             CreateMap<DocumentOnlineSingDto, DocumentInstanceOnlineSingDto>()
-                .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src =>
-                    src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == ContractRequestHeader.LangCode).Code
-                    ?? src.DocumentTemplateDetails.FirstOrDefault().Code))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src =>
-                    src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == ContractRequestHeader.LangCode).Version
-                    ?? src.DocumentTemplateDetails.FirstOrDefault().Version))
-                .ReverseMap();
+                 .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom((src, dest, destMember, context) =>
+                 {
+                     var langCode = (string)context.Items[Lang.LangCode];
+                     return src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == langCode)?.Code
+                         ?? src.DocumentTemplateDetails.FirstOrDefault()?.Code;
+                 }))
+                 .ForMember(dest => dest.Version, opt => opt.MapFrom((src, dest, destMember, context) =>
+                 {
+                     var langCode = (string)context.Items[Lang.LangCode];
+                     return src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == langCode)?.Version
+                         ?? src.DocumentTemplateDetails.FirstOrDefault()?.Version;
+                 }))
+                 .ReverseMap();
+
 
             CreateMap<ContractDocumentGroupDetailDto, DocumentGroupInstanceDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.ContractDocumentGroup.Status))
