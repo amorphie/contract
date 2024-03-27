@@ -11,7 +11,6 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
         {
             var list = new List<string>
             {
-                "DocumentDefinitionLanguageDetails",
                 "DocumentEntityPropertys",
                 "DocumentTagsDetails",
                 "DocumentUpload",

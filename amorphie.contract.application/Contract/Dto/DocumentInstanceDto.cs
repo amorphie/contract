@@ -1,4 +1,6 @@
-﻿namespace amorphie.contract.application.Contract.Dto
+﻿using System.Text.Json.Serialization;
+
+namespace amorphie.contract.application.Contract.Dto
 {
 
     public class DocumentInstanceDto

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using amorphie.core.Base;
 
 namespace amorphie.contract.application
@@ -9,7 +10,8 @@ namespace amorphie.contract.application
 
         public string Status { get; set; } = default!;
 
-        public List<MultilanguageText> MultilanguageText { get; set; } = default!;
+        [JsonIgnore]
+        public Dictionary<string, string> Titles { get; set; } = default!;
 
     }
 }

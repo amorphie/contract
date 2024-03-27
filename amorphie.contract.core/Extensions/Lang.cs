@@ -4,6 +4,7 @@ public static class Lang
 {
     private const string DefaultLang = "tr-TR";
     private const string UndefinedLang = "Undefined_Lang_Key";
+    public const string LangCode = "LangCode";
 
     public static string L(this Dictionary<string, string> multilanguages, string langCode)
     {

@@ -35,17 +35,17 @@ namespace amorphie.contract.zeebe.Services
 
         private void SetDocumentGroupLanguageDetail()
         {
-            var multiLanguageList = _documentDefinitionDataModel.titles.Select(x => new MultiLanguage
-            {
-                Name = x.title,
-                LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                Code = _documentGroup.Code
-            });
-            _documentGroup.DocumentGroupLanguageDetail = multiLanguageList.Select(x => new DocumentGroupLanguageDetail
-            {
-                DocumentGroupId = _documentGroup.Id,
-                MultiLanguage = x
-            }).ToList();
+            // var multiLanguageList = _documentDefinitionDataModel.titles.Select(x => new MultiLanguage
+            // {
+            //     Name = x.title,
+            //     LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
+            //     Code = _documentGroup.Code
+            // });
+            // _documentGroup.DocumentGroupLanguageDetail = multiLanguageList.Select(x => new DocumentGroupLanguageDetail
+            // {
+            //     DocumentGroupId = _documentGroup.Id,
+            //     MultiLanguage = x
+            // }).ToList();
 
             //TODO [LANG] yukarıdaki kod refactor edilmeli.
             var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
@@ -119,25 +119,6 @@ namespace amorphie.contract.zeebe.Services
                 SetContractDefinitionHistory(documentGroup);
                 documentGroup.Code = _documentGroup.Code;
 
-                foreach (var detailObject in _documentGroup.DocumentGroupLanguageDetail)
-                {
-                    var multiLangObject = detailObject.MultiLanguage;
-                    var entity = documentGroup.DocumentGroupLanguageDetail.Where(x => x.MultiLanguage.LanguageTypeId == multiLangObject.LanguageTypeId).FirstOrDefault();
-
-                    if (entity is not null)
-                    {
-                        entity.MultiLanguage.Name = multiLangObject.Name;
-                        entity.MultiLanguage.Code = multiLangObject.Code;
-                    }
-                    else
-                    {
-                        _dbContext.Entry(detailObject).State = EntityState.Added;
-                        _dbContext.Entry(multiLangObject).State = EntityState.Added;
-                        documentGroup.DocumentGroupLanguageDetail.Add(detailObject);
-                    }
-                }
-
-
                 foreach (var detailObject in _documentGroup.DocumentGroupDetails)
                 {
                     var entity = documentGroup.DocumentGroupDetails.Where(x => x.DocumentDefinitionId == detailObject.DocumentDefinitionId).FirstOrDefault();
@@ -148,9 +129,6 @@ namespace amorphie.contract.zeebe.Services
                         documentGroup.DocumentGroupDetails.Add(detailObject);
                     }
                 }
-
-                var removeLanguages = documentGroup.DocumentGroupLanguageDetail.Where(x => !_documentGroup.DocumentGroupLanguageDetail.Select(z => z.MultiLanguage.LanguageTypeId).ToList().Contains(x.MultiLanguage.LanguageTypeId)).ToList();
-                documentGroup.DocumentGroupLanguageDetail = documentGroup.DocumentGroupLanguageDetail.Except(removeLanguages).ToList();
 
                 var removeDetails = documentGroup.DocumentGroupDetails.Where(x => !_documentGroup.DocumentGroupDetails.Select(z => z.DocumentDefinitionId).ToList().Contains(x.DocumentDefinitionId)).ToList();
                 documentGroup.DocumentGroupDetails = documentGroup.DocumentGroupDetails.Except(removeDetails).ToList();

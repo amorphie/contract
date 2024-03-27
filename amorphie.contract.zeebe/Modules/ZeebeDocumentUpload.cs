@@ -125,8 +125,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 KiloBytesSize = entityData.GetProperty("file-size").ToString(),
                 ContentType = entityData.GetProperty("file-type").ToString(),
-                Name = fileName,
-                ContentData = entityData.GetProperty("file-byte-array").ToString()
+                Name = fileName
             };
             var filebytes = ExtensionService.StringToBytes(entityData.GetProperty("file-byte-array").ToString(), entityData.GetProperty("file-size").ToString());
 
@@ -152,9 +151,9 @@ namespace amorphie.contract.zeebe.Modules
             }
             dbContext.Document.Add(document);
             dbContext.SaveChanges();
-            messageVariables.Variables.Add("documentDefinition", Newtonsoft.Json.JsonConvert.SerializeObject(documentDefinition));
+            messageVariables.Variables.Add("documentDefinition", JsonConvert.SerializeObject(documentDefinition));
 
-            messageVariables.Variables.Add("document", Newtonsoft.Json.JsonConvert.SerializeObject(document));
+            messageVariables.Variables.Add("document", JsonConvert.SerializeObject(document));
 
             messageVariables.Success = true;
 
