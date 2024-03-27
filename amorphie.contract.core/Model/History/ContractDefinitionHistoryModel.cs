@@ -1,4 +1,3 @@
-using System.Text;
 using amorphie.contract.core.Entity.Base;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
@@ -9,7 +8,6 @@ public class ContractDefinitionHistoryModel : BaseEntity
 {
     public EStatus Status { get; set; } = default!;
     public EBankEntity BankEntity { get; set; } = default!;
-    public ICollection<ContractDefinitionLanguageDetail>? ContractDefinitionLanguageDetails { get; set; } = new List<ContractDefinitionLanguageDetail>();
     public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
     public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
     public ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();

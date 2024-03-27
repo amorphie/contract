@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 using amorphie.contract.core.Entity.Base;
 using Microsoft.EntityFrameworkCore.Query;
 using amorphie.contract.infrastructure.Extensions;
-using amorphie.contract.core;
 
 namespace amorphie.contract.infrastructure.Contexts;
 
@@ -55,7 +54,6 @@ public class ProjectDbContext : DbContext
 
     public DbSet<ContractDefinition> ContractDefinition { get; set; }
     public DbSet<ContractDocumentDetail> ContractDocumentDetail { get; set; }
-    public DbSet<ContractDefinitionLanguageDetail> ContractDefinitionLanguageDetail { get; set; }
     public DbSet<ContractDocumentGroupDetail> ContractDocumentGroupDetail { get; set; }
     public DbSet<ContractEntityProperty> ContractEntityProperty { get; set; }
     public DbSet<ContractTag> ContractTag { get; set; }
@@ -78,7 +76,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentOnlineSing> DocumentOnlineSing { get; set; }
     public DbSet<DocumentTsizl> DocumentTsizls { get; set; }
     public DbSet<DocumentDys> DocumentDys { get; set; }
-    public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
 
     public DbSet<DocumentEntityProperty> DocumentEntityProperty { get; set; }
     #region  DocumentGroup

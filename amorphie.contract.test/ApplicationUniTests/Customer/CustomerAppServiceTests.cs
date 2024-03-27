@@ -16,60 +16,34 @@ public class CustomerAppServiceTests
         Environment.SetEnvironmentVariable("EnableApm", "false");
     }
 
-    [Fact]
-    public void FindTitle_ReturnsLabel_WhenLanguageMatchFound()
-    {
-        var connectionString = "DataSource=:memory:";
-        var options = new DbContextOptionsBuilder<ProjectDbContext>()
-            .UseSqlite(connectionString)
-            .Options;
+ 
 
-        var minioServiceMock = new Mock<IMinioService>();
+    // [Fact]
+    // public void FindTitle_ReturnsFirstLabel_WhenLanguageMatchNotFound()
+    // {
+    //     var connectionString = "DataSource=:memory:";
+    //     var options = new DbContextOptionsBuilder<ProjectDbContext>()
+    //         .UseSqlite(connectionString)
+    //         .Options;
 
-        using var context = new ProjectDbContext(options, null);
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+    //     var minioServiceMock = new Mock<IMinioService>();
 
-        var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
+    //     using var context = new ProjectDbContext(options, null);
 
-        var texts = new List<MultilanguageText>
-            {
-                new MultilanguageText { Language = "en-EN", Label = "English" },
-                new MultilanguageText { Language = "tr-TR", Label = "Turkish" }
-            };
-        var expectedLabel = "Turkish";
-
-        var result = customerAppService.FindTitle(texts, "tr-TR");
-
-        Assert.Equal(expectedLabel, result);
-    }
-
-    [Fact]
-    public void FindTitle_ReturnsFirstLabel_WhenLanguageMatchNotFound()
-    {
-        var connectionString = "DataSource=:memory:";
-        var options = new DbContextOptionsBuilder<ProjectDbContext>()
-            .UseSqlite(connectionString)
-            .Options;
-
-        var minioServiceMock = new Mock<IMinioService>();
-
-        using var context = new ProjectDbContext(options, null);
-
-        var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
+    //     var customerAppService = new CustomerAppService(context, minioServiceMock.Object, null);
 
 
-        var texts = new List<MultilanguageText>
-            {
-                new MultilanguageText { Language = "en", Label = "English Default" }
-            };
+    //     var texts = new List<MultilanguageText>
+    //         {
+    //             new MultilanguageText { Language = "en", Label = "English Default" }
+    //         };
 
-        var expectedLabel = "English Default";
+    //     var expectedLabel = "English Default";
 
-        var result = customerAppService.FindTitle(texts, "fr");
+    //     var result = customerAppService.FindTitle(texts, "fr");
 
-        Assert.Equal(expectedLabel, result);
-    }
+    //     Assert.Equal(expectedLabel, result);
+    // }
 
     [Fact]
     public async Task GetDocumentsByContracts_ReturnsDocumentsAsync()

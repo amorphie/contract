@@ -260,7 +260,7 @@ namespace amorphie.contract.application
                              DocumentDefinition = new DocumentDefinitionDto
                              {
                                  Code = x.DocumentDefinition.Code,
-                                 MultilanguageText = ObjectMapperApp.Mapper.Map<List<MultilanguageText>>(x.DocumentDefinition.DocumentDefinitionLanguageDetails),
+                                 Titles = x.DocumentDefinition.Titles,
                                  DocumentOperations = new DocumentOperationsDto
                                  {
                                      DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,
