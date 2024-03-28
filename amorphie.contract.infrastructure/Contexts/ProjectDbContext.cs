@@ -41,15 +41,14 @@ public class ProjectDbContext : DbContext
 
     #region Common
 
-    // public DbSet<Callback> Callback { get; set; }
     public DbSet<Tag> Tag { get; set; }
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
-    // public DbSet<Status> Status { get; set; }
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
     public DbSet<TemplateRender> TemplateRender { get; set; }
     #endregion
+
     #region Contract
 
     public DbSet<ContractDefinition> ContractDefinition { get; set; }
@@ -59,8 +58,8 @@ public class ProjectDbContext : DbContext
     public DbSet<ContractTag> ContractTag { get; set; }
     public DbSet<ContractValidation> ContractValidation { get; set; }
     public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
-
-
+    public DbSet<ContractInstance> ContractInstance { get; set; }
+    public DbSet<ContractInstanceDetail> ContractInstanceDetail { get; set; }
 
     #endregion
 
