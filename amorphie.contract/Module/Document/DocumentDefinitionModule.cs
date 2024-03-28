@@ -9,6 +9,7 @@ using amorphie.contract.Extensions;
 using amorphie.contract.application;
 using amorphie.core.Extension;
 using amorphie.contract.application.Extensions;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract;
 
@@ -105,28 +106,7 @@ public class DocumentDefinitionModule
 
         var list = await context.DocumentDefinition.OrderBy(x => x.Code).Skip(input.Page * input.PageSize).Take(input.PageSize).AsNoTracking().ToListAsync(token);
 
-        var responseDtos = ObjectMapperApp.Mapper.Map<List<DocumentDefinitionDto>>(list);
-
-        foreach (var dto in responseDtos)
-        {
-            //[LANG]
-            // if (dto.MultilanguageText is not null)
-            // {
-            //     var selectedLanguageText = dto?.MultilanguageText.FirstOrDefault(t => t.Language == input.LangCode);
-
-            //     if (selectedLanguageText != null)
-            //     {
-            //         dto.Name = selectedLanguageText.Label;
-            //     }
-            //     else if (dto.MultilanguageText.Any())
-            //     {
-            //         dto.Name = dto.MultilanguageText.First().Label;
-            //     }
-            // }
-
-        }
-
-
+        var responseDtos = ObjectMapperApp.Mapper.Map<List<DocumentDefinitionDto>>(list, opt => opt.Items[Lang.LangCode] = input.LangCode).ToList();
 
         if (responseDtos is null)
         {
