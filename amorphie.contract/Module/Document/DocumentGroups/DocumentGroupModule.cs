@@ -86,7 +86,7 @@ public class DocumentGroupModule
 
             var list = await context!.DocumentGroup!.Skip(page * pageSize).Take(pageSize).ToListAsync(token);
 
-            var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list);
+            var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list, opt => opt.Items[Lang.LangCode] = language);
 
             // foreach (var documentGroupViewModel in list)
             // {
