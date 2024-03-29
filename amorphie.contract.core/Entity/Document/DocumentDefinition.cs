@@ -50,6 +50,7 @@ namespace amorphie.contract.core.Entity.Document
         [Required]
         public string Semver { get; set; } = default!;
 
+        public Dictionary<string, string> Titles { get; set; } = default!;
         public override string ToString()
         {
             return Code;
