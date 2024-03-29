@@ -15,9 +15,15 @@ using amorphie.contract.infrastructure.Services.Kafka;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
+using amorphie.contract.infrastructure.Services.Refit;
 using System.Reflection;
 using FluentValidation;
 using Serilog;
+using Polly.Retry;
+using Polly.Extensions.Http;
+using Polly.Timeout;
+using Polly;
+using Refit;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,14 +46,28 @@ builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 
+//wait 1s and retry again 3 times when get timeout
+AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .Or<TimeoutRejectedException>()
+    .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000));
+
+builder.Services
+    .AddRefitClient<ITemplateEngineService>()
+    .ConfigureHttpClient(c =>
+        c.BaseAddress = new Uri(StaticValuesExtensions.TemplateEngineUrl ??
+                                throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
+    .AddPolicyHandler(retryPolicy);
+
+
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDysProducer, DysProducer>();
 builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
 builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
+builder.Services.AddSingleton<ITemplateEngineAppService, TemplateEngineAppService>();
 
-builder.Services.AddSingleton<ITemplateEngineService, TemplateEngineService>();
 var assemblies = new Assembly[]
                 {
                       typeof(DocumentDefinitionValidator).Assembly,

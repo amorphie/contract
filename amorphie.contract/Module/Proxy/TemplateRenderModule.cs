@@ -11,6 +11,8 @@ using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 using amorphie.contract.Extensions;
+using amorphie.contract.core.Response;
+using amorphie.contract.application.TemplateEngine;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -27,6 +29,8 @@ namespace amorphie.contract.Module.Proxy
             routeGroupBuilder.MapPost("render", RenderHtml);
             routeGroupBuilder.MapPost("render/pdf", RenderPdf);
             routeGroupBuilder.MapGet("template/definition", GetTemplates);
+            routeGroupBuilder.MapGet("instance/{renderId}", GetRender);
+            routeGroupBuilder.MapGet("instance/pdf/{renderId}", GetRenderPdf);
         }
 
         async ValueTask<IResult> RenderHtml(
@@ -215,6 +219,18 @@ namespace amorphie.contract.Module.Proxy
                     throw new Exception("Template Engine Connection Exception");
                 }
             }
+        }
+
+        async Task<GenericResult<string>> GetRender([FromServices] ITemplateEngineAppService templateEngineAppService, string renderId)
+        {
+            var result = await templateEngineAppService.GetRender(renderId);
+            return result;
+        }
+
+        async Task<GenericResult<string>> GetRenderPdf([FromServices] ITemplateEngineAppService templateEngineAppService, string renderId)
+        {
+            var result = await templateEngineAppService.GetRenderPdf(renderId);
+            return result;
         }
     }
 }
