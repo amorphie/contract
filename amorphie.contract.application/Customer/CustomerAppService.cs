@@ -51,8 +51,8 @@ namespace amorphie.contract.application.Customer
             var userReference = inputDto.GetUserReference();
 
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
-            var contractQuery = _dbContext!.ContractDefinition.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).AsQueryable();
-            contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
+            var allContractQuery = _dbContext!.ContractDefinition.AsQueryable();
+            allContractQuery = ContractHelperExtensions.LikeWhere(allContractQuery, inputDto.Code);
 
 
             if (inputDto.StartDate.HasValue)
@@ -75,21 +75,21 @@ namespace amorphie.contract.application.Customer
             .AsSplitQuery()
             .ToListAsync(token);
 
-            contractQuery = contractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+            
+            allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
             ||
             x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
 
+            var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
+            
             var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
 
-            List<Guid> allContractDocumentIds = new List<Guid>();
+            List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))
+                                 .Concat(allContractQuery.SelectMany(main => main.ContractDocumentGroupDetails.Select(docGrup => docGrup.DocumentGroupId)))
+                                 .ToList();
             foreach (var model in contractModels)
             {
                 allContractDocumentIds.AddRange(model.CustomerContractDocuments.Select(x => x.Id));
-
-                foreach (var group in model.CustomerContractDocumentGroups)
-                {
-                    allContractDocumentIds.AddRange(group.CustomerContractGroupDocuments.Select(x => x.Id));
-                }
 
                 model.Title = model.Titles.L(inputDto.GetLanguageCode());
 
