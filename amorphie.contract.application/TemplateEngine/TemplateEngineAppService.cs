@@ -33,6 +33,9 @@ namespace amorphie.contract.application.TemplateEngine
             try
             {
                 result = await _templateEngineService.GetRender(renderId);
+                  if (!String.IsNullOrEmpty(result))
+                    result = result.Trim('\"');
+                    
             }
             catch (Exception ex)
             {
@@ -49,6 +52,9 @@ namespace amorphie.contract.application.TemplateEngine
             try
             {
                 result = await _templateEngineService.GetRenderPdf(renderId);
+                if (!String.IsNullOrEmpty(result))
+                    result = result.Trim('\"');
+
             }
             catch (Exception ex)
             {
