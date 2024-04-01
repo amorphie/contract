@@ -63,8 +63,7 @@ public class DocumentDefinitionModule
         //   .ToList();
 
         // var list = await query.ToListAsync(token);
-
-        // return Results.Ok(result);
+        //DÜZELECEK TEST
         return Results.Ok("result");
     }
     async ValueTask<IResult> getAnyDocumentDefinitionListSearch(
