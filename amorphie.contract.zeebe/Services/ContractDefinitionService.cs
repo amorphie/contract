@@ -122,7 +122,8 @@ namespace amorphie.contract.zeebe.Services
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.name.code).Select(y => y.Id).FirstOrDefault(),
                 UseExisting = x.useExisting,
-                Required = x.required
+                Required = x.required,
+                Sequence = x.sequence
             });
             _ContractDefinition.ContractDocumentDetails = contractDocumentDetail.ToList();
 
