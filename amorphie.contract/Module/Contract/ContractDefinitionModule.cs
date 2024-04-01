@@ -26,7 +26,6 @@ public class ContractDefinitionModule
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("GetExistContract", GetExist);
-        routeGroupBuilder.MapPost("UpdateAllDefinitionForLang", UpdateAllDefinitionLang);
     }
     protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
@@ -76,75 +75,6 @@ public class ContractDefinitionModule
         var response = await contractAppService.GetExist(req, token);
 
         return Results.Ok(response);
-    }
-
-    //TODO [LANG] Data kopyalandıktan sonra bu servisi kaldır!!
-    async ValueTask<IResult> UpdateAllDefinitionLang([FromServices] ProjectDbContext context)
-    {
-        //Contract Definition
-
-        var contractDefs = await context.ContractDefinition.ToListAsync();
-
-        foreach (var item in contractDefs)
-        {
-            if (item.ContractDefinitionLanguageDetails is null)
-                continue;
-
-            foreach (var detail in item.ContractDefinitionLanguageDetails)
-            {
-                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
-                var languageName = detail?.MultiLanguage?.Name;
-
-                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
-                    item.Titles[languageCode] = languageName;
-            }
-        }
-
-        //Document Definition
-
-        var documentDefs = await context.DocumentDefinition.ToListAsync();
-
-        foreach (var item in documentDefs)
-        {
-            if (item.DocumentDefinitionLanguageDetails is null)
-                continue;
-
-            foreach (var detail in item.DocumentDefinitionLanguageDetails)
-            {
-                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
-                var languageName = detail?.MultiLanguage?.Name;
-
-                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
-                    item.Titles[languageCode] = languageName;
-            }
-        }
-
-        //Document Group Definition
-
-        var documentGroupDefs = await context.DocumentGroup.ToListAsync();
-
-        foreach (var item in documentGroupDefs)
-        {
-            if (item.DocumentGroupLanguageDetail is null)
-                continue;
-
-            foreach (var detail in item.DocumentGroupLanguageDetail)
-            {
-                var languageCode = detail?.MultiLanguage?.LanguageType?.Code;
-                var languageName = detail?.MultiLanguage?.Name;
-
-                if (!string.IsNullOrEmpty(languageCode) && !string.IsNullOrEmpty(languageName))
-                    item.Titles[languageCode] = languageName;
-            }
-        }
-
-        context.UpdateRange(contractDefs);
-        context.UpdateRange(documentDefs);
-        context.UpdateRange(documentGroupDefs);
-
-        await context.SaveChangesAsync();
-
-        return Results.Ok("response");
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };

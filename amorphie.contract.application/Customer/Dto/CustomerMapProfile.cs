@@ -1,12 +1,11 @@
-﻿using System;
-using amorphie.contract.core.Entity.Document;
+﻿using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Entity.Contract;
 using AutoMapper;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
-using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.core.Base;
 using amorphie.contract.core;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract.application.Customer.Dto
 {
@@ -18,37 +17,29 @@ namespace amorphie.contract.application.Customer.Dto
             CreateMap<ContractDefinition, CustomerContractDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
-                .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.ContractDefinitionLanguageDetails))
                 .ForMember(dest => dest.CustomerContractDocuments, opt => opt.MapFrom(src => src.ContractDocumentDetails))
                 .ForMember(dest => dest.CustomerContractDocumentGroups, opt => opt.MapFrom(src => src.ContractDocumentGroupDetails))
                 .ReverseMap();
 
-            CreateMap<ContractDefinitionLanguageDetail, MultilanguageText>()
-                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.MultiLanguage.Name))
-                .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.MultiLanguage.LanguageType.Code)).ReverseMap();
-
             CreateMap<DocumentDefinition, CustomerContractDocumentDto>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               //.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Semver))
                .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentOnlineSing != null))
                .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSing))
                .ForMember(dest => dest.ApprovalDate, opt => opt.MapFrom(src => src.CreatedAt))
-               .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.DocumentDefinitionLanguageDetails))
                .ReverseMap();
 
             CreateMap<ContractDocumentDetail, CustomerContractDocumentDto>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DocumentDefinition.Id))
-               .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
+                // [LANG]   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.DocumentDefinition.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.DocumentDefinition.Semver))
                .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing != null))
                .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
                .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing))
                .ForMember(dest => dest.ApprovalDate, opt => opt.MapFrom(src => src.CreatedAt))
-               .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails))
-               .ReverseMap();
+               .ForMember(dest => dest.Titles, opt => opt.MapFrom(src => src.DocumentDefinition.Titles)).ReverseMap();
 
             CreateMap<DocumentOnlineSing, OnlineSignDto>()
                 .ForMember(dest => dest.AllovedClients, opt => opt.MapFrom(src => src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code)))
@@ -75,7 +66,8 @@ namespace amorphie.contract.application.Customer.Dto
                 .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
                 .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
                 .ForMember(dest => dest.DocumentGroupStatus, opt => opt.MapFrom(src => AppConsts.NotValid))
-                .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.DocumentGroup.DocumentGroupLanguageDetail))
+                //[LANG] .ForMember(dest => dest.MultiLanguageText, opt => opt.MapFrom(src => src.DocumentGroup.DocumentGroupLanguageDetail))
+                .ForMember(dest => dest.Titles, opt => opt.MapFrom(src => src.DocumentGroup.Titles))
                 .ReverseMap();
         }
     }

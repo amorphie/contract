@@ -1,10 +1,4 @@
-using System.Diagnostics.Tracing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using amorphie.core.Base;
-using Google.Rpc;
 
 namespace amorphie.contract.application
 {
@@ -23,7 +17,6 @@ namespace amorphie.contract.application
         public string Semver { get; set; }
 
         public string? BaseStatus { get; set; }
-        public List<MultilanguageText>? MultilanguageText { get; set; }
         public List<EntityPropertyDto>? EntityProperties { get; set; }
         public List<TagDto>? Tags { get; set; }
         public DocumentUploadDto? DocumentUpload { get; set; }
@@ -34,6 +27,7 @@ namespace amorphie.contract.application
         public DocumentOperationsDto? DocumentOperations { get; set; }
         public DocumentDysDto? DocumentDys { get; set; }
         public DocumentTsizlDto? DocumentTsizl { get; set; }
+        public Dictionary<string, string> Titles { get; set; } = default!;
 
     }
 
