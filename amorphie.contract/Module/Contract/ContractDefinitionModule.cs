@@ -11,6 +11,8 @@ using amorphie.core.Extension;
 using amorphie.contract.core.Enum;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
+using amorphie.contract.core.Extensions;
+using amorphie.contract.Extensions;
 
 namespace amorphie.contract;
 
@@ -29,6 +31,7 @@ public class ContractDefinitionModule
     }
     protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
+        var langCode = HeaderHelper.GetHeaderLangCode(httpContext);
         try
         {
             var query = context!.ContractDefinition!.Skip(page)
@@ -37,7 +40,7 @@ public class ContractDefinitionModule
 
             var list = await query.ToListAsync(token);
 
-            var respose = ObjectMapperApp.Mapper.Map<List<ContractDefinitionDto>>(list);
+            var respose = ObjectMapperApp.Mapper.Map<List<ContractDefinitionDto>>(list,opt => opt.Items[Lang.LangCode] = langCode);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 

@@ -115,7 +115,8 @@ namespace amorphie.contract.application.Contract
                 .ToListAsync(cts);
 
             var listDocument = contractDefinition.ContractDocumentDetails
-                .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
+                .Where(d => !customerDocument.Contains(d.DocumentDefinitionId))
+                .OrderBy(d => d.Order);
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 

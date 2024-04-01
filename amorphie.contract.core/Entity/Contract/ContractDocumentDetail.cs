@@ -36,6 +36,8 @@ namespace amorphie.contract.core.Entity.Contract
         // public string DocumentDefinitionSemver { get; set; }
         [Required]
         public bool Required { get; set; }
+        [Required]
+        public short Order { get; set; }
 
     }
 }
