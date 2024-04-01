@@ -434,7 +434,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<short>("Sequence")
+                    b.Property<short>("Order")
                         .HasColumnType("smallint");
 
                     b.Property<int>("UseExisting")

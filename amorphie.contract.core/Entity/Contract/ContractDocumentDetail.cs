@@ -37,7 +37,7 @@ namespace amorphie.contract.core.Entity.Contract
         [Required]
         public bool Required { get; set; }
         [Required]
-        public short Sequence { get; set; }
+        public short Order { get; set; }
 
     }
 }

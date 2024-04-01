@@ -22,7 +22,7 @@ namespace amorphie.contract.zeebe.Model.ContractDefinitionDataModel
         public string minVersiyon { get; set; }
         public Name name { get; set; }
         public bool required { get; set; }
-        public short sequence { get; set; }
+        public short order { get; set; }
         public EUseExisting useExisting { get; set; }
     }
 

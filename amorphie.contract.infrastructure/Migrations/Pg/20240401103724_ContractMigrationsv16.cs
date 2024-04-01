@@ -11,7 +11,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<short>(
-                name: "Sequence",
+                name: "Order",
                 schema: "Cont",
                 table: "ContractDocumentDetail",
                 type: "smallint",
@@ -23,7 +23,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Sequence",
+                name: "Order",
                 schema: "Cont",
                 table: "ContractDocumentDetail");
         }

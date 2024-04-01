@@ -1,2 +1,2 @@
 ALTER TABLE "Cont"."ContractDocumentDetail"
-ADD COLUMN "Sequence" smallint NOT NULL;;
+ADD COLUMN "Order" smallint NOT NULL;;

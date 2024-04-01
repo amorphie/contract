@@ -116,7 +116,7 @@ namespace amorphie.contract.application.Contract
 
             var listDocument = contractDefinition.ContractDocumentDetails
                 .Where(d => !customerDocument.Contains(d.DocumentDefinitionId))
-                .OrderBy(d => d.Sequence);
+                .OrderBy(d => d.Order);
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
