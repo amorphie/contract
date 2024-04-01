@@ -59,7 +59,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
         }
-
+        // TEST
         static IResult CreateDocumentGroupDefinition(
             [FromBody] dynamic body,
             [FromServices] ProjectDbContext dbContext,
