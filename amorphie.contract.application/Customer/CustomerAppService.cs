@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Response;
 using amorphie.contract.core;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract.application.Customer
 {
@@ -103,7 +104,9 @@ namespace amorphie.contract.application.Customer
                     allContractDocumentIds.AddRange(group.CustomerContractGroupDocuments.Select(x => x.Id));
                 }
 
-                model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
+                // It will be used after data migration.
+                // model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
+                model.Title = model.Titles.L(inputDto.GetLanguageCode());
 
                 var contractDocuments = model.CustomerContractDocuments;
                 var contractDocumentGroups = model.CustomerContractDocumentGroups;
@@ -113,7 +116,10 @@ namespace amorphie.contract.application.Customer
 
                 foreach (var contDocument in contractDocuments)
                 {
-                    contDocument.Title = FindTitle(contDocument.MultiLanguageText, inputDto.GetLanguageCode());
+                    // contDocument.Title = FindTitle(contDocument.MultiLanguageText, inputDto.GetLanguageCode());
+                    //TODO [LANG] lang migration dan sonra değiştirilmeli.
+                    contDocument.Title = contDocument.Titles.L(inputDto.GetLanguageCode());
+
                     if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
                     {
                         contDocument.DocumentStatus = AppConsts.Valid;
@@ -130,13 +136,18 @@ namespace amorphie.contract.application.Customer
                  {
                      foreach (var contractDocGroup in contractDocumentGroups)
                      {
-                         contractDocGroup.Title = FindTitle(contractDocGroup.MultiLanguageText, inputDto.GetLanguageCode());
+                         //  contractDocGroup.Title = FindTitle(contractDocGroup.MultiLanguageText, inputDto.GetLanguageCode());
+                         //TODO [LANG] lang migration dan sonra değiştirilmeli.
+                         contractDocGroup.Title = contractDocGroup.Titles.L(inputDto.GetLanguageCode());
 
                          int validDocCount = 0;
 
                          foreach (var groupDocument in contractDocGroup.CustomerContractGroupDocuments)
                          {
-                             groupDocument.Title = FindTitle(groupDocument.MultiLanguageText, inputDto.GetLanguageCode());
+                             //  groupDocument.Title = FindTitle(groupDocument.MultiLanguageText, inputDto.GetLanguageCode());
+
+                             //TODO [LANG] lang migration dan sonra değiştirilmeli.
+                             groupDocument.Title = groupDocument.Titles.L(inputDto.GetLanguageCode());
 
                              if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
                              {
@@ -190,7 +201,10 @@ namespace amorphie.contract.application.Customer
 
                 otherDocumentDefinition.ForEach(x =>
                 {
-                    x.Title = FindTitle(x.MultiLanguageText, inputDto.GetLanguageCode());
+                    //x.Title = FindTitle(x.MultiLanguageText, inputDto.GetLanguageCode());
+                    //TODO [LANG] lang migration dan sonra değiştirilmeli.
+                    x.Title = x.Titles.L(inputDto.GetLanguageCode());
+
                     x.DocumentStatus = AppConsts.Valid;
                 });
 

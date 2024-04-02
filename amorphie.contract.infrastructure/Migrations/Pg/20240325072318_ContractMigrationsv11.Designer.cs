@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using amorphie.contract.infrastructure.Contexts;
@@ -11,9 +12,11 @@ using amorphie.contract.infrastructure.Contexts;
 namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240325072318_ContractMigrationsv11")]
+    partial class ContractMigrationsv11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,48 +401,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.ToTable("ContractDefinition", "Cont");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDefinitionHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContractDefinitionHistoryModel")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<Guid>("ContractDefinitionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContractDefinitionHistory", "Cont");
-                });
-
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractDocumentDetail", b =>
                 {
                     b.Property<Guid>("Id")
@@ -730,48 +691,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.HasIndex("ValidationId");
 
                     b.ToTable("ContractValidation", "Cont");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.DocumentGroupHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("DocumentGroupHistoryModel")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<Guid>("DocumentGroupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DocumentGroupHistory", "DocGroup");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Customer", b =>
@@ -1081,10 +1000,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Titles")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
 
                     b.HasKey("Id");
 
@@ -1427,10 +1342,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Titles")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
 
                     b.HasKey("Id");
 
