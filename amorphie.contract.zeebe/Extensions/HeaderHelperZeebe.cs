@@ -6,7 +6,7 @@ namespace amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 public static class HeaderHelperZeebe
 {
     private const string headerTag = "Headers";
-    public static HeaderFilterModel GetHeader(dynamic body)
+    public static HeaderFilterModel GetHeader(dynamic body, bool exception = false)
     {
         string reference = String.Empty;
         string businessLine = String.Empty;
@@ -44,10 +44,11 @@ public static class HeaderHelperZeebe
         {
             clientId = body.GetProperty(headerTag).GetProperty(AppHeaderConsts.ClientId.ToLower()).ToString();
         }
-
-        ArgumentException.ThrowIfNullOrEmpty(reference, nameof(reference));
-        ArgumentException.ThrowIfNullOrEmpty(businessLine, nameof(businessLine));
-
+        if (exception)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(reference, nameof(reference));
+            ArgumentException.ThrowIfNullOrEmpty(businessLine, nameof(businessLine));
+        }
 
         return new HeaderFilterModel(businessLine, langCode, clientId, reference, customerNo);
     }

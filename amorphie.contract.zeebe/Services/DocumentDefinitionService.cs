@@ -6,7 +6,6 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
-using Grpc.Core;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -21,9 +20,11 @@ namespace amorphie.contract.zeebe.Services
         DocumentDefinitionDataModel _documentDefinitionDataModel;
         DocumentDefinition _documentdef;
         dynamic? _documentDefinitionDataDynamic;
-        public DocumentDefinitionService(ProjectDbContext dbContext)
+        private readonly Serilog.ILogger _logger;
+        public DocumentDefinitionService(ProjectDbContext dbContext, Serilog.ILogger logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
 
@@ -36,11 +37,19 @@ namespace amorphie.contract.zeebe.Services
                 Code = _documentdef.Code
             }).ToList();
 
+            _logger.Information("SetDocumentDefinitionLanguageDetail - {multiLanguageList } ", multiLanguageList);
+
             _documentdef.DocumentDefinitionLanguageDetails = multiLanguageList.Select(x => new DocumentDefinitionLanguageDetail
             {
                 DocumentDefinitionId = _documentdef.Id,
                 MultiLanguage = x
             }).ToList();
+
+            //TODO [LANG] yukarıdaki kod refactor edilmeli.
+
+            var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
+            _documentdef.Titles = _documentDefinitionDataModel.data.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
+            _logger.Information("SetDocumentDefinitionLanguageDetail - {_documentdef.Titles } ", _documentdef.Titles);
         }
         private void SetDocumentTagsDetails()
         {
