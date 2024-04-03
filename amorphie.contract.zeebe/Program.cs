@@ -18,6 +18,7 @@ using amorphie.contract.infrastructure.Services.Kafka;
 using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
 using Serilog;
+using amorphie.contract.application.TemplateEngine;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,6 +71,7 @@ builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
 builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
+builder.Services.AddSingleton<ITemplateEngineAppService, TemplateEngineAppService>();
 
 
 
