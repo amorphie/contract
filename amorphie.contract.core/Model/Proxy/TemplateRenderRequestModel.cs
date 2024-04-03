@@ -3,10 +3,59 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 namespace amorphie.contract.core.Model.Proxy
 {
+
+    public class DocumentDef
+    {
+        public string DocumentDefinitionCode { get; set; }
+        public string DocumentSemanticVersion { get; set; }
+    }
+    public class ApprovedDocument : DocumentDef
+    {
+
+        public Guid ContractInstanceId { get; set; }
+        public Guid RenderId { get; set; }
+        public bool Approved { get; set; }
+    }
+    public class ApprovedDocumentList
+    {
+        public ApprovedDocumentList()
+        {
+            Document = new List<ApprovedDocument>();
+        }
+        public List<ApprovedDocument> Document { get; set; }
+
+    }
+
+    public class ApprovedTemplateDocumentList
+    {
+        public string DocumentDefinitionCode { get; set; }
+        public string DocumentSemanticVersion { get; set; }
+        public Guid ContractInstanceId { get; set; }
+
+        public bool Approved { get; set; }
+        public string Name { get; set; }
+        public Guid RenderId { get; set; }
+        public object RenderData { get; set; }
+        public object RenderDataForLog { get; set; }
+        public string SemanticVersion { get; set; }
+        public string ProcessName { get; set; }
+        public string Identity { get; set; }
+
+    }
     public class TemplateRenderRequestModel
     {
         public TemplateRenderRequestModel()
         {
+        }
+        public TemplateRenderRequestModel(ApprovedTemplateDocumentList approvedDocumentList)
+        {
+            RenderId = approvedDocumentList.RenderId;
+            RenderData = approvedDocumentList.RenderData;
+            RenderDataForLog = approvedDocumentList.RenderDataForLog;
+            SemanticVersion = approvedDocumentList.SemanticVersion;
+            ProcessName = approvedDocumentList.ProcessName;
+            Identity = approvedDocumentList.Identity;
+            Name = approvedDocumentList.Name;
         }
 
         public string Name { get; set; }
@@ -25,18 +74,7 @@ namespace amorphie.contract.core.Model.Proxy
         [Newtonsoft.Json.JsonProperty("process-name")]
         [JsonPropertyName("process-name")]
         public string ProcessName { get; set; }
-        // [Newtonsoft.Json.JsonProperty("item-id")]
-        // [JsonPropertyName("item-id")]
-        // public string ItemId { get; set; }
-        // public string Action { get; set; }
         public string Identity { get; set; }
-        // public string Customer { get; set; }
-        // [Newtonsoft.Json.JsonProperty("children-name")]
-        // [JsonPropertyName("children-name")]
-        // public string ChildrenName { get; set; }
-        // public List<object> Children { get; set; }
-
     }
-
 }
 

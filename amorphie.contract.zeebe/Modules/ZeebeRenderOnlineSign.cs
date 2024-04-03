@@ -2,8 +2,10 @@ using System.Text;
 using System.Text.Json;
 using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Model;
+using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using amorphie.contract.zeebe.Model;
@@ -76,13 +78,13 @@ namespace amorphie.contract.zeebe.Modules
         });
         }
         static IResult Render(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration
-      )
+            [FromBody] dynamic body,
+            [FromServices] ProjectDbContext dbContext,
+            HttpRequest request,
+            HttpContext httpContext,
+            [FromServices] DaprClient client,
+            IConfiguration configuration,
+            [FromServices] ITemplateEngineAppService templateEngineAppService)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             HeaderFilterModel headerModel;
@@ -188,7 +190,9 @@ namespace amorphie.contract.zeebe.Modules
             var list = new ApprovedDocumentList();
             foreach (var cdto in documentRenderList)
             {
-                HttpSendTemplate(new TemplateRenderRequestModel(cdto));//TODO:dapr yok
+                var renderRequestModel = new TemplateRenderRequestModel(cdto);
+                templateEngineAppService.SendRenderPdf(renderRequestModel);
+                //TODO render edilip edilmediği hata kontrolü yok.
                 list.Document.Add(new ApprovedDocument
                 {
                     DocumentDefinitionCode = cdto.DocumentDefinitionCode,
@@ -205,40 +209,7 @@ namespace amorphie.contract.zeebe.Modules
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
-        private static async void HttpSendTemplate(TemplateRenderRequestModel requestModel)//TODO:dapr kullanılacak 
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                string modelJson = JsonSerializer.Serialize(requestModel);
 
-                HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEnginePdfRenderEndpoint, httpContent);
-
-                if (response.IsSuccessStatusCode)
-                {
-                }
-
-            }
-        }
-        private static async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                // string modelJson = JsonSerializer.Serialize(requestModel);
-
-                // HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-            }
-            return "Template engine error";
-        }
         static IResult NotValidated(
         [FromBody] dynamic body,
        [FromServices] ProjectDbContext dbContext,

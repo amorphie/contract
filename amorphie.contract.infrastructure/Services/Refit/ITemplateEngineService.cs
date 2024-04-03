@@ -1,3 +1,5 @@
+using amorphie.contract.core.Model.Proxy;
+using amorphie.contract.Models.Proxy;
 using Refit;
 
 namespace amorphie.contract.infrastructure.Services.Refit;
@@ -21,4 +23,29 @@ public interface ITemplateEngineService
     [Get("/Template/Render/instance/pdf/{renderId}")]
     Task<string> GetRenderPdf(string renderId);
 
+    /// <summary>
+    /// Used to render an existing template to pdf with render request. Render request is posted from body. Returns stream that has the file.
+    /// </summary>
+    /// <param name="renderRequestModel"></param>
+    /// <returns></returns>
+    [Headers("Content-Type: application/json")]
+    [Post("/Template/Render/pdf")]
+    Task<HttpResponseMessage> SendRenderPdf([Body] TemplateRenderRequestModel renderRequestModel);
+
+    /// <summary>
+    /// Used to render an existing template with render request. Render request is posted from body. Returns string.
+    /// </summary>
+    /// <param name="renderRequestModel"></param>
+    /// <returns></returns>
+    [Headers("Content-Type: application/json")]
+    [Post("/Template/Render")]
+    Task<HttpResponseMessage> SendRenderHtml([Body] TemplateRenderRequestModel renderRequestModel);
+
+    /// <summary>
+    /// Query parameter is being used like "SQL like" search. Example: looking for template "tr-manuel-payment-after-mail-content" use query "%manuel%" it will return all templates that has "manuel" in its name.
+    /// </summary>
+    /// <param name="names"></param>
+    /// <returns></returns>
+    [Get("/Template/Definition/name?query={names}")]
+    Task<HttpResponseMessage> GetTemplateDefinitions(string names);
 }
