@@ -13,20 +13,18 @@ using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.Extensions;
+using amorphie.contract.Module.Base;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Admin.Contract;
 
 public class ContractDefinitionModule
-    : BaseBBTContractRoute<ContractDefinition, ContractDefinition, ProjectDbContext>
+    : BaseAdminModule<ContractDefinition, ContractDefinition, ProjectDbContext>
 {
     public ContractDefinitionModule(WebApplication app) : base(app)
     {
-
     }
-
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
-        
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("GetExistContract", GetExist);
     }
@@ -41,7 +39,7 @@ public class ContractDefinitionModule
 
             var list = await query.ToListAsync(token);
 
-            var respose = ObjectMapperApp.Mapper.Map<List<ContractDefinitionDto>>(list,opt => opt.Items[Lang.LangCode] = langCode);
+            var respose = ObjectMapperApp.Mapper.Map<List<ContractDefinitionDto>>(list, opt => opt.Items[Lang.LangCode] = langCode);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -68,7 +66,6 @@ public class ContractDefinitionModule
         }
         return Results.NoContent();
     }
-
     async ValueTask<IResult> GetExist([FromServices] IContractAppService contractAppService, CancellationToken token, [FromQuery] string? code, [FromQuery] EBankEntity? eBankEntity)
     {
         var req = new ContractGetExistInputDto()
@@ -80,9 +77,7 @@ public class ContractDefinitionModule
 
         return Results.Ok(response);
     }
-
     public override string[]? PropertyCheckList => new string[] { "Code" };
-
-    public override string? UrlFragment => "contract-definition";
+    public override string? UrlFragment => base.UrlFragment + "contract-definition";
 }
 

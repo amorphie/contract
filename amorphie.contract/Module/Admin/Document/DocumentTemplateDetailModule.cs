@@ -1,27 +1,16 @@
-
-using amorphie.core.Module.minimal_api;
 using amorphie.contract.infrastructure.Contexts;
-
-using FluentValidation;
-using amorphie.core.Base;
 using amorphie.contract.core.Entity.Document;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using amorphie.contract.Module.Base;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Admin.Document;
 
-    public class DocumentTemplateDetailModule
-        : BaseBBTRoute<DocumentTemplateDetail, DocumentTemplateDetail, ProjectDbContext>
+public class DocumentTemplateDetailModule
+    : AudiAdminModule<DocumentTemplateDetail, DocumentTemplateDetail, ProjectDbContext>
 {
     public DocumentTemplateDetailModule(WebApplication app) : base(app)
     {
     }
-
     public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId" };
-
-    public override string? UrlFragment => "document-template-detail";
-
-
-
+    public override string? UrlFragment => base.UrlFragment + "document-template-detail";
 }
 

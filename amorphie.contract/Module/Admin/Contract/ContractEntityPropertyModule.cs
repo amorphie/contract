@@ -1,26 +1,16 @@
-
-using amorphie.core.Module.minimal_api;
 using amorphie.contract.infrastructure.Contexts;
-
-using FluentValidation;
-using amorphie.core.Base;
-using amorphie.contract.core.Entity.Document;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.Module.Base;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Admin.Contract;
 
-    public class ContractEntityPropertyModule
-        : BaseBBTRoute<ContractEntityProperty, ContractEntityProperty, ProjectDbContext>
+public class ContractEntityPropertyModule
+    : AudiAdminModule<ContractEntityProperty, ContractEntityProperty, ProjectDbContext>
 {
     public ContractEntityPropertyModule(WebApplication app) : base(app)
     {
     }
-
     public override string[]? PropertyCheckList => new string[] { "ContractDefinitionId", "EntityPropertyId" };
-
-    public override string? UrlFragment => "contract-entity-property";
-
+    public override string? UrlFragment => base.UrlFragment + "contract-entity-property";
 }
 

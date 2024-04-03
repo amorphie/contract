@@ -1,21 +1,15 @@
 using amorphie.contract.core.Entity.Contract;
-using amorphie.contract.core.Entity.Document;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.core.Module.minimal_api;
+using amorphie.contract.Module.Base;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Admin.Contract;
 
-    public class ContractDefinitionHistoryModule
-        : BaseBBTRoute<ContractDefinitionHistory, ContractDefinitionHistory, ProjectDbContext>
+public class ContractDefinitionHistoryModule
+        : AudiAdminModule<ContractDefinitionHistory, ContractDefinitionHistory, ProjectDbContext>
 {
     public ContractDefinitionHistoryModule(WebApplication app) : base(app)
     {
     }
-
     public override string[]? PropertyCheckList => new string[] { "History", "DocumentDefinitionId" };
-
-    public override string? UrlFragment => "contract-definition-history";
-
-
-
+    public override string? UrlFragment => base.UrlFragment + "contract-definition-history";
 }

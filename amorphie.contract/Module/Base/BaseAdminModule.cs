@@ -9,17 +9,16 @@ using AutoMapper;
 using amorphie.contract.core.Entity.Base;
 using Microsoft.AspNetCore.Routing;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Base;
 
 
-public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
+public abstract class BaseAdminModule<TDTOModel, TDBModel, TDbContext>
 : BaseBBTRoute<TDTOModel, TDBModel, TDbContext> where TDTOModel : class, new() where TDBModel
 : BaseEntity where TDbContext : DbContext
 {
-    protected BaseBBTContractRoute(WebApplication app) : base(app)
+    protected BaseAdminModule(WebApplication app) : base(app)
     {
     }
-
 
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
@@ -36,7 +35,7 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
     }
     protected virtual void DoesExist(RouteGroupBuilder routeGroupBuilder)
     {
-        routeGroupBuilder.MapGet("/does-Exist/{keyword}", new Func<TDbContext, IMapper, string, HttpContext, CancellationToken, ValueTask<bool>>(GetMethodDoesExist)).Produces<TDTOModel>(200, null, Array.Empty<string>()).Produces(404, null, null);
+        routeGroupBuilder.MapGet("/does-exist/{keyword}", new Func<TDbContext, IMapper, string, HttpContext, CancellationToken, ValueTask<bool>>(GetMethodDoesExist)).Produces<TDTOModel>(200, null, Array.Empty<string>()).Produces(404, null, null);
     }
     protected virtual async ValueTask<IResult> GetMethodByCode([FromServices] TDbContext context, [FromServices] IMapper mapper,
      [FromRoute] string code, HttpContext httpContext, CancellationToken token)
@@ -54,7 +53,6 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
             IResult result = TypedResults.Ok(mapper.Map<TDTOModel>(val));
             result2 = result;
         }
-
         return result2;
     }
 
@@ -65,18 +63,13 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
 
         if (!string.IsNullOrEmpty(keyword) && keyword != "*")
         {
-            // "%" karakteri varsa deseni kontrol et
             if (keyword.Contains("%"))
             {
-                // "%" karakterini kaldır
                 string pattern = keyword.Replace("%", "");
-
-                // Deseni kontrol et
                 return await source.AsNoTracking().AnyAsync(x => x.Code.StartsWith(pattern) || x.Code.EndsWith(pattern), token);
             }
             else
             {
-                // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
                 return await source.AsNoTracking().AnyAsync(x => x.Code == keyword, token);
             }
         }
@@ -102,5 +95,6 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
 
         return Results.NotFound();
     }
+    public override string? UrlFragment => "admin/";
 }
 

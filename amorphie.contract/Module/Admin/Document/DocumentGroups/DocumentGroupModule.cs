@@ -1,37 +1,31 @@
 using amorphie.contract.infrastructure.Contexts;
-
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using amorphie.contract.Extensions;
 using amorphie.contract.application;
 using amorphie.core.Extension;
 using amorphie.contract.application.Extensions;
 using amorphie.contract.core.Extensions;
+using amorphie.contract.Module.Base;
 
-namespace amorphie.contract;
+namespace amorphie.contract.Module.Admin.Document.DocumentGroups;
 
 public class DocumentGroupModule
-    : BaseBBTContractRoute<DocumentGroup, DocumentGroup, ProjectDbContext>
+    : BaseAdminModule<DocumentGroup, DocumentGroup, ProjectDbContext>
 {
     public DocumentGroupModule(WebApplication app) : base(app)
     {
     }
-
     public override string[]? PropertyCheckList => new string[] { "Code", "Name" };
-
-    public override string? UrlFragment => "document-group";
+    public override string? UrlFragment => base.UrlFragment +"document-group";
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("getAnyDocumentGroupListSearch", getAnyDocumentGroupListSearch);
         routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
     }
-
-    //TODO kullanılmıyorsa silelim.
     async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
   [FromHeader(Name = "Language")] string? language = "en-EN")
@@ -54,26 +48,14 @@ public class DocumentGroupModule
             CancellationToken cancellationToken
         )
     {
-        try
-        {
-
             var query = context!.DocumentGroup.AsQueryable();
             var anyValue = false;
             if (!string.IsNullOrEmpty(dataSearch.Keyword))
             {
                 anyValue = query.Any(x => dataSearch.Keyword == x.Code);
             }
-
             return Results.Ok(anyValue);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-
-        return Results.NoContent();
     }
-
     protected async override ValueTask<IResult> GetAllMethod([FromServices] ProjectDbContext context, [FromServices] IMapper mapper, [FromQuery, Range(0, 100)] int page, [FromQuery, Range(5, 100)] int pageSize, HttpContext httpContext, CancellationToken token, [FromQuery] string? sortColumn, [FromQuery] SortDirectionEnum? sortDirection)
     {
         try
@@ -87,46 +69,7 @@ public class DocumentGroupModule
             var list = await context!.DocumentGroup!.Skip(page * pageSize).Take(pageSize).ToListAsync(token);
 
             var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list, opt => opt.Items[Lang.LangCode] = language);
-
-            // foreach (var documentGroupViewModel in list)
-            // {
-
-            //     var selectedGroupLanguageText = documentGroupViewModel.MultilanguageText
-            //         .FirstOrDefault(t => t.Language == language);
-
-            //     if (selectedGroupLanguageText != null)
-            //     {
-            //         documentGroupViewModel.Name = selectedGroupLanguageText.Label;
-            //     }
-            //     else if (documentGroupViewModel.MultilanguageText.Any())
-            //     {
-            //         documentGroupViewModel.Name = documentGroupViewModel.MultilanguageText.First().Label;
-            //     }
-
-            //     //TODO: Umut - Mapping
-            //     // Check if DocumentDefinitionViewModels is null or empty before iterating
-            //     // if (documentGroupViewModel.DocumentDefinitionList != null && documentGroupViewModel.DocumentDefinitionList.Any())
-            //     // {
-            //     //     // Apply the logic to each DocumentDefinitionViewModel in the DocumentGroupViewModel
-            //     //     foreach (var documentDefinitionViewModel in documentGroupViewModel.DocumentDefinitionList)
-            //     //     {
-            //     //         var selectedLanguageText = documentDefinitionViewModel.MultilanguageText
-            //     //             .FirstOrDefault(t => t.Language == language);
-
-            //     //         if (selectedLanguageText != null)
-            //     //         {
-            //     //             documentDefinitionViewModel.Name = selectedLanguageText.Label;
-            //     //         }
-            //     //         else if (documentDefinitionViewModel.MultilanguageText.Any())
-            //     //         {
-            //     //             documentDefinitionViewModel.Name = documentDefinitionViewModel.MultilanguageText.First().Label;
-            //     //         }
-            //     //     }
-            //     // }
-            // }
-
             return Results.Ok(response);
-
         }
         catch (Exception ex)
         {
@@ -134,11 +77,5 @@ public class DocumentGroupModule
         }
         return Results.NoContent();
     }
-
-    private void MultiLanguageTextToNameByLanguage(string language)
-    {
-
-    }
-
 }
 
