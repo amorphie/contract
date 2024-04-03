@@ -23,6 +23,7 @@ public abstract class BaseBBTContractRoute<TDTOModel, TDBModel, TDbContext>
 
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
+        routeGroupBuilder = routeGroupBuilder.MapGroup("/Admin/{module}/{controller}");
         base.AddRoutes(routeGroupBuilder);
 
         this.GetByCode(routeGroupBuilder);

@@ -26,6 +26,7 @@ public class ContractDefinitionModule
 
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
+        
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapGet("GetExistContract", GetExist);
     }

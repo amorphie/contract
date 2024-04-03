@@ -12,7 +12,7 @@ using amorphie.contract.core.Entity.Common;
 namespace amorphie.contract.common;
 
     public class MultiLanguageModule
-        : BaseBBTRoute<MultiLanguage, MultiLanguage, ProjectDbContext>
+        : BaseBBTAdminRoute<MultiLanguage, MultiLanguage, ProjectDbContext>
 {
     public MultiLanguageModule(WebApplication app) : base(app)
     {
@@ -21,7 +21,7 @@ namespace amorphie.contract.common;
 
     public override string[]? PropertyCheckList => new string[] { "Name" };
 
-    public override string? UrlFragment => "Common-MultiLanguage";
+    public override string? UrlFragment => base.UrlFragment +  "Common-MultiLanguage" ;
 
 
 
