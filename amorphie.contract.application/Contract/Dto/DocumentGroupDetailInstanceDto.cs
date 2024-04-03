@@ -9,8 +9,5 @@ namespace amorphie.contract.application
         public List<DocumentInstanceDto> DocumentInstances { get; set; } = default!;
 
         public string Status { get; set; } = default!;
-
-        public string Name { get; set; } = default!;
-
     }
 }

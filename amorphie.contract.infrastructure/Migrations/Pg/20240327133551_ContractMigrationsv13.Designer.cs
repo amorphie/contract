@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using amorphie.contract.infrastructure.Contexts;
@@ -11,9 +12,11 @@ using amorphie.contract.infrastructure.Contexts;
 namespace amorphie.contract.infrastructure.Migrations.Pg
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240327133551_ContractMigrationsv13")]
+    partial class ContractMigrationsv13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -434,9 +437,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
-                    b.Property<short>("Order")
-                        .HasColumnType("smallint");
-
                     b.Property<int>("UseExisting")
                         .HasColumnType("integer");
 
@@ -543,96 +543,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.HasIndex("EntityPropertyId");
 
                     b.ToTable("ContractEntityProperty", "Cont");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractInstance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContractCode")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("ContractInstance", "Cont");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractInstanceDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ContractInstanceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CreatedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentInstanceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ModifiedByBehalfOf")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractInstanceId");
-
-                    b.HasIndex("DocumentInstanceId");
-
-                    b.ToTable("ContractInstanceDetail", "Cont");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractProcess", b =>
@@ -1019,6 +929,10 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("ContentData")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("ContentTransferEncoding")
                         .IsRequired()
@@ -2258,17 +2172,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("EntityProperty");
                 });
 
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractInstanceDetail", b =>
-                {
-                    b.HasOne("amorphie.contract.core.Entity.Contract.ContractInstance", "ContractInstance")
-                        .WithMany("ContractInstanceDetails")
-                        .HasForeignKey("ContractInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ContractInstance");
-                });
-
             modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractTag", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Contract.ContractDefinition", "ContractDefinition")
@@ -2625,11 +2528,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("ContractTags");
 
                     b.Navigation("ContractValidations");
-                });
-
-            modelBuilder.Entity("amorphie.contract.core.Entity.Contract.ContractInstance", b =>
-                {
-                    b.Navigation("ContractInstanceDetails");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Customer", b =>

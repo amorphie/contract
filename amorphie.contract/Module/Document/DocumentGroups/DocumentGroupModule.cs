@@ -10,6 +10,7 @@ using amorphie.contract.Extensions;
 using amorphie.contract.application;
 using amorphie.core.Extension;
 using amorphie.contract.application.Extensions;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract;
 
@@ -29,6 +30,8 @@ public class DocumentGroupModule
         routeGroupBuilder.MapGet("getAnyDocumentGroupListSearch", getAnyDocumentGroupListSearch);
         routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
     }
+
+    //TODO kullanılmıyorsa silelim.
     async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
   [FromHeader(Name = "Language")] string? language = "en-EN")
@@ -40,11 +43,7 @@ public class DocumentGroupModule
         {
             x.Id,
             x.Code,
-            title = x.DocumentGroupLanguageDetail.Any(a => a.MultiLanguage.LanguageType.Code == language) ?
-            x.DocumentGroupLanguageDetail.Where(a => a.MultiLanguage.LanguageType.Code == language)
-            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault() :
-            x.DocumentGroupLanguageDetail.Where(a => a.MultiLanguage.LanguageType.Code == "en-EN")
-            .Select(x => new { x.MultiLanguage.Name, LanguageType = x.MultiLanguage.LanguageType.Code }).FirstOrDefault(),
+            title = x.Titles.L(language)
 
         }).ToListAsync(token);
         // var list = await query.ToListAsync(token);
@@ -87,7 +86,7 @@ public class DocumentGroupModule
 
             var list = await context!.DocumentGroup!.Skip(page * pageSize).Take(pageSize).ToListAsync(token);
 
-            var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list);
+            var response = ObjectMapperApp.Mapper.Map<List<DocumentGroupDto>?>(list, opt => opt.Items[Lang.LangCode] = language);
 
             // foreach (var documentGroupViewModel in list)
             // {

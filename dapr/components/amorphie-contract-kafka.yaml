@@ -12,3 +12,4 @@ spec:
       # Enable auth. Default is "false"
     - name: authType
       value: "none"
+
