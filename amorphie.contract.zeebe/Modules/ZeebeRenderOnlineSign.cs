@@ -132,10 +132,10 @@ namespace amorphie.contract.zeebe.Modules
                   .Select(x =>
                   new ApprovedTemplateDocumentList
                   {
-                      SemanticVersion = x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(z => z.DocumentTemplate.LanguageType.Code == headerModel.LangCode)?.DocumentTemplate.Version
-                         ?? x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.DocumentTemplate.Version,
-                      Name = x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(z => z.DocumentTemplate.LanguageType.Code == headerModel.LangCode)?.DocumentTemplate.Code
-                         ?? x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.DocumentTemplate.Code,
+                      SemanticVersion = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Version
+                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Version,
+                      Name = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Code
+                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Code,
                       RenderId = Guid.NewGuid(),
                       RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                       RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",

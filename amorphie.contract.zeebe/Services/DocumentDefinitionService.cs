@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
+using amorphie.contract.core.Model.Documents;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -176,6 +177,8 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentOnlineSingTemplateDetails()
         {
+            var langTypes = _dbContext.LanguageType.ToList();
+
             var documentTemplateDetail = _documentDefinitionDataModel.data.TemplateList.Select(x => new DocumentTemplateDetail
             {
                 DocumentDefinitionId = _documentdef.Id,
@@ -186,7 +189,13 @@ namespace amorphie.contract.zeebe.Services
                     Version = x.version
                 }
             }).ToList();
-            _documentdef.DocumentOnlineSing.DocumentTemplateDetails = documentTemplateDetail;
+            var documentTemplateDetail2 = _documentDefinitionDataModel.data.TemplateList.Select(x => new Template
+            {
+                LanguageCode = langTypes.FirstOrDefault(a=>a.Id == ZeebeMessageHelper.StringToGuid(x.language))?.Code,
+                Code = x.RenderTemplate.name,
+                Version = x.version
+            }).ToList();
+            _documentdef.DocumentOnlineSing.Templates = documentTemplateDetail2;
         }
         private void SetDocumentOnlineSingAllowedClientDetails()
         {

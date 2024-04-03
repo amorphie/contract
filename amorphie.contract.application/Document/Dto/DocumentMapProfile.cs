@@ -3,6 +3,7 @@ using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Model.Documents;
 using amorphie.contract.core.Model.History;
 using AutoMapper;
 
@@ -33,14 +34,17 @@ namespace amorphie.contract.application
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size))
                 .ForPath(dest => dest.DocumentOptimizeType.Code, opt => opt.MapFrom(src => src.Code)).ReverseMap();
 
-            CreateMap<DocumentTemplateDetailsDto, DocumentTemplateDetail>()
-                .ForPath(dest => dest.DocumentTemplate.Code, opt => opt.MapFrom(src => src.Code))
-                .ForPath(dest => dest.DocumentTemplate.LanguageType.Code, opt => opt.MapFrom(src => src.LanguageType))
-                .ForPath(dest => dest.DocumentTemplate.Version, opt => opt.MapFrom(src => src.Version)).ReverseMap();
+            CreateMap<DocumentTemplateDetailsDto, Template>()
+                .ForPath(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                .ForPath(dest => dest.LanguageCode, opt => opt.MapFrom(src => src.LanguageCode))
+                .ForPath(dest => dest.Version, opt => opt.MapFrom(src => src.Version)).ReverseMap();
 
             CreateMap<DocumentOnlineSing, DocumentOnlineSingDto>()
                 .ForMember(dest => dest.DocumentAllowedClientDetails, opt => opt.MapFrom(src =>
-                           src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code)))
+                           src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code))
+                           )
+                           .ForPath(dest=>dest.Templates, opt=>opt.MapFrom(src=>src.Templates))
+
                 .ReverseMap();
 
             CreateMap<DocumentFormatDetailDto, DocumentFormatDetail>()

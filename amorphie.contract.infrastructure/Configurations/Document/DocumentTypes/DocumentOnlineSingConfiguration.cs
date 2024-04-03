@@ -20,6 +20,7 @@ namespace amorphie.contract.infrastructure.Configurations.Document.DocumentTypes
                 "DocumentTemplateDetails",
 
             });
+            builder.OwnsMany(product => product.Templates, builder => { builder.ToJson(); });
 
         }
     }
