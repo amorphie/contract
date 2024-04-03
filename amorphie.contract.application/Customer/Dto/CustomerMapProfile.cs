@@ -6,6 +6,7 @@ using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.core.Base;
 using amorphie.contract.core;
 using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Model.Documents;
 
 namespace amorphie.contract.application.Customer.Dto
 {
@@ -32,7 +33,7 @@ namespace amorphie.contract.application.Customer.Dto
 
             CreateMap<ContractDocumentDetail, CustomerContractDocumentDto>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DocumentDefinition.Id))
-                // [LANG]   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
+               // [LANG]   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.DocumentDefinition.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.DocumentDefinition.Semver))
                .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing != null))
@@ -51,7 +52,10 @@ namespace amorphie.contract.application.Customer.Dto
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DocumentTemplate.Code))
                 .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.DocumentTemplate.Version))
                 .ReverseMap();
-
+            CreateMap<Template, DocumentTemplateDto>()
+                         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Code))
+                         .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.Version))
+                         .ReverseMap();
             //CreateMap<DocumentGroup, CustomerContractDocumentGroupDto>()
             //   .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             //   .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))

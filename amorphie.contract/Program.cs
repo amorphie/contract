@@ -66,7 +66,7 @@ builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
 builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
-builder.Services.AddSingleton<ITemplateEngineAppService, TemplateEngineAppService>();
+builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
 
 var assemblies = new Assembly[]
                 {

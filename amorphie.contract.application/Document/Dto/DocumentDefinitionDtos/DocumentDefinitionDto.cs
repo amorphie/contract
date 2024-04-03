@@ -1,3 +1,4 @@
+using amorphie.contract.core.Model.Documents;
 using amorphie.core.Base;
 
 namespace amorphie.contract.application
@@ -71,14 +72,15 @@ namespace amorphie.contract.application
     public class DocumentOnlineSingDto
     {
         public List<string>? DocumentAllowedClientDetails { get; set; }
-        public List<DocumentTemplateDetailsDto>? DocumentTemplateDetails { get; set; }
+        public List<DocumentTemplateDetailsDto>? Templates { get; set; }
+
 
 
     }
     public class DocumentTemplateDetailsDto
     {
         public string Code { get; set; }
-        public string LanguageType { get; set; }
+        public string LanguageCode{ get; set; }
         public string Version { get; set; } = default!;
 
     }

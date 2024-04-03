@@ -14,7 +14,7 @@ using amorphie.contract.core.Extensions;
 namespace amorphie.contract;
 
 public class DocumentDefinitionModule
-    : BaseBBTContractRoute<DocumentDefinitionDto, DocumentDefinition, ProjectDbContext>
+    : BaseBBTContractRoute<DocumentDefinition, DocumentDefinition, ProjectDbContext>
 {
 
     public DocumentDefinitionModule(WebApplication app) : base(app)

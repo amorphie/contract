@@ -22,16 +22,19 @@ namespace amorphie.contract.application.Contract
                  .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom((src, dest, destMember, context) =>
                  {
                      var langCode = (string)context.Items[Lang.LangCode];
-                     return src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == langCode)?.Code
-                         ?? src.DocumentTemplateDetails.FirstOrDefault()?.Code;
+                     return src.Templates.FirstOrDefault(x => x.LanguageCode == langCode)?.Code
+                         ?? src.Templates.FirstOrDefault()?.Code;
                  }))
                  .ForMember(dest => dest.Version, opt => opt.MapFrom((src, dest, destMember, context) =>
                  {
                      var langCode = (string)context.Items[Lang.LangCode];
-                     return src.DocumentTemplateDetails.FirstOrDefault(x => x.LanguageType == langCode)?.Version
-                         ?? src.DocumentTemplateDetails.FirstOrDefault()?.Version;
+                     return src.Templates.FirstOrDefault(x => x.LanguageCode == langCode)?.Version
+                         ?? src.Templates.FirstOrDefault()?.Version;
                  }))
                  .ReverseMap();
+
+
+          
 
 
             CreateMap<ContractDocumentGroupDetailDto, DocumentGroupInstanceDto>()
@@ -44,7 +47,7 @@ namespace amorphie.contract.application.Contract
                         {
                             return src.ContractDocumentGroup.Titles.L(Convert.ToString(context.Items[Lang.LangCode]));
                         }
-                ));         
+                ));
 
             CreateMap<DocumentDefinitionDto, DocumentInstanceDto>()
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
