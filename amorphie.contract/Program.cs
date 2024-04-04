@@ -24,6 +24,7 @@ using Polly.Extensions.Http;
 using Polly.Timeout;
 using Polly;
 using Refit;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,8 +36,11 @@ builder.Services.AddDaprClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SwaggerDoc("amorphie.contract.v1", new OpenApiInfo { Title = "amorphie.contract.v1", Version = "v1" });
+    c.SwaggerDoc("amorphie.contract.admin", new OpenApiInfo { Title = "amorphie.contract.admin", Version = "v1" });
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
+
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -117,7 +121,11 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // db.Database.Migrate();
 // DbInitializer.Initialize(db); // DB INIT MOCK TESTI ÇALIŞTIRILACAKSA BU SATIRI AÇ DEBUG ET.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/amorphie.contract.v1/swagger.json", "amorphie.contract.v1");
+    c.SwaggerEndpoint("/swagger/amorphie.contract.admin/swagger.json", "amorphie.contract.admin");
+});
 
 // app.UseHttpsRedirection();
 
