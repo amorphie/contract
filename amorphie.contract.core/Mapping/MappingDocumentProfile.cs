@@ -31,8 +31,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentOptimizeType, DocumentOptimizeType>().ReverseMap();
             CreateMap<DocumentSize, DocumentSize>().ReverseMap();
             CreateMap<DocumentTagsDetail, DocumentTagsDetail>().ReverseMap();
-            CreateMap<DocumentTemplate, DocumentTemplate>().ReverseMap();
-            CreateMap<DocumentTemplateDetail, DocumentTemplateDetail>().ReverseMap();
+   
 
             #region DocumentGroup
             CreateMap<DocumentGroup, DocumentGroup>().ReverseMap();

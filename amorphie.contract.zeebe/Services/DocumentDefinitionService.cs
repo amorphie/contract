@@ -179,16 +179,6 @@ namespace amorphie.contract.zeebe.Services
         {
             var langTypes = _dbContext.LanguageType.ToList();
 
-            var documentTemplateDetail = _documentDefinitionDataModel.data.TemplateList.Select(x => new DocumentTemplateDetail
-            {
-                DocumentDefinitionId = _documentdef.Id,
-                DocumentTemplate = new DocumentTemplate
-                {
-                    LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                    Code = x.RenderTemplate.name,
-                    Version = x.version
-                }
-            }).ToList();
             var documentTemplateDetail2 = _documentDefinitionDataModel.data.TemplateList.Select(x => new Template
             {
                 LanguageCode = langTypes.FirstOrDefault(a=>a.Id == ZeebeMessageHelper.StringToGuid(x.language))?.Code,

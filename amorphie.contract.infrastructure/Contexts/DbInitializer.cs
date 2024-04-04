@@ -27,21 +27,21 @@ namespace amorphie.contract.infrastructure.Contexts
             };
             return MockContractDefinition;
         }
-        public static void TemplateCodeReview(ProjectDbContext context)
-        {
-            var dtd = context.DocumentDefinition.Where(x=>x.DocumentOnlineSing.DocumentTemplateDetails.Any()).ToList();
-            foreach (var i in dtd)
-            { 
-                i.DocumentOnlineSing.Templates = i.DocumentOnlineSing.DocumentTemplateDetails.
-                Select(x=>new Template
-                {
-                    Code = x.DocumentTemplate.Code,
-                    LanguageCode = x.DocumentTemplate.LanguageType.Code,
-                    Version =x.DocumentTemplate.Version
-                }).ToList();
-            }
-            context.SaveChanges();
-        }
+        // public static void TemplateCodeReview(ProjectDbContext context)
+        // {
+        //     var dtd = context.DocumentDefinition.Where(x=>x.DocumentOnlineSing.DocumentTemplateDetails.Any()).ToList();
+        //     foreach (var i in dtd)
+        //     { 
+        //         i.DocumentOnlineSing.Templates = i.DocumentOnlineSing.DocumentTemplateDetails.
+        //         Select(x=>new Template
+        //         {
+        //             Code = x.DocumentTemplate.Code,
+        //             LanguageCode = x.DocumentTemplate.LanguageType.Code,
+        //             Version =x.DocumentTemplate.Version
+        //         }).ToList();
+        //     }
+        //     context.SaveChanges();
+        // }
         public static void Initialize(ProjectDbContext context)
         {
             // Veritabanı oluşturur.
