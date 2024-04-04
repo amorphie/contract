@@ -45,13 +45,9 @@ namespace amorphie.contract.application.Customer.Dto
             CreateMap<DocumentOnlineSing, OnlineSignDto>()
                 .ForMember(dest => dest.AllovedClients, opt => opt.MapFrom(src => src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code)))
                 .ForMember(dest => dest.ScaRequired, opt => opt.MapFrom(src => src.Required))
-                .ForMember(dest => dest.DocumentModelTemplate, opt => opt.MapFrom(src => src.DocumentTemplateDetails))
                 .ReverseMap();
 
-            CreateMap<DocumentTemplateDetail, DocumentTemplateDto>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DocumentTemplate.Code))
-                .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.DocumentTemplate.Version))
-                .ReverseMap();
+        
             CreateMap<Template, DocumentTemplateDto>()
                          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Code))
                          .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.Version))

@@ -151,22 +151,22 @@ namespace amorphie.contract.Module.Proxy
             {
                 List<TemplateEngineDefinitionResponseModel> responseList = response.Data;
 
-                var dbQuery = context!.DocumentTemplate.AsQueryable();
+                var dbQuery = context!.DocumentOnlineSing.AsQueryable();
 
 
                 // "%" karakteri varsa deseni kontrol et
                 if (query.Contains("%"))
                 {
                     // Deseni kontrol et ve LIKE operatörünü kullan
-                    dbQuery = dbQuery.Where(x => EF.Functions.Like(x.Code, query));
+                    dbQuery = dbQuery.Where(x =>x.Templates.Any(a=> EF.Functions.Like(a.Code, query)));
                 }
                 else
                 {
                     // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
-                    dbQuery = dbQuery.Where(x => x.Code == query);
+                    dbQuery = dbQuery.Where(x => x.Templates.Any(a=>a.Code == query));
                 }
 
-                var dbList = await dbQuery.Select(x => x.Code).ToListAsync(cancellationToken);
+                var dbList = await dbQuery.SelectMany(x => x.Templates.Select(a=>a.Code)).ToListAsync(cancellationToken);
 
                 responseList = responseList.Where(x => !dbList.Contains(x.Name)).ToList();
 

@@ -94,8 +94,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentSize> DocumentSize { get; set; }
     public DbSet<DocumentTagsDetail> DocumentTagsDetail { get; set; }
 
-    public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
-    public DbSet<DocumentTemplateDetail> DocumentTemplateDetail { get; set; }
 
     public DbSet<DocumentUpload> DocumentUpload { get; set; }
 
