@@ -8,6 +8,15 @@ namespace amorphie.contract.infrastructure.Extensions
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
+            if (context.ApiDescription.RelativePath.StartsWith("admin/"))
+            {
+                context.ApiDescription.GroupName = "amorphie.contract.admin";
+            }
+            else
+            {
+                context.ApiDescription.GroupName = "amorphie.contract.v1";
+            }
+
             if (operation.Parameters is null)
             {
                 operation.Parameters = new List<OpenApiParameter>();

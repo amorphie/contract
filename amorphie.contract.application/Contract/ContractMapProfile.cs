@@ -31,6 +31,6 @@ namespace amorphie.contract.application.Contract
                     .ReverseMap();
 
         }
-    }  
+    }
 
 }
