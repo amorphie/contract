@@ -118,23 +118,20 @@ namespace amorphie.contract.application.Contract
             var listDocument = contractDefinition.ContractDocumentDetails
                 .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
 
-            var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
+           var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
+            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
+            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);
 
-            var contractModel = new ContractDefinitionDto
+            var contractInstanceDto = new ContractInstanceDto()
             {
-                Status = EStatus.InProgress.ToString(),
-                Id = contractDefinition.Id,
                 Code = contractDefinition.Code,
-                ContractDocumentDetails = contractDocumentDetails,
-                ContractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup)
+                Status = EStatus.InProgress.ToString(),
+                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
+                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };
-            if (contractModel.ContractDocumentDetails.Count == 0)
+            if (contractInstanceDto.Document.Count == 0)
                 return GenericResult<bool>.Success(true);
-
-
-            // return false;
             return GenericResult<bool>.Success(false);
         }
     }
