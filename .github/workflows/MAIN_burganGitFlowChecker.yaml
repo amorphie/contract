@@ -31,7 +31,7 @@ jobs:
 
         git checkout origin/dev
         git log --oneline | grep $(echo ${commit:0:5})
-        echo "You should merge your commits to Dev branch"
+        echo "Commit'lerinizi önce Dev branchine PR yapmalısınız."
 
     - name: Check Test Branch for Commits
       run: |
@@ -39,7 +39,7 @@ jobs:
 
         git checkout origin/test
         git log --oneline | grep $(echo ${commit:0:5})
-        echo "You should merge your commits to Test branch"
+        echo "Commit'lerinizi önce Test branchine PR yapmalısınız."
 
     - name: Check Preprod Branch for Commits
       run: |
@@ -47,4 +47,4 @@ jobs:
 
         git checkout origin/preprod
         git log --oneline | grep $(echo ${commit:0:5})
-        echo "You should merge your commits to Preprod branch"
+        echo "Commit'lerinizi önce Preprod branchine PR yapmalısınız."
