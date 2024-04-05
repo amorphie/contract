@@ -165,13 +165,11 @@ namespace amorphie.contract.zeebe.Modules
             headerModel = HeaderHelperZeebe.GetHeader(body);
             string contractName = string.Empty;
 
-            if (messageVariables.Data.GetProperty("entityData").ToString().IndexOf("ContractInstance") != -1)
+            if (messageVariables.Data.GetProperty("entityData").ToString().IndexOf("contractName") != -1)
             {
-                if (messageVariables.Data.GetProperty("entityData").GetProperty("ContractInstance").ToString().IndexOf("contractName") != -1)
-                {
-                    contractName = messageVariables.Data.GetProperty("entityData").GetProperty("ContractInstance").GetProperty("contractName").ToString();
-                }
+                contractName = messageVariables.Data.GetProperty("entityData").GetProperty("contractName").ToString();
             }
+            
             if (body.ToString().IndexOf("ContractInstance") != -1 && string.IsNullOrEmpty(contractName))
             {
                 //TODO: login sürecinde gerekli bunu sadece loginde caliscak sekilde yapıcaz reference,language,bankEntity,contractName
