@@ -10,14 +10,11 @@ public class DocumentAdminModule
     {
     }
 
+
     public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentContentId" };
 
     public override string? UrlFragment => base.UrlFragment + "document";
 
 }
-
-
-
-
 
 

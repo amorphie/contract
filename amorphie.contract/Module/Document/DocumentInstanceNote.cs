@@ -12,5 +12,6 @@ public class DocumentInstanceNoteModule
     }
     public override string[]? PropertyCheckList => new string[] { "DocumentId", "Note" };
     public override string? UrlFragment => "document-instance-note";
+
 }
 
