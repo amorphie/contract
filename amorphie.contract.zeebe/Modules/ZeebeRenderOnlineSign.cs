@@ -92,24 +92,26 @@ namespace amorphie.contract.zeebe.Modules
             // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             headerModel = HeaderHelperZeebe.GetHeader(body);
-            if (body.ToString().IndexOf("ContractInstance") != -1)
+            var subFlowContractInstance = false;
+            if (body.ToString().IndexOf("XContractInstance") != -1)
             {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                subFlowContractInstance=true;
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
                 {
-                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                    headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("language") != -1)
                 {
-                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                    headerModel.LangCode = body.GetProperty("XContractInstance").GetProperty("language").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("bankEntity") != -1)
                 {
-                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                    headerModel.GetBankEntity(body.GetProperty("XContractInstance").GetProperty("bankEntity").ToString());
                 }
             }
 
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
-            if (messageVariables.TransitionName == "render-online-sign-start")
+            if (messageVariables.TransitionName == "render-online-sign-start"&&!subFlowContractInstance)
             {
                 var documentDef = messageVariables.Data.GetProperty("entityData").GetProperty("Document").ToString();
                 var documentDefDto = JsonSerializer.Deserialize<List<DocumentDef>>(documentDef, options: new JsonSerializerOptions
@@ -154,7 +156,7 @@ namespace amorphie.contract.zeebe.Modules
             else
             {
 
-                string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+                // string contractName = body.GetProperty("XContractInstance").GetProperty("contractName").ToString();
                 var contractInstanceId = ZeebeMessageHelper.StringToGuid(body.GetProperty("InstanceId").ToString());
                 // messageVariables.TransitionName = "checking-account-opening-start";
                 var contractInstance = body.GetProperty("XContractInstance");
@@ -254,20 +256,20 @@ namespace amorphie.contract.zeebe.Modules
             headerModel = HeaderHelperZeebe.GetHeader(body);
 
 
-            if (body.ToString().IndexOf("ContractInstance") != -1)
+            if (body.ToString().IndexOf("XContractInstance") != -1)
 
             {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
                 {
-                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                    headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("language") != -1)
                 {
-                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                    headerModel.LangCode = body.GetProperty("XContractInstance").GetProperty("language").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("bankEntity") != -1)
                 {
-                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                    headerModel.GetBankEntity(body.GetProperty("XContractInstance").GetProperty("bankEntity").ToString());
                 }
             }
 
