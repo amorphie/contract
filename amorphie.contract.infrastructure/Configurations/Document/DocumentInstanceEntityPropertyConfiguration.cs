@@ -8,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentInstanceEntityPropertyConfiguration : ConfigurationBaseAudiEntity<DocumentInstanceEntityProperty>,
-         IEntityTypeConfiguration<DocumentInstanceEntityProperty>
+    // public class DocumentInstanceEntityPropertyConfiguration : ConfigurationBaseAudiEntity<DocumentInstanceEntityProperty>,
+    //      IEntityTypeConfiguration<DocumentInstanceEntityProperty>
 
-    {
-        public void Configure(EntityTypeBuilder<DocumentInstanceEntityProperty> builder)
-        {
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "EntityProperty",
-            });
+    // {
+    //     public void Configure(EntityTypeBuilder<DocumentInstanceEntityProperty> builder)
+    //     {
+    //         NavigationBuilderAutoInclude(builder, new List<string>
+    //         {
+    //             "EntityProperty",
+    //         });
 
-        }
-    }
+    //     }
+    // }
 }

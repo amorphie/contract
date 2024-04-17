@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using amorphie.contract.core.Entity.EAV;
 
 namespace amorphie.contract.core.Entity.Document
 {

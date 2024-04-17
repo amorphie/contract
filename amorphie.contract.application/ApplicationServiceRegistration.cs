@@ -1,5 +1,6 @@
 using System.Reflection;
 using amorphie.contract.application.Contract;
+using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
 using amorphie.contract.infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,11 @@ namespace amorphie.contract.application
             services.AddTransient<IDocumentAppService, DocumentAppService>();
             services.AddTransient<IDocumentDysAppService, DocumentDysAppService>();
 
+            services.AddScoped<IFileContentProvider, ByteArrayConverter>();
+            services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
+            services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
+            services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
+            services.AddScoped<FileConverterFactory>(); 
             return services;
         }
     }

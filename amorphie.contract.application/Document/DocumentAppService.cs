@@ -1,18 +1,19 @@
 using System.Data;
+using amorphie.contract.application.ConverterFactory;
+using amorphie.contract.application.Customer;
+using amorphie.contract.application.Customer.Dto;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity.Document;
-using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.core.Base;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 
 namespace amorphie.contract.application
@@ -22,20 +23,20 @@ namespace amorphie.contract.application
     {
         private readonly ProjectDbContext _dbContext;
         private readonly IMinioService _minioService;
-
         private readonly IDysProducer _dysProducer;
-
         private readonly ITSIZLProducer _tsizlProducer;
-
         private readonly ITemplateEngineAppService _templateEngineAppService;
-
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService)
+        private readonly ICustomerAppService _customerAppService;
+        private readonly FileConverterFactory _fileConverterFactory;
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, FileConverterFactory fileConverterFactory)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
             _dysProducer = dysProducer;
             _tsizlProducer = tsizlProducer;
             _templateEngineAppService = templateEngineAppService;
+            _customerAppService = customerAppService;
+            _fileConverterFactory = fileConverterFactory;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -64,7 +65,6 @@ namespace amorphie.contract.application
             return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
-
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
@@ -80,115 +80,69 @@ namespace amorphie.contract.application
             return GenericResult<List<RootDocumentDto>>.Success(response);
         }
 
-        private List<DocumentElementDto> GetDocumentElementDtos(string Fields, string TitleFields)
+        public async Task<GenericResult<bool>> AddAsync(DocumentDto documentDto, string minioObjectName)
         {
-            var elementIds = Fields.Split(',').Select(x => x.Trim());
-            var elementTitles = TitleFields.Split(',').Select(x => x.Trim());
 
-            var documentElementDtos = elementIds.Zip(elementTitles, (id, title) =>
-                new DocumentElementDto
-                {
-                    ElementID = id,
-                    ElementName = title
-                }).ToList();
+            var document = new Document
+            {
+                Id = documentDto.Id,
+                DocumentDefinitionId = documentDto.DocumentDefinitionId,
+                Status = EStatus.Completed,
+                CustomerId = documentDto.CustomerId,
+                DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
+                DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
+            };
 
-            return documentElementDtos;
+            document.DocumentContent.MinioObjectName = minioObjectName;
+
+            await _dbContext.Document.AddAsync(document);
+            await _dbContext.SaveChangesAsync();
+
+            return GenericResult<bool>.Success(true);
         }
 
         public async Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input)
         {
             var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
-            if (docdef == null)
+
+            if (docdef is null)
+                return GenericResult<bool>.Fail($"Document Code ve versiyona ait kayit bulunamadi! {input.DocumentCode}, {input.DocumentVersion}");
+
+            // Metadata tag implementation -> IsTagImplemented
+
+            if (docdef.DefinitionMetadata?.Any() == true) // && docdef?.DocumentDys is not null DYS olmayacak
             {
-                throw new ArgumentException("Document Code ve versiyona ait kayit bulunamadi!");
+                CheckRequiredMetadata(docdef.DefinitionMetadata, input.InstanceMetadata);
             }
 
-            var entityProperties = ObjectMapperApp.Mapper.Map<List<EntityProperty>>(input.InstanceMetadata);
-            if (docdef.DocumentEntityPropertys.Any() && docdef.DocumentDys != null)
+            var customerId = await _customerAppService.GetIdByReference(input.Reference);
+            if (!customerId.IsSuccess)
             {
-                var element = GetDocumentElementDtos(docdef.DocumentDys.Fields, docdef.DocumentDys.TitleFields);
-                foreach (var entityProperty in entityProperties)
-                {
-                    var correspondingElement = element.FirstOrDefault(e => e.ElementName == entityProperty.Code);
-                    if (correspondingElement != null)
-                    {
-                        entityProperty.Code = correspondingElement.ElementID;
-                    }
-                }
-                foreach (var item in docdef.DocumentEntityPropertys)
-                {
-                    if (item.EntityProperty.Required && string.IsNullOrEmpty(item.EntityProperty.EntityPropertyValue.Data))
-                    {
-                        var conflictingProperty = entityProperties.FirstOrDefault(x => x.Code == item.EntityProperty.Code);
-                        if (conflictingProperty == null)
-                        {
-                            throw new ArgumentException($"Girilmesi zorunlu metadalar bulunmakta {item.EntityProperty.Code}");
-                        }
-                    }
-                    //Else if(item.EntityProperty.Required) -> tagdan gelecek...
-                }
+                var customerInputDto = new CustomerInputDto(input.Owner, input.Reference, input.CustomerNo);
+                customerId = await _customerAppService.AddAsync(customerInputDto);
             }
 
-
-            var cus = _dbContext.Customer.FirstOrDefault(x => x.Reference == input.Reference);
-            if (cus == null)
+            var documentDto = new DocumentDto
             {
-                cus = new core.Entity.Customer
-                {
-                    Reference = input.Reference,
-                    Owner = input.Owner,
-                    CustomerNo = input.CustomerNo
-                };
-
-                _dbContext.Customer.Add(cus);
-                _dbContext.SaveChanges();
-
-            }
-
-            var document = new Document
-            {
-                Id = input.Id,
+                DocumentContent = input.DocumentContent,
+                CustomerId = customerId.Data,
                 DocumentDefinitionId = docdef.Id,
+                Id = input.Id,
                 Status = EStatus.Completed,
-                CustomerId = cus.Id,
-                DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(input),
-                DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(input.Notes),
-            }; //DocumentInstanceNotes dan hata alcak mıyım kontrol et
+                Metadata = input.InstanceMetadata,
+                Notes = input.Notes,
+            };
 
-            if (entityProperties.Any())
+            var response = await AddAsync(documentDto, input.ToString());
+            if (!response.IsSuccess)
             {
-                document.DocumentInstanceEntityPropertys = entityProperties
-                    .Select(item => new DocumentInstanceEntityProperty
-                    {
-                        DocumentId = document.Id,
-                        EntityProperty = item
-                    })
-                    .ToList();
+                return response;
             }
 
-            _dbContext.Document.Add(document);
-            await _dbContext.SaveChangesAsync();
+            var converter = _fileConverterFactory.GetConverter(input.ContextType);
+            byte[] fileByteArray = await converter.GetFileContentAsync(input.DocumentContent.FileContext);
 
-            byte[] fileByteArray;
-            if (input.FileContextType == "byte")
-            {
-                fileByteArray = input.FileContext.Split(',').Select(byte.Parse).ToArray();
-            }
-            else if (input.FileContextType == "ZeebeRender")
-            {
-                fileByteArray = Convert.FromBase64String(input.FileContext);//TODO: SubFlow için düzenle
-            }
-            else if (input.FileContextType == "TemplateRender")
-            {
-                var content  = await _templateEngineAppService.GetRenderPdf(input.FileContext);
-                fileByteArray = Convert.FromBase64String(content.Data);//TODO: SubFlow için düzenle
-            }
-            else
-            {
-                fileByteArray = Convert.FromBase64String(input.FileContext);
-            }
-
-            await _minioService.UploadFile(fileByteArray, input.ToString(), input.FileType, "");
+            await _minioService.UploadFile(fileByteArray, input.ToString(), input.DocumentContent.ContentType, "");
 
             if (docdef.DocumentDys is not null)
             {
@@ -206,15 +160,32 @@ namespace amorphie.contract.application
 
         private async Task SendToDys(DocumentDefinition docDef, DocumentInstanceInputDto inputDto, byte[] fileByteArray)
         {
-            var documentDys = new DocumentDysRequestModel(inputDto.Owner, inputDto.DocumentCode, docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.FileType, fileByteArray);
+            var documentDys = new DocumentDysRequestModel(inputDto.Owner, inputDto.DocumentCode, docDef.DocumentDys.ReferenceId.ToString(), docDef.Code, inputDto.ToString(), inputDto.DocumentContent.ContentType, fileByteArray);
             if (inputDto.InstanceMetadata is not null)
             {
                 foreach (var item in inputDto.InstanceMetadata)
                 {
-                    documentDys.DocumentParameters.Add(item.Code, item.EntityPropertyValue);
+                    documentDys.DocumentParameters.Add(item.Code, item.Data);
                 }
             }
             await _dysProducer.PublishDysData(documentDys);
+        }
+
+        private GenericResult<bool> CheckRequiredMetadata(List<Metadata> docDefMetadata, List<MetadataDto> instanceMetadataList)
+        {
+            foreach (var item in docDefMetadata)
+            {
+                if (item.IsRequired && string.IsNullOrEmpty(item.Data))
+                {
+                    var conflictingProperty = instanceMetadataList.FirstOrDefault(x => x.Code == item.Code);
+                    if (conflictingProperty == null)
+                    {
+                        return GenericResult<bool>.Fail($"Girilmesi zorunlu metadatalar bulunmaktadır {item.Code}");
+                    }
+                }
+            }
+
+            return GenericResult<bool>.Success(true);
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)
@@ -283,13 +254,16 @@ namespace amorphie.contract.application
 
             return GenericResult<DocumentDownloadOutputDto>.Success(res);
         }
+
     }
 
     public interface IDocumentAppService
     {
+        Task<GenericResult<bool>> AddAsync(DocumentDto documentDto, string minioObjectName);
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
         Task<GenericResult<bool>> Instance(DocumentInstanceInputDto input);
         Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
     }
 }
+
