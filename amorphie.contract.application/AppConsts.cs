@@ -8,6 +8,7 @@ namespace amorphie.contract.application
         public static readonly string InProgress = "in-progress";
         public static readonly string Valid = "valid";
         public static readonly string NotValid = "not-valid";
+        public static readonly string Expired = "expired";
 
         #endregion
     }
