@@ -12,7 +12,6 @@ using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
-using MongoDB.Bson;
 
 namespace amorphie.contract.application.Customer
 {
@@ -77,20 +76,24 @@ namespace amorphie.contract.application.Customer
             .AsSplitQuery()
             .ToListAsync(token);
 
-            //kontrakttaki bir dökümanı güncelleyince ıd değişti o yüzden yenisi görülürken eskisi görülmüyor ama eskisi document te var.. sabah bak
+            var filteredContracts = allContractQuery
+                .Where(x => x.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+                        || x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
+                .ToList();
 
+            var historyContract = _dbContext.ContractDefinitionHistory
+                .Where(x => filteredContracts.Select(ab => ab.Id).Contains(x.ContractDefinitionId))
+                .ToList();
 
-            allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
-            ||
-            x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
+            var historyQuery = historyContract
+                .Where(x => x.ContractDefinitionHistoryModel.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+                        || x.ContractDefinitionHistoryModel.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
+                .Select(x => x.ContractDefinitionHistoryModel)
+                .ToList();
 
-            var history = _dbContext.ContractDefinitionHistory.Where(x => allContractQuery.Select(ab => ab.Id).Contains(x.ContractDefinitionId)).ToList();
-
-             var historyQuery = history.Where(x => x.ContractDefinitionHistoryModel.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
-            ||
-            x.ContractDefinitionHistoryModel.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId)))).Select(x => x.ContractDefinitionHistoryModel);
-
-            var contractHistoryQuery = historyQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).ToList();
+            var contractHistoryQuery = historyQuery
+                .Where(x => x.BankEntity == inputDto.GetBankEntityCode())
+                .ToList();
             
             var contractHistory = ObjectMapperApp.Mapper.Map<List<ContractDefinition>>(contractHistoryQuery);
             var contractHistoryModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contractHistory);
