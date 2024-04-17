@@ -16,8 +16,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentAllowedClientDetail, DocumentAllowedClientDetail>().ReverseMap();
             CreateMap<DocumentContent, DocumentContent>().ReverseMap();
             CreateMap<DocumentDefinition, DocumentDefinition>().ReverseMap();
-            CreateMap<DocumentEntityProperty, DocumentEntityProperty>().ReverseMap();
-            CreateMap<DocumentInstanceEntityProperty, DocumentInstanceEntityProperty>().ReverseMap();
+            // CreateMap<DocumentEntityProperty, DocumentEntityProperty>().ReverseMap();
             CreateMap<DocumentInstanceNote, DocumentInstanceNote>().ReverseMap();
             CreateMap<DocumentFormat, DocumentFormat>().ReverseMap();
             CreateMap<DocumentFormatDetail, DocumentFormatDetail>().ReverseMap();

@@ -11,5 +11,14 @@ namespace amorphie.contract.application
         public static readonly string Expired = "expired";
 
         #endregion
+
+        #region File Converter Factory
+
+        public static readonly string ConverterDefaultRender = "DefaultRender";
+        public static readonly string ConverterTemplateRender = "TemplateRender";
+        public static readonly string ConverterByteRender = "ByteRender";
+        public static readonly string ConverterZeebeRender = "ZeebeRender";
+
+        #endregion
     }
 }

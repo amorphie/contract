@@ -33,6 +33,8 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
                 v => JsonSerializer.Serialize(v, new JsonSerializerOptions(JsonSerializerDefaults.General)),
                 v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))!);
 
+            builder.OwnsMany(d => d.DefinitionMetadata, builder => { builder.ToJson(); });
+
         }
 
     }
