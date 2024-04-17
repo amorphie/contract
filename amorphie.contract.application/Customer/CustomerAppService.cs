@@ -16,6 +16,8 @@ namespace amorphie.contract.application.Customer
 {
     public interface ICustomerAppService
     {
+        Task<GenericResult<Guid>> GetIdByReference(string userReference);
+        Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto);
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts);
@@ -37,6 +39,41 @@ namespace amorphie.contract.application.Customer
 
             _baseUrl = StaticValuesExtensions.Apisix.BaseUrl;
             _downloadEndpoint = StaticValuesExtensions.Apisix.DownloadEndpoint;
+        }
+
+        public async Task<GenericResult<Guid>> GetIdByReference(string userReference)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(nameof(userReference));
+
+            var customerId = await _dbContext.Customer
+                .Where(x => x.Reference == userReference)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (customerId == Guid.Empty)
+            {
+                return GenericResult<Guid>.Fail($"Customer not found. Reference: {userReference}");
+            }
+
+            return GenericResult<Guid>.Success(customerId);
+        }
+
+        public async Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(nameof(inputDto.Reference));
+
+            var customer = new core.Entity.Customer
+            {
+                Reference = inputDto.Reference,
+                Owner = inputDto.Owner,
+                CustomerNo = inputDto.CustomerNo
+            };
+
+            _dbContext.Customer.Add(customer);
+
+            await _dbContext.SaveChangesAsync();
+
+            return GenericResult<Guid>.Success(customer.Id);
         }
 
         public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
@@ -75,13 +112,13 @@ namespace amorphie.contract.application.Customer
             .AsSplitQuery()
             .ToListAsync(token);
 
-            
+
             allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
             ||
             x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
 
             var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
-            
+
             var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
 
             List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.core.Entity.Document
 {
@@ -20,12 +21,14 @@ namespace amorphie.contract.core.Entity.Document
         public DocumentContent DocumentContent { get; set; } = default!;
 
         public EStatus Status { get; set; } = default!;
-        public ICollection<DocumentInstanceEntityProperty>? DocumentInstanceEntityPropertys { get; set; } = new List<DocumentInstanceEntityProperty>();
         public ICollection<DocumentInstanceNote>? DocumentInstanceNotes { get; set; } = new List<DocumentInstanceNote>();
-        
+
         public Guid CustomerId { get; set; }
 
         [ForeignKey("CustomerId")]
         public Customer Customer { get; set; } = default!;
+
+        public List<Metadata> InstanceMetadata { get; set; } = new();
+
     }
 }

@@ -6,7 +6,6 @@ using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
-using amorphie.contract.core.Entity.EAV;
 using amorphie.contract.core.Entity.Proxy;
 using amorphie.contract.core.Entity;
 using System.Linq.Expressions;
@@ -54,7 +53,6 @@ public class ProjectDbContext : DbContext
     public DbSet<ContractDefinition> ContractDefinition { get; set; }
     public DbSet<ContractDocumentDetail> ContractDocumentDetail { get; set; }
     public DbSet<ContractDocumentGroupDetail> ContractDocumentGroupDetail { get; set; }
-    public DbSet<ContractEntityProperty> ContractEntityProperty { get; set; }
     public DbSet<ContractTag> ContractTag { get; set; }
     public DbSet<ContractValidation> ContractValidation { get; set; }
     public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
@@ -65,7 +63,6 @@ public class ProjectDbContext : DbContext
 
     #region Document
     public DbSet<Document> Document { get; set; }
-    public DbSet<DocumentInstanceEntityProperty> DocumentInstanceEntityProperty { get; set; }
     public DbSet<DocumentInstanceNote> DocumentInstanceNote { get; set; }
     public DbSet<DocumentAllowedClient> DocumentAllowedClient { get; set; }
     public DbSet<DocumentAllowedClientDetail> DocumentAllowedClientDetail { get; set; }
@@ -76,7 +73,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentTsizl> DocumentTsizls { get; set; }
     public DbSet<DocumentDys> DocumentDys { get; set; }
 
-    public DbSet<DocumentEntityProperty> DocumentEntityProperty { get; set; }
     #region  DocumentGroup
     public DbSet<DocumentGroup> DocumentGroup { get; set; }
     public DbSet<DocumentGroupDetail> DocumentGroupDetail { get; set; }
@@ -99,9 +95,7 @@ public class ProjectDbContext : DbContext
 
 
     #endregion
-    public DbSet<EntityProperty> EntityProperty { get; set; }
-    // public DbSet<EntityPropertyType> EntityPropertyType { get; set; }
-    public DbSet<EntityPropertyValue> EntityPropertyValue { get; set; }
+    
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Contract> Contract { get; set; }
     protected IConfiguration Configuration { get; }

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using amorphie.core.Base;
 
 namespace amorphie.contract.application.Customer.Dto
 {
@@ -17,5 +16,6 @@ namespace amorphie.contract.application.Customer.Dto
         public Dictionary<string, string> Titles { get; set; } = default!;
 
     }
+
 }
 

@@ -18,7 +18,7 @@ namespace amorphie.contract.application
         public string Semver { get; set; }
 
         public string? BaseStatus { get; set; }
-        public List<EntityPropertyDto>? EntityProperties { get; set; }
+        
         public List<TagDto>? Tags { get; set; }
         public DocumentUploadDto? DocumentUpload { get; set; }
 
@@ -29,6 +29,7 @@ namespace amorphie.contract.application
         public DocumentDysDto? DocumentDys { get; set; }
         public DocumentTsizlDto? DocumentTsizl { get; set; }
         public Dictionary<string, string> Titles { get; set; } = default!;
+        public List<MetadataDto> DefinitionMetadata { get; set; } = default!;
 
     }
 
@@ -80,7 +81,7 @@ namespace amorphie.contract.application
     public class DocumentTemplateDetailsDto
     {
         public string Code { get; set; }
-        public string LanguageCode{ get; set; }
+        public string LanguageCode { get; set; }
         public string Version { get; set; } = default!;
 
     }

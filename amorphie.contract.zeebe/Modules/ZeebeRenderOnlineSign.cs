@@ -95,7 +95,7 @@ namespace amorphie.contract.zeebe.Modules
             var subFlowContractInstance = false;
             if (body.ToString().IndexOf("XContractInstance") != -1)
             {
-                subFlowContractInstance=true;
+                subFlowContractInstance = true;
                 if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
                 {
                     headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
@@ -111,7 +111,7 @@ namespace amorphie.contract.zeebe.Modules
             }
 
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
-            if (messageVariables.TransitionName == "render-online-sign-start"&&!subFlowContractInstance)
+            if (messageVariables.TransitionName == "render-online-sign-start" && !subFlowContractInstance)
             {
                 var documentDef = messageVariables.Data.GetProperty("entityData").GetProperty("Document").ToString();
                 var documentDefDto = JsonSerializer.Deserialize<List<DocumentDef>>(documentDef, options: new JsonSerializerOptions
@@ -283,6 +283,7 @@ namespace amorphie.contract.zeebe.Modules
             {
                 PropertyNameCaseInsensitive = true
             }) as ApprovedDocumentList;
+
             foreach (var i in contractDocumentModel.Document.Where(x => x.Approved))
             {
                 var input = new DocumentInstanceInputDto
@@ -290,15 +291,17 @@ namespace amorphie.contract.zeebe.Modules
                     Id = i.RenderId,
                     DocumentCode = i.DocumentDefinitionCode,
                     DocumentVersion = i.DocumentSemanticVersion,
-                    // Reference = reference,
-                    // Owner = reference,
-                    FileName = i.DocumentDefinitionCode + ".pdf", //TODO: Degişecek,
-                    FileType = "application/pdf",
-                    FileContextType = "TemplateRender",//bunu template Id ilede alsın Id yi arkada baska bir workerla çözede bilirsin bakıcam
-                    FileContext = i.RenderId.ToString(),
+                    DocumentContent = new DocumentContentDto
+                    {
+                        FileName = i.DocumentDefinitionCode + ".pdf",
+                        ContentType = "application/pdf",
+                        FileContext = i.RenderId.ToString(),
+                    },
+                    ContextType = AppConsts.ConverterTemplateRender
                 };
 
                 input.SetHeaderParameters(headerModel.UserReference, customerNo);
+                
                 await documentAppService.Instance(input);
 
             }

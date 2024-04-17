@@ -11,6 +11,7 @@ public class ContractDefinitionHistoryModel : BaseEntity
     public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
     public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
     public ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();
-    public ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
+    // public ICollection<ContractEntityProperty> ContractEntityProperty { get; set; } = new List<ContractEntityProperty>();
     public ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
+    public List<Metadata> DefinitionMetadata { get; set; } = new();
 }

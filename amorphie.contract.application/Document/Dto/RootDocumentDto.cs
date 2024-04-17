@@ -1,3 +1,5 @@
+using amorphie.contract.application.Contract.Dto;
+
 namespace amorphie.contract.application
 {
 
