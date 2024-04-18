@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentInstanceNote", Schema = "Doc")]
-    public class DocumentInstanceNote : AudiEntity
+    public class DocumentInstanceNote : AuditEntity
     {
         [Required]
         public Guid DocumentId { get; set; }

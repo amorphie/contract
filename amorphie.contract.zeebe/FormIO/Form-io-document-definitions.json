@@ -19,8 +19,8 @@
       "data": {
         "values": [
           {
-            "label": "OnlineSing",
-            "value": "onlineSing"
+            "label": "OnlineSign",
+            "value": "OnlineSign"
           },
           {
             "label": "Upload",
@@ -204,7 +204,7 @@
         },
         {
           "title": "Render",
-          "tooltip": "'OnlineSing' için özel bir şablonun kullanılması durumunda, şablonun versiyonu, hangi müşteri türlerine izin verildiği ve hangi dillerde şablonların mevcut olduğu bilgileri gereklidir.“RenderUpload” özelliği, belgenin render edilip yüklendiği senaryolar için kullanılır. Genellikle, belgenin öncelikle bir şablon veya form kullanılarak oluşturulduğu ve ardından yüklendiği durumları kapsar. ",
+          "tooltip": "'OnlineSign' için özel bir şablonun kullanılması durumunda, şablonun versiyonu, hangi müşteri türlerine izin verildiği ve hangi dillerde şablonların mevcut olduğu bilgileri gereklidir.“RenderUpload” özelliği, belgenin render edilip yüklendiği senaryolar için kullanılır. Genellikle, belgenin öncelikle bir şablon veya form kullanılarak oluşturulduğu ve ardından yüklendiği durumları kapsar. ",
           "collapsible": true,
           "key": "render",
           "conditional": {
@@ -345,7 +345,7 @@
           "conditional": {
             "show": false,
             "when": "DocumentType",
-            "eq": "onlineSing"
+            "eq": "OnlineSign"
           },
           "type": "panel",
           "label": "Panel",

@@ -118,7 +118,7 @@ namespace amorphie.contract.application.Contract
             var listDocument = contractDefinition.ContractDocumentDetails
                 .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
 
-           var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
+            var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
             var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
             var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);

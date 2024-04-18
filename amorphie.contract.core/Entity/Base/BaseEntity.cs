@@ -3,14 +3,14 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Base
 {
-    public class BaseEntity : AudiEntity
+    public class BaseEntity : AuditEntity
     {
         [MaxLength(1000)]
         [Required]
         public string Code { get; set; } = default!;
 
     }
-    public class AudiEntity : EntityBase, ISoftDelete
+    public class AuditEntity : EntityBase, ISoftDelete
     {
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; }

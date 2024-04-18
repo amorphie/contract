@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentTsizlConfiguration : ConfigurationBaseAudiEntity<DocumentTsizl>,
+    public class DocumentTsizlConfiguration : ConfigurationBaseAuditEntity<DocumentTsizl>,
          IEntityTypeConfiguration<DocumentTsizl>
 
     {

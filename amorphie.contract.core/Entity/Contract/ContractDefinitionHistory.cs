@@ -6,7 +6,7 @@ using amorphie.contract.core.Model.History;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractDefinitionHistory", Schema = "Cont")]
-    public class ContractDefinitionHistory : AudiEntity
+    public class ContractDefinitionHistory : AuditEntity
     {
         [Required]
         public ContractDefinitionHistoryModel ContractDefinitionHistoryModel { get; set; }

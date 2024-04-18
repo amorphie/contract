@@ -11,10 +11,9 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
         {
             var list = new List<string>
             {
-                "DocumentEntityPropertys",
                 "DocumentTagsDetails",
                 "DocumentUpload",
-                "DocumentOnlineSing",
+                "DocumentOnlineSign",
                 "DocumentOptimize",
                 "DocumentOperations",
                 "DocumentDys",

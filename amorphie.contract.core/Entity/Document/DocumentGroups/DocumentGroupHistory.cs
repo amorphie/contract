@@ -11,7 +11,7 @@ using amorphie.contract.core.Model.History;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("DocumentGroupHistory", Schema = "DocGroup")]
-    public class DocumentGroupHistory : AudiEntity
+    public class DocumentGroupHistory : AuditEntity
     {
         [Required]
         public DocumentGroupHistoryModel DocumentGroupHistoryModel { get; set; }

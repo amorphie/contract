@@ -29,10 +29,10 @@ namespace amorphie.contract.infrastructure.Contexts
         }
         // public static void TemplateCodeReview(ProjectDbContext context)
         // {
-        //     var dtd = context.DocumentDefinition.Where(x=>x.DocumentOnlineSing.DocumentTemplateDetails.Any()).ToList();
+        //     var dtd = context.DocumentDefinition.Where(x=>x.DocumentOnlineSign.DocumentTemplateDetails.Any()).ToList();
         //     foreach (var i in dtd)
         //     { 
-        //         i.DocumentOnlineSing.Templates = i.DocumentOnlineSing.DocumentTemplateDetails.
+        //         i.DocumentOnlineSign.Templates = i.DocumentOnlineSign.DocumentTemplateDetails.
         //         Select(x=>new Template
         //         {
         //             Code = x.DocumentTemplate.Code,

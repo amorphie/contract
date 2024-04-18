@@ -12,19 +12,20 @@ namespace amorphie.contract.application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            // services.AddTransient<IDocumentAppService, DocumentAppService>();
+
             services.AddTransient<IDocumentDefinitionAppService, DocumentDefinitionAppService>();
             services.AddTransient<IContractAppService, ContractAppService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<ICustomerAppService, CustomerAppService>();
             services.AddTransient<IDocumentAppService, DocumentAppService>();
             services.AddTransient<IDocumentDysAppService, DocumentDysAppService>();
+            services.AddTransient<IUserSignedContractAppService, UserSignedContractAppService>();
 
             services.AddScoped<IFileContentProvider, ByteArrayConverter>();
             services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
             services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
             services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
-            services.AddScoped<FileConverterFactory>(); 
+            services.AddScoped<FileConverterFactory>();
             return services;
         }
     }

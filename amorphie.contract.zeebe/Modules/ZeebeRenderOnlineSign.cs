@@ -134,10 +134,10 @@ namespace amorphie.contract.zeebe.Modules
                   .Select(x =>
                   new ApprovedTemplateDocumentList
                   {
-                      SemanticVersion = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Version
-                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Version,
-                      Name = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Code
-                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Code,
+                      SemanticVersion = x.DocumentOnlineSign?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Version
+                         ?? x.DocumentOnlineSign?.Templates.FirstOrDefault()?.Version,
+                      Name = x.DocumentOnlineSign?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Code
+                         ?? x.DocumentOnlineSign?.Templates.FirstOrDefault()?.Code,
                       RenderId = Guid.NewGuid(),
                       RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                       RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
@@ -171,8 +171,8 @@ namespace amorphie.contract.zeebe.Modules
                     {
                         ContractInstanceId = contractInstanceId,
                         DocumentSemanticVersion = contractDocument.MinVersion,
-                        SemanticVersion = contractDocument.DocumentDetail.OnlineSing.Version,
-                        Name = contractDocument.DocumentDetail.OnlineSing.TemplateCode,
+                        SemanticVersion = contractDocument.DocumentDetail.OnlineSign.Version,
+                        Name = contractDocument.DocumentDetail.OnlineSign.TemplateCode,
                         RenderId = Guid.NewGuid(),
                         RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                         RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",

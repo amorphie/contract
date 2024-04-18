@@ -171,20 +171,20 @@ namespace amorphie.contract.zeebe.Services
         }
         #endregion
 
-        #region  SetDocumentOnlineSing
-        private void SetDocumentOnlineSing()
+        #region  SetDocumentOnlineSign
+        private void SetDocumentOnlineSign()
         {
-            if (_documentdef.DocumentOnlineSing == null)
+            if (_documentdef.DocumentOnlineSign == null)
             {
-                _documentdef.DocumentOnlineSing = new DocumentOnlineSing();
+                _documentdef.DocumentOnlineSign = new DocumentOnlineSign();
 
             }
 
-            SetDocumentOnlineSingTemplateDetails();
-            SetDocumentOnlineSingAllowedClientDetails();
+            SetDocumentOnlineSignTemplateDetails();
+            SetDocumentOnlineSignAllowedClientDetails();
 
         }
-        private void SetDocumentOnlineSingTemplateDetails()
+        private void SetDocumentOnlineSignTemplateDetails()
         {
             var langTypes = _dbContext.LanguageType.ToList();
 
@@ -194,9 +194,9 @@ namespace amorphie.contract.zeebe.Services
                 Code = x.RenderTemplate.name,
                 Version = x.version
             }).ToList();
-            _documentdef.DocumentOnlineSing.Templates = documentTemplateDetail2;
+            _documentdef.DocumentOnlineSign.Templates = documentTemplateDetail2;
         }
-        private void SetDocumentOnlineSingAllowedClientDetails()
+        private void SetDocumentOnlineSignAllowedClientDetails()
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
@@ -205,7 +205,7 @@ namespace amorphie.contract.zeebe.Services
 
             }).ToList();
 
-            _documentdef.DocumentOnlineSing.DocumentAllowedClientDetails = allowedClientDetail;
+            _documentdef.DocumentOnlineSign.DocumentAllowedClientDetails = allowedClientDetail;
         }
         #endregion
 
@@ -316,14 +316,14 @@ namespace amorphie.contract.zeebe.Services
                 SetDocumentDys(dysMetadata);
                 SetDocumentTsizl();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("OnlineSign") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
 
                 }
                 else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
                     SetDocumentUpload();
                 }
                 else
@@ -385,14 +385,14 @@ namespace amorphie.contract.zeebe.Services
                 SetDocumentOperation();
                 SetDocumentEOV();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("OnlineSign") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
 
                 }
                 else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
                     SetDocumentUpload();
                 }
                 else

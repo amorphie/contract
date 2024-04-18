@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentFormatDetailConfiguration : ConfigurationBaseAudiEntity<DocumentFormatDetail>,
+    public class DocumentFormatDetailConfiguration : ConfigurationBaseAuditEntity<DocumentFormatDetail>,
          IEntityTypeConfiguration<DocumentFormatDetail>
 
     {

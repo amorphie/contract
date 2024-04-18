@@ -151,7 +151,7 @@ namespace amorphie.contract.Module.Proxy
             {
                 List<TemplateEngineDefinitionResponseModel> responseList = response.Data;
 
-                var dbQuery = context!.DocumentOnlineSing.AsQueryable();
+                var dbQuery = context!.DocumentOnlineSign.AsQueryable();
 
 
                 // "%" karakteri varsa deseni kontrol et

@@ -8,7 +8,7 @@ namespace amorphie.contract.Module.Base;
 
 public abstract class AudiAdminModule<TDTOModel, TDBModel, TDbContext>
 : BaseBBTRoute<TDTOModel, TDBModel, TDbContext> where TDTOModel : class, new() where TDBModel
-: AudiEntity where TDbContext : DbContext
+: AuditEntity where TDbContext : DbContext
 {
     protected AudiAdminModule(WebApplication app) : base(app)
     {

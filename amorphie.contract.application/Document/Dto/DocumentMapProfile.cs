@@ -35,7 +35,7 @@ namespace amorphie.contract.application
                 .ForPath(dest => dest.LanguageCode, opt => opt.MapFrom(src => src.LanguageCode))
                 .ForPath(dest => dest.Version, opt => opt.MapFrom(src => src.Version)).ReverseMap();
 
-            CreateMap<DocumentOnlineSing, DocumentOnlineSingDto>()
+            CreateMap<DocumentOnlineSign, DocumentOnlineSignDto>()
                 .ForMember(dest => dest.DocumentAllowedClientDetails, opt => opt.MapFrom(src =>
                            src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code))
                            )
@@ -69,7 +69,7 @@ namespace amorphie.contract.application
 
             CreateMap<DocumentDefinition, DocumentDefinitionDto>()
                     .ForMember(dest => dest.DocumentOperations, opt => opt.MapFrom(src => src.DocumentOperations))
-                    .ForMember(dest => dest.DocumentOnlineSing, opt => opt.MapFrom(src => src.DocumentOnlineSing))
+                    .ForMember(dest => dest.DocumentOnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSign))
                     .ForMember(dest => dest.DocumentUpload, opt => opt.MapFrom(src => src.DocumentUpload))
                     .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.DocumentTagsDetails))
                     .ForMember(dest => dest.DocumentDys, opt => opt.MapFrom(src => src.DocumentDys))
