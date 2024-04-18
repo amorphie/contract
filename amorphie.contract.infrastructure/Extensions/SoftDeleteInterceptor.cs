@@ -14,7 +14,7 @@ namespace amorphie.contract.infrastructure.Extensions
 
             foreach (var entry in eventData.Context.ChangeTracker.Entries())
             {
-                if (entry is not { State: EntityState.Deleted, Entity: AudiEntity delete }) continue;
+                if (entry is not { State: EntityState.Deleted, Entity: AuditEntity delete }) continue;
                 entry.State = EntityState.Modified;
                 delete.IsDeleted = true;
                 delete.IsActive = false;
@@ -31,7 +31,7 @@ namespace amorphie.contract.infrastructure.Extensions
 
             foreach (var entry in eventData.Context.ChangeTracker.Entries())
             {
-                if (entry is not { State: EntityState.Deleted, Entity: AudiEntity delete }) continue;
+                if (entry is not { State: EntityState.Deleted, Entity: AuditEntity delete }) continue;
                 entry.State = EntityState.Modified;
                 delete.IsDeleted = true;
                 delete.IsActive = false;

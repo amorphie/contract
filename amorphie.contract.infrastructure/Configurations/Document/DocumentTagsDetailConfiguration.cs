@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentTagsDetailConfiguration : ConfigurationBaseAudiEntity<DocumentTagsDetail>,
+    public class DocumentTagsDetailConfiguration : ConfigurationBaseAuditEntity<DocumentTagsDetail>,
              IEntityTypeConfiguration<DocumentTagsDetail>
 
     {

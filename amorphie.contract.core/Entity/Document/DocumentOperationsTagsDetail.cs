@@ -12,7 +12,7 @@ namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOperationsTagsDetail", Schema = "Doc")]
 
-    public class DocumentOperationsTagsDetail : AudiEntity
+    public class DocumentOperationsTagsDetail : AuditEntity
     {
         [Required]
         public Guid? DocumentOperationsId { get; set; }

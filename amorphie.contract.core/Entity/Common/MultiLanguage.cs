@@ -10,7 +10,7 @@ namespace amorphie.contract.core.Entity.Common
     [Table("MultiLanguage", Schema = "Common")]
     [Index(nameof(Code))]
 
-    public class MultiLanguage : AudiEntity
+    public class MultiLanguage : AuditEntity
     {
         public string Name { get; set; }//Nufus Cuzdani
         public string Code { get; set; }//özel durum farkındaysan baseentityden türemiyor

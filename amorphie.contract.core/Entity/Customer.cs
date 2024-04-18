@@ -4,7 +4,7 @@ using amorphie.contract.core.Entity.Base;
 namespace amorphie.contract.core.Entity
 {
     [Table("Customer", Schema = "Cus")]
-    public class Customer : AudiEntity
+    public class Customer : AuditEntity
     {
         public string? Owner { get; set; }
         public string? Reference { get; set; }

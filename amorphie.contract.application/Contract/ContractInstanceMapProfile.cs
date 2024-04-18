@@ -16,9 +16,9 @@ namespace amorphie.contract.application.Contract
                 .ForMember(dest => dest.UseExisting, opt => opt.MapFrom(src => src.UseExisting))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.DocumentDefinition.Code))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.DocumentDefinition.Status))
-                .ForPath(dest => dest.DocumentDetail.OnlineSing, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing));
+                .ForPath(dest => dest.DocumentDetail.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSign));
 
-            CreateMap<DocumentOnlineSingDto, DocumentInstanceOnlineSingDto>()
+            CreateMap<DocumentOnlineSignDto, DocumentInstanceOnlineSignDto>()
                  .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom((src, dest, destMember, context) =>
                  {
                      var langCode = (string)context.Items[Lang.LangCode];
@@ -51,7 +51,7 @@ namespace amorphie.contract.application.Contract
 
             CreateMap<DocumentDefinitionDto, DocumentInstanceDto>()
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
-                .ForPath(dest => dest.DocumentDetail.OnlineSing, opt => opt.MapFrom(src => src.DocumentOnlineSing))
+                .ForPath(dest => dest.DocumentDetail.OnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSign))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.Semver))
                 .ReverseMap();

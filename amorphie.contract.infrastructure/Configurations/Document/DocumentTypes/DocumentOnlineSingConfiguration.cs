@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Document.DocumentTypes
 {
-    public class DocumentOnlineSingConfiguration : ConfigurationBaseAudiEntity<DocumentOnlineSing>,
-         IEntityTypeConfiguration<DocumentOnlineSing>
+    public class DocumentOnlineSignConfiguration : ConfigurationBaseAuditEntity<DocumentOnlineSign>,
+         IEntityTypeConfiguration<DocumentOnlineSign>
 
     {
-        public void Configure(EntityTypeBuilder<DocumentOnlineSing> builder)
+        public void Configure(EntityTypeBuilder<DocumentOnlineSign> builder)
         {
             NavigationBuilderAutoInclude(builder, new List<string>
             {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentInstanceNoteConfiguration : ConfigurationBaseAudiEntity<DocumentInstanceNote>,
+    public class DocumentInstanceNoteConfiguration : ConfigurationBaseAuditEntity<DocumentInstanceNote>,
          IEntityTypeConfiguration<DocumentInstanceNote>
 
     {

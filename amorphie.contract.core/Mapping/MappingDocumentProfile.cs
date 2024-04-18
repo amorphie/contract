@@ -38,7 +38,7 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentGroupHistory, DocumentGroupHistory>().ReverseMap();
             #endregion
             #region documentType
-            CreateMap<DocumentOnlineSing, DocumentOnlineSing>().ReverseMap();
+            CreateMap<DocumentOnlineSign, DocumentOnlineSign>().ReverseMap();
             CreateMap<DocumentUpload, DocumentUpload>().ReverseMap();
             #endregion
         }

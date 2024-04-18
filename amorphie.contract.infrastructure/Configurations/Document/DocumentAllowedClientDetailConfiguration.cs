@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Definition
 {
-    public class DocumentAllowedClientDetailConfiguration : ConfigurationBaseAudiEntity<DocumentAllowedClientDetail>,
+    public class DocumentAllowedClientDetailConfiguration : ConfigurationBaseAuditEntity<DocumentAllowedClientDetail>,
          IEntityTypeConfiguration<DocumentAllowedClientDetail>
 
     {

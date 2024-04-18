@@ -24,10 +24,10 @@ namespace amorphie.contract.core.Entity.Document
         [ForeignKey("DocumentUploadId")]
 
         public DocumentUpload? DocumentUpload { get; set; } = default!;
-        public Guid? DocumentOnlineSingId { get; set; }
-        [ForeignKey("DocumentOnlineSingId")]
+        public Guid? DocumentOnlineSignId { get; set; }
+        [ForeignKey("DocumentOnlineSignId")]
 
-        public DocumentOnlineSing? DocumentOnlineSing { get; set; } = default!;
+        public DocumentOnlineSign? DocumentOnlineSign { get; set; } = default!;
 
         #endregion
         public Guid? DocumentOptimizeId { get; set; }

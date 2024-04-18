@@ -23,7 +23,7 @@ namespace amorphie.contract.application
         public DocumentUploadDto? DocumentUpload { get; set; }
 
 
-        public DocumentOnlineSingDto? DocumentOnlineSing { get; set; }
+        public DocumentOnlineSignDto? DocumentOnlineSign { get; set; }
         public DocumentOptimizeDto? DocumentOptimize { get; set; }
         public DocumentOperationsDto? DocumentOperations { get; set; }
         public DocumentDysDto? DocumentDys { get; set; }
@@ -70,7 +70,7 @@ namespace amorphie.contract.application
         public List<DocumentFormatDetailDto>? DocumentFormatDetails { get; set; }
         public List<string>? DocumentAllowedClientDetails { get; set; }
     }
-    public class DocumentOnlineSingDto
+    public class DocumentOnlineSignDto
     {
         public List<string>? DocumentAllowedClientDetails { get; set; }
         public List<DocumentTemplateDetailsDto>? Templates { get; set; }

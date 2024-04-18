@@ -10,7 +10,7 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOptimize", Schema = "Doc")]
-    public class DocumentOptimize : AudiEntity
+    public class DocumentOptimize : AuditEntity
     {
         public bool Size { get; set; }
         [Required]

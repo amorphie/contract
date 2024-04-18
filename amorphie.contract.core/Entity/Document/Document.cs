@@ -7,7 +7,7 @@ using amorphie.contract.core.Model;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("Document", Schema = "Doc")]
-    public class Document : AudiEntity
+    public class Document : AuditEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }

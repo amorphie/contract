@@ -56,8 +56,8 @@ public class ProjectDbContext : DbContext
     public DbSet<ContractTag> ContractTag { get; set; }
     public DbSet<ContractValidation> ContractValidation { get; set; }
     public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
-    public DbSet<ContractInstance> ContractInstance { get; set; }
-    public DbSet<ContractInstanceDetail> ContractInstanceDetail { get; set; }
+    public DbSet<UserSignedContract> UserSignedContract { get; set; }
+    public DbSet<UserSignedContractDetail> UserSignedContractDetail { get; set; }
 
     #endregion
 
@@ -69,7 +69,7 @@ public class ProjectDbContext : DbContext
 
     public DbSet<DocumentContent> DocumentContent { get; set; }
     public DbSet<DocumentDefinition> DocumentDefinition { get; set; }
-    public DbSet<DocumentOnlineSing> DocumentOnlineSing { get; set; }
+    public DbSet<DocumentOnlineSign> DocumentOnlineSign { get; set; }
     public DbSet<DocumentTsizl> DocumentTsizls { get; set; }
     public DbSet<DocumentDys> DocumentDys { get; set; }
 

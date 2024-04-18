@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentContent", Schema = "Doc")]
-    public class DocumentContent : AudiEntity
+    public class DocumentContent : AuditEntity
     {
         public string KiloBytesSize { get; set; } = default!;
         public string ContentType { get; set; } = default!;
