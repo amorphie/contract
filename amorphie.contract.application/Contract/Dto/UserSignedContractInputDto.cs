@@ -1,5 +1,3 @@
-using amorphie.contract.core.Model;
-
 namespace amorphie.contract.application.Contract.Dto
 {
     public class UserSignedContractInputDto
@@ -8,11 +6,18 @@ namespace amorphie.contract.application.Contract.Dto
         public Guid ContractInstanceId { get; set; }
         public string ContractCode { get; set; }
 
-        public void SetHeaderParameters(HeaderFilterModel headerFilterModel)
+        public void SetHeaderParameters(string userReference)
         {
-            UserReference = headerFilterModel.UserReference;
+            _userReference = userReference;
         }
 
-        public string UserReference { get; private set; }
+        private string _userReference;
+
+        public string GetUserReference()
+        {
+            ArgumentException.ThrowIfNullOrEmpty(_userReference);
+
+            return _userReference;
+        }
     }
 }

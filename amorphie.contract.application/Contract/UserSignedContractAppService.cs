@@ -28,14 +28,14 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<Guid>> UpsertAsync(UserSignedContractInputDto inputDto)
         {
-
-            var customerResult = await _customerAppService.GetIdByReference(inputDto.UserReference);
+            var userReference = inputDto.GetUserReference();
+            var customerResult = await _customerAppService.GetIdByReference(userReference);
 
             if (!customerResult.IsSuccess)
             {
-                _logger.Error("Failed to get customer. {Message} - {UserReference}", customerResult.ErrorMessage, inputDto.UserReference);
+                _logger.Error("Failed to get customer. {Message} - {UserReference}", customerResult.ErrorMessage, userReference);
 
-                return GenericResult<Guid>.Fail($"Failed to get customer {inputDto.UserReference}");
+                return GenericResult<Guid>.Fail($"Failed to get customer {userReference}");
             }
 
             var userSignedContract = await _projectDbContext.UserSignedContract.FirstOrDefaultAsync(k => k.ContractCode == inputDto.ContractCode && k.ContractInstanceId == inputDto.ContractInstanceId);

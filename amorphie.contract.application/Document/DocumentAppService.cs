@@ -1,4 +1,6 @@
 using System.Data;
+using amorphie.contract.application.Contract;
+using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Dto;
@@ -28,7 +30,9 @@ namespace amorphie.contract.application
         private readonly ITemplateEngineAppService _templateEngineAppService;
         private readonly ICustomerAppService _customerAppService;
         private readonly FileConverterFactory _fileConverterFactory;
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, FileConverterFactory fileConverterFactory)
+        private readonly IUserSignedContractAppService _userSignedContractAppService;
+
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, FileConverterFactory fileConverterFactory, IUserSignedContractAppService userSignedContractAppService)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
@@ -37,6 +41,7 @@ namespace amorphie.contract.application
             _templateEngineAppService = templateEngineAppService;
             _customerAppService = customerAppService;
             _fileConverterFactory = fileConverterFactory;
+            _userSignedContractAppService = userSignedContractAppService;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -143,6 +148,13 @@ namespace amorphie.contract.application
             byte[] fileByteArray = await converter.GetFileContentAsync(input.DocumentContent.FileContext);
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.DocumentContent.ContentType, "");
+
+            await _userSignedContractAppService.UpsertAsync(new UserSignedContractInputDto
+            {
+                ContractCode = "",
+                ContractInstanceId =  "",
+                DocumentInstanceIds = new List<Guid>()
+            });
 
             if (docdef.DocumentDys is not null)
             {

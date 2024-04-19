@@ -91,6 +91,12 @@ namespace amorphie.contract.zeebe.Modules
             // string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
             // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
+            
+            
+            // if IsRenderOnlineMainFlow {
+                    
+            // }
+
             headerModel = HeaderHelperZeebe.GetHeader(body);
             var subFlowContractInstance = false;
             if (body.ToString().IndexOf("XContractInstance") != -1)
@@ -301,7 +307,7 @@ namespace amorphie.contract.zeebe.Modules
                 };
 
                 input.SetHeaderParameters(headerModel.UserReference, customerNo);
-                
+
                 await documentAppService.Instance(input);
 
             }
