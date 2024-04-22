@@ -9,6 +9,7 @@ public class LanguageTypeModule
 {
     public LanguageTypeModule(WebApplication app) : base(app)
     {
+        //EMPTY TEST COMMIT
     }
     public override string[]? PropertyCheckList => new string[] { "Code" };
     public override string? UrlFragment => base.UrlFragment + "common-languagetype";
