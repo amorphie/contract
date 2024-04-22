@@ -9,15 +9,21 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
     {
         public virtual void Configure(EntityTypeBuilder<ContractDefinition> builder)
         {
-            var list = new List<string>
-            {
-                "ContractDocumentDetails",
-                "ContractDocumentGroupDetails",
-                "ContractTag",
-                "ContractValidations"
-            };
-            NavigationBuilderAutoInclude(builder, list);
-            //
+            // var list = new List<string>
+            // {
+            //     "ContractDocumentDetails",
+            //     "ContractDocumentGroupDetails",
+            //     "ContractTag",
+            //     "ContractValidations"
+            // };
+            // NavigationBuilderAutoInclude(builder, list);
+
+            //TODO Diğer tablolarada uygulanacak
+            builder.Navigation(k => k.ContractDocumentDetails).AutoInclude();
+            builder.Navigation(k => k.ContractDocumentGroupDetails).AutoInclude();
+            builder.Navigation(k => k.ContractTags).AutoInclude();
+            builder.Navigation(k => k.ContractValidations).AutoInclude();
+
             builder.HasIndex(x => new
             {
                 x.Code,
