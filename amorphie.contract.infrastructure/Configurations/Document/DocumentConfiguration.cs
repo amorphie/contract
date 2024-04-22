@@ -8,16 +8,10 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<core.Entity.Document.Document> builder)
         {
-
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "DocumentDefinition",
-                "DocumentInstanceNotes",
-                "DocumentContent",
-                "Status",
-                "Customer",
-            });
-
+            builder.Navigation(k => k.DocumentDefinition).AutoInclude();
+            builder.Navigation(k => k.DocumentInstanceNotes).AutoInclude();
+            builder.Navigation(k => k.DocumentContent).AutoInclude();
+            builder.Navigation(k => k.Customer).AutoInclude();
             builder.OwnsMany(d => d.InstanceMetadata, builder => { builder.ToJson(); });
         }
     }

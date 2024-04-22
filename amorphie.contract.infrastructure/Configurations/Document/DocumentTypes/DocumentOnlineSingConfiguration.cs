@@ -14,12 +14,7 @@ namespace amorphie.contract.infrastructure.Configurations.Document.DocumentTypes
     {
         public void Configure(EntityTypeBuilder<DocumentOnlineSign> builder)
         {
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "DocumentAllowedClientDetails",
-                "DocumentTemplateDetails",
-
-            });
+            builder.Navigation(k => k.DocumentAllowedClientDetails).AutoInclude();
             builder.OwnsMany(product => product.Templates, builder => { builder.ToJson(); });
 
         }

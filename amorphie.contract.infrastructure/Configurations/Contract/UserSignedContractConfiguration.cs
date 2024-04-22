@@ -8,15 +8,9 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
     {
         public override void Configure(EntityTypeBuilder<UserSignedContract> builder)
         {
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "UserSignedContractDetails",
-            });
-
+            builder.Navigation(k => k.UserSignedContractDetails).AutoInclude();
             builder.HasIndex(x => x.CustomerId);
-
             builder.Property(k => k.ContractCode).IsRequired().HasMaxLength(1000);
-
         }
     }
 }
