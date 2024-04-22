@@ -6,6 +6,7 @@ namespace amorphie.contract.application.Contract.Request
     public class ContractInstanceInputDto
     {
         public string ContractName { get; set; }
+        public Guid ContractInstanceId { get; set;}
         public string? Reference { get; private set; }
         public string? LangCode { get; private set; }
 

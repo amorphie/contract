@@ -149,12 +149,12 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(fileByteArray, input.ToString(), input.DocumentContent.ContentType, "");
 
-            await _userSignedContractAppService.UpsertAsync(new UserSignedContractInputDto
-            {
-                ContractCode = "",
-                ContractInstanceId =  "",
-                DocumentInstanceIds = new List<Guid>()
-            });
+            // await _userSignedContractAppService.UpsertAsync(new UserSignedContractInputDto
+            // {
+            //     ContractCode = "",
+            //     ContractInstanceId =  "",
+            //     DocumentInstanceIds = new List<Guid>()
+            // });
 
             if (docdef.DocumentDys is not null)
             {

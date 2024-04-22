@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using amorphie.contract.application;
 using amorphie.contract.application.Contract;
+using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
-using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
@@ -17,6 +15,12 @@ namespace amorphie.contract.zeebe.Modules
 {
     public static class ZeebeContractInstance
     {
+        public const string ContractVariableName = "ContractInstance";
+        public const string XContractOutputDto = "XContractOutputDto";
+        public const string ContractStatus = "ContractStatus";
+
+
+
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
             app.MapPost("/startcontract", StartContract)
@@ -146,64 +150,44 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult ContractInstance(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration,
-          [FromServices] IContractAppService contractAppService, CancellationToken token
-      )
-        {
-            var messageVariables = new MessageVariables();
-            messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            HeaderFilterModel headerModel;
-            // string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-            // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
-            // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
-            headerModel = HeaderHelperZeebe.GetHeader(body);
-            string contractName = string.Empty;
 
-            if (messageVariables.Data.GetProperty("entityData").ToString().IndexOf("contractName") != -1)
+
+
+        static async ValueTask<IResult> ContractInstance([FromBody] dynamic body, [FromServices] IContractAppService contractAppService,
+        [FromServices] IUserSignedContractAppService userSignedContractAppService, CancellationToken token)
+        {
+
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+
+            var inputDto = ZeebeMessageHelper.MapToDto<ContractInputDto>(body);
+
+            var contractServiceInput = new ContractInstanceInputDto
             {
-                contractName = messageVariables.Data.GetProperty("entityData").GetProperty("contractName").ToString();
-            }
-            
-            else if (body.ToString().IndexOf("\"ContractInstance\"") != -1 && string.IsNullOrEmpty(contractName))
-            {
-                //TODO: login sürecinde gerekli bunu sadece loginde caliscak sekilde yapıcaz reference,language,bankEntity,contractName
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
-                {
-                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
-                }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
-                {
-                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
-                }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
-                {
-                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
-                }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("contractName") != -1)
-                {
-                    contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
-                }
-            }
-            else if (string.IsNullOrEmpty(contractName)){
-                contractName = body.GetProperty("XContractInstance").GetProperty("code").ToString();
-            }
-            var contract = new ContractInstanceInputDto
-            {
-                ContractName = contractName,
+                ContractName = inputDto.ContractCode,
+                ContractInstanceId = ZeebeMessageHelper.StringToGuid(inputDto.ContractInstanceId),
             };
 
-            contract.SetHeaderParameters(headerModel);
-            var InstanceDto = contractAppService.Instance(contract, token).Result;
-            messageVariables.Variables.Add("XContractInstance", InstanceDto.Data);
+            if (String.IsNullOrEmpty(headerModel.UserReference))
+            {
+                var contractInstanceDtoZeebe = ZeebeMessageHelper.MapToDto<ContractInstanceZeebeDto>(body, ContractVariableName);
+                headerModel.UserReference = contractInstanceDtoZeebe.Reference;
+                var banktEntity = headerModel.GetBankEntity(contractInstanceDtoZeebe.BankEntity);
+                headerModel.SetBankEntity(banktEntity);
+            }
 
-            messageVariables.Variables.Add("ContractStatus", InstanceDto.Data.Status);
+            contractServiceInput.SetHeaderParameters(headerModel);
+
+            var instanceDto = await contractAppService.Instance(contractServiceInput, token);
+
+            messageVariables.Variables.Add("XContractInstance", instanceDto.Data); //TODO kullanılmıyorsa silinecek.
+
+            messageVariables.Variables.Add(XContractOutputDto, instanceDto.Data);
+
+            messageVariables.Variables.Add(ContractStatus, instanceDto.Data.Status);
+
             messageVariables.Success = true;
+
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 

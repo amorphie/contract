@@ -4,8 +4,8 @@
     {
         public string Code { get; set; }
         public string Status { get; set; }
-        public List<DocumentInstanceDto> Document { get; set; } = new List<DocumentInstanceDto>();
+        public List<DocumentInstanceDto> DocumentList { get; set; } = new List<DocumentInstanceDto>();
 
-        public List<DocumentGroupInstanceDto> DocumentGroup { get; set; }
+        public List<DocumentGroupInstanceDto> DocumentGroupList { get; set; }
     }
 }

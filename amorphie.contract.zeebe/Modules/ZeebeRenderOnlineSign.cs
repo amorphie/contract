@@ -173,7 +173,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 if (contractDto != null)
                 {
-                    documentRenderList = contractDto.Document.Select(contractDocument => new ApprovedTemplateDocumentList
+                    documentRenderList = contractDto.DocumentList.Select(contractDocument => new ApprovedTemplateDocumentList
                     {
                         ContractInstanceId = contractInstanceId,
                         DocumentSemanticVersion = contractDocument.MinVersion,
