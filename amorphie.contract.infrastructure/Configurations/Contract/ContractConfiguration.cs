@@ -7,6 +7,7 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
     {
         public void Configure(EntityTypeBuilder<core.Entity.Contract.Contract> builder)
         {
+            
             // NavigationBuilderAutoInclude(builder, new List<string>
             // {
             //     "Validations",
