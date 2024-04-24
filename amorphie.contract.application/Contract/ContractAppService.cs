@@ -5,6 +5,7 @@ using amorphie.contract.infrastructure.Contexts;
 
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Response;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract.application.Contract
 {
@@ -35,10 +36,8 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
-            // throw new Exception("");
-            //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
             var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
-            // var ss = await _dbContext.ContractDefinition.Include(x=>x.ContractDocumentDetails).FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
+
             if (contractDefinition == null)
             {
                 throw new ArgumentNullException("not contract");
@@ -64,30 +63,24 @@ namespace amorphie.contract.application.Contract
                 .ToListAsync(cts);
 
             var listDocument = contractDefinition.ContractDocumentDetails
-                .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
+                .Where(d => !customerDocument.Contains(d.DocumentDefinitionId))
+                .OrderBy(d => d.Order);
 
             var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            ContractRequestHeader.LangCode = req.LangCode ?? "";
+            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
+            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);
 
-            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(
-                listDocument
-            );
-            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(
-                listDocumentGroup
-            );
             var contractInstanceDto = new ContractInstanceDto()
             {
                 Code = contractDefinition.Code,
                 Status = EStatus.InProgress.ToString(),
-                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails,
-                opts => opts.Items["LangCode"] = req.LangCode ?? ""),
-                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails,
-                opts => opts.Items["LangCode"] = req.LangCode ?? "")
+                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
+                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };
 
-             if (contractInstanceDto.Document.Count == 0)
-                 contractInstanceDto.Status = EStatus.Completed.ToString();
+            if (contractInstanceDto.Document.Count == 0)
+                contractInstanceDto.Status = EStatus.Completed.ToString();
 
 
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
@@ -125,23 +118,20 @@ namespace amorphie.contract.application.Contract
             var listDocument = contractDefinition.ContractDocumentDetails
                 .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
 
-            var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
+           var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
-            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument);
+            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
+            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);
 
-            var contractModel = new ContractDefinitionDto
+            var contractInstanceDto = new ContractInstanceDto()
             {
-                Status = EStatus.InProgress.ToString(),
-                Id = contractDefinition.Id,
                 Code = contractDefinition.Code,
-                ContractDocumentDetails = contractDocumentDetails,
-                ContractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup)
+                Status = EStatus.InProgress.ToString(),
+                Document = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
+                DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };
-            if (contractModel.ContractDocumentDetails.Count == 0)
+            if (contractInstanceDto.Document.Count == 0)
                 return GenericResult<bool>.Success(true);
-
-
-            // return false;
             return GenericResult<bool>.Success(false);
         }
     }

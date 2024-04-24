@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.2 AS base
 WORKDIR /app
 
-RUN adduser -u 5679 --disabled-password --gecos "" amorphie-contractuser && chown -R amorphie-contractuser:amorphie-contractuser /app
+RUN adduser amorphie-contractuser --disabled-password --gecos "" && chown -R amorphie-contractuser:amorphie-contractuser /app
 USER amorphie-contractuser
 
 

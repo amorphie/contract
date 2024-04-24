@@ -13,9 +13,6 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentContent", Schema = "Doc")]
     public class DocumentContent : AudiEntity
     {
-        [Required]
-
-        public string ContentData { get; set; } = default!;
         public string KiloBytesSize { get; set; } = default!;
         public string ContentType { get; set; } = default!;
         public string ContentTransferEncoding { get; set; } = default!;

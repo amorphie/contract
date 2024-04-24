@@ -6,6 +6,7 @@ using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
 using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
+using amorphie.contract.core.Model.Documents;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -20,36 +21,17 @@ namespace amorphie.contract.zeebe.Services
         DocumentDefinitionDataModel _documentDefinitionDataModel;
         DocumentDefinition _documentdef;
         dynamic? _documentDefinitionDataDynamic;
-        private readonly Serilog.ILogger _logger;
-        public DocumentDefinitionService(ProjectDbContext dbContext, Serilog.ILogger logger)
+        public DocumentDefinitionService(ProjectDbContext dbContext)
         {
             _dbContext = dbContext;
-            _logger = logger;
         }
 
 
         private void SetDocumentDefinitionLanguageDetail()
         {
-            var multiLanguageList = _documentDefinitionDataModel.data.Titles.Select(x => new MultiLanguage
-            {
-                Name = x.title,
-                LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                Code = _documentdef.Code
-            }).ToList();
-
-            _logger.Information("SetDocumentDefinitionLanguageDetail - {multiLanguageList } ", multiLanguageList);
-
-            _documentdef.DocumentDefinitionLanguageDetails = multiLanguageList.Select(x => new DocumentDefinitionLanguageDetail
-            {
-                DocumentDefinitionId = _documentdef.Id,
-                MultiLanguage = x
-            }).ToList();
-
-            //TODO [LANG] yukarıdaki kod refactor edilmeli.
 
             var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
             _documentdef.Titles = _documentDefinitionDataModel.data.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
-            _logger.Information("SetDocumentDefinitionLanguageDetail - {_documentdef.Titles } ", _documentdef.Titles);
         }
         private void SetDocumentTagsDetails()
         {
@@ -195,17 +177,15 @@ namespace amorphie.contract.zeebe.Services
         }
         private void SetDocumentOnlineSingTemplateDetails()
         {
-            var documentTemplateDetail = _documentDefinitionDataModel.data.TemplateList.Select(x => new DocumentTemplateDetail
+            var langTypes = _dbContext.LanguageType.ToList();
+
+            var documentTemplateDetail2 = _documentDefinitionDataModel.data.TemplateList.Select(x => new Template
             {
-                DocumentDefinitionId = _documentdef.Id,
-                DocumentTemplate = new DocumentTemplate
-                {
-                    LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                    Code = x.RenderTemplate.name,
-                    Version = x.version
-                }
+                LanguageCode = langTypes.FirstOrDefault(a=>a.Id == ZeebeMessageHelper.StringToGuid(x.language))?.Code,
+                Code = x.RenderTemplate.name,
+                Version = x.version
             }).ToList();
-            _documentdef.DocumentOnlineSing.DocumentTemplateDetails = documentTemplateDetail;
+            _documentdef.DocumentOnlineSing.Templates = documentTemplateDetail2;
         }
         private void SetDocumentOnlineSingAllowedClientDetails()
         {
