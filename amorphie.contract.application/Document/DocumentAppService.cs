@@ -27,13 +27,15 @@ namespace amorphie.contract.application
 
         private readonly ITSIZLProducer _tsizlProducer;
 
+        private readonly ITemplateEngineAppService _templateEngineAppService;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer)
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
             _dysProducer = dysProducer;
             _tsizlProducer = tsizlProducer;
+            _templateEngineAppService = templateEngineAppService;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -178,10 +180,8 @@ namespace amorphie.contract.application
             }
             else if (input.FileContextType == "TemplateRender")
             {
-                // var content = _templateEngineService.GetRenderInstance(input.FileContext).Result.ToString().Trim('\"');
-                var content = await GetRenderInstance(input.FileContext);
-                content = content.Trim('\"');
-                fileByteArray = Convert.FromBase64String(content);//TODO: SubFlow için düzenle
+                var content  = await _templateEngineAppService.GetRenderPdf(input.FileContext);
+                fileByteArray = Convert.FromBase64String(content.Data);//TODO: SubFlow için düzenle
             }
             else
             {
@@ -217,22 +217,6 @@ namespace amorphie.contract.application
             await _dysProducer.PublishDysData(documentDys);
         }
 
-        public async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
-        {
-            using (HttpClient client = new HttpClient())
-            {
-
-                HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-            }
-            return "Template engine error";
-        }
-
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllMethod(PagedInputDto pagedInputDto, CancellationToken cancellationToken)
         {
             var query = _dbContext!.Document;
@@ -260,7 +244,7 @@ namespace amorphie.contract.application
                              DocumentDefinition = new DocumentDefinitionDto
                              {
                                  Code = x.DocumentDefinition.Code,
-                                 MultilanguageText = ObjectMapperApp.Mapper.Map<List<MultilanguageText>>(x.DocumentDefinition.DocumentDefinitionLanguageDetails),
+                                 Titles = x.DocumentDefinition.Titles,
                                  DocumentOperations = new DocumentOperationsDto
                                  {
                                      DocumentManuelControl = x.DocumentDefinition.DocumentOperations!.DocumentManuelControl,

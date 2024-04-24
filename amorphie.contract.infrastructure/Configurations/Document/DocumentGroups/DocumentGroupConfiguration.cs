@@ -14,7 +14,6 @@ namespace amorphie.contract.infrastructure.Configurations.DocumentGroups
             NavigationBuilderAutoInclude(builder, new List<string>
             {
                 "DocumentGroupDetails",
-                "DocumentGroupLanguageDetail",
                 "Status",
                 "DocumentGroupHistories"
             });
