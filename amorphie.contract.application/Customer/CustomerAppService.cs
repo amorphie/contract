@@ -58,12 +58,12 @@ namespace amorphie.contract.application.Customer
 
             if (inputDto.StartDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt > inputDto.StartDate.Value);
+                documentQuery = documentQuery.Where(x => x.CreatedAt >= inputDto.StartDate.Value);
             }
 
             if (inputDto.EndDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
+                documentQuery = documentQuery.Where(x => x.CreatedAt <= inputDto.EndDate.Value);
             }
 
             var documents = await documentQuery.Select(x => new DocumentForMinioObject
