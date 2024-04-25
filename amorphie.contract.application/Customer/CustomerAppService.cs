@@ -219,7 +219,11 @@ namespace amorphie.contract.application.Customer
             {
                 foreach (var j in i.CustomerContractDocuments)
                 {
-                    j.ApprovalDate = documents.FirstOrDefault(x=>x.DocumentDefinitionId == j.Id).ApprovalDate;
+                    if(documents.Any(x=>x.DocumentDefinitionId == j.Id)){
+                        j.ApprovalDate = documents.FirstOrDefault(x=>x.DocumentDefinitionId == j.Id).ApprovalDate;
+                    }else{
+                        j.ApprovalDate = null;
+                    }
                 }
             }
             return GenericResult<List<CustomerContractDto>>.Success(contractModels);
