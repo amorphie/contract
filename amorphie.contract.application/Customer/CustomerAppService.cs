@@ -11,6 +11,7 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
+using System.Text.Json.Serialization;
 
 namespace amorphie.contract.application.Customer
 {
@@ -70,18 +71,19 @@ namespace amorphie.contract.application.Customer
                 Id = x.Id,
                 DocumentDefinitionId = x.DocumentDefinitionId,
                 Status = x.Status,
-                DocumentContentId = x.DocumentContent.Id.ToString()
+                DocumentContentId = x.DocumentContent.Id.ToString(),
+                ApprovalDate = x.CreatedAt
             })
             .AsSplitQuery()
             .ToListAsync(token);
 
-            
+
             allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
             ||
             x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
 
             var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
-            
+
             var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
 
             List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))
@@ -212,7 +214,18 @@ namespace amorphie.contract.application.Customer
                     contractModels.Add(contractModel);
                 }
             }
-
+            
+            foreach (var i in contractModels)
+            {
+                foreach (var j in i.CustomerContractDocuments)
+                {
+                    if(documents.Any(x=>x.DocumentDefinitionId == j.Id)){
+                        j.ApprovalDate = documents.FirstOrDefault(x=>x.DocumentDefinitionId == j.Id).ApprovalDate;
+                    }else{
+                        j.ApprovalDate = null;
+                    }
+                }
+            }
             return GenericResult<List<CustomerContractDto>>.Success(contractModels);
         }
 
@@ -332,6 +345,8 @@ namespace amorphie.contract.application.Customer
             public Guid DocumentDefinitionId { get; set; }
             public EStatus Status { get; set; }
             public string DocumentContentId { get; set; }
+            [JsonIgnore]
+            public DateTime ApprovalDate {get;set;}
         }
     }
 }
