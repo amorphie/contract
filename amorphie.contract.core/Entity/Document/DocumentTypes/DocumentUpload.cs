@@ -9,7 +9,7 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.Document.DocumentTypes
 {
     [Table("DocumentUpload", Schema = "DocTp")]
-    public class DocumentUpload : AudiEntity
+    public class DocumentUpload : AuditEntity
     {
         public bool Required { get; set; }
         public ICollection<DocumentFormatDetail> DocumentFormatDetails { get; set; } = new List<DocumentFormatDetail>();

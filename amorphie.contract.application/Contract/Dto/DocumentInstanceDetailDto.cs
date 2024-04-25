@@ -3,9 +3,9 @@
 
     public class DocumentInstanceDetailDto
     {
-        public DocumentInstanceOnlineSingDto OnlineSing { get; set; } = new DocumentInstanceOnlineSingDto();
+        public DocumentInstanceOnlineSignDto OnlineSign { get; set; } = new DocumentInstanceOnlineSignDto();
     }
-    public class DocumentInstanceOnlineSingDto
+    public class DocumentInstanceOnlineSignDto
     {
         public string TemplateCode { get; set; }
         public string Version { get; set; }

@@ -6,7 +6,7 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
 {
     [Table("DocumentGroupDetail", Schema = "DocGroup")]
 
-    public class DocumentGroupDetail : AudiEntity
+    public class DocumentGroupDetail : AuditEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }

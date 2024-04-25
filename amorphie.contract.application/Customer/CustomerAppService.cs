@@ -11,12 +11,16 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
-using System.Text.Json.Serialization;
+ 
+using amorphie.contract.core.Entity.Contract;
+ 
 
 namespace amorphie.contract.application.Customer
 {
     public interface ICustomerAppService
     {
+        Task<GenericResult<Guid>> GetIdByReference(string userReference);
+        Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto);
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts);
@@ -38,6 +42,41 @@ namespace amorphie.contract.application.Customer
 
             _baseUrl = StaticValuesExtensions.Apisix.BaseUrl;
             _downloadEndpoint = StaticValuesExtensions.Apisix.DownloadEndpoint;
+        }
+
+        public async Task<GenericResult<Guid>> GetIdByReference(string userReference)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(nameof(userReference));
+
+            var customerId = await _dbContext.Customer
+                .Where(x => x.Reference == userReference)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (customerId == Guid.Empty)
+            {
+                return GenericResult<Guid>.Fail($"Customer not found. Reference: {userReference}");
+            }
+
+            return GenericResult<Guid>.Success(customerId);
+        }
+
+        public async Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(nameof(inputDto.Reference));
+
+            var customer = new core.Entity.Customer
+            {
+                Reference = inputDto.Reference,
+                Owner = inputDto.Owner,
+                CustomerNo = inputDto.CustomerNo
+            };
+
+            _dbContext.Customer.Add(customer);
+
+            await _dbContext.SaveChangesAsync();
+
+            return GenericResult<Guid>.Success(customer.Id);
         }
 
         public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
@@ -77,7 +116,7 @@ namespace amorphie.contract.application.Customer
             .AsSplitQuery()
             .ToListAsync(token);
 
-
+ 
             allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
             ||
             x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
@@ -85,6 +124,56 @@ namespace amorphie.contract.application.Customer
             var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
 
             var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
+ 
+            allContractQuery = allContractQuery
+                .Where(x => x.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+                || x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
+
+            var history = _dbContext.ContractDefinitionHistory
+                .Where(x => allContractQuery.Select(ab => ab.Id).Contains(x.ContractDefinitionId))
+                .ToList();
+
+            var historyQuery = history
+                .Where(x => x.ContractDefinitionHistoryModel.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+                || x.ContractDefinitionHistoryModel.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
+                .Select(x => x.ContractDefinitionHistoryModel);
+
+            var contractHistoryQuery = historyQuery
+                .Where(x => x.BankEntity == inputDto.GetBankEntityCode())
+                .ToList();
+            
+            var contractHistory = ObjectMapperApp.Mapper.Map<List<ContractDefinition>>(contractHistoryQuery);
+            var contractHistoryModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contractHistory);
+
+            var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
+
+            var contractModels = await contractQuery
+                .AsNoTracking()
+                .AsSplitQuery()
+                .ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider)
+                .ToListAsync(token);
+
+            foreach (var contractHistoryModel in contractHistoryModels)
+            {
+                var matchingContract = contractModels.FirstOrDefault(x => x.Code == contractHistoryModel.Code);
+                if (matchingContract != null)
+                {
+                    var firstDocumentDetail = contractHistoryModel.CustomerContractDocuments.FirstOrDefault();
+                    if (firstDocumentDetail != null)
+                    {
+                        firstDocumentDetail.DocumentStatus = AppConsts.Expired;
+                        matchingContract.CustomerContractDocuments.Add(firstDocumentDetail);
+                    }
+                    var firstGroupDetail = contractHistoryModel.CustomerContractDocumentGroups.FirstOrDefault();
+                    if (firstGroupDetail != null)
+                    {
+                        firstGroupDetail.DocumentGroupStatus = AppConsts.Expired;
+                        matchingContract.CustomerContractDocumentGroups.Add(firstGroupDetail);
+                    }
+                }
+            }
+            //var mergedcontractModels = contractModels.Concat(contractHistoryModels).ToList();
+ 
 
             List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))
                                  .Concat(allContractQuery.SelectMany(main => main.ContractDocumentGroupDetails.Select(docGrup => docGrup.DocumentGroupId)))
@@ -105,7 +194,7 @@ namespace amorphie.contract.application.Customer
                 {
                     contDocument.Title = contDocument.Titles.L(inputDto.GetLanguageCode());
 
-                    if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
+                    if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId) && contDocument.DocumentStatus != AppConsts.Expired)
                     {
                         contDocument.DocumentStatus = AppConsts.Valid;
                         model.ContractStatus = AppConsts.InProgress;
@@ -129,7 +218,7 @@ namespace amorphie.contract.application.Customer
                          {
                              groupDocument.Title = groupDocument.Titles.L(inputDto.GetLanguageCode());
 
-                             if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
+                             if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId) && groupDocument.DocumentStatus != AppConsts.Expired)
                              {
                                  groupDocument.DocumentStatus = AppConsts.Valid;
                                  model.ContractStatus = AppConsts.InProgress;
@@ -244,7 +333,7 @@ namespace amorphie.contract.application.Customer
             }
             else
             {
-                minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
                 {
                     DocumentDefinitionId = x.Id,
                     MinioUrl = ""
@@ -252,7 +341,7 @@ namespace amorphie.contract.application.Customer
 
                 model.CustomerContractDocumentGroups.ForEach(x =>
                 {
-                    minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                    minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
                     {
                         DocumentDefinitionId = x.Id,
                         MinioUrl = ""

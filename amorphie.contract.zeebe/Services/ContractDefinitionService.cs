@@ -6,6 +6,7 @@ using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
 using amorphie.contract.application;
 using amorphie.contract.core.Model.History;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -16,7 +17,7 @@ namespace amorphie.contract.zeebe.Services
     }
     public class ContractDefinitionService : IContractDefinitionService
     {
-        ProjectDbContext _dbContext;
+        private readonly ProjectDbContext _dbContext;
         ContractDefinitionDataModel _ContractDefinitionDataModel;
         ContractDefinition _ContractDefinition;
         dynamic? _ContractDefinitionDataModelDynamic;
@@ -169,60 +170,68 @@ namespace amorphie.contract.zeebe.Services
 
             foreach (var propertyData in _ContractDefinitionDataModel.EntityProperty)
             {
-                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
-                {
-                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = propertyData.value },
-                    Code = propertyData.PropertyName
-                };
+                // Umut için bırakıldı..)
+                // var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                // {
+                //     EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                //     EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = propertyData.value },
+                //     Code = propertyData.PropertyName
+                // };
 
-                var contractEntityProperty = new ContractEntityProperty
-                {
-                    ContractDefinitionId = _ContractDefinition.Id,
-                    EntityProperty = entityProperty
-                };
+                // var contractEntityProperty = new ContractEntityProperty
+                // {
+                //     ContractDefinitionId = _ContractDefinition.Id,
+                //     EntityProperty = entityProperty
+                // };
 
-                _ContractDefinition.ContractEntityProperty.Add(contractEntityProperty);
+                // _ContractDefinition.ContractEntityProperty.Add(contractEntityProperty);
+
+                _ContractDefinition.DefinitionMetadata.Add(new Metadata
+                {
+                    Code = propertyData.PropertyName,
+                    Data = propertyData.value,
+                });
             }
         }
 
-        private void UpdateEntityProperty(List<core.Entity.EAV.EntityProperty> oldEntityProperties)
-        {
-            if (_ContractDefinitionDataModel.EntityProperty == null)
-            {
-                return;
-            }
-            var removedItems = oldEntityProperties.Where(x => _ContractDefinitionDataModel.EntityProperty.Any(y => y.PropertyName == x.Code)).ToList();
-            var addedItems = _ContractDefinitionDataModel.EntityProperty.Where(x => !oldEntityProperties.Any(y => y.Code == x.PropertyName))
-                            .Select(x => new ContractEntityProperty
-                            {
-                                ContractDefinitionId = _ContractDefinition.Id,
-                                EntityProperty = new core.Entity.EAV.EntityProperty
-                                {
-                                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
-                                    Code = x.PropertyName
-                                }
-                            }).ToList();
-            foreach (var oldEntityProperty in oldEntityProperties)
-            {
-                var matchingEntityProperty = _ContractDefinitionDataModel.EntityProperty.FirstOrDefault(y => y.PropertyName == oldEntityProperty.Code);
+        // private void UpdateEntityProperty(List<Metadata> oldEntityProperties)
+        // {
+        //     if (_ContractDefinitionDataModel.EntityProperty == null)
+        //     {
+        //         return;
+        //     }
+        //     _dbContext.ContractDefinition
+        //     // var removedItems = oldEntityProperties.Where(x => _ContractDefinitionDataModel.EntityProperty.Any(y => y.PropertyName == x.Code)).ToList();
+        //     // var addedItems = _ContractDefinitionDataModel.EntityProperty.Where(x => !oldEntityProperties.Any(y => y.Code == x.PropertyName))
+        //     //                 .Select(x => new ContractEntityProperty
+        //     //                 {
+        //     //                     ContractDefinitionId = _ContractDefinition.Id,
+        //     //                     EntityProperty = new core.Entity.EAV.EntityProperty
+        //     //                     {
+        //     //                         EEntityPropertyType = (ushort)EEntityPropertyType.str,
+        //     //                         EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = x.value },
+        //     //                         Code = x.PropertyName
+        //     //                     }
+        //     //                 }).ToList();
+        //     // foreach (var oldEntityProperty in oldEntityProperties)
+        //     // {
+        //     //     var matchingEntityProperty = _ContractDefinitionDataModel.EntityProperty.FirstOrDefault(y => y.PropertyName == oldEntityProperty.Code);
 
-                if (matchingEntityProperty != null)
-                {
-                    oldEntityProperty.EntityPropertyValue.Data = matchingEntityProperty.value;
-                }
-            }
-            if (removedItems.Any())
-            {
-                _dbContext.RemoveRange(removedItems);
-            }
+        //     //     if (matchingEntityProperty != null)
+        //     //     {
+        //     //         oldEntityProperty.EntityPropertyValue.Data = matchingEntityProperty.value;
+        //     //     }
+        //     // }
+        //     // if (removedItems.Any())
+        //     // {
+        //     //     _dbContext.RemoveRange(removedItems);
+        //     // }
 
-            if (addedItems.Any())
-            {
-                _dbContext.AddRange(addedItems);
-            }
-        }
+        //     // if (addedItems.Any())
+        //     // {
+        //     //     _dbContext.AddRange(addedItems);
+        //     // }
+        // }
 
         #region VALIDATION
         // private Validation MapContractValidation()
@@ -365,8 +374,8 @@ namespace amorphie.contract.zeebe.Services
                 UpdateContractDocumentGroupDetail(contractDefinition.ContractDocumentGroupDetails.ToList());
                 UpdateContractDocumentDetail(contractDefinition.ContractDocumentDetails.ToList());
                 UpdateContractTag(contractDefinition.ContractTags.ToList());
-                UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x => x.EntityProperty).ToList());
-                await _dbContext.SaveChangesAsync();
+                //UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x => x.EntityProperty).ToList());
+                _dbContext.SaveChanges();
 
                 #region GENERIC_UPDATER
                 // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();

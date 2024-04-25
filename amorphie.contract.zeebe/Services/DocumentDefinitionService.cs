@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using amorphie.contract.core.Enum;
 using amorphie.contract.zeebe.Helper;
 using amorphie.contract.core.Model.Documents;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.zeebe.Services
 {
@@ -86,6 +87,7 @@ namespace amorphie.contract.zeebe.Services
         }
         private List<MetadataElement> SetDocumentEOV()
         {
+            // Burayu Umut elden geçireceği için bıraktık. Direkt DefinitionMetadata içine bassa yeterli. 
             var dysTagField = new List<MetadataElement>();
             foreach (var entityPropertyData in _documentDefinitionDataModel.data.EntityProperty)
             {
@@ -101,21 +103,28 @@ namespace amorphie.contract.zeebe.Services
                         dysTagField.Add(matchedMetadataElement);
                     }
                 }
-                var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                // var entityProperty = new amorphie.contract.core.Entity.EAV.EntityProperty
+                // {
+                //     EEntityPropertyType = (ushort)EEntityPropertyType.str,
+                //     EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
+                //     Code = entityPropertyData.PropertyName,
+                //     Required = entityPropertyData.required
+                // };
+
+                // var documentEntityProperty = new DocumentEntityProperty
+                // {
+                //     DocumentDefinitionId = _documentdef.Id,
+                //     EntityProperty = entityProperty
+                // };
+
+                // _documentdef.DocumentEntityPropertys.Add(documentEntityProperty);
+
+                _documentdef.DefinitionMetadata.Add(new Metadata
                 {
-                    EEntityPropertyType = (ushort)EEntityPropertyType.str,
-                    EntityPropertyValue = new core.Entity.EAV.EntityPropertyValue { Data = entityPropertyData.value },
                     Code = entityPropertyData.PropertyName,
-                    Required = entityPropertyData.required
-                };
-
-                var documentEntityProperty = new DocumentEntityProperty
-                {
-                    DocumentDefinitionId = _documentdef.Id,
-                    EntityProperty = entityProperty
-                };
-
-                _documentdef.DocumentEntityPropertys.Add(documentEntityProperty);
+                    Data = entityPropertyData.value,
+                    IsRequired = entityPropertyData.required
+                });
             }
             return dysTagField;
         }
@@ -162,32 +171,32 @@ namespace amorphie.contract.zeebe.Services
         }
         #endregion
 
-        #region  SetDocumentOnlineSing
-        private void SetDocumentOnlineSing()
+        #region  SetDocumentOnlineSign
+        private void SetDocumentOnlineSign()
         {
-            if (_documentdef.DocumentOnlineSing == null)
+            if (_documentdef.DocumentOnlineSign == null)
             {
-                _documentdef.DocumentOnlineSing = new DocumentOnlineSing();
+                _documentdef.DocumentOnlineSign = new DocumentOnlineSign();
 
             }
 
-            SetDocumentOnlineSingTemplateDetails();
-            SetDocumentOnlineSingAllowedClientDetails();
+            SetDocumentOnlineSignTemplateDetails();
+            SetDocumentOnlineSignAllowedClientDetails();
 
         }
-        private void SetDocumentOnlineSingTemplateDetails()
+        private void SetDocumentOnlineSignTemplateDetails()
         {
             var langTypes = _dbContext.LanguageType.ToList();
 
             var documentTemplateDetail2 = _documentDefinitionDataModel.data.TemplateList.Select(x => new Template
             {
-                LanguageCode = langTypes.FirstOrDefault(a=>a.Id == ZeebeMessageHelper.StringToGuid(x.language))?.Code,
+                LanguageCode = langTypes.FirstOrDefault(a => a.Id == ZeebeMessageHelper.StringToGuid(x.language))?.Code,
                 Code = x.RenderTemplate.name,
                 Version = x.version
             }).ToList();
-            _documentdef.DocumentOnlineSing.Templates = documentTemplateDetail2;
+            _documentdef.DocumentOnlineSign.Templates = documentTemplateDetail2;
         }
-        private void SetDocumentOnlineSingAllowedClientDetails()
+        private void SetDocumentOnlineSignAllowedClientDetails()
         {
             var allowedClientDetail = _documentDefinitionDataModel.data.RenderAllowedClients.Select(x => new DocumentAllowedClientDetail
             {
@@ -196,7 +205,7 @@ namespace amorphie.contract.zeebe.Services
 
             }).ToList();
 
-            _documentdef.DocumentOnlineSing.DocumentAllowedClientDetails = allowedClientDetail;
+            _documentdef.DocumentOnlineSign.DocumentAllowedClientDetails = allowedClientDetail;
         }
         #endregion
 
@@ -307,14 +316,14 @@ namespace amorphie.contract.zeebe.Services
                 SetDocumentDys(dysMetadata);
                 SetDocumentTsizl();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("OnlineSign") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
 
                 }
                 else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
                     SetDocumentUpload();
                 }
                 else
@@ -376,14 +385,14 @@ namespace amorphie.contract.zeebe.Services
                 SetDocumentOperation();
                 SetDocumentEOV();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("OnlineSign") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
 
                 }
                 else if (_documentDefinitionDataModel.data.DocumentType.IndexOf("renderUpload") > -1)
                 {
-                    SetDocumentOnlineSing();
+                    SetDocumentOnlineSign();
                     SetDocumentUpload();
                 }
                 else

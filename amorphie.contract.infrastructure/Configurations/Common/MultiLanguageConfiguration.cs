@@ -7,17 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Common
 {
-    public class MultiLanguageConfiguration : ConfigurationBaseAudiEntity<MultiLanguage>,
+    public class MultiLanguageConfiguration : ConfigurationBaseAuditEntity<MultiLanguage>,
     IEntityTypeConfiguration<MultiLanguage>
 
     {
         public void Configure(EntityTypeBuilder<MultiLanguage> builder)
         {
-            var list = new List<string>
-            {
-                "LanguageType",
-            };
-            NavigationBuilderAutoInclude(builder, list);
+            builder.Navigation(k => k.LanguageType).AutoInclude();
         }
     }
 }

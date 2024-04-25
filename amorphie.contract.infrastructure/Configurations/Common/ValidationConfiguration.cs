@@ -7,16 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Common
 {
-    public class ValidationConfiguration : ConfigurationBaseAudiEntity<Validation>,
+    public class ValidationConfiguration : ConfigurationBaseAuditEntity<Validation>,
      IEntityTypeConfiguration<Validation>
     {
         public void Configure(EntityTypeBuilder<Validation> builder)
         {
-            var list = new List<string>
-            {
-                "ValidationDecision",
-            };
-            NavigationBuilderAutoInclude(builder, list);
+            builder.Navigation(k => k.ValidationDecision).AutoInclude();
         }
     }
 }

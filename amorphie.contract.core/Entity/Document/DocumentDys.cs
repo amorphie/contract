@@ -5,7 +5,7 @@ using amorphie.contract.core.Entity.Base;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentDys", Schema = "Doc")]
-    public class DocumentDys : AudiEntity
+    public class DocumentDys : AuditEntity
     {
         [Required]
         public int ReferenceId { get; set; }

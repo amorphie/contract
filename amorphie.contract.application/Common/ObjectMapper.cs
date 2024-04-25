@@ -14,6 +14,7 @@ namespace amorphie.contract.application
             cfg.AddProfile<ContractMapProfile>();
             cfg.AddProfile<CustomerMapProfile>();
             cfg.AddProfile<ContractInstanceMapProfile>();
+            cfg.AddProfile<CommonMapProfile>();
         });
 
         return config.CreateMapper();

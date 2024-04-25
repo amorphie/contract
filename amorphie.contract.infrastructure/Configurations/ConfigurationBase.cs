@@ -40,7 +40,7 @@ namespace amorphie.contract.infrastructure.Configurations
         }
     }
 
-    public class ConfigurationBaseAudiEntity<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : AudiEntity
+    public class ConfigurationBaseAuditEntity<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : AuditEntity
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {

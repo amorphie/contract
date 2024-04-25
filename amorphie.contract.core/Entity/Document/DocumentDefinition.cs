@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using amorphie.contract.core.Entity.Common;
 using amorphie.contract.core.Entity.Document.DocumentTypes;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.core.Entity.Document
 {
@@ -14,7 +14,6 @@ namespace amorphie.contract.core.Entity.Document
         public EStatus Status { get; set; } = default!;
 
         public EStatus BaseStatus { get; set; } = default!;
-        public ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
         public ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 
         public DocumentDys DocumentDys { get; set; } = default!;
@@ -25,10 +24,10 @@ namespace amorphie.contract.core.Entity.Document
         [ForeignKey("DocumentUploadId")]
 
         public DocumentUpload? DocumentUpload { get; set; } = default!;
-        public Guid? DocumentOnlineSingId { get; set; }
-        [ForeignKey("DocumentOnlineSingId")]
+        public Guid? DocumentOnlineSignId { get; set; }
+        [ForeignKey("DocumentOnlineSignId")]
 
-        public DocumentOnlineSing? DocumentOnlineSing { get; set; } = default!;
+        public DocumentOnlineSign? DocumentOnlineSign { get; set; } = default!;
 
         #endregion
         public Guid? DocumentOptimizeId { get; set; }
@@ -41,6 +40,9 @@ namespace amorphie.contract.core.Entity.Document
         public string Semver { get; set; } = default!;
 
         public Dictionary<string, string> Titles { get; set; } = default!;
+
+        public List<Metadata> DefinitionMetadata { get; set; } = new();
+
         public override string ToString()
         {
             return Code;
