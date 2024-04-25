@@ -113,20 +113,18 @@ namespace amorphie.contract.application.Customer
             .AsSplitQuery()
             .ToListAsync(token);
 
-            var filteredContracts = allContractQuery
+            allContractQuery = allContractQuery
                 .Where(x => x.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
-                        || x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
+                || x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
+
+            var history = _dbContext.ContractDefinitionHistory
+                .Where(x => allContractQuery.Select(ab => ab.Id).Contains(x.ContractDefinitionId))
                 .ToList();
 
-            var historyContract = _dbContext.ContractDefinitionHistory
-                .Where(x => filteredContracts.Select(ab => ab.Id).Contains(x.ContractDefinitionId))
-                .ToList();
-
-            var historyQuery = historyContract
+            var historyQuery = history
                 .Where(x => x.ContractDefinitionHistoryModel.ContractDocumentDetails.Any(z => documentQuery.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
-                        || x.ContractDefinitionHistoryModel.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
-                .Select(x => x.ContractDefinitionHistoryModel)
-                .ToList();
+                || x.ContractDefinitionHistoryModel.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documentQuery.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))))
+                .Select(x => x.ContractDefinitionHistoryModel);
 
             var contractHistoryQuery = historyQuery
                 .Where(x => x.BankEntity == inputDto.GetBankEntityCode())
@@ -311,7 +309,7 @@ namespace amorphie.contract.application.Customer
             }
             else
             {
-                minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
                 {
                     DocumentDefinitionId = x.Id,
                     MinioUrl = ""
@@ -319,7 +317,7 @@ namespace amorphie.contract.application.Customer
 
                 model.CustomerContractDocumentGroups.ForEach(x =>
                 {
-                    minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                    minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
                     {
                         DocumentDefinitionId = x.Id,
                         MinioUrl = ""
