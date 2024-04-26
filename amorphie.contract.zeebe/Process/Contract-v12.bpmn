@@ -15,7 +15,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="contractinstance" retries="1" />
           <zeebe:ioMapping>
-            <zeebe:input source="={&#10;  &#34;ContractCode&#34; : if ContractInstance.contractName = null then&#10;    TRXcontractstartStartContract.Data.entityData.ContractCode else ContractInstance.ContractCode,&#10;  &#34;ContractInstanceId&#34; : InstanceId,&#10;  &#34;IsContractMainFlow&#34; : IsContractMainFlow&#10;}&#10;" target="ContractInputDto" />
+            <zeebe:input source="={&#10;  &#34;ContractCode&#34; : if ContractInstance.contractName = null then&#10;    TRXcontractstartStartContract.Data.entityData.ContractCode else ContractInstance.contractName,&#10;  &#34;ContractInstanceId&#34; : InstanceId,&#10;  &#34;IsContractMainFlow&#34; : IsContractMainFlow&#10;}" target="ContractInputDto" />
             <zeebe:output source="=XContractOutputDto" target="ContractOutputDto" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
