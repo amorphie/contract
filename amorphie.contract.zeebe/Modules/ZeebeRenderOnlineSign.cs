@@ -1,14 +1,14 @@
-using System.Text;
 using System.Text.Json;
 using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.Contract.Dto.Zeebe;
+using amorphie.contract.application.Documents.Dto.Zeebe;
 using amorphie.contract.application.TemplateEngine;
-using amorphie.contract.core;
+using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
-using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -80,44 +80,61 @@ namespace amorphie.contract.zeebe.Modules
         static IResult Render(
             [FromBody] dynamic body,
             [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration,
             [FromServices] ITemplateEngineAppService templateEngineAppService)
         {
-            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            HeaderFilterModel headerModel;
-            // string reference = body.GetProperty("Headers").GetProperty("user_reference").ToString();
-            // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
-            // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
-            
-            
-            // if IsRenderOnlineMainFlow {
-                    
-            // }
 
-            headerModel = HeaderHelperZeebe.GetHeader(body);
-            var subFlowContractInstance = false;
-            if (body.ToString().IndexOf("XContractInstance") != -1)
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+
+            var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body);
+
+            if (String.IsNullOrWhiteSpace(headerModel.UserReference))
             {
-                subFlowContractInstance = true;
-                if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
+                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
+                headerModel.UserReference = contractWithoutHeaderDto.Reference;
+                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
+                headerModel.SetBankEntity(banktEntity);
+            }
+
+            List<ApprovedTemplateDocumentList> approvedTemplateDocumentList = new();
+
+            if (inputDto.DocumentList.IsNotEmpty())
+            {
+
+                foreach (var _document in inputDto.DocumentList)
                 {
-                    headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
-                }
-                if (body.GetProperty("XContractInstance").ToString().IndexOf("language") != -1)
-                {
-                    headerModel.LangCode = body.GetProperty("XContractInstance").GetProperty("language").ToString();
-                }
-                if (body.GetProperty("XContractInstance").ToString().IndexOf("bankEntity") != -1)
-                {
-                    headerModel.GetBankEntity(body.GetProperty("XContractInstance").GetProperty("bankEntity").ToString());
+                    if (_document.DocumentDetail is not null)
+                    {
+                        // ContractOutput ile aldığımız değerler.
+                        approvedTemplateDocumentList.Add(new ApprovedTemplateDocumentList
+                        {
+                            ContractInstanceId = inputDto.ContractInstanceId,
+                            DocumentSemanticVersion = _document.MinVersion,
+                            SemanticVersion = _document.DocumentDetail.OnlineSign.Version,
+                            Name = _document.DocumentDetail.OnlineSign.TemplateCode,
+                            RenderId = Guid.NewGuid(),
+                            RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                            RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                            ProcessName = nameof(ZeebeRenderOnlineSign),
+                            Identity = headerModel.UserReference,
+                            DocumentDefinitionCode = _document.Code,
+                            Approved = false,
+                        });
+                    }
+                    else
+                    {
+                        //Direkt render ile bekledğimiz iki değer var.
+                        // DB den onlinesign kayıtlarını çek 
+                    }
                 }
             }
 
+
+            var subFlowContractInstance = false;
+
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
-            if (messageVariables.TransitionName == "render-online-sign-start" && !subFlowContractInstance)
+
+            if (inputDto.IsRenderOnlineMainFlow) //messageVariables.TransitionName == "render-online-sign-start" && !subFlowContractInstance)
             {
                 var documentDef = messageVariables.Data.GetProperty("entityData").GetProperty("Document").ToString();
                 var documentDefDto = JsonSerializer.Deserialize<List<DocumentDef>>(documentDef, options: new JsonSerializerOptions
@@ -159,41 +176,7 @@ namespace amorphie.contract.zeebe.Modules
 
                 dbContext.DocumentDefinition.Where(x => documentDefListCode.Contains(x.Code));
             }
-            else
-            {
 
-                // string contractName = body.GetProperty("XContractInstance").GetProperty("contractName").ToString();
-                var contractInstanceId = ZeebeMessageHelper.StringToGuid(body.GetProperty("InstanceId").ToString());
-                // messageVariables.TransitionName = "checking-account-opening-start";
-                var contractInstance = body.GetProperty("XContractInstance");
-                ContractInstanceDto contractDto = JsonSerializer.Deserialize<ContractInstanceDto>(contractInstance, options: new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                if (contractDto != null)
-                {
-                    documentRenderList = contractDto.DocumentList.Select(contractDocument => new ApprovedTemplateDocumentList
-                    {
-                        ContractInstanceId = contractInstanceId,
-                        DocumentSemanticVersion = contractDocument.MinVersion,
-                        SemanticVersion = contractDocument.DocumentDetail.OnlineSign.Version,
-                        Name = contractDocument.DocumentDetail.OnlineSign.TemplateCode,
-                        RenderId = Guid.NewGuid(),
-                        RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
-                        RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
-                        // Action = "Contract:" + contractDto.Code + ", DocumentDefinition:" + x.DocumentDefinition.Code,
-                        ProcessName = nameof(ZeebeRenderOnlineSign),
-                        Identity = headerModel.UserReference,
-                        DocumentDefinitionCode = contractDocument.Code,
-                        Approved = false,
-
-                    }).ToList();
-
-
-
-                }
-            }
 
             var list = new ApprovedDocumentList();
             foreach (var cdto in documentRenderList)
@@ -214,6 +197,7 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Variables.Add("ApprovedDocumentList", list);
             messageVariables.additionalData = list;
             messageVariables.Success = true;
+
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }

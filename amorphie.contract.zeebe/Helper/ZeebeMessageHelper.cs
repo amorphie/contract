@@ -95,10 +95,12 @@ public static class ZeebeMessageHelper
     {
         var jsonDto = body.GetProperty(variableName).ToString();
 
-        var resultDto = JsonSerializer.Deserialize<T>(jsonDto, options: new JsonSerializerOptions
+        var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
-        });
+        };
+
+        T resultDto = JsonSerializer.Deserialize<T>(jsonDto, options);
 
         return resultDto;
     }

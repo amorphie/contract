@@ -69,11 +69,12 @@ namespace amorphie.contract.application.Contract
                     .Concat(customerDocumentGroup.Select(cdg => cdg.DocumentInstanceId))
                     .ToList();
 
+            Guid contractInstanceId =  req.ContractInstanceId;
 
             var userSignedInput = new UserSignedContractInputDto
             {
                 ContractCode = req.ContractName,
-                ContractInstanceId = req.ContractInstanceId,
+                ContractInstanceId = contractInstanceId,
                 DocumentInstanceIds = mergedDocumentInstanceIds
             };
             userSignedInput.SetHeaderParameters(req.Reference);
@@ -91,7 +92,8 @@ namespace amorphie.contract.application.Contract
 
             var contractInstanceDto = new ContractInstanceDto()
             {
-                Code = contractDefinition.Code,
+                ContractCode = contractDefinition.Code,
+                ContractInstanceId = contractInstanceId,
                 Status = EStatus.InProgress.ToString(),
                 DocumentList = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
                 DocumentGroupList = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
@@ -143,7 +145,7 @@ namespace amorphie.contract.application.Contract
 
             var contractInstanceDto = new ContractInstanceDto()
             {
-                Code = contractDefinition.Code,
+                ContractCode = contractDefinition.Code,
                 Status = EStatus.InProgress.ToString(),
                 DocumentList = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
                 DocumentGroupList = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)

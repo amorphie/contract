@@ -1,12 +1,9 @@
-using amorphie.contract.application;
 using amorphie.contract.application.Contract;
-using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
-using amorphie.contract.zeebe.Model;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -15,11 +12,6 @@ namespace amorphie.contract.zeebe.Modules
 {
     public static class ZeebeContractInstance
     {
-        public const string ContractVariableName = "ContractInstance";
-        public const string XContractOutputDto = "XContractOutputDto";
-        public const string ContractStatus = "ContractStatus";
-
-
 
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
@@ -170,9 +162,9 @@ namespace amorphie.contract.zeebe.Modules
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                var contractInstanceDtoZeebe = ZeebeMessageHelper.MapToDto<ContractInstanceZeebeDto>(body, ContractVariableName);
-                headerModel.UserReference = contractInstanceDtoZeebe.Reference;
-                var banktEntity = headerModel.GetBankEntity(contractInstanceDtoZeebe.BankEntity);
+                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
+                headerModel.UserReference = contractWithoutHeaderDto.Reference;
+                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
                 headerModel.SetBankEntity(banktEntity);
             }
 
@@ -182,9 +174,9 @@ namespace amorphie.contract.zeebe.Modules
 
             messageVariables.Variables.Add("XContractInstance", instanceDto.Data); //TODO kullanılmıyorsa silinecek.
 
-            messageVariables.Variables.Add(XContractOutputDto, instanceDto.Data);
+            messageVariables.Variables.Add(ZeebeConsts.XContractOutputDto, instanceDto.Data);
 
-            messageVariables.Variables.Add(ContractStatus, instanceDto.Data.Status);
+            messageVariables.Variables.Add(ZeebeConsts.ContractStatus, instanceDto.Data.Status);
 
             messageVariables.Success = true;
 
