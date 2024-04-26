@@ -58,12 +58,14 @@ namespace amorphie.contract.application.Customer
 
             if (inputDto.StartDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt >= inputDto.StartDate.Value);
+                var startOfDay = inputDto.StartDate.Value.Date;
+                documentQuery = documentQuery.Where(x => x.CreatedAt > startOfDay);
             }
 
             if (inputDto.EndDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt <= inputDto.EndDate.Value);
+                var endOfDay = inputDto.EndDate.Value.Date.AddDays(1);
+                documentQuery = documentQuery.Where(x => x.CreatedAt < endOfDay);
             }
 
             var documents = await documentQuery.Select(x => new DocumentForMinioObject
@@ -214,14 +216,17 @@ namespace amorphie.contract.application.Customer
                     contractModels.Add(contractModel);
                 }
             }
-            
+
             foreach (var i in contractModels)
             {
                 foreach (var j in i.CustomerContractDocuments)
                 {
-                    if(documents.Any(x=>x.DocumentDefinitionId == j.Id)){
-                        j.ApprovalDate = documents.FirstOrDefault(x=>x.DocumentDefinitionId == j.Id).ApprovalDate;
-                    }else{
+                    if (documents.Any(x => x.DocumentDefinitionId == j.Id))
+                    {
+                        j.ApprovalDate = documents.FirstOrDefault(x => x.DocumentDefinitionId == j.Id).ApprovalDate;
+                    }
+                    else
+                    {
                         j.ApprovalDate = null;
                     }
                 }
@@ -346,7 +351,7 @@ namespace amorphie.contract.application.Customer
             public EStatus Status { get; set; }
             public string DocumentContentId { get; set; }
             [JsonIgnore]
-            public DateTime ApprovalDate {get;set;}
+            public DateTime ApprovalDate { get; set; }
         }
     }
 }
