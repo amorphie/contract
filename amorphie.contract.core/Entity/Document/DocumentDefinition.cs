@@ -11,19 +11,9 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentDefinition : BaseEntity
     {
 
-        // public Guid StatusId { get; set; }
-
-        // [ForeignKey("StatusId")]
-
         public EStatus Status { get; set; } = default!;
-        // public Guid BaseStatusId { get; set; }
-
-        // [Required]
-        // [ForeignKey("BaseStatusId")]
 
         public EStatus BaseStatus { get; set; } = default!;
-        [Required]
-        public ICollection<DocumentDefinitionLanguageDetail>? DocumentDefinitionLanguageDetails { get; set; } = new List<DocumentDefinitionLanguageDetail>();
         public ICollection<DocumentEntityProperty>? DocumentEntityPropertys { get; set; } = new List<DocumentEntityProperty>();
         public ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 

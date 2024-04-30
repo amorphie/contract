@@ -2,8 +2,10 @@ using System.Text;
 using System.Text.Json;
 using amorphie.contract.application;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Model;
+using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using amorphie.contract.zeebe.Model;
@@ -76,13 +78,13 @@ namespace amorphie.contract.zeebe.Modules
         });
         }
         static IResult Render(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration
-      )
+            [FromBody] dynamic body,
+            [FromServices] ProjectDbContext dbContext,
+            HttpRequest request,
+            HttpContext httpContext,
+            [FromServices] DaprClient client,
+            IConfiguration configuration,
+            [FromServices] ITemplateEngineAppService templateEngineAppService)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             HeaderFilterModel headerModel;
@@ -90,24 +92,26 @@ namespace amorphie.contract.zeebe.Modules
             // string language = body.GetProperty("Headers").GetProperty("acceptlanguage").ToString();
             // string bankEntity = body.GetProperty("Headers").GetProperty("business_line").ToString();
             headerModel = HeaderHelperZeebe.GetHeader(body);
-            if (body.ToString().IndexOf("ContractInstance") != -1)
+            var subFlowContractInstance = false;
+            if (body.ToString().IndexOf("XContractInstance") != -1)
             {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                subFlowContractInstance=true;
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
                 {
-                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                    headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("language") != -1)
                 {
-                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                    headerModel.LangCode = body.GetProperty("XContractInstance").GetProperty("language").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("bankEntity") != -1)
                 {
-                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                    headerModel.GetBankEntity(body.GetProperty("XContractInstance").GetProperty("bankEntity").ToString());
                 }
             }
 
             var documentRenderList = new List<ApprovedTemplateDocumentList>();
-            if (messageVariables.TransitionName == "render-online-sign-start")
+            if (messageVariables.TransitionName == "render-online-sign-start"&&!subFlowContractInstance)
             {
                 var documentDef = messageVariables.Data.GetProperty("entityData").GetProperty("Document").ToString();
                 var documentDefDto = JsonSerializer.Deserialize<List<DocumentDef>>(documentDef, options: new JsonSerializerOptions
@@ -130,10 +134,10 @@ namespace amorphie.contract.zeebe.Modules
                   .Select(x =>
                   new ApprovedTemplateDocumentList
                   {
-                      SemanticVersion = x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(z => z.DocumentTemplate.LanguageType.Code == headerModel.LangCode)?.DocumentTemplate.Version
-                         ?? x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.DocumentTemplate.Version,
-                      Name = x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault(z => z.DocumentTemplate.LanguageType.Code == headerModel.LangCode)?.DocumentTemplate.Code
-                         ?? x.DocumentOnlineSing?.DocumentTemplateDetails.FirstOrDefault()?.DocumentTemplate.Code,
+                      SemanticVersion = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Version
+                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Version,
+                      Name = x.DocumentOnlineSing?.Templates.FirstOrDefault(z => z.LanguageCode == headerModel.LangCode)?.Code
+                         ?? x.DocumentOnlineSing?.Templates.FirstOrDefault()?.Code,
                       RenderId = Guid.NewGuid(),
                       RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
                       RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
@@ -152,7 +156,7 @@ namespace amorphie.contract.zeebe.Modules
             else
             {
 
-                string contractName = body.GetProperty("ContractInstance").GetProperty("contractName").ToString();
+                // string contractName = body.GetProperty("XContractInstance").GetProperty("contractName").ToString();
                 var contractInstanceId = ZeebeMessageHelper.StringToGuid(body.GetProperty("InstanceId").ToString());
                 // messageVariables.TransitionName = "checking-account-opening-start";
                 var contractInstance = body.GetProperty("XContractInstance");
@@ -188,7 +192,9 @@ namespace amorphie.contract.zeebe.Modules
             var list = new ApprovedDocumentList();
             foreach (var cdto in documentRenderList)
             {
-                HttpSendTemplate(new TemplateRenderRequestModel(cdto));//TODO:dapr yok
+                var renderRequestModel = new TemplateRenderRequestModel(cdto);
+                templateEngineAppService.SendRenderPdf(renderRequestModel);
+                //TODO render edilip edilmediği hata kontrolü yok.
                 list.Document.Add(new ApprovedDocument
                 {
                     DocumentDefinitionCode = cdto.DocumentDefinitionCode,
@@ -205,40 +211,7 @@ namespace amorphie.contract.zeebe.Modules
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
-        private static async void HttpSendTemplate(TemplateRenderRequestModel requestModel)//TODO:dapr kullanılacak 
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                string modelJson = JsonSerializer.Serialize(requestModel);
 
-                HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync(StaticValuesExtensions.TemplateEngineUrl + StaticValuesExtensions.TemplateEnginePdfRenderEndpoint, httpContent);
-
-                if (response.IsSuccessStatusCode)
-                {
-                }
-
-            }
-        }
-        private static async Task<string> GetRenderInstance(string instance)//TODO:dapr kullanılacak 
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                // string modelJson = JsonSerializer.Serialize(requestModel);
-
-                // HttpContent httpContent = new StringContent(modelJson, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.GetAsync(StaticValuesExtensions.TemplateEngineUrl + string.Format(StaticValuesExtensions.TemplateEngineRenderInstance, instance));
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-            }
-            return "Template engine error";
-        }
         static IResult NotValidated(
         [FromBody] dynamic body,
        [FromServices] ProjectDbContext dbContext,
@@ -283,20 +256,20 @@ namespace amorphie.contract.zeebe.Modules
             headerModel = HeaderHelperZeebe.GetHeader(body);
 
 
-            if (body.ToString().IndexOf("ContractInstance") != -1)
+            if (body.ToString().IndexOf("XContractInstance") != -1)
 
             {
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("reference") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("reference") != -1)
                 {
-                    headerModel.UserReference = body.GetProperty("ContractInstance").GetProperty("reference").ToString();
+                    headerModel.UserReference = body.GetProperty("XContractInstance").GetProperty("reference").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("language") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("language") != -1)
                 {
-                    headerModel.LangCode = body.GetProperty("ContractInstance").GetProperty("language").ToString();
+                    headerModel.LangCode = body.GetProperty("XContractInstance").GetProperty("language").ToString();
                 }
-                if (body.GetProperty("ContractInstance").ToString().IndexOf("bankEntity") != -1)
+                if (body.GetProperty("XContractInstance").ToString().IndexOf("bankEntity") != -1)
                 {
-                    headerModel.GetBankEntity(body.GetProperty("ContractInstance").GetProperty("bankEntity").ToString());
+                    headerModel.GetBankEntity(body.GetProperty("XContractInstance").GetProperty("bankEntity").ToString());
                 }
             }
 

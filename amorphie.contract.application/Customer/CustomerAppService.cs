@@ -5,13 +5,13 @@ using amorphie.contract.infrastructure.Contexts;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Elastic.Apm.Api;
-using amorphie.core.Base;
 using amorphie.contract.core.Services;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Response;
 using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
+using System.Text.Json.Serialization;
 
 namespace amorphie.contract.application.Customer
 {
@@ -40,18 +40,6 @@ namespace amorphie.contract.application.Customer
             _downloadEndpoint = StaticValuesExtensions.Apisix.DownloadEndpoint;
         }
 
-        public string FindTitle(List<MultilanguageText> texts, string language)
-        {
-            if (!texts.Any())
-                return "Undefined title";
-
-            var lang = texts.FirstOrDefault(x => x.Language == language);
-
-            return lang != null ?
-                lang.Label :
-                texts.FirstOrDefault().Label;
-        }
-
         public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
             bool othersOnly = false;
@@ -64,18 +52,20 @@ namespace amorphie.contract.application.Customer
             var userReference = inputDto.GetUserReference();
 
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
-            var contractQuery = _dbContext!.ContractDefinition.Where(x => x.BankEntity == inputDto.GetBankEntityCode()).AsQueryable();
-            contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
+            var allContractQuery = _dbContext!.ContractDefinition.AsQueryable();
+            allContractQuery = ContractHelperExtensions.LikeWhere(allContractQuery, inputDto.Code);
 
 
             if (inputDto.StartDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt > inputDto.StartDate.Value);
+                var startOfDay = inputDto.StartDate.Value.Date;
+                documentQuery = documentQuery.Where(x => x.CreatedAt > startOfDay);
             }
 
             if (inputDto.EndDate.HasValue)
             {
-                documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
+                var endOfDay = inputDto.EndDate.Value.Date.AddDays(1);
+                documentQuery = documentQuery.Where(x => x.CreatedAt < endOfDay);
             }
 
             var documents = await documentQuery.Select(x => new DocumentForMinioObject
@@ -83,29 +73,28 @@ namespace amorphie.contract.application.Customer
                 Id = x.Id,
                 DocumentDefinitionId = x.DocumentDefinitionId,
                 Status = x.Status,
-                DocumentContentId = x.DocumentContent.Id.ToString()
+                DocumentContentId = x.DocumentContent.Id.ToString(),
+                ApprovalDate = x.CreatedAt
             })
             .AsSplitQuery()
             .ToListAsync(token);
 
-            contractQuery = contractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
+
+            allContractQuery = allContractQuery.Where(x => x.ContractDocumentDetails.Any(z => documents.Select(d => d.DocumentDefinitionId).Contains(z.DocumentDefinitionId))
             ||
             x.ContractDocumentGroupDetails.Any(z => z.DocumentGroup.DocumentGroupDetails.Any(y => documents.Select(d => d.DocumentDefinitionId).Contains(y.DocumentDefinitionId))));
 
+            var contractQuery = allContractQuery.Where(x => x.BankEntity == inputDto.GetBankEntityCode());
+
             var contractModels = await contractQuery.AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToListAsync(token);
 
-            List<Guid> allContractDocumentIds = new List<Guid>();
+            List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))
+                                 .Concat(allContractQuery.SelectMany(main => main.ContractDocumentGroupDetails.Select(docGrup => docGrup.DocumentGroupId)))
+                                 .ToList();
             foreach (var model in contractModels)
             {
                 allContractDocumentIds.AddRange(model.CustomerContractDocuments.Select(x => x.Id));
 
-                foreach (var group in model.CustomerContractDocumentGroups)
-                {
-                    allContractDocumentIds.AddRange(group.CustomerContractGroupDocuments.Select(x => x.Id));
-                }
-
-                // It will be used after data migration.
-                // model.Title = FindTitle(model.MultiLanguageText, inputDto.GetLanguageCode());
                 model.Title = model.Titles.L(inputDto.GetLanguageCode());
 
                 var contractDocuments = model.CustomerContractDocuments;
@@ -116,8 +105,6 @@ namespace amorphie.contract.application.Customer
 
                 foreach (var contDocument in contractDocuments)
                 {
-                    // contDocument.Title = FindTitle(contDocument.MultiLanguageText, inputDto.GetLanguageCode());
-                    //TODO [LANG] lang migration dan sonra değiştirilmeli.
                     contDocument.Title = contDocument.Titles.L(inputDto.GetLanguageCode());
 
                     if (customerCompletedDocuments.Exists(x => contDocument.Id == x.DocumentDefinitionId))
@@ -136,17 +123,12 @@ namespace amorphie.contract.application.Customer
                  {
                      foreach (var contractDocGroup in contractDocumentGroups)
                      {
-                         //  contractDocGroup.Title = FindTitle(contractDocGroup.MultiLanguageText, inputDto.GetLanguageCode());
-                         //TODO [LANG] lang migration dan sonra değiştirilmeli.
                          contractDocGroup.Title = contractDocGroup.Titles.L(inputDto.GetLanguageCode());
 
                          int validDocCount = 0;
 
                          foreach (var groupDocument in contractDocGroup.CustomerContractGroupDocuments)
                          {
-                             //  groupDocument.Title = FindTitle(groupDocument.MultiLanguageText, inputDto.GetLanguageCode());
-
-                             //TODO [LANG] lang migration dan sonra değiştirilmeli.
                              groupDocument.Title = groupDocument.Titles.L(inputDto.GetLanguageCode());
 
                              if (customerCompletedDocuments.Exists(x => groupDocument.Id == x.DocumentDefinitionId))
@@ -197,14 +179,17 @@ namespace amorphie.contract.application.Customer
 
                 var otherDocumentDefinition = _dbContext.DocumentDefinition
                                                 .IgnoreQueryFilters()
-                                                .Where(x => otherDocuments.Select(x => x.DocumentDefinitionId).Contains(x.Id)).AsNoTracking().AsSplitQuery().ProjectTo<CustomerContractDocumentDto>(ObjectMapperApp.Mapper.ConfigurationProvider).ToList();
+                                                .Where(x => otherDocuments
+                                                .Select(x => x.DocumentDefinitionId).Contains(x.Id))
+                                                    .AsNoTracking()
+                                                    .AsSplitQuery()
+                                                    .ProjectTo<CustomerContractDocumentDto>(
+                                                        ObjectMapperApp.Mapper.ConfigurationProvider
+                                                       ).ToList();
 
                 otherDocumentDefinition.ForEach(x =>
                 {
-                    //x.Title = FindTitle(x.MultiLanguageText, inputDto.GetLanguageCode());
-                    //TODO [LANG] lang migration dan sonra değiştirilmeli.
                     x.Title = x.Titles.L(inputDto.GetLanguageCode());
-
                     x.DocumentStatus = AppConsts.Valid;
                 });
 
@@ -232,6 +217,20 @@ namespace amorphie.contract.application.Customer
                 }
             }
 
+            foreach (var i in contractModels)
+            {
+                foreach (var j in i.CustomerContractDocuments)
+                {
+                    if (documents.Any(x => x.DocumentDefinitionId == j.Id))
+                    {
+                        j.ApprovalDate = documents.FirstOrDefault(x => x.DocumentDefinitionId == j.Id).ApprovalDate;
+                    }
+                    else
+                    {
+                        j.ApprovalDate = null;
+                    }
+                }
+            }
             return GenericResult<List<CustomerContractDto>>.Success(contractModels);
         }
 
@@ -351,6 +350,8 @@ namespace amorphie.contract.application.Customer
             public Guid DocumentDefinitionId { get; set; }
             public EStatus Status { get; set; }
             public string DocumentContentId { get; set; }
+            [JsonIgnore]
+            public DateTime ApprovalDate { get; set; }
         }
     }
 }

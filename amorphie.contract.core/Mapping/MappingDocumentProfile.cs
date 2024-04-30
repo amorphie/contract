@@ -16,7 +16,6 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentAllowedClientDetail, DocumentAllowedClientDetail>().ReverseMap();
             CreateMap<DocumentContent, DocumentContent>().ReverseMap();
             CreateMap<DocumentDefinition, DocumentDefinition>().ReverseMap();
-            CreateMap<DocumentDefinitionLanguageDetail, DocumentDefinitionLanguageDetail>().ReverseMap();
             CreateMap<DocumentEntityProperty, DocumentEntityProperty>().ReverseMap();
             CreateMap<DocumentInstanceEntityProperty, DocumentInstanceEntityProperty>().ReverseMap();
             CreateMap<DocumentInstanceNote, DocumentInstanceNote>().ReverseMap();
@@ -32,13 +31,11 @@ namespace amorphie.contract.core.Mapping
             CreateMap<DocumentOptimizeType, DocumentOptimizeType>().ReverseMap();
             CreateMap<DocumentSize, DocumentSize>().ReverseMap();
             CreateMap<DocumentTagsDetail, DocumentTagsDetail>().ReverseMap();
-            CreateMap<DocumentTemplate, DocumentTemplate>().ReverseMap();
-            CreateMap<DocumentTemplateDetail, DocumentTemplateDetail>().ReverseMap();
-            // CreateMap<DocumentVersions, DocumentVersions>().ReverseMap();
+   
+
             #region DocumentGroup
             CreateMap<DocumentGroup, DocumentGroup>().ReverseMap();
             CreateMap<DocumentGroupDetail, DocumentGroupDetail>().ReverseMap();
-            CreateMap<DocumentGroupLanguageDetail, DocumentGroupLanguageDetail>().ReverseMap();
             CreateMap<DocumentGroupHistory, DocumentGroupHistory>().ReverseMap();
             #endregion
             #region documentType
