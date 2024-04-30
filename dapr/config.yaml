@@ -4,4 +4,7 @@ metadata:
   name: daprConfig
   namespace: default
 spec:
+  features:
+    - name: Resiliency
+      enabled: true
   

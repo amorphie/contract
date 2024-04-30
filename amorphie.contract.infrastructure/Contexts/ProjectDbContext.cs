@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 using amorphie.contract.core.Entity.Base;
 using Microsoft.EntityFrameworkCore.Query;
 using amorphie.contract.infrastructure.Extensions;
-using amorphie.contract.core;
 
 namespace amorphie.contract.infrastructure.Contexts;
 
@@ -42,27 +41,25 @@ public class ProjectDbContext : DbContext
 
     #region Common
 
-    // public DbSet<Callback> Callback { get; set; }
     public DbSet<Tag> Tag { get; set; }
     public DbSet<LanguageType> LanguageType { get; set; }
     public DbSet<MultiLanguage> MultiLanguage { get; set; }
-    // public DbSet<Status> Status { get; set; }
     public DbSet<Validation> Validation { get; set; }
     public DbSet<ValidationDecision> ValidationDecision { get; set; }
     public DbSet<TemplateRender> TemplateRender { get; set; }
     #endregion
+
     #region Contract
 
     public DbSet<ContractDefinition> ContractDefinition { get; set; }
     public DbSet<ContractDocumentDetail> ContractDocumentDetail { get; set; }
-    public DbSet<ContractDefinitionLanguageDetail> ContractDefinitionLanguageDetail { get; set; }
     public DbSet<ContractDocumentGroupDetail> ContractDocumentGroupDetail { get; set; }
     public DbSet<ContractEntityProperty> ContractEntityProperty { get; set; }
     public DbSet<ContractTag> ContractTag { get; set; }
     public DbSet<ContractValidation> ContractValidation { get; set; }
     public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
-
-
+    public DbSet<ContractInstance> ContractInstance { get; set; }
+    public DbSet<ContractInstanceDetail> ContractInstanceDetail { get; set; }
 
     #endregion
 
@@ -78,7 +75,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentOnlineSing> DocumentOnlineSing { get; set; }
     public DbSet<DocumentTsizl> DocumentTsizls { get; set; }
     public DbSet<DocumentDys> DocumentDys { get; set; }
-    public DbSet<DocumentDefinitionLanguageDetail> DocumentDefinitionLanguageDetail { get; set; }
 
     public DbSet<DocumentEntityProperty> DocumentEntityProperty { get; set; }
     #region  DocumentGroup
@@ -98,8 +94,6 @@ public class ProjectDbContext : DbContext
     public DbSet<DocumentSize> DocumentSize { get; set; }
     public DbSet<DocumentTagsDetail> DocumentTagsDetail { get; set; }
 
-    public DbSet<DocumentTemplate> DocumentTemplate { get; set; }
-    public DbSet<DocumentTemplateDetail> DocumentTemplateDetail { get; set; }
 
     public DbSet<DocumentUpload> DocumentUpload { get; set; }
 

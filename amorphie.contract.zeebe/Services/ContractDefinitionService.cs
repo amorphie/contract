@@ -4,12 +4,6 @@ using Newtonsoft.Json;
 using amorphie.contract.zeebe.Model.ContractDefinitionDataModel;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Enum;
-using Microsoft.EntityFrameworkCore;
-using amorphie.contract.core;
-using amorphie.contract.core.Entity.Base;
-using amorphie.contract.core.Entity.EAV;
-using System.Collections;
-using System.Text.Json;
 using amorphie.contract.application;
 using amorphie.contract.core.Model.History;
 
@@ -47,64 +41,14 @@ namespace amorphie.contract.zeebe.Services
             _ContractDefinitionDataModel = JsonConvert.DeserializeObject<ContractDefinitionDataModel>
             (test.Replace("{}", "\"\""));
         }
-        private void UpdateContractDefinitionLanguage(List<MultiLanguage> multiLanguages)
+        private void UpdateContractDefinitionLanguage()
         {
-            var removedMultiLang = multiLanguages.Where(x => !_ContractDefinitionDataModel.Titles.Any(y => ZeebeMessageHelper.StringToGuid(y.language) == x.LanguageTypeId)).ToList();
-            var addedMultiLang = _ContractDefinitionDataModel.Titles
-                                .Where(x => !multiLanguages.Any(y => y.LanguageTypeId == ZeebeMessageHelper.StringToGuid(x.language)))
-                                .Select(x => new ContractDefinitionLanguageDetail
-                                {
-                                    ContractDefinitionId = _ContractDefinition.Id,
-                                    MultiLanguage = new MultiLanguage
-                                    {
-                                        Name = x.title,
-                                        LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                                        Code = _ContractDefinition.Code
-                                    }
-                                })
-                                .ToList();
-
-            foreach (var oldMultiLanguage in multiLanguages)
-            {
-                var matchingMultiLang = _ContractDefinitionDataModel.Titles.FirstOrDefault(y => ZeebeMessageHelper.StringToGuid(y.language) == oldMultiLanguage.LanguageTypeId);
-                if (matchingMultiLang != null)
-                {
-                    oldMultiLanguage.Name = matchingMultiLang.title;
-                }
-            }
-            if (removedMultiLang.Any())
-            {
-                _dbContext.RemoveRange(removedMultiLang);
-            }
-
-            if (addedMultiLang.Any())
-            {
-                _dbContext.AddRange(addedMultiLang);
-            }
-
-            //TODO [LANG] yukarıdaki kod refactor edilmeli.
-
             var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
             _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
 
         }
         private void SetContractDefinitionLanguageDetail()
         {
-            var multiLanguageList = _ContractDefinitionDataModel.Titles.Select(x => new MultiLanguage
-            {
-                Name = x.title,
-                LanguageTypeId = ZeebeMessageHelper.StringToGuid(x.language),
-                Code = _ContractDefinition.Code
-            }).ToList();
-
-            _ContractDefinition.ContractDefinitionLanguageDetails = multiLanguageList.Select(x => new ContractDefinitionLanguageDetail
-            {
-                ContractDefinitionId = _ContractDefinition.Id,
-                MultiLanguage = x
-            }).ToList();
-
-            //TODO [LANG] yukarıdaki kod refactor edilmeli.
-
             var langTypes = _dbContext.LanguageType.ToDictionary(i => i.Id, i => i.Code);
             _ContractDefinition.Titles = _ContractDefinitionDataModel.Titles.ToDictionary(item => langTypes[ZeebeMessageHelper.StringToGuid(item.language)], item => item.title);
         }
@@ -178,7 +122,8 @@ namespace amorphie.contract.zeebe.Services
                 ContractDefinitionId = _ContractDefinition.Id,
                 DocumentDefinitionId = _dbContext.DocumentDefinition.Where(y => y.Semver == x.minVersiyon && y.Code == x.name.code).Select(y => y.Id).FirstOrDefault(),
                 UseExisting = x.useExisting,
-                Required = x.required
+                Required = x.required,
+                Order = x.order
             });
             _ContractDefinition.ContractDocumentDetails = contractDocumentDetail.ToList();
 
@@ -416,7 +361,7 @@ namespace amorphie.contract.zeebe.Services
                 SetContractDefinitionHistory(contractDefinition);
                 contractDefinition.ModifiedAt = DateTime.UtcNow;
                 contractDefinition.BankEntity = _ContractDefinition.BankEntity;
-                UpdateContractDefinitionLanguage(contractDefinition.ContractDefinitionLanguageDetails.Select(x => x.MultiLanguage).ToList());
+                UpdateContractDefinitionLanguage();
                 UpdateContractDocumentGroupDetail(contractDefinition.ContractDocumentGroupDetails.ToList());
                 UpdateContractDocumentDetail(contractDefinition.ContractDocumentDetails.ToList());
                 UpdateContractTag(contractDefinition.ContractTags.ToList());
