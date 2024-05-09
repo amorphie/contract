@@ -14,8 +14,7 @@ namespace amorphie.contract.application.Contract
     {
 
         Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts);
-        Task<GenericResult<bool>> InstanceState(ContractInstanceInputDto req, CancellationToken cts);
-
+        Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts);
         Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts);
 
     }
@@ -42,27 +41,51 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
-            var contractDefinition = await _dbContext.ContractDefinition.AsNoTracking().FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
+            //TODO BankEntity kontrolü..
 
-            if (contractDefinition == null)
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, cts);
+
+            ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
+
+            Guid contractInstanceId = req.ContractInstanceId;
+            await SaveUserSignedContract(contractInstanceId, req, contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList, contractStatus);
+
+            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
+            var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
+
+            var contractInstanceDto = new ContractInstanceDto()
             {
-                throw new ArgumentNullException("Contract not found.");
+                ContractCode = req.ContractName,
+                ContractInstanceId = contractInstanceId,
+                DocumentList = unSignedDocuments,
+                Status = contractStatus.ToString(),
+                DocumentGroupList = unSignedDocumentGroups
+            };
+
+            return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
+        }
+
+        #region Private Methods
+        private async Task<GenericResult<GetContractInstanceResponseDto>> GetContractInstance(string contractCode, string userReference, string langCode, CancellationToken cancellationToken)
+        {
+            var contractDefinition = await _dbContext.ContractDefinition.AsNoTracking().FirstOrDefaultAsync(x => x.Code == contractCode, cancellationToken);
+
+            if (contractDefinition is null)
+            {
+                throw new ArgumentNullException(nameof(contractCode), $"Contract not found : {contractCode}");
             }
 
-            var allDocumentIdsOfContract = contractDefinition.ContractDocumentDetails
-                .Select(x => new { Id = x.DocumentDefinitionId, Code = x.DocumentDefinition.Code })
+            var _allDocumentCodesOfContract = contractDefinition.ContractDocumentDetails
+                .Select(x => x.DocumentDefinition.Code)
                     .Concat(contractDefinition.ContractDocumentGroupDetails
                         .SelectMany(x => x.DocumentGroup.DocumentGroupDetails)
-                        .Select(cd => new { Id = cd.DocumentDefinitionId, Code = cd.DocumentDefinition.Code }))
+                        .Select(cd => cd.DocumentDefinition.Code))
                 .ToList();
 
-
-            var allDocumentCodeList = allDocumentIdsOfContract.Select(a => a.Code).ToList();
-
             var documents = await (from df in _dbContext.DocumentDefinition
-                                   join d in _dbContext.Document.Where(x => x.Customer.Reference == req.Reference) on df.Id equals d.DocumentDefinitionId into userDocuments
+                                   join d in _dbContext.Document.Where(x => x.Customer.Reference == userReference) on df.Id equals d.DocumentDefinitionId into userDocuments
                                    from userDoc in userDocuments.DefaultIfEmpty()
-                                   where allDocumentCodeList.Contains(df.Code)
+                                   where _allDocumentCodesOfContract.Contains(df.Code)
                                    select new DocumentCustomerInfoDto
                                    {
                                        DocumentDefinitionId = df.Id,
@@ -76,42 +99,29 @@ namespace amorphie.contract.application.Contract
 
 
             List<DocumentInstanceDto> documentInstanceDtos = new();
-
-            foreach (var contractDoc in contractDefinition.ContractDocumentDetails)
+            foreach (var contractDoc in contractDefinition.ContractDocumentDetails.OrderBy(k => k.Order))
             {
-                var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, req.LangCode);
+                var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode);
                 documentInstanceDtos.Add(documentInstanceDto);
             }
 
-
-            var docGroupInstanceDtos = new List<DocumentGroupInstanceDto>();
+            List<DocumentGroupInstanceDto> docGroupInstanceDtos = new();
             foreach (var contractDocGroupDetail in contractDefinition.ContractDocumentGroupDetails)
             {
-                var documentGroupInstanceDto = MapToDocumentGroupInstanceDto(documents, contractDocGroupDetail, req.LangCode);
+                var documentGroupInstanceDto = MapToDocumentGroupInstanceDto(documents, contractDocGroupDetail, langCode);
                 docGroupInstanceDtos.Add(documentGroupInstanceDto);
             }
 
-            Guid contractInstanceId = req.ContractInstanceId;
-
-            await SaveUserSignedContract(contractInstanceId, req, documentInstanceDtos, docGroupInstanceDtos);
-
-            string contractStatus = SetAndGetContractDocumentStatus(documentInstanceDtos, docGroupInstanceDtos);
-            
-            var unSignedDocuments = documentInstanceDtos.Where(k => !k.IsSigned).ToList();
-
-            var contractInstanceDto = new ContractInstanceDto()
+            var response = new GetContractInstanceResponseDto
             {
-                ContractCode = contractDefinition.Code,
-                ContractInstanceId = contractInstanceId,
-                DocumentList = unSignedDocuments,
-                Status = contractStatus,
-                DocumentGroupList = docGroupInstanceDtos.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList()
+                DocumentList = documentInstanceDtos,
+                DocumentGroupList = docGroupInstanceDtos
             };
 
-            return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
+            return GenericResult<GetContractInstanceResponseDto>.Success(response);
         }
 
-        private string SetAndGetContractDocumentStatus(List<DocumentInstanceDto> documentInstanceDtos, List<DocumentGroupInstanceDto> documentGroupInstanceDtos)
+        private ApprovalStatus SetAndGetContractDocumentStatus(List<DocumentInstanceDto> documentInstanceDtos, List<DocumentGroupInstanceDto> documentGroupInstanceDtos)
         {
             bool unSignedDocument = documentInstanceDtos.Any(k => k.IsRequired && !k.IsSigned);
             foreach (var item in documentGroupInstanceDtos)
@@ -127,11 +137,11 @@ namespace amorphie.contract.application.Contract
 
             if (unSignedDocument || unCompletedGroup)
             {
-                return ApprovalStatus.InProgress.ToString();
+                return ApprovalStatus.InProgress;
             }
             else
             {
-                return ApprovalStatus.Approved.ToString();
+                return ApprovalStatus.Approved;
             }
 
         }
@@ -252,21 +262,24 @@ namespace amorphie.contract.application.Contract
             return docGroupInstanceDto;
         }
 
-        private async Task SaveUserSignedContract(Guid contractInstanceId, ContractInstanceInputDto req, List<DocumentInstanceDto> documentInstanceDtos, List<DocumentGroupInstanceDto> docGroupInstanceDtos)
+        private async Task SaveUserSignedContract(Guid contractInstanceId, ContractInstanceInputDto req, List<DocumentInstanceDto> documentInstanceDtos, List<DocumentGroupInstanceDto> docGroupInstanceDtos, ApprovalStatus contractStatus)
         {
 
-            var allDocumentInstanceIds = documentInstanceDtos.Where(d => d.IsSigned && d.DocumentInstanceId.HasValue)
+            var allDocumentInstanceIds = documentInstanceDtos
+            .Where(d => d.IsSigned && d.DocumentInstanceId.HasValue)
                 .Select(d => d.DocumentInstanceId.Value)
-            .Concat(docGroupInstanceDtos
-                .Where(k => k.DocumentGroupDetailInstance.DocumentInstances.Any(x => x.IsSigned && x.DocumentInstanceId.HasValue))
-                    .SelectMany(d => d.DocumentGroupDetailInstance.DocumentInstances)
-                    .Select(x => x.DocumentInstanceId.Value)).ToList();
+            .Concat(
+                docGroupInstanceDtos
+            .Where(k => k.DocumentGroupDetailInstance.DocumentInstances.Any(x => x.IsSigned && x.DocumentInstanceId.HasValue))
+                .SelectMany(d => d.DocumentGroupDetailInstance.DocumentInstances)
+                .Select(x => x.DocumentInstanceId.Value)).ToList();
 
             var userSignedInput = new UserSignedContractInputDto
             {
                 ContractCode = req.ContractName,
                 ContractInstanceId = contractInstanceId,
-                DocumentInstanceIds = allDocumentInstanceIds
+                DocumentInstanceIds = allDocumentInstanceIds,
+                ApprovalStatus = contractStatus
             };
             userSignedInput.SetHeaderParameters(req.Reference);
 
@@ -278,54 +291,31 @@ namespace amorphie.contract.application.Contract
 
         }
 
-        public async Task<GenericResult<bool>> InstanceState(ContractInstanceInputDto req, CancellationToken cts)
+        #endregion
+
+        public async Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts)
         {
-            //TODO: Daha sonra eklenecek && x.BankEntity == req.EBankEntity
-            var contractDefinition = await _dbContext.ContractDefinition.FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
-            // var ss = await _dbContext.ContractDefinition.Include(x=>x.ContractDocumentDetails).FirstOrDefaultAsync(x => x.Code == req.ContractName, cts);
-            if (contractDefinition == null)
+            var userSignedInput = new IsUserApprovedContractInputDto(req.ContractName, req.Reference);
+
+            var isUserApprovedContact = await _userSignedContractAppService.IsUserApprovedContract(userSignedInput);
+
+            if (!isUserApprovedContact.IsSuccess)
             {
                 return GenericResult<bool>.Success(false);
-
             }
 
-            var documentList = contractDefinition.ContractDocumentDetails
-                .Select(x => x.DocumentDefinitionId)
-                .ToList();
-
-            var documentGroupList = contractDefinition.ContractDocumentGroupDetails
-                .SelectMany(x => x.DocumentGroup.DocumentGroupDetails)
-                .Select(a => a.DocumentDefinitionId)
-                .ToList();
-
-            var customerDocument = await _dbContext.Document
-                .Where(x => x.Customer.Reference == req.Reference && documentList.Contains(x.DocumentDefinitionId))
-                .Select(x => x.DocumentDefinitionId)
-                .ToListAsync(cts);
-
-            var customerDocumentGroup = await _dbContext.Document
-                .Where(x => x.Customer.Reference == req.Reference && documentGroupList.Contains(x.DocumentDefinitionId))
-                .Select(x => x.DocumentDefinitionId)
-                .ToListAsync(cts);
-
-            var listDocument = contractDefinition.ContractDocumentDetails
-                .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
-
-            var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
-
-            var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
-            var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);
-
-            var contractInstanceDto = new ContractInstanceDto()
+            if (isUserApprovedContact.Data.HasValue)
             {
-                ContractCode = contractDefinition.Code,
-                Status = ApprovalStatus.InProgress.ToString(),
-                DocumentList = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
-                DocumentGroupList = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
-            };
-            if (contractInstanceDto.DocumentList.Count == 0)
-                return GenericResult<bool>.Success(true);
-            return GenericResult<bool>.Success(false);
+                return GenericResult<bool>.Success(isUserApprovedContact.Data.Value);
+            }
+            else
+            {
+                var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, cts);
+
+                ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
+
+                return GenericResult<bool>.Success(contractStatus == ApprovalStatus.Approved ? true : false);
+            }
         }
     }
 
