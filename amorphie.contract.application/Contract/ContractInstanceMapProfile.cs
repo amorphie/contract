@@ -41,8 +41,8 @@ namespace amorphie.contract.application.Contract
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.ContractDocumentGroup.Status))
                 .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
                 .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
-                .ForPath(dest => dest.DocumentGroupDetailInstanceDto.Code, opt => opt.MapFrom(src => src.ContractDocumentGroup.Code))
-                .ForPath(dest => dest.DocumentGroupDetailInstanceDto.DocumentInstances, opt => opt.MapFrom(src => src.ContractDocumentGroup.DocumentDefinitions))
+                .ForPath(dest => dest.DocumentGroupDetailInstance.Code, opt => opt.MapFrom(src => src.ContractDocumentGroup.Code))
+                .ForPath(dest => dest.DocumentGroupDetailInstance.DocumentInstances, opt => opt.MapFrom(src => src.ContractDocumentGroup.DocumentDefinitions))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom((src, dest, destMember, context) =>
                         {
                             return src.ContractDocumentGroup.Titles.L(Convert.ToString(context.Items[Lang.LangCode]));

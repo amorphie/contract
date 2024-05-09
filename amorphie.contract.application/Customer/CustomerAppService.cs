@@ -174,8 +174,8 @@ namespace amorphie.contract.application.Customer
                 var contractDocuments = model.CustomerContractDocuments;
                 var contractDocumentGroups = model.CustomerContractDocumentGroups;
 
-                var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.EStatus.Completed).ToList();
-                var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.EStatus.Completed).ToList();
+                var customerCompletedDocuments = documents.Where(x => x.Status == core.Enum.ApprovalStatus.Approved).ToList();
+                var customerNotCompletedDocuments = documents.Where(x => x.Status != core.Enum.ApprovalStatus.Approved).ToList();
 
                 foreach (var contDocument in contractDocuments)
                 {
@@ -408,7 +408,7 @@ namespace amorphie.contract.application.Customer
         {
             public Guid Id { get; set; }
             public Guid DocumentDefinitionId { get; set; }
-            public EStatus Status { get; set; }
+            public ApprovalStatus Status { get; set; }
             public string DocumentContentId { get; set; }
         }
     }

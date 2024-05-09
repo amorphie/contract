@@ -12,6 +12,8 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
             builder.Property(k => k.DocumentInstanceId).IsRequired();
             builder.Property(k => k.UserSignedContractId).IsRequired();
             builder.Property(x => x.Id).ValueGeneratedNever();
+
+            builder.HasIndex(x => new { x.DocumentInstanceId, x.UserSignedContractId }).IsUnique();
         }
     }
 }

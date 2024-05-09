@@ -28,17 +28,17 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<Guid>> UpsertAsync(UserSignedContractInputDto inputDto)
         {
-
-            var customerResult = await _customerAppService.GetIdByReference(inputDto.UserReference);
+            var userReference = inputDto.GetUserReference();
+            var customerResult = await _customerAppService.GetIdByReference(userReference);
 
             if (!customerResult.IsSuccess)
             {
-                _logger.Error("Failed to get customer. {Message} - {UserReference}", customerResult.ErrorMessage, inputDto.UserReference);
+                _logger.Error("Failed to get customer. {Message} - {UserReference}", customerResult.ErrorMessage, userReference);
 
-                return GenericResult<Guid>.Fail($"Failed to get customer {inputDto.UserReference}");
+                return GenericResult<Guid>.Fail($"Failed to get customer {userReference}");
             }
 
-            var userSignedContract = await _projectDbContext.UserSignedContract.FirstOrDefaultAsync(k => k.ContractCode == inputDto.ContractCode && k.ContractInstanceId == inputDto.ContractInstanceId);
+            var userSignedContract = await _projectDbContext.UserSignedContract.FirstOrDefaultAsync(k => k.ContractCode == inputDto.ContractCode); //TODO ANYVALID kontrol edilecek.
 
             if (userSignedContract is null)
             {
@@ -57,11 +57,11 @@ namespace amorphie.contract.application.Contract
             }
             else
             {
-                foreach (var item in inputDto.DocumentInstanceIds)
+                foreach (var docInstanceId in inputDto.DocumentInstanceIds.Where(k => !userSignedContract.UserSignedContractDetails.Any(x => x.DocumentInstanceId == k)).ToList())
                 {
                     userSignedContract.UserSignedContractDetails.Add(new UserSignedContractDetail
                     {
-                        DocumentInstanceId = item,
+                        DocumentInstanceId = docInstanceId,
                         UserSignedContractId = userSignedContract.Id
                     });
                 }

@@ -6,7 +6,7 @@ namespace amorphie.contract.core.Model.History;
 
 public class ContractDefinitionHistoryModel : BaseEntity
 {
-    public EStatus Status { get; set; } = default!;
+    public ApprovalStatus Status { get; set; } = default!;
     public EBankEntity BankEntity { get; set; } = default!;
     public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
     public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
