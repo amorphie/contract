@@ -2,10 +2,10 @@
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.core.Enum;
 using amorphie.contract.infrastructure.Contexts;
-
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Response;
 using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Entity.Contract;
 
 namespace amorphie.contract.application.Contract
 {
@@ -42,15 +42,14 @@ namespace amorphie.contract.application.Contract
 
             if (contractDefinition == null)
             {
-                throw new ArgumentNullException("not contract");
+                throw new ArgumentNullException("Contract not found.");
             }
-            EStatus contractStatus = EStatus.Completed;
 
             var allDocumentIdsOfContract = contractDefinition.ContractDocumentDetails
                 .Select(x => new { Id = x.DocumentDefinitionId, Code = x.DocumentDefinition.Code })
-                .Concat(contractDefinition.ContractDocumentGroupDetails
-                    .SelectMany(x => x.DocumentGroup.DocumentGroupDetails)
-                    .Select(cd => new { Id = cd.DocumentDefinitionId, Code = cd.DocumentDefinition.Code }))
+                    .Concat(contractDefinition.ContractDocumentGroupDetails
+                        .SelectMany(x => x.DocumentGroup.DocumentGroupDetails)
+                        .Select(cd => new { Id = cd.DocumentDefinitionId, Code = cd.DocumentDefinition.Code }))
                 .ToList();
 
 
@@ -60,67 +59,24 @@ namespace amorphie.contract.application.Contract
                                    join d in _dbContext.Document.Where(x => x.Customer.Reference == req.Reference) on df.Id equals d.DocumentDefinitionId into userDocuments
                                    from userDoc in userDocuments.DefaultIfEmpty()
                                    where allDocumentCodeList.Contains(df.Code)
-                                   select new
+                                   select new DocumentCustomerInfoDto
                                    {
                                        DocumentDefinitionId = df.Id,
                                        DocumentCode = df.Code,
                                        SemVer = df.Semver,
                                        IsSigned = userDoc.Customer != null,
                                        DocumentInstanceId = userDoc != null ? userDoc.Id : (Guid?)null,
-                                   }).AsNoTracking().ToListAsync();
-
-
-
+                                   })
+                                   .AsNoTracking()
+                                   .ToListAsync();
 
 
             List<DocumentInstanceDto> documentInstanceDtos = new();
 
             foreach (var contractDoc in contractDefinition.ContractDocumentDetails)
             {
-                var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
-                var findDocumentLastVersion = Versioning.FindLargestVersion(documentsVersionByCode);
-
-                var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
-                var findUserSignedLastVersion = Versioning.FindLargestVersion(signedDocumentsVersionByCode);
-
-                // Checking contract document min version...
-                var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-
-                var documentInstance = new DocumentInstanceDto
-                {
-                    Code = contractDoc.DocumentDefinition.Code,
-                    UseExisting = contractDoc.UseExisting.ToString(),
-                    IsRequired = contractDoc.Required,
-                    Status = contractDoc.DocumentDefinition.Status.ToString(),
-                    MinVersion = contractDoc.DocumentDefinition.Semver,
-                    LastVersion = findDocumentLastVersion,
-                    Name = contractDoc.DocumentDefinition.Titles.L(req.LangCode),
-                    DocumentDetail = new DocumentInstanceDetailDto
-                    {
-                        OnlineSign = new DocumentInstanceOnlineSignDto
-                        {
-                            TemplateCode = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault()?.Code, // SORU: Neden liste anlamadım
-                            Version = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault()?.Version
-                        }
-                    }
-                };
-
-                if (customerDocument is not null)
-                {
-                    documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
-
-                    documentInstance.Sign();
-                }
-                else
-                {
-                    contractStatus = EStatus.InProgress;
-                    // if (documents.Any(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned))
-                    // {
-                    //     customerSignedOldVersionDocuments.Add(contractDoc);
-                    // }
-                }
-
-                documentInstanceDtos.Add(documentInstance);
+                var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, req.LangCode);
+                documentInstanceDtos.Add(documentInstanceDto);
             }
 
 
@@ -131,7 +87,6 @@ namespace amorphie.contract.application.Contract
                 {
                     AtLeastRequiredDocument = contractDocGroupDetail.AtLeastRequiredDocument,
                     Required = contractDocGroupDetail.Required,
-                    Status = contractDocGroupDetail.DocumentGroup.Status.ToString(),
                     Title = contractDocGroupDetail.DocumentGroup.Titles.L(req.LangCode)
                 };
 
@@ -144,31 +99,31 @@ namespace amorphie.contract.application.Contract
                     var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
                     var findUserSignedLastVersion = Versioning.FindLargestVersion(signedDocumentsVersionByCode);
 
-                    docGroupInstanceDto.DocumentGroupDetailInstanceDto = new DocumentGroupDetailInstanceDto
+                    docGroupInstanceDto.DocumentGroupDetailInstance = new DocumentGroupDetailInstanceDto
                     {
                         Code = contractDoc.DocumentGroup.Code,
-                        Status = contractDoc.DocumentDefinition.Status.ToString() //SORU doğru mu?
                     };
 
                     // Checking contract document min version...
                     var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
+                    var template = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == req.LangCode);
 
 
                     var documentInstance = new DocumentInstanceDto
                     {
                         Code = contractDoc.DocumentDefinition.Code,
-                        // UseExisting = contractDoc.UseExisting.ToString(), Soru Bunu nereden alıyorduk?
-                        IsRequired = contractDocGroupDetail.Required, // SORU Doğru mu?
-                        Status = contractDoc.DocumentDefinition.Status.ToString(),
+                        UseExisting = EUseExisting.AnyValid.ToString(),
+                        IsRequired = contractDocGroupDetail.Required,
                         MinVersion = contractDoc.DocumentDefinition.Semver,
                         LastVersion = findDocumentLastVersion,
                         Name = contractDoc.DocumentDefinition.Titles.L(req.LangCode),
+                        Status = ApprovalStatus.InProgress.ToString(),
                         DocumentDetail = new DocumentInstanceDetailDto
                         {
                             OnlineSign = new DocumentInstanceOnlineSignDto
                             {
-                                TemplateCode = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault()?.Code, // SORU: Neden liste anlamadım
-                                Version = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault()?.Version
+                                TemplateCode = template?.Code,
+                                Version = template?.Version
                             }
                         }
                     };
@@ -176,15 +131,18 @@ namespace amorphie.contract.application.Contract
                     if (customerDocument is not null)
                     {
                         documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
-
+                        documentInstance.Status = ApprovalStatus.Approved.ToString();
                         documentInstance.Sign();
                     }
                     else
                     {
-                        contractStatus = EStatus.InProgress;
+                        if (documents.Any(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned))
+                        {
+                            documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
+                        }
                     }
 
-                    docGroupInstanceDto.DocumentGroupDetailInstanceDto.DocumentInstances.Add(documentInstance);
+                    docGroupInstanceDto.DocumentGroupDetailInstance.DocumentInstances.Add(documentInstance);
 
                 }
 
@@ -195,8 +153,9 @@ namespace amorphie.contract.application.Contract
 
             var allDocumentInstanceIds = documentInstanceDtos.Where(d => d.IsSigned && d.DocumentInstanceId.HasValue)
                 .Select(d => d.DocumentInstanceId.Value)
-            .Concat(docGroupInstanceDtos.Where(k => k.DocumentGroupDetailInstanceDto.DocumentInstances.Any(x => x.IsSigned && x.DocumentInstanceId.HasValue))
-                .SelectMany(d => d.DocumentGroupDetailInstanceDto.DocumentInstances)
+            .Concat(docGroupInstanceDtos
+                .Where(k => k.DocumentGroupDetailInstance.DocumentInstances.Any(x => x.IsSigned && x.DocumentInstanceId.HasValue))
+                    .SelectMany(d => d.DocumentGroupDetailInstance.DocumentInstances)
                     .Select(x => x.DocumentInstanceId.Value)).ToList();
 
             var userSignedInput = new UserSignedContractInputDto
@@ -209,16 +168,94 @@ namespace amorphie.contract.application.Contract
 
             await _userSignedContractAppService.UpsertAsync(userSignedInput);
 
+            string contractStatus = SetAndGetContractDocumentStatus(documentInstanceDtos, docGroupInstanceDtos);
+            var unSignedDocuments = documentInstanceDtos.Where(k => !k.IsSigned).ToList();
+
             var contractInstanceDto = new ContractInstanceDto()
             {
                 ContractCode = contractDefinition.Code,
                 ContractInstanceId = contractInstanceId,
-                Status = contractStatus.ToString(),
-                DocumentList = documentInstanceDtos.Where(k => !k.IsSigned).ToList(),
-                DocumentGroupList = docGroupInstanceDtos.Where(k => k.DocumentGroupDetailInstanceDto.DocumentInstances.Any(x => !x.IsSigned)).ToList()
+                DocumentList = unSignedDocuments,
+                Status = contractStatus,
+                DocumentGroupList = docGroupInstanceDtos.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList()
             };
+
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
         }
+
+        private string SetAndGetContractDocumentStatus(List<DocumentInstanceDto> documentInstanceDtos, List<DocumentGroupInstanceDto> documentGroupInstanceDtos)
+        {
+            bool unSignedDocument = documentInstanceDtos.Any(k => k.IsRequired && !k.IsSigned);
+            foreach (var item in documentGroupInstanceDtos)
+            {
+                var signedCount = item.DocumentGroupDetailInstance.DocumentInstances.Count(k => k.IsRequired && k.IsSigned);
+                if (signedCount >= item.AtLeastRequiredDocument)
+                {
+                    item.Status = ApprovalStatus.Approved.ToString();
+                }
+            }
+
+            var unCompletedGroup = documentGroupInstanceDtos.Any(k => k.Status != ApprovalStatus.Approved.ToString() && k.Required);
+
+            if (unSignedDocument || unCompletedGroup)
+            {
+                return ApprovalStatus.InProgress.ToString();
+            }
+            else
+            {
+                return ApprovalStatus.Approved.ToString();
+            }
+
+        }
+
+        private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode)
+        {
+            var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
+            var findDocumentLastVersion = Versioning.FindLargestVersion(documentsVersionByCode);
+
+            var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
+            var findUserSignedLastVersion = Versioning.FindLargestVersion(signedDocumentsVersionByCode);
+
+            // Checking contract document min version...
+            var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
+            var template = contractDoc.DocumentDefinition?.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+
+            var documentInstance = new DocumentInstanceDto
+            {
+                Code = contractDoc.DocumentDefinition.Code,
+                UseExisting = contractDoc.UseExisting.ToString(),
+                IsRequired = contractDoc.Required,
+                Status = ApprovalStatus.InProgress.ToString(),
+                MinVersion = contractDoc.DocumentDefinition.Semver,
+                LastVersion = findDocumentLastVersion,
+                Name = contractDoc.DocumentDefinition.Titles.L(langCode),
+                DocumentDetail = new DocumentInstanceDetailDto
+                {
+                    OnlineSign = new DocumentInstanceOnlineSignDto
+                    {
+                        TemplateCode = template?.Code,
+                        Version = template?.Version
+                    }
+                }
+            };
+
+            if (customerDocument is not null)
+            {
+                documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
+                documentInstance.Status = ApprovalStatus.Approved.ToString();
+                documentInstance.Sign();
+            }
+            else
+            {
+                if (documents.Any(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned))
+                {
+                    documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
+                }
+            }
+
+            return documentInstance;
+        }
+
 
         public async Task<GenericResult<bool>> InstanceState(ContractInstanceInputDto req, CancellationToken cts)
         {
@@ -261,7 +298,7 @@ namespace amorphie.contract.application.Contract
             var contractInstanceDto = new ContractInstanceDto()
             {
                 ContractCode = contractDefinition.Code,
-                Status = EStatus.InProgress.ToString(),
+                Status = ApprovalStatus.InProgress.ToString(),
                 DocumentList = ObjectMapperApp.Mapper.Map<List<DocumentInstanceDto>>(contractDocumentDetails, opt => opt.Items[Lang.LangCode] = req.LangCode),
                 DocumentGroupList = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };

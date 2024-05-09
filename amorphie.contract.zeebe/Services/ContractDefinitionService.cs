@@ -28,10 +28,10 @@ namespace amorphie.contract.zeebe.Services
         private void SetContractDefinitionDefault(Guid id)
         {
             _ContractDefinition = new ContractDefinition();
-            var activeStatus = EStatus.Active;
+            var activApprovalStatus = ApprovalStatus.Approved;
 
             _ContractDefinition.Id = id;
-            _ContractDefinition.Status = activeStatus;
+            _ContractDefinition.Status = activApprovalStatus;
             _ContractDefinition.Code = _ContractDefinitionDataModel.code;
 
         }

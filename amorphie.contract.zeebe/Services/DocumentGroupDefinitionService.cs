@@ -69,7 +69,7 @@ namespace amorphie.contract.zeebe.Services
             _documentGroup = new DocumentGroup();
 
             _documentGroup.Id = id;
-            _documentGroup.Status = core.Enum.EStatus.Active;
+            _documentGroup.Status = core.Enum.ApprovalStatus.Approved;
             _documentGroup.Code = _documentDefinitionDataModel.code;
 
         }

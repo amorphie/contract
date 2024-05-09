@@ -16,6 +16,7 @@ namespace amorphie.contract.application.Contract.Dto
 
         public string? LastVersion { get; set; }
 
+        [JsonIgnore]
         public bool IsSigned { get; set; }
 
         public void Sign()
