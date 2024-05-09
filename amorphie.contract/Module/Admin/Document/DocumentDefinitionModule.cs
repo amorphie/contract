@@ -34,21 +34,21 @@ public class DocumentDefinitionModule
         var query = context!.DocumentDefinition.AsQueryable();
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var documentDefinitions = await query.ToListAsync(token);
-        var result = documentDefinitions
-            .Select(d => new
-            {
-                Code = d.Code,
-                Title = d.Titles,
-                Semver = d.Semver
-            })
-            .GroupBy(x => new { x.Title, language, x.Code })
-            .Select(group => new
-            {
-                Code = group.Key.Code,
-                Title = new { Name = group.Key.Title.L(language), LanguageType = language },
-                SemverList = group.Select(x => x.Semver).ToList()
-            })
-            .ToList();
+            var result = documentDefinitions
+                .Select(d => new
+                {
+                    Code = d.Code,
+                    Title = d.Titles,
+                    Semver = d.Semver
+                })
+                .GroupBy(x => new { x.Code, Title=x.Title.L(language) })
+                .Select(group => new
+                {
+                    Code = group.Key.Code,
+                    Title = new { Name = group.Key.Title, LanguageType = language },
+                    SemverList = group.Select(x => x.Semver).ToList()
+                })
+                .ToList();
 
         return Results.Ok(result);
     }

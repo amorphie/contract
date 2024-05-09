@@ -14,13 +14,8 @@ namespace amorphie.contract.infrastructure.Configurations.Document.DocumentTypes
     {
         public void Configure(EntityTypeBuilder<DocumentUpload> builder)
         {
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "DocumentFormatDetails",
-                "DocumentAllowedClientDetail",
-
-            });
-
+            builder.Navigation(k => k.DocumentFormatDetails).AutoInclude();
+            builder.Navigation(k => k.DocumentAllowedClientDetails).AutoInclude();
         }
     }
 }
