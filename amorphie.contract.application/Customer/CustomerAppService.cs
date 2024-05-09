@@ -366,20 +366,6 @@ namespace amorphie.contract.application.Customer
 
 
         }
-
-        private class MinioObject
-        {
-            public string MinioUrl { get; set; }
-            public Guid DocumentDefinitionId { get; set; }
-        }
-
-        private class DocumentForMinioObject
-        {
-            public Guid Id { get; set; }
-            public Guid DocumentDefinitionId { get; set; }
-            public ApprovalStatus Status { get; set; }
-            public string DocumentContentId { get; set; }
-        }
     }
 }
 
