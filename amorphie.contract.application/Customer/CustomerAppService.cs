@@ -11,8 +11,9 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Model.Documents;
 using amorphie.contract.application.Contract.Dto;
-using System.Reflection.Metadata;
 
 namespace amorphie.contract.application.Customer
 {
@@ -193,9 +194,9 @@ namespace amorphie.contract.application.Customer
                         customerContractDocumentDto.Id = contractDocument.DocumentDefinitionId;
                         customerContractDocumentDto.Title = contractDocument.Titles.L(inputDto.GetLanguageCode());
                         customerContractDocumentDto.Code = contractDocument.Code;
-                        if(document?.Status == EStatus.Completed && contractDocument.Semver != longestVersion)
+                        if(document?.Status == ApprovalStatus.Approved && contractDocument.Semver != longestVersion)
                             customerContractDocumentDto.DocumentStatus = AppConsts.Expired;
-                        else if(document?.Status == EStatus.Completed )
+                        else if(document?.Status == ApprovalStatus.Approved )
                             customerContractDocumentDto.DocumentStatus = AppConsts.Valid;
                         else
                             customerContractDocumentDto.DocumentStatus = AppConsts.InProgress;
@@ -238,9 +239,9 @@ namespace amorphie.contract.application.Customer
                             customerContractDocumentDto.Id = contractDocumentGroupDocument.DocumentDefinitionId;
                             customerContractDocumentDto.Title = contractDocumentGroupDocument.Titles.L(inputDto.GetLanguageCode());
                             customerContractDocumentDto.Code = contractDocumentGroupDocument.Code;
-                            if(document?.Status == EStatus.Completed && contractDocumentGroupDocument.Semver != longestVersion)
+                            if(document?.Status == ApprovalStatus.Approved && contractDocumentGroupDocument.Semver != longestVersion)
                                 customerContractDocumentDto.DocumentStatus = AppConsts.Expired;
-                            else if(document?.Status == EStatus.Completed )
+                            else if(document?.Status == ApprovalStatus.Approved )
                                 customerContractDocumentDto.DocumentStatus = AppConsts.Valid;
                             else
                                 customerContractDocumentDto.DocumentStatus = AppConsts.InProgress;
@@ -263,7 +264,9 @@ namespace amorphie.contract.application.Customer
                         }
                         customerContractDocumentGroupDto.AtLeastRequiredDocument = contractDocumentGroup.AtLeastRequiredDocument;
                         customerContractDocumentGroupDto.Required = contractDocumentGroup.Required;
-                        customerContractDocumentGroupDto.DocumentGroupStatus = AppConsts.NotValid;
+                        //customerContractDocumentDtos daki Tüm dökümanlar Valid mi kontrolü
+                        var allValid = customerContractDocumentDtos.TrueForAll(x => x.DocumentStatus == AppConsts.Valid);
+                        customerContractDocumentGroupDto.DocumentGroupStatus = allValid?AppConsts.Valid: AppConsts.NotValid;
                         customerContractDocumentGroupDto.Titles = contractDocumentGroup.Titles;
                         customerContractDocumentGroupDto.CustomerContractGroupDocuments = customerContractDocumentDtos;
                         customerContractDocumentGroupDtos.Add(customerContractDocumentGroupDto);
@@ -279,7 +282,7 @@ namespace amorphie.contract.application.Customer
                             Id = d.DocumentDefinitionId,
                             Title = d.DocumentDefinition.Titles.L(inputDto.GetLanguageCode()),
                             Code = d.DocumentDefinition.Code,
-                            DocumentStatus = d.Status == EStatus.Completed ? AppConsts.Valid : AppConsts.InProgress,
+                            DocumentStatus = d.Status == ApprovalStatus.Approved ? AppConsts.Valid : AppConsts.InProgress,
                             Required = true,
                             Render = d.DocumentDefinition.DocumentOnlineSign != null,
                             Version = d.DocumentDefinition.Semver,
@@ -373,7 +376,7 @@ namespace amorphie.contract.application.Customer
         {
             public Guid Id { get; set; }
             public Guid DocumentDefinitionId { get; set; }
-            public EStatus Status { get; set; }
+            public ApprovalStatus Status { get; set; }
             public string DocumentContentId { get; set; }
         }
     }

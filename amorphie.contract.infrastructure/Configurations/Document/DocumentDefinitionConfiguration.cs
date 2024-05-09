@@ -9,19 +9,14 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
     {
         public void Configure(EntityTypeBuilder<DocumentDefinition> builder)
         {
-            var list = new List<string>
-            {
-                "DocumentTagsDetails",
-                "DocumentUpload",
-                "DocumentOnlineSign",
-                "DocumentOptimize",
-                "DocumentOperations",
-                "DocumentDys",
-                "DocumentTsizl"
-            };
-            NavigationBuilderAutoInclude(builder, list);
-            //
-
+            builder.Navigation(k => k.DocumentTagsDetails).AutoInclude();
+            builder.Navigation(k => k.DocumentUpload).AutoInclude();
+            builder.Navigation(k => k.DocumentOnlineSign).AutoInclude();
+            builder.Navigation(k => k.DocumentOptimize).AutoInclude();
+            builder.Navigation(k => k.DocumentOperations).AutoInclude();
+            builder.Navigation(k => k.DocumentDys).AutoInclude();
+            builder.Navigation(k => k.DocumentTsizl).AutoInclude();
+            
             builder.HasIndex(x => new
             {
                 x.Code,
@@ -33,8 +28,6 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
                 v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))!);
 
             builder.OwnsMany(d => d.DefinitionMetadata, builder => { builder.ToJson(); });
-
         }
-
     }
 }

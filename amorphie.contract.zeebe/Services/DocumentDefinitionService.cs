@@ -302,8 +302,8 @@ namespace amorphie.contract.zeebe.Services
                     {
                         Id = id,
                         Code = _documentDefinitionDataModel.data.Code,
-                        Status = EStatus.OnHold,
-                        BaseStatus = EStatus.OnHold,
+                        Status = ApprovalStatus.OnHold,
+                        BaseStatus = ApprovalStatus.OnHold,
                         Semver = _documentDefinitionDataModel.data.versiyon
 
                     };
@@ -331,8 +331,8 @@ namespace amorphie.contract.zeebe.Services
                     SetDocumentUpload();
                 }
 
-                _documentdef.Status = EStatus.Active;
-                _documentdef.BaseStatus = EStatus.Active;
+                _documentdef.Status = ApprovalStatus.Approved;
+                _documentdef.BaseStatus = ApprovalStatus.Approved;
 
                 _dbContext.DocumentDefinition.Add(_documentdef);
                 _dbContext.SaveChanges();
@@ -372,8 +372,8 @@ namespace amorphie.contract.zeebe.Services
                     {
                         Id = id,
                         Code = _documentDefinitionDataModel.data.Code,
-                        Status = EStatus.OnHold,
-                        BaseStatus = EStatus.OnHold,
+                        Status = ApprovalStatus.OnHold,
+                        BaseStatus = ApprovalStatus.OnHold,
                         Semver = _documentDefinitionDataModel.data.versiyon
 
                     };
@@ -400,8 +400,8 @@ namespace amorphie.contract.zeebe.Services
                     SetDocumentUpload();
                 }
 
-                _documentdef.Status = EStatus.Active;
-                _documentdef.BaseStatus = EStatus.Active;
+                _documentdef.Status = ApprovalStatus.Approved;
+                _documentdef.BaseStatus = ApprovalStatus.Approved;
 
                 _dbContext.DocumentDefinition.Add(_documentdef);
                 _dbContext.SaveChanges();

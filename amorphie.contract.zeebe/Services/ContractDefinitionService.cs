@@ -17,7 +17,7 @@ namespace amorphie.contract.zeebe.Services
     }
     public class ContractDefinitionService : IContractDefinitionService
     {
-        ProjectDbContext _dbContext;
+        private readonly ProjectDbContext _dbContext;
         ContractDefinitionDataModel _ContractDefinitionDataModel;
         ContractDefinition _ContractDefinition;
         dynamic? _ContractDefinitionDataModelDynamic;
@@ -28,10 +28,10 @@ namespace amorphie.contract.zeebe.Services
         private void SetContractDefinitionDefault(Guid id)
         {
             _ContractDefinition = new ContractDefinition();
-            var activeStatus = EStatus.Active;
+            var activApprovalStatus = ApprovalStatus.Approved;
 
             _ContractDefinition.Id = id;
-            _ContractDefinition.Status = activeStatus;
+            _ContractDefinition.Status = activApprovalStatus;
             _ContractDefinition.Code = _ContractDefinitionDataModel.code;
 
         }
@@ -374,10 +374,8 @@ namespace amorphie.contract.zeebe.Services
                 UpdateContractDocumentGroupDetail(contractDefinition.ContractDocumentGroupDetails.ToList());
                 UpdateContractDocumentDetail(contractDefinition.ContractDocumentDetails.ToList());
                 UpdateContractTag(contractDefinition.ContractTags.ToList());
-                // UpdateEntityProperty(contractDefinition.DefinitionMetadata);
-
-
-                await _dbContext.SaveChangesAsync();
+                //UpdateEntityProperty(contractDefinition.ContractEntityProperty.Select(x => x.EntityProperty).ToList());
+                _dbContext.SaveChanges();
 
                 #region GENERIC_UPDATER
                 // var oldEntityPropertyValueContract = contractDefinition.ContractEntityProperty.Select(x=>x.EntityProperty.EntityPropertyValue).ToList();

@@ -92,7 +92,7 @@ namespace amorphie.contract.application
             {
                 Id = documentDto.Id,
                 DocumentDefinitionId = documentDto.DocumentDefinitionId,
-                Status = EStatus.Completed,
+                Status = ApprovalStatus.Approved,
                 CustomerId = documentDto.CustomerId,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
                 DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
@@ -133,7 +133,7 @@ namespace amorphie.contract.application
                 CustomerId = customerId.Data,
                 DocumentDefinitionId = docdef.Id,
                 Id = input.Id,
-                Status = EStatus.Completed,
+                Status = ApprovalStatus.Approved,
                 Metadata = input.InstanceMetadata,
                 Notes = input.Notes,
             };

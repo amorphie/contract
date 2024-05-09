@@ -48,6 +48,7 @@ public class ContractModule
         var inputQ = new ContractInstanceInputDto
         {
             ContractName = input.ContractName,
+            ContractInstanceId = Guid.NewGuid()
         };
         inputQ.SetHeaderParameters(headerModels);
 
