@@ -20,6 +20,8 @@ namespace amorphie.contract.application.Customer.Dto
 
         [JsonIgnore]
         public Dictionary<string, string> Titles { get; set; } = default!;
+        [JsonIgnore]
+        public bool IsDeleted { get; set; }
 
     }
 }

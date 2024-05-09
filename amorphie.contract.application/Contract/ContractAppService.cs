@@ -139,10 +139,10 @@ namespace amorphie.contract.application.Contract
         private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode)
         {
             var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
-            var findDocumentLastVersion = Versioning.FindLargestVersion(documentsVersionByCode);
+            var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode);
 
             var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
-            var findUserSignedLastVersion = Versioning.FindLargestVersion(signedDocumentsVersionByCode);
+            var findUserSignedLastVersion = Versioning.FindHighestVersion(signedDocumentsVersionByCode);
 
             // Checking contract document min version...
             var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
@@ -197,10 +197,10 @@ namespace amorphie.contract.application.Contract
             {
 
                 var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
-                var findDocumentLastVersion = Versioning.FindLargestVersion(documentsVersionByCode);
+                var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode);
 
                 var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
-                var findUserSignedLastVersion = Versioning.FindLargestVersion(signedDocumentsVersionByCode);
+                var findUserSignedLastVersion = Versioning.FindHighestVersion(signedDocumentsVersionByCode);
 
                 docGroupInstanceDto.DocumentGroupDetailInstance = new DocumentGroupDetailInstanceDto
                 {

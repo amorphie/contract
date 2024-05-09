@@ -14,6 +14,8 @@ using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Model.Documents;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.core.Entity.Document.DocumentTypes;
+using amorphie.contract.core.Entity.Document;
 
 namespace amorphie.contract.application.Customer
 {
@@ -79,99 +81,17 @@ namespace amorphie.contract.application.Customer
             return GenericResult<Guid>.Success(customer.Id);
         }
 
-        public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        public async Task<List<CustomerContractDto>> MapToCustomerContract(
+                List<CustomerContractDto> customerContract, 
+                IQueryable<Document> documentQuery,
+                List<CustomerDocumentDto> customerDocument,
+                GetCustomerDocumentsByContractInputDto inputDto, 
+                bool othersOnly = false)
         {
-            bool othersOnly = false;
-            if (inputDto.Code == "//OtherDocuments")
-            {
-                inputDto.Code = "";
-                othersOnly = true;
-            }
-            var userReference = inputDto.GetUserReference();
-            var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
-
-            var contractQuery = _dbContext!.ContractDefinition.AsQueryable();
-            contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
-
-            if (inputDto.StartDate.HasValue)
-                documentQuery = documentQuery.Where(x => x.CreatedAt > inputDto.StartDate.Value);
-            if (inputDto.EndDate.HasValue)
-                documentQuery = documentQuery.Where(x => x.CreatedAt < inputDto.EndDate.Value);
-            var userId = _dbContext.Customer.Where(x => x.Reference == userReference).Select(x => x.Id).FirstOrDefault();
-            
-            var querableDocument = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
-
-            var customDocument = querableDocument
-                    .Select(d => new
-                    {
-                        d.Id,
-                        d.DocumentDefinitionId,
-                        d.Status,
-                        d.DocumentContentId,
-                        d.CreatedAt
-                    }).ToList();
-
-            var querableDocumentIds = customDocument.Select(d => d.DocumentDefinitionId).ToList();
-            var quearableContract = contractQuery.IgnoreAutoIncludes().IgnoreQueryFilters()
-                .Where(c => 
-                            (
-                                c.ContractDocumentDetails.Any(cdd => querableDocumentIds.Contains(cdd.DocumentDefinitionId)) 
-                                && 
-                                _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId)
-                            )
-                            || 
-                                c.ContractDocumentGroupDetails.Any(cdgd => cdgd.DocumentGroup.DocumentGroupDetails.Any(dgd => querableDocumentIds.Contains(dgd.DocumentDefinitionId)) 
-                                && 
-                                _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId)
-                            )
-                     )
-                .Select(cd => new
-                {
-                    cd.Id,
-                    cd.Code,
-                    cd.Titles,
-                    cd.Status,
-                    cd.IsDeleted,
-                    customerContractDocumentGroups = cd.ContractDocumentGroupDetails
-                        .Select(cdgd => new
-                        {
-                            cd.Id,
-                            cdgd.DocumentGroupId,
-                            cdgd.DocumentGroup.Code,
-                            cdgd.DocumentGroup.Titles,
-                            cdgd.AtLeastRequiredDocument,
-                            cdgd.Required,
-                            customerContractGroupDocuments = cdgd.DocumentGroup.DocumentGroupDetails.Select(dgd => new
-                            {
-                                dgd.DocumentDefinitionId,
-                                dgd.DocumentDefinition.Titles,
-                                dgd.DocumentDefinition.Code,
-                                cdgd.Required,
-                                Render = dgd.DocumentDefinition.DocumentOnlineSign != null,
-                                dgd.DocumentDefinition.Semver,
-                                dgd.DocumentDefinition.DocumentOnlineSign,
-                                dgd.IsDeleted
-                                })
-                        }),
-                    CustomerContractDocuments = cd.ContractDocumentDetails
-                        .Select(cdd => new
-                        {
-                            cdd.DocumentDefinitionId,
-                            cdd.DocumentDefinition.Titles,
-                            cdd.DocumentDefinition.Code,
-                            cdd.Required,
-                            Render = cdd.DocumentDefinition.DocumentOnlineSign != null,
-                            cdd.DocumentDefinition.Semver,
-                            cdd.DocumentDefinition.DocumentOnlineSign,
-                            cdd.IsDeleted
-
-                        }),
-                })
-                .ToList();
             List<CustomerContractDto> customerContractDtos = new List<CustomerContractDto>();
             List<Guid> allContractDocumentIds = new List<Guid>();
 
-            foreach (var contract in quearableContract)
+            foreach (var contract in customerContract)
             {
                 CustomerContractDto customerContractDto = new CustomerContractDto();
                 customerContractDto.Id = contract.Id;
@@ -185,16 +105,16 @@ namespace amorphie.contract.application.Customer
                     List<CustomerContractDocumentDto> customerContractDocumentDtos = new List<CustomerContractDocumentDto>();
                     foreach (var contractDocument in contract.CustomerContractDocuments)
                     {
-                        var findDocumentVersion = contract.CustomerContractDocuments.Where(x => x.Code == contractDocument.Code).Select(x=>x.Semver).ToArray();
-                        var longestVersion = Versioning.FindLargestVersion(findDocumentVersion);
-                        var document = customDocument.Where(d => d.DocumentDefinitionId == contractDocument.DocumentDefinitionId).FirstOrDefault();
+                        var findDocumentVersion = contract.CustomerContractDocuments.Where(x => x.Code == contractDocument.Code).Select(x=>x.Version).ToArray();
+                        var longestVersion = Versioning.FindHighestVersion(findDocumentVersion);
+                        var document = customerDocument.Where(d => d.DocumentDefinitionId == contractDocument.Id).FirstOrDefault();
                         if(document == null && contractDocument.IsDeleted)
                             continue;
                         CustomerContractDocumentDto customerContractDocumentDto = new CustomerContractDocumentDto();
-                        customerContractDocumentDto.Id = contractDocument.DocumentDefinitionId;
+                        customerContractDocumentDto.Id = contractDocument.Id;
                         customerContractDocumentDto.Title = contractDocument.Titles.L(inputDto.GetLanguageCode());
                         customerContractDocumentDto.Code = contractDocument.Code;
-                        if(document?.Status == ApprovalStatus.Approved && contractDocument.Semver != longestVersion)
+                        if(document?.Status == ApprovalStatus.Approved && contractDocument.Version != longestVersion)
                             customerContractDocumentDto.DocumentStatus = AppConsts.Expired;
                         else if(document?.Status == ApprovalStatus.Approved )
                             customerContractDocumentDto.DocumentStatus = AppConsts.Valid;
@@ -202,70 +122,52 @@ namespace amorphie.contract.application.Customer
                             customerContractDocumentDto.DocumentStatus = AppConsts.InProgress;
                         customerContractDocumentDto.Required = contractDocument.Required;
                         customerContractDocumentDto.Render = contractDocument.Render;
-                        customerContractDocumentDto.Version = contractDocument.Semver;
+                        customerContractDocumentDto.Version = contractDocument.Version;
                         customerContractDocumentDto.MinioUrl = document?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={document.DocumentContentId}";
                         customerContractDocumentDto.ApprovalDate = document?.CreatedAt == null ? DateTime.MinValue : document.CreatedAt;
-                        customerContractDocumentDto.OnlineSign = new OnlineSignDto
-                        {
-                            AllovedClients = contractDocument.DocumentOnlineSign.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code).ToList(),
-                            ScaRequired = contractDocument.DocumentOnlineSign.Required,
-                            DocumentModelTemplate = contractDocument.DocumentOnlineSign.Templates.Select(x => new DocumentTemplateDto
-                            {
-                                Name = x.Code,
-                                MinVersion = x.Version
-                            }).ToList()
-                        };
-                        allContractDocumentIds.Add(contractDocument.DocumentDefinitionId);
+                        customerContractDocumentDto.OnlineSign = contractDocument.OnlineSign;
+                        allContractDocumentIds.Add(contractDocument.Id);
                         customerContractDocumentDtos.Add(customerContractDocumentDto);
                     }
                     customerContractDto.CustomerContractDocuments = customerContractDocumentDtos;
                 }
-                if(contract.customerContractDocumentGroups != null)
+                if(contract.CustomerContractDocumentGroups != null)
                 {
                     List<CustomerContractDocumentGroupDto> customerContractDocumentGroupDtos = new List<CustomerContractDocumentGroupDto>();
-                    foreach (var contractDocumentGroup in contract.customerContractDocumentGroups)
+                    foreach (var contractDocumentGroup in contract.CustomerContractDocumentGroups)
                     {
                         CustomerContractDocumentGroupDto customerContractDocumentGroupDto = new CustomerContractDocumentGroupDto();
                         List<CustomerContractDocumentDto> customerContractDocumentDtos = new List<CustomerContractDocumentDto>();
-                        customerContractDocumentGroupDto.Id = contractDocumentGroup.DocumentGroupId;
+                        customerContractDocumentGroupDto.Id = contractDocumentGroup.Id;
                         customerContractDocumentGroupDto.Code = contractDocumentGroup.Code;
                         customerContractDocumentGroupDto.CustomerContractGroupDocuments = new List<CustomerContractDocumentDto>();
-                        foreach (var contractDocumentGroupDocument in contractDocumentGroup.customerContractGroupDocuments)
+                        foreach (var contractDocumentGroupDocument in contractDocumentGroup.CustomerContractGroupDocuments)
                         {
-                            var findDocumentVersion = contractDocumentGroup.customerContractGroupDocuments.Where(x => x.Code == contractDocumentGroupDocument.Code).Select(x=>x.Semver).ToArray();
-                            var longestVersion = Versioning.FindLargestVersion(findDocumentVersion);
-                            var document = customDocument.Where(d => d.DocumentDefinitionId == contractDocumentGroupDocument.DocumentDefinitionId).FirstOrDefault();
+                            var findDocumentVersion = contractDocumentGroup.CustomerContractGroupDocuments.Where(x => x.Code == contractDocumentGroupDocument.Code).Select(x=>x.Version).ToArray();
+                            var longestVersion = Versioning.FindHighestVersion(findDocumentVersion);
+                            var document = customerDocument.Where(d => d.DocumentDefinitionId == contractDocumentGroupDocument.Id).FirstOrDefault();
                             CustomerContractDocumentDto customerContractDocumentDto = new CustomerContractDocumentDto();
-                            customerContractDocumentDto.Id = contractDocumentGroupDocument.DocumentDefinitionId;
+                            customerContractDocumentDto.Id = contractDocumentGroupDocument.Id;
                             customerContractDocumentDto.Title = contractDocumentGroupDocument.Titles.L(inputDto.GetLanguageCode());
                             customerContractDocumentDto.Code = contractDocumentGroupDocument.Code;
-                            if(document?.Status == ApprovalStatus.Approved && contractDocumentGroupDocument.Semver != longestVersion)
+                            if(document?.Status == ApprovalStatus.Approved && contractDocumentGroupDocument.Version != longestVersion)
                                 customerContractDocumentDto.DocumentStatus = AppConsts.Expired;
                             else if(document?.Status == ApprovalStatus.Approved )
                                 customerContractDocumentDto.DocumentStatus = AppConsts.Valid;
                             else
                                 customerContractDocumentDto.DocumentStatus = AppConsts.InProgress;
                             customerContractDocumentDto.Render = contractDocumentGroupDocument.Render;
-                            customerContractDocumentDto.Version = contractDocumentGroupDocument.Semver;
+                            customerContractDocumentDto.Version = contractDocumentGroupDocument.Version;
                             customerContractDocumentDto.MinioUrl = document?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={document.DocumentContentId}";
                             customerContractDocumentDto.ApprovalDate = document?.CreatedAt == null ? DateTime.MinValue : document.CreatedAt;
-                            customerContractDocumentDto.OnlineSign = new OnlineSignDto
-                            {
-                                AllovedClients = contractDocumentGroupDocument.DocumentOnlineSign.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code).ToList(),
-                                ScaRequired = contractDocumentGroupDocument.DocumentOnlineSign.Required,
-                                DocumentModelTemplate = contractDocumentGroupDocument.DocumentOnlineSign.Templates.Select(x => new DocumentTemplateDto
-                                {
-                                    Name = x.Code,
-                                    MinVersion = x.Version
-                                }).ToList()
-                            };
-                            allContractDocumentIds.Add(contractDocumentGroupDocument.DocumentDefinitionId);
+                            customerContractDocumentDto.OnlineSign = contractDocumentGroupDocument.OnlineSign;
+                            allContractDocumentIds.Add(contractDocumentGroupDocument.Id);
                             customerContractDocumentDtos.Add(customerContractDocumentDto);
                         }
                         customerContractDocumentGroupDto.AtLeastRequiredDocument = contractDocumentGroup.AtLeastRequiredDocument;
                         customerContractDocumentGroupDto.Required = contractDocumentGroup.Required;
                         //customerContractDocumentDtos daki Tüm dökümanlar Valid mi kontrolü
-                        var allValid = customerContractDocumentDtos.TrueForAll(x => x.DocumentStatus == AppConsts.Valid);
+                        var allValid = customerContractDocumentDtos.All(x => x.DocumentStatus == AppConsts.Valid);
                         customerContractDocumentGroupDto.DocumentGroupStatus = allValid?AppConsts.Valid: AppConsts.NotValid;
                         customerContractDocumentGroupDto.Titles = contractDocumentGroup.Titles;
                         customerContractDocumentGroupDto.CustomerContractGroupDocuments = customerContractDocumentDtos;
@@ -276,6 +178,16 @@ namespace amorphie.contract.application.Customer
                 customerContractDtos.Add(customerContractDto);
                 
             }
+            var otherContract = await GetOtherDocuments(documentQuery,allContractDocumentIds, inputDto);                         
+            customerContractDtos.Add(otherContract);
+            if(othersOnly)
+            {
+                customerContractDtos = new List<CustomerContractDto> { otherContract };
+            }
+            return customerContractDtos;
+        }
+        public async Task<CustomerContractDto> GetOtherDocuments(IQueryable<Document> documentQuery, List<Guid> allContractDocumentIds,GetCustomerDocumentsByContractInputDto inputDto)
+        {
             var otherDocuments = documentQuery.Where(d=>!allContractDocumentIds.Contains(d.DocumentDefinitionId))
                     .Select(d=> new CustomerContractDocumentDto
                         {
@@ -305,13 +217,102 @@ namespace amorphie.contract.application.Customer
                 Titles = new Dictionary<string, string> { { "tr", "Diğer Belgeler" }, { "en", "Other Documents" } },
                 Title = inputDto.GetLanguageCode() == "tr-TR" ? "Diğer" : "Other",
                 CustomerContractDocuments = otherDocuments
-            };                          
-            customerContractDtos.Add(otherContract);
-            if(othersOnly)
+            };
+            return otherContract;
+        }
+
+        public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
+        {
+            bool othersOnly = false;
+            if (inputDto.Code == "//OtherDocuments")
             {
-                customerContractDtos = new List<CustomerContractDto> { otherContract };
+                inputDto.Code = "";
+                othersOnly = true;
             }
-            return GenericResult<List<CustomerContractDto>>.Success(customerContractDtos);
+            var userReference = inputDto.GetUserReference();
+            var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
+
+            var contractQuery = _dbContext!.ContractDefinition.AsQueryable();
+            contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
+
+            if (inputDto.StartDate.HasValue)
+                documentQuery = documentQuery.Where(x => x.CreatedAt >= inputDto.StartDate.Value);
+            if (inputDto.EndDate.HasValue)
+                documentQuery = documentQuery.Where(x => x.CreatedAt <= inputDto.EndDate.Value);
+            var userId = _dbContext.Customer.Where(x => x.Reference == userReference).Select(x => x.Id).FirstOrDefault();
+            
+            var querableDocument = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
+
+            List<CustomerDocumentDto> customDocument = querableDocument
+                    .Select(d => new CustomerDocumentDto
+                    {
+                        Id= d.Id,
+                        DocumentDefinitionId= d.DocumentDefinitionId,
+                        Status=d.Status,
+                        DocumentContentId= d.DocumentContentId,
+                        CreatedAt=d.CreatedAt
+                    }).ToList();
+
+            var querableDocumentIds = customDocument.Select(d => d.DocumentDefinitionId).ToList();
+            List<CustomerContractDto> quearableContract = contractQuery.IgnoreAutoIncludes().IgnoreQueryFilters()
+                .Where(c => 
+                            (
+                                c.ContractDocumentDetails.Any(cdd => querableDocumentIds.Contains(cdd.DocumentDefinitionId)) 
+                                && 
+                                _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId)
+                            )
+                            || 
+                                c.ContractDocumentGroupDetails.Any(cdgd => cdgd.DocumentGroup.DocumentGroupDetails.Any(dgd => querableDocumentIds.Contains(dgd.DocumentDefinitionId)) 
+                                && 
+                                _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId)
+                            )
+                     )
+                .Select(cd => new CustomerContractDto
+                {
+                    Id=cd.Id,
+                    Code = cd.Code,
+                    Titles= cd.Titles,
+                    Status= cd.Status,
+                    IsDeleted = cd.IsDeleted,
+                    CustomerContractDocumentGroups = cd.ContractDocumentGroupDetails
+                        .Select(cdgd => new CustomerContractDocumentGroupDto
+                        {
+                            Id = cdgd.DocumentGroupId,
+                            Code= cdgd.DocumentGroup.Code,
+                            Titles=cdgd.DocumentGroup.Titles,
+                            AtLeastRequiredDocument= cdgd.AtLeastRequiredDocument,
+                            Required= cdgd.Required,
+                            CustomerContractGroupDocuments = cdgd.DocumentGroup.DocumentGroupDetails.Select(dgd => new CustomerContractDocumentDto
+                            {
+                                Id=dgd.DocumentDefinitionId,
+                                Titles=dgd.DocumentDefinition.Titles,
+                                Code=dgd.DocumentDefinition.Code,
+                                Required=cdgd.Required,
+                                Render = dgd.DocumentDefinition.DocumentOnlineSign != null,
+                                Version=dgd.DocumentDefinition.Semver,
+                                OnlineSign= ObjectMapperApp.Mapper.Map<OnlineSignDto>(dgd.DocumentDefinition.DocumentOnlineSign),
+                                IsDeleted=dgd.IsDeleted
+                                })
+                        }),
+                    CustomerContractDocuments = cd.ContractDocumentDetails
+                        .Select(cdd => new CustomerContractDocumentDto
+                        {
+                            Id=cdd.DocumentDefinitionId,
+                            Titles= cdd.DocumentDefinition.Titles,
+                            Code=cdd.DocumentDefinition.Code,
+                            Required=cdd.Required,
+                            Render = cdd.DocumentDefinition.DocumentOnlineSign != null,
+                            Version=cdd.DocumentDefinition.Semver,
+                            OnlineSign=ObjectMapperApp.Mapper.Map<OnlineSignDto>(cdd.DocumentDefinition.DocumentOnlineSign),
+                            IsDeleted=cdd.IsDeleted
+
+                        }),
+                })
+                .ToList();
+
+            var customerContract = await MapToCustomerContract(quearableContract, documentQuery, customDocument, inputDto, othersOnly);
+            
+            return GenericResult<List<CustomerContractDto>>.Success(customerContract);
         }
 
         public async Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
