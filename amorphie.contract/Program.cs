@@ -28,9 +28,22 @@ using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
-await builder.Configuration.AddVaultSecrets("contract-secretstore", new[] { "contract-secretstore" });
+//await builder.Configuration.AddVaultSecrets("contract-secretstore", new[] { "contract-secretstore" });
 
-var postgreSql = builder.Configuration["contractdb"];
+//var postgreSql = builder.Configuration["contractdb"];
+
+IConfiguration Configuration;
+Configuration = builder
+    .Configuration
+    .AddJsonFile($"appsettings.json", false, true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .AddUserSecrets<Program>()
+    .Build();
+
+builder.Services.AddDbContext<ProjectDbContext>
+    (options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddDaprClient();
 builder.Services.AddEndpointsApiExplorer();
@@ -81,8 +94,8 @@ builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 
-builder.Services.AddDbContext<ProjectDbContext>
-    (options => options.UseNpgsql(postgreSql));
+//builder.Services.AddDbContext<ProjectDbContext>
+//    (options => options.UseNpgsql(postgreSql));
 
 builder.Services.AddCors(options =>
 {
