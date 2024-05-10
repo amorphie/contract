@@ -20,7 +20,7 @@ namespace amorphie.contract.core.Entity.Document
 
         public DocumentContent DocumentContent { get; set; } = default!;
 
-        public EStatus Status { get; set; } = default!;
+        public ApprovalStatus Status { get; set; } = default!;
         public ICollection<DocumentInstanceNote>? DocumentInstanceNotes { get; set; } = new List<DocumentInstanceNote>();
 
         public Guid CustomerId { get; set; }

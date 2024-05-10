@@ -7,7 +7,7 @@ namespace amorphie.contract.application.Customer
     {
         public Guid Id { get; set; }
         public Guid DocumentDefinitionId { get; set; }
-        public EStatus Status { get; set; }
+        public ApprovalStatus Status { get; set; }
         public string DocumentContentId { get; set; }
     }
 }

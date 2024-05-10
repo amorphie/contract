@@ -1,11 +1,16 @@
-﻿using amorphie.contract.core.Enum;
+﻿using System.ComponentModel.DataAnnotations;
+using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 
 namespace amorphie.contract.application.Contract.Request
 {
     public class ContractInstanceInputDto
     {
-        public string ContractName { get; set; }
+
+        [Required]
+        public required string ContractName { get; set; }
+
+        public required Guid ContractInstanceId { get; set;}
         public string? Reference { get; private set; }
         public string? LangCode { get; private set; }
 
@@ -20,10 +25,6 @@ namespace amorphie.contract.application.Contract.Request
             LangCode = headerFilterModel.LangCode;
             EBankEntity = headerFilterModel.EBankEntity;
         }
-        //public string Owner { get; set; }
-        //public string CallbackName { get; set; }
-        //public Guid ProcessId { get; set; }
-        //public ContractProcess Process { get; set; } = default!;
     }
 
 }

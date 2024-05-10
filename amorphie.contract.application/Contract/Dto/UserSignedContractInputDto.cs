@@ -1,18 +1,30 @@
-using amorphie.contract.core.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.contract.application.Contract.Dto
 {
     public class UserSignedContractInputDto
     {
         public List<Guid> DocumentInstanceIds { get; set; } = new();
-        public Guid ContractInstanceId { get; set; }
-        public string ContractCode { get; set; }
 
-        public void SetHeaderParameters(HeaderFilterModel headerFilterModel)
+        [Required]
+        public required Guid ContractInstanceId { get; set; }
+
+        [Required]
+        public required string ContractCode { get; set; }
+
+        public void SetHeaderParameters(string userReference)
         {
-            UserReference = headerFilterModel.UserReference;
+            _userReference = userReference;
         }
 
-        public string UserReference { get; private set; }
+        private string _userReference;
+
+        public string GetUserReference()
+        {
+            ArgumentException.ThrowIfNullOrEmpty(_userReference);
+
+            return _userReference;
+        }
     }
+
 }
