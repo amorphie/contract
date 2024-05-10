@@ -85,13 +85,13 @@ namespace amorphie.contract.application.Contract
             var documents = await (from df in _dbContext.DocumentDefinition
                                    join d in _dbContext.Document.Where(x => x.Customer.Reference == userReference) on df.Id equals d.DocumentDefinitionId into userDocuments
                                    from userDoc in userDocuments.DefaultIfEmpty()
-                                   where _allDocumentCodesOfContract.Contains(df.Code)
+                                   where _allDocumentCodesOfContract.Contains(df.Code) && df.IsActive
                                    select new DocumentCustomerInfoDto
                                    {
                                        DocumentDefinitionId = df.Id,
                                        DocumentCode = df.Code,
                                        SemVer = df.Semver,
-                                       IsSigned = userDoc.Customer != null,
+                                       IsSigned = userDoc.Customer != null && userDoc.Status == ApprovalStatus.Approved,
                                        DocumentInstanceId = userDoc != null ? userDoc.Id : (Guid?)null,
                                    })
                                    .AsNoTracking()
