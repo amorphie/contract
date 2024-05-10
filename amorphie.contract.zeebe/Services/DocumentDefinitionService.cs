@@ -307,7 +307,7 @@ namespace amorphie.contract.zeebe.Services
                 SetDocumentDys(dysMetadata);
                 SetDocumentTsizl();
 
-                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSing") > -1)
+                if (_documentDefinitionDataModel.data.DocumentType.IndexOf("onlineSign") > -1)
                 {
                     SetDocumentOnlineSing();
 
