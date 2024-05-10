@@ -40,6 +40,9 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
+builder.Services.AddHealthChecks().AddNpgSql(postgreSql);
+
+
 builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 {
     loggerConfiguration
@@ -111,6 +114,8 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 // sssss
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 

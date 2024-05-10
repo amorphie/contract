@@ -41,9 +41,11 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
+builder.Services.AddHealthChecks().AddNpgSql(postgreSql);
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 
@@ -126,6 +128,8 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/amorphie.contract.v1/swagger.json", "amorphie.contract.v1");
     c.SwaggerEndpoint("/swagger/amorphie.contract.admin/swagger.json", "amorphie.contract.admin");
 });
+
+app.MapHealthChecks("/health");
 
 // app.UseHttpsRedirection();
 
