@@ -129,7 +129,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/amorphie.contract.admin/swagger.json", "amorphie.contract.admin");
 });
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/healthz");
 
 // app.UseHttpsRedirection();
 

@@ -115,7 +115,7 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/healthz");
 
 app.UseHttpsRedirection();
 
