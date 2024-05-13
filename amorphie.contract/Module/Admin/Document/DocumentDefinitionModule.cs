@@ -28,9 +28,9 @@ public class DocumentDefinitionModule
         routeGroupBuilder.MapGet("GetAllSearch", getAllSearch);
     }
     async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
-    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data,
-   [FromHeader(Name = "Language")] string? language = "tr-TR")
+    HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data)
     {
+        var language = httpContext.Request.Headers["Accept-Language"].ToString();
         var query = context!.DocumentDefinition.AsQueryable();
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var documentDefinitions = await query.ToListAsync(token);
