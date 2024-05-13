@@ -15,7 +15,7 @@ namespace amorphie.contract.application.Customer.Dto
         public bool Render { get; set; }
         public string Version { get; set; }
         public string MinioUrl { get; set; }
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
         public OnlineSignDto OnlineSign { get; set; }
 
         [JsonIgnore]

@@ -10,6 +10,7 @@ namespace amorphie.contract.application.Customer.Dto
         public ApprovalStatus Status { get; set; }
         public Guid DocumentContentId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Version { get; set; }
 
     }
 

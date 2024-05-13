@@ -9,8 +9,7 @@ namespace amorphie.contract.core.Enum
 
         //Signed but now it has new version.
         HasNewVersion = 6,
-        Rejected = 7,
-        Expired = 8
+        Rejected = 7
     }
 
     public enum DefinitionStatus : ushort
