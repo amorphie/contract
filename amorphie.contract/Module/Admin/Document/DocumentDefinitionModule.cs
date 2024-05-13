@@ -33,22 +33,29 @@ public class DocumentDefinitionModule
         var language = HeaderHelper.GetHeaderLangCode(httpContext);
         var query = context!.DocumentDefinition.AsQueryable();
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
-        var documentDefinitions = await query.ToListAsync(token);
-            var result = documentDefinitions
+        //var documentDefinitions = await query.ToListAsync(token);
+            var queryResult = await query
                 .Select(d => new
                 {
                     Code = d.Code,
-                    Title = d.Titles,
+                    Title = new { d.Titles, d.Semver },
                     Semver = d.Semver
                 })
-                .GroupBy(x => new { x.Code, Title=x.Title.L(language) })
+                .GroupBy(x => x.Code)
                 .Select(group => new
                 {
-                    Code = group.Key.Code,
-                    Title = new { Name = group.Key.Title, LanguageType = language },
+                    Code = group.Key,
+                    Title = group.Select(x => x.Title).ToList(),
                     SemverList = group.Select(x => x.Semver).ToList()
                 })
-                .ToList();
+                .ToListAsync(token);
+
+        var result = queryResult.Select(x => new
+        {
+            Code = x.Code,
+            Title = new { Name = x.Title.FirstOrDefault(z => z.Semver == Versioning.FindHighestVersion(x.SemverList.ToArray())).Titles.L(language), LanguageType = language },
+            SemverList = x.SemverList
+        });
 
         return Results.Ok(result);
     }
