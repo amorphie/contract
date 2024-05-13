@@ -30,7 +30,7 @@ public class DocumentDefinitionModule
     async ValueTask<IResult> getAllSearch([FromServices] ProjectDbContext context, [FromServices] IMapper mapper,
     HttpContext httpContext, CancellationToken token, [AsParameters] ComponentSearch data)
     {
-        var language = httpContext.Request.Headers["Accept-Language"].ToString();
+        var language = HeaderHelper.GetHeaderLangCode(httpContext);
         var query = context!.DocumentDefinition.AsQueryable();
         query = ContractHelperExtensions.LikeWhere(query, data.Keyword);
         var documentDefinitions = await query.ToListAsync(token);

@@ -18,7 +18,7 @@ public static class Lang
 
         if (!multilanguages.TryGetValue(langCode, out resultValue))
         {
-                resultValue = UndefinedLang;
+            resultValue = UndefinedLang;
         }
 
         return resultValue;
