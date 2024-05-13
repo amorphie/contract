@@ -41,18 +41,13 @@ public class ContractModule
         return Results.Ok(response);
     }
     async ValueTask<IResult> InstanceState([FromServices] IContractAppService contractAppService, CancellationToken token,
-    [AsParameters] ContractInstanceInputDto input, HttpContext httpContext)
+    [AsParameters] ContractInstanceStateInputDto input, HttpContext httpContext)
     {
 
         var headerModels = HeaderHelper.GetHeader(httpContext);
-        var inputQ = new ContractInstanceInputDto
-        {
-            ContractName = input.ContractName,
-            ContractInstanceId = Guid.NewGuid()
-        };
-        inputQ.SetHeaderParameters(headerModels);
+        input.SetHeaderParameters(headerModels);
 
-        var response = await contractAppService.InstanceState(inputQ, token);
+        var response = await contractAppService.InstanceState(input, token);
         return Results.Ok(response);
     }
 
