@@ -3,6 +3,7 @@ namespace amorphie.contract.core.Extensions;
 public static class Lang
 {
     private const string DefaultLang = "tr-TR";
+    private const string SecondaryLang = "en-EN";
     private const string UndefinedLang = "Undefined_Lang_Key";
     public const string LangCode = "LangCode";
 
@@ -16,9 +17,11 @@ public static class Lang
 
         string resultValue = String.Empty;
 
-        if (!multilanguages.TryGetValue(langCode, out resultValue))
+        if (!multilanguages.TryGetValue(langCode, out resultValue) ||
+            !multilanguages.TryGetValue(DefaultLang, out resultValue) ||
+            !multilanguages.TryGetValue(SecondaryLang, out resultValue))
         {
-            resultValue = UndefinedLang;
+                resultValue = UndefinedLang;
         }
 
         return resultValue;
