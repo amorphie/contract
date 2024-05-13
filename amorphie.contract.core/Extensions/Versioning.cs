@@ -5,7 +5,7 @@ namespace amorphie.contract.core.Extensions;
 
 public static class Versioning
 {
-    public static string FindLargestVersion(string[] versions)
+    public static string FindHighestVersion(string[] versions)
     {
         if (versions == null || versions.Length == 0)
         {
