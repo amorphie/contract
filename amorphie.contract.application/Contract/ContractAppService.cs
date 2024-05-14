@@ -7,6 +7,7 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using Serilog;
+using System.Security.Cryptography.X509Certificates;
 
 namespace amorphie.contract.application.Contract
 {
@@ -93,6 +94,16 @@ namespace amorphie.contract.application.Contract
                                        SemVer = df.Semver,
                                        IsSigned = userDoc.Customer != null && userDoc.Status == ApprovalStatus.Approved,
                                        DocumentInstanceId = userDoc != null ? userDoc.Id : (Guid?)null,
+                                       DocumentOnlineSign = new DocumentOnlineSignDto
+                                       {
+                                           Templates = df.DocumentOnlineSign.Templates.Select(a => new DocumentTemplateDetailsDto
+                                           {
+                                               Code = a.Code,
+                                               LanguageCode = a.LanguageCode,
+                                               Version = a.Version
+                                           }).ToList()
+                                       },
+                                       Titles = df.Titles
                                    })
                                    .AsNoTracking()
                                    .ToListAsync();
@@ -148,15 +159,19 @@ namespace amorphie.contract.application.Contract
 
         private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode)
         {
-            var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
-            var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode);
+            var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).ToArray();
+
+            var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode.Select(k => k.SemVer).ToArray());
+
+            var documentLastVersion = documentsVersionByCode.First(x => x.SemVer == findDocumentLastVersion);
 
             var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
             var findUserSignedLastVersion = Versioning.FindHighestVersion(signedDocumentsVersionByCode);
 
             // Checking contract document min version...
             var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-            var template = contractDoc.DocumentDefinition?.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+            var template = documentLastVersion.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+
 
             var documentInstance = new DocumentInstanceDto
             {
@@ -166,7 +181,7 @@ namespace amorphie.contract.application.Contract
                 Status = ApprovalStatus.InProgress.ToString(),
                 MinVersion = contractDoc.DocumentDefinition.Semver,
                 LastVersion = findDocumentLastVersion,
-                Name = contractDoc.DocumentDefinition.Titles.L(langCode),
+                Name = documentLastVersion.Titles.L(langCode),
                 DocumentDetail = new DocumentInstanceDetailDto
                 {
                     OnlineSign = new DocumentInstanceOnlineSignDto
@@ -206,9 +221,11 @@ namespace amorphie.contract.application.Contract
             foreach (var contractDoc in contractDocGroupDetail.DocumentGroup.DocumentGroupDetails.ToList())
             {
 
-                var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).Select(k => k.SemVer).ToArray();
-                var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode);
+                var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).ToArray();
+                var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode.Select(k => k.SemVer).ToArray());
 
+                var documentLastVersion = documentsVersionByCode.First(x => x.SemVer == findDocumentLastVersion);
+               
                 var signedDocumentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned).Select(k => k.SemVer).ToArray();
                 var findUserSignedLastVersion = Versioning.FindHighestVersion(signedDocumentsVersionByCode);
 
@@ -219,7 +236,7 @@ namespace amorphie.contract.application.Contract
 
                 // Checking contract document min version...
                 var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-                var template = contractDoc.DocumentDefinition.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+                var template = documentLastVersion.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
 
 
                 var documentInstance = new DocumentInstanceDto
@@ -229,7 +246,7 @@ namespace amorphie.contract.application.Contract
                     IsRequired = contractDocGroupDetail.Required,
                     MinVersion = contractDoc.DocumentDefinition.Semver,
                     LastVersion = findDocumentLastVersion,
-                    Name = contractDoc.DocumentDefinition.Titles.L(langCode),
+                    Name = documentLastVersion.Titles.L(langCode),
                     Status = ApprovalStatus.InProgress.ToString(),
                     DocumentDetail = new DocumentInstanceDetailDto
                     {
@@ -238,7 +255,8 @@ namespace amorphie.contract.application.Contract
                             TemplateCode = template?.Code,
                             Version = template?.Version
                         }
-                    }
+                    },
+                    
                 };
 
                 if (customerDocument is not null)
