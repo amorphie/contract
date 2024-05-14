@@ -12,8 +12,6 @@ using amorphie.contract.core;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
-using System.Collections.Generic;
-using amorphie.contract.core.Entity.Document;
 
 namespace amorphie.contract.application.Customer
 {
@@ -110,7 +108,7 @@ namespace amorphie.contract.application.Customer
                 Id = x.Id,
                 DocumentDefinitionId = x.DocumentDefinitionId,
                 Status = x.Status,
-                DocumentContentId = x.DocumentContentId.ToString()
+                DocumentContentId = x.DocumentContent.Id.ToString()
             })
             .AsSplitQuery()
             .ToListAsync(token);
@@ -131,7 +129,7 @@ namespace amorphie.contract.application.Customer
             var contractHistoryQuery = historyQuery
                 .Where(x => x.BankEntity == inputDto.GetBankEntityCode())
                 .ToList();
-
+            
             var contractHistory = ObjectMapperApp.Mapper.Map<List<ContractDefinition>>(contractHistoryQuery);
             var contractHistoryModels = ObjectMapperApp.Mapper.Map<List<CustomerContractDto>>(contractHistory);
 
@@ -167,15 +165,9 @@ namespace amorphie.contract.application.Customer
             List<Guid> allContractDocumentIds = allContractQuery.SelectMany(main => main.ContractDocumentDetails.Select(doc => doc.DocumentDefinitionId))
                                  .Concat(allContractQuery.SelectMany(main => main.ContractDocumentGroupDetails.Select(docGrup => docGrup.DocumentGroupId)))
                                  .ToList();
-
             foreach (var model in contractModels)
             {
-                //allContractDocumentIds.AddRange(model.CustomerContractDocuments.Select(x => x.Id));
-
-                if (othersOnly)
-                {
-                    break;
-                }
+                allContractDocumentIds.AddRange(model.CustomerContractDocuments.Select(x => x.Id));
 
                 model.Title = model.Titles.L(inputDto.GetLanguageCode());
 
@@ -248,14 +240,16 @@ namespace amorphie.contract.application.Customer
                  {
                      if (model.ContractStatus == AppConsts.Valid || model.ContractStatus == AppConsts.InProgress)
                      {
-                         SetContractDocumentsMinioUrl(model, documents);
+                         GetMinioUrl(model, documents, token);
                      }
                  });
             }
 
             if (String.IsNullOrEmpty(inputDto.Code))
             {
-                var otherDocuments = documents.Where(x => !allContractDocumentIds.Distinct().Contains(x.DocumentDefinitionId));
+                allContractDocumentIds = allContractDocumentIds.Distinct().ToList();
+
+                var otherDocuments = documents.Where(x => !allContractDocumentIds.Contains(x.DocumentDefinitionId));
 
                 var otherDocumentDefinition = _dbContext.DocumentDefinition
                                                 .IgnoreQueryFilters()
@@ -282,7 +276,7 @@ namespace amorphie.contract.application.Customer
                     CustomerContractDocumentGroups = new List<CustomerContractDocumentGroupDto>()
                 };
 
-                SetContractDocumentsMinioUrl(contractModel, documents);
+                GetMinioUrl(contractModel, documents, token);
 
                 if (othersOnly)
                 {
@@ -300,32 +294,58 @@ namespace amorphie.contract.application.Customer
             return GenericResult<List<CustomerContractDto>>.Success(contractModels);
         }
 
-        private void SetContractDocumentsMinioUrl(CustomerContractDto model, List<DocumentForMinioObject> documentsForMinio)
+
+        private void GetMinioUrl(CustomerContractDto model, List<DocumentForMinioObject> documents, CancellationToken token)
         {
-            List<Guid> contractDocumentDefinitionIds = model.CustomerContractDocuments.Where(x => model.Code == "Other_idle_docs" || x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => x.Id).ToList();
+            List<MinioObject> minioDocuments = new List<MinioObject>();
 
-            model.CustomerContractDocumentGroups.ForEach(x =>
+            if (model.Code == "Other_idle_docs")
             {
-                contractDocumentDefinitionIds.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => x.Id).ToList());
-            });
+                minioDocuments = model.CustomerContractDocuments.Select(x => new MinioObject
+                {
+                    DocumentDefinitionId = x.Id,
+                    MinioUrl = ""
+                }).ToList();
+            }
+            else
+            {
+                minioDocuments = model.CustomerContractDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                {
+                    DocumentDefinitionId = x.Id,
+                    MinioUrl = ""
+                }).ToList();
 
-            documentsForMinio = documentsForMinio.Where(x => contractDocumentDefinitionIds.Distinct().Contains(x.DocumentDefinitionId)).ToList();
+                model.CustomerContractDocumentGroups.ForEach(x =>
+                {
+                    minioDocuments.AddRange(x.CustomerContractGroupDocuments.Where(x => x.DocumentStatus == AppConsts.InProgress || x.DocumentStatus == AppConsts.Expired || x.DocumentStatus == AppConsts.Valid).Select(x => new MinioObject
+                    {
+                        DocumentDefinitionId = x.Id,
+                        MinioUrl = ""
+                    }).ToList());
+                });
 
-            GetMinioUrl(documentsForMinio);
+                minioDocuments = minioDocuments.GroupBy(x => x.DocumentDefinitionId).Select(x => x.First()).ToList();
+            }
 
-            model.CustomerContractDocuments.Where(x => documentsForMinio.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = documentsForMinio.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
+
+            foreach (var minioDoc in minioDocuments)
+            {
+                var documentDefinition = documents.FirstOrDefault(z => z.DocumentDefinitionId == minioDoc.DocumentDefinitionId);
+                if (documentDefinition != null)
+                {
+                    string minioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectId={documentDefinition.DocumentContentId}";
+
+                    minioDoc.MinioUrl = minioUrl;
+                }
+            }
+
+            model.CustomerContractDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
 
             foreach (var contractGroup in model.CustomerContractDocumentGroups)
             {
-                contractGroup.CustomerContractGroupDocuments.Where(x => documentsForMinio.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = documentsForMinio.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
+                contractGroup.CustomerContractGroupDocuments.Where(x => minioDocuments.Select(z => z.DocumentDefinitionId).Contains(x.Id)).ToList().ForEach(x => x.MinioUrl = minioDocuments.FirstOrDefault(z => z.DocumentDefinitionId == x.Id).MinioUrl);
             }
         }
-
-        private void GetMinioUrl(List<DocumentForMinioObject> minioObjectList)
-        {
-            minioObjectList.ForEach(x => x.MinioUrl = $"{_baseUrl}{_downloadEndpoint}?ObjectId={x.DocumentContentId}");
-        }
-
         public async Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)
         {
             var documentsQuery = _dbContext!.Document.Where(x => x.Customer.Reference == inputDto.GetUserReference()).AsQueryable();
@@ -342,25 +362,15 @@ namespace amorphie.contract.application.Customer
 
             var documents = await documentsQuery.ToListAsync(token);
 
-            var documentsForMinio = documents.Select(x => new DocumentForMinioObject
-            {
-                Id = x.Id,
-                DocumentDefinitionId = x.DocumentDefinitionId,
-                Status = x.Status,
-                DocumentContentId = x.DocumentContent.Id.ToString()
-            }).ToList();
-
-            GetMinioUrl(documentsForMinio);
-
             var responseTasks = documents.Select(async x =>
             {
-                //var minioUrl = await _minioService.GetDocumentUrl(x.DocumentContent.MinioObjectName, token);
+                var minioUrl = await _minioService.GetDocumentUrl(x.DocumentContent.MinioObjectName, token);
                 return new DocumentCustomerDto
                 {
                     Code = x.DocumentDefinition.Code,
                     Semver = x.DocumentDefinition.Semver,
                     Status = x.Status.ToString(),
-                    MinioUrl = documentsForMinio.Where(z => z.DocumentDefinitionId == x.DocumentDefinitionId).Select(z => z.MinioUrl).FirstOrDefault(),
+                    MinioUrl = minioUrl,
                     MinioObjectName = x.DocumentContent.MinioObjectName,
                     Reference = x.Customer.Reference
                 };
@@ -388,11 +398,11 @@ namespace amorphie.contract.application.Customer
 
         }
 
-        //private class MinioObject
-        //{
-        //    public string MinioUrl { get; set; }
-        //    public Guid DocumentDefinitionId { get; set; }
-        //}
+        private class MinioObject
+        {
+            public string MinioUrl { get; set; }
+            public Guid DocumentDefinitionId { get; set; }
+        }
 
         private class DocumentForMinioObject
         {
@@ -400,7 +410,6 @@ namespace amorphie.contract.application.Customer
             public Guid DocumentDefinitionId { get; set; }
             public ApprovalStatus Status { get; set; }
             public string DocumentContentId { get; set; }
-            public string MinioUrl { get; set; } = "";
         }
     }
 }
