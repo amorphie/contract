@@ -18,7 +18,6 @@ namespace amorphie.contract.application.Contract
             CreateMap<ContractDefinition, ContractDefinitionDto>()
                     .ForPath(dest => dest.ContractDocumentDetails, opt => opt.MapFrom(src => src.ContractDocumentDetails))
                     .ForPath(dest => dest.ContractDocumentGroupDetails, opt => opt.MapFrom(src => src.ContractDocumentGroupDetails))
-                    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
                     .ReverseMap();
 
             CreateMap<ContractDocumentGroupDetailDto, ContractDocumentGroupDetail>()

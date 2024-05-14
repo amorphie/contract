@@ -15,7 +15,6 @@ namespace amorphie.contract.application.Contract
                 .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.MinVersion))
                 .ForMember(dest => dest.UseExisting, opt => opt.MapFrom(src => src.UseExisting))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.DocumentDefinition.Code))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.DocumentDefinition.Status))
                 .ForPath(dest => dest.DocumentDetail.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSign));
 
             CreateMap<DocumentOnlineSignDto, DocumentInstanceOnlineSignDto>()
@@ -38,7 +37,6 @@ namespace amorphie.contract.application.Contract
 
 
             CreateMap<ContractDocumentGroupDetailDto, DocumentGroupInstanceDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.ContractDocumentGroup.Status))
                 .ForMember(dest => dest.AtLeastRequiredDocument, opt => opt.MapFrom(src => src.AtLeastRequiredDocument))
                 .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
                 .ForPath(dest => dest.DocumentGroupDetailInstance.Code, opt => opt.MapFrom(src => src.ContractDocumentGroup.Code))
@@ -52,7 +50,6 @@ namespace amorphie.contract.application.Contract
             CreateMap<DocumentDefinitionDto, DocumentInstanceDto>()
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                 .ForPath(dest => dest.DocumentDetail.OnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSign))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.MinVersion, opt => opt.MapFrom(src => src.Semver))
                 .ReverseMap();
         }

@@ -81,7 +81,6 @@ namespace amorphie.contract.application
                     ));
 
             CreateMap<DocumentGroup, DocumentGroupDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.DocumentDefinitions, opt => opt.MapFrom(src =>
                     src.DocumentGroupDetails.Select(x => x.DocumentDefinition)))
                 .ForMember(dest => dest.Titles, opt => opt.MapFrom(src => src.Titles))

@@ -51,8 +51,6 @@ namespace amorphie.contract.application
             {
                 Id = id,
                 Code = inputDto.Code,
-                Status = EStatus.Active,
-                BaseStatus = EStatus.Active,
                 Semver = inputDto.Version,
                 Titles = inputDto.Titles,
                 DefinitionMetadata = inputDto.Metadatas
@@ -123,8 +121,6 @@ namespace amorphie.contract.application
             {
                 Id = id,
                 Code = inputDto.Code,
-                Status = EStatus.Active,
-                BaseStatus = EStatus.Active,
                 Semver = inputDto.Version,
                 Titles = inputDto.Titles,
                 DefinitionMetadata = inputDto.Metadatas

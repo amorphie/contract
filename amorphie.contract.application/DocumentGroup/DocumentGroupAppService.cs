@@ -29,7 +29,6 @@ namespace amorphie.contract.application
             var documentGroup = new DocumentGroup
             {
                 Id = id,
-                Status = core.Enum.EStatus.Active,
                 Code = inputDto.Code,
                 Titles = inputDto.Titles
             };

@@ -33,7 +33,6 @@ namespace amorphie.contract.application.Contract
             ContractDefinition contractDefinition = new ContractDefinition();
 
             contractDefinition.Id = id;
-            contractDefinition.Status = EStatus.Active;
             contractDefinition.Code = inputDto.Code;
             contractDefinition.Titles = inputDto.Titles;
             contractDefinition.BankEntity = inputDto.RegistrationType;

@@ -10,10 +10,6 @@ namespace amorphie.contract.core.Entity.Document
     [Table("DocumentDefinition", Schema = "Doc")]
     public class DocumentDefinition : BaseEntity
     {
-
-        public ApprovalStatus Status { get; set; } = default!;
-
-        public ApprovalStatus BaseStatus { get; set; } = default!;
         public ICollection<DocumentTagsDetail>? DocumentTagsDetails { get; set; } = new List<DocumentTagsDetail>();
 
         public DocumentDys DocumentDys { get; set; } = default!;
