@@ -1,19 +1,18 @@
 using System.ComponentModel.DataAnnotations;
-using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.application.Contract.Dto
 {
-    public class UserSignedContractInputDto
+    public class IsUserApprovedContractInputDto
     {
-        public List<Guid> DocumentInstanceIds { get; set; } = new();
+
+        public IsUserApprovedContractInputDto(string contractCode, string userReference)
+        {
+            ContractCode = contractCode;
+            _userReference = userReference;
+        }
 
         [Required]
-        public required Guid ContractInstanceId { get; set; }
-
-        [Required]
-        public required string ContractCode { get; set; }
-
-        public ApprovalStatus ApprovalStatus { get; set; }
+        public string ContractCode { get; set; }
 
         public void SetHeaderParameters(string userReference)
         {

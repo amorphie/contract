@@ -97,10 +97,9 @@ namespace amorphie.contract.zeebe.Modules
             var reference = body.GetProperty("ContractInstanceState").GetProperty("reference").ToString();
             var language = body.GetProperty("ContractInstanceState").GetProperty("language").ToString();
             string bankEntity = body.GetProperty("ContractInstanceState").GetProperty("bankEntity").ToString();
-            var contract = new ContractInstanceInputDto
+            var contract = new ContractInstanceStateInputDto
             {
                 ContractName = contractName,
-                ContractInstanceId = Guid.NewGuid()
             };
             contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
 
