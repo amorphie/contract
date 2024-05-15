@@ -14,13 +14,4 @@ namespace amorphie.contract.core.Enum
         //Before document validation flow
         TemporarilyApproved = 8
     }
-
-    public enum DefinitionStatus : ushort
-    {
-        Completed = 3,
-        OnHold = 4,
-        Canceled = 5,
-        Rejected = 7
-    }
-
 }

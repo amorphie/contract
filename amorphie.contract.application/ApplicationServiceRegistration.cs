@@ -16,6 +16,8 @@ namespace amorphie.contract.application
 
             services.AddTransient<IDocumentDefinitionAppService, DocumentDefinitionAppService>();
             services.AddTransient<IContractAppService, ContractAppService>();
+            services.AddTransient<IContractDefinitionAppService, ContractDefinitionAppService>();
+            services.AddTransient<IDocumentGroupAppService, DocumentGroupAppService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<ICustomerAppService, CustomerAppService>();
             services.AddTransient<IDocumentAppService, DocumentAppService>();

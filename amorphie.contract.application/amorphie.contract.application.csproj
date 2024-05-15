@@ -11,12 +11,22 @@
     <None Remove="Customer\Dto\" />
     <None Remove="Customer\Request\" />
     <None Remove="Extensions\" />
+    <None Remove="DocumentGroup\Dto\" />
+    <None Remove="DocumentGroup\Dto\Input\" />
+    <None Remove="Contract\Dto\Input\" />
+    <None Remove="Document\Dto\Input\" />
+    <None Remove="DocumentGroup\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Customer\" />
     <Folder Include="Customer\Dto\" />
     <Folder Include="Customer\Request\" />
     <Folder Include="Extensions\" />
+    <Folder Include="DocGroup\Dto\" />
+    <Folder Include="DocGroup\Dto\Input\" />
+    <Folder Include="Contract\Dto\Input\" />
+    <Folder Include="Document\Dto\Input\" />
+    <Folder Include="DocumentGroup\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />

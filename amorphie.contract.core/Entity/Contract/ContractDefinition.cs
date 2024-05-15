@@ -8,7 +8,6 @@ namespace amorphie.contract.core.Entity.Contract
     [Table("ContractDefinition", Schema = "Cont")]
     public class ContractDefinition : BaseEntity
     {
-        public ApprovalStatus Status { get; set; } = default!;
         public EBankEntity BankEntity { get; set; } = default!;
         public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
         public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
