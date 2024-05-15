@@ -7,7 +7,6 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using Serilog;
-using System.Security.Cryptography.X509Certificates;
 
 namespace amorphie.contract.application.Contract
 {
