@@ -1,5 +1,4 @@
 using amorphie.contract.core.Model.Minio;
-using Minio.DataModel;
 
 namespace amorphie.contract.core.Services
 {

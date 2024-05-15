@@ -6,10 +6,9 @@ using Minio.DataModel.Args;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Enum;
 using amorphie.contract.infrastructure.Extensions;
-using Minio.DataModel;
+
 using amorphie.contract.core.Model.Minio;
-using Minio.DataModel.Tags;
-using Microsoft.AspNetCore.Http;
+
 
 namespace amorphie.contract.infrastructure.Services
 {
