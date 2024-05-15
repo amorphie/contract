@@ -2,6 +2,7 @@
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Entity.Document.DocumentGroups;
 using amorphie.contract.core.Model.History;
+using amorphie.contract.core.Response;
 using amorphie.contract.infrastructure.Contexts;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,8 @@ namespace amorphie.contract.application
 {
     public interface IDocumentGroupAppService
     {
-        Task<DocumentGroup> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
-        Task<DocumentGroup> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentGroup>> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentGroup>> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
     }
 
     public class DocumentGroupAppService : IDocumentGroupAppService
@@ -24,7 +25,7 @@ namespace amorphie.contract.application
             _dbContext = dbContext;
         }
 
-        public async Task<DocumentGroup> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentGroup>> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
         {
             var documentGroup = new DocumentGroup
             {
@@ -39,10 +40,10 @@ namespace amorphie.contract.application
 
             _dbContext.SaveChanges();
 
-            return documentGroup;
+            return GenericResult<DocumentGroup>.Success(documentGroup);
         }
 
-        public async Task<DocumentGroup> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentGroup>> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
         {
             var documentGroup = _dbContext.DocumentGroup.AsSplitQuery().FirstOrDefault(x => x.Id == id);
 
@@ -58,7 +59,7 @@ namespace amorphie.contract.application
 
             _dbContext.SaveChanges();
 
-            return documentGroup;
+            return GenericResult<DocumentGroup>.Success(documentGroup);
         }
 
         private void CreateDocumentGroupDetail(List<DocumentGroupDocumentInputDto> list, Guid groupId)

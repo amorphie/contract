@@ -8,13 +8,14 @@ using amorphie.contract.infrastructure.Contexts;
 using Serilog;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Entity.Common;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.application.Contract
 {
     public interface IContractDefinitionAppService
-	{
-        Task<ContractDefinition> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
-        Task<ContractDefinition> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
+    {
+        Task<GenericResult<ContractDefinition>> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<ContractDefinition>> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
     }
 
     public class ContractDefinitionAppService : IContractDefinitionAppService
@@ -28,7 +29,7 @@ namespace amorphie.contract.application.Contract
             _logger = logger;
         }
 
-        public async Task<ContractDefinition> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<ContractDefinition>> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
         {
             ContractDefinition contractDefinition = new ContractDefinition();
 
@@ -49,10 +50,10 @@ namespace amorphie.contract.application.Contract
 
             _logger.Information("Contract Definition Created ({code}).", contractDefinition.Code);
 
-            return contractDefinition;
+            return GenericResult<ContractDefinition>.Success(contractDefinition);
         }
 
-        public async Task<ContractDefinition> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<ContractDefinition>> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
         {
             var contractDefinition = _dbContext.ContractDefinition.FirstOrDefault(x => x.Id == id);
             if (contractDefinition == null)
@@ -78,7 +79,7 @@ namespace amorphie.contract.application.Contract
 
             _logger.Information("Contract Definition Updated ({code}).", contractDefinition.Code);
 
-            return contractDefinition;
+            return GenericResult<ContractDefinition>.Success(contractDefinition);
         }
 
         #region CreateMethods

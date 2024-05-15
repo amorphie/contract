@@ -15,8 +15,8 @@ namespace amorphie.contract.application
     public interface IDocumentDefinitionAppService
     {
         Task<GenericResult<IEnumerable<DocumentDefinitionDto>>> GetAllDocumentDefinition(GetAllDocumentDefinitionInputDto input, CancellationToken cancellationToken);
-        Task<DocumentDefinition> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
-        Task<DocumentDefinition> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentDefinition>> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentDefinition>> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
     }
 
     public class DocumentDefinitionAppService : IDocumentDefinitionAppService
@@ -38,13 +38,13 @@ namespace amorphie.contract.application
             return GenericResult<IEnumerable<DocumentDefinitionDto>>.Success(responseDtos);
         }
 
-        public async Task<DocumentDefinition> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentDefinition>> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
         {
             var isDefinitionCodeExist = _dbContext.DocumentDefinition.Any(x => x.Code == inputDto.Code); //Update methodu olduğu için aynı kodun farklı versiyonları kontrolü yapmıyorum. Kullanıcının update'e gitmesi gerek.
 
             if (isDefinitionCodeExist)
             {
-                throw new Exception("Ayni Dokuman tanımı daha önce yapılmıs");
+                return GenericResult<DocumentDefinition>.Fail("Ayni Dokuman tanımı daha önce yapılmış");
             }
 
             var documentDefinition = new DocumentDefinition
@@ -95,10 +95,10 @@ namespace amorphie.contract.application
 
             _dbContext.SaveChanges();
 
-            return documentDefinition;
+            return GenericResult<DocumentDefinition>.Success(documentDefinition);
         }
 
-        public async Task<DocumentDefinition> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentDefinition>> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
         {
             var versionList = _dbContext.DocumentDefinition
                                 .Where(x => x.Code == inputDto.Code)
@@ -110,11 +110,11 @@ namespace amorphie.contract.application
                 throw new EntityNotFoundException("Document Definition", inputDto.Code);
             }
 
-            var highestVersion = VersionHelperExtension.GetHighestVersion(versionList);
+            var highestVersion = Versioning.FindHighestVersion(versionList);
 
-            if (VersionHelperExtension.CompareVersions(inputDto.Version, highestVersion) <= 0)
+            if (Versioning.CompareVersion(inputDto.Version, highestVersion))
             {
-                throw new ArgumentException($"Versiyon {highestVersion} dan daha büyük olmalı");
+                return GenericResult<DocumentDefinition>.Fail($"Versiyon {highestVersion} dan daha büyük olmalı");
             }
 
             var documentDefinition = new DocumentDefinition
@@ -165,7 +165,7 @@ namespace amorphie.contract.application
 
             _dbContext.SaveChanges();
 
-            return documentDefinition;
+            return GenericResult<DocumentDefinition>.Success(documentDefinition);
         }
 
         private Guid FindDocumentOptimize(Guid transformTo, Guid documentId) //DocumentOptimize elden geçirilmeli

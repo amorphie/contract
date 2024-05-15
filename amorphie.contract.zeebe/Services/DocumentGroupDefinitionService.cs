@@ -7,13 +7,14 @@ using amorphie.contract.zeebe.Model.DocumentGroupDataModel;
 using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.application;
 using amorphie.contract.core.Model.History;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.zeebe.Services
 {
     public interface IDocumentGroupDefinitionService
     {
-        Task<DocumentGroup> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
-        Task<DocumentGroup> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentGroup>> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentGroup>> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id);
     }
     public class DocumentGroupDefinitionService : IDocumentGroupDefinitionService
     {

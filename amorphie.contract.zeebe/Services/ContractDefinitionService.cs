@@ -12,13 +12,14 @@ using Newtonsoft.Json;
 using System.Diagnostics.Contracts;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Dto.Input;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.zeebe.Services
 {
     public interface IContractDefinitionService
     {
-        Task<ContractDefinition> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
-        Task<ContractDefinition> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<ContractDefinition>> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<ContractDefinition>> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id);
     }
 
     public class ContractDefinitionService : IContractDefinitionService

@@ -13,13 +13,14 @@ using amorphie.contract.core.Entity.Contract;
 using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.core.CustomException;
 using amorphie.contract.application;
+using amorphie.contract.core.Response;
 
 namespace amorphie.contract.zeebe.Services
 {
     public interface IDocumentDefinitionService
     {
-        Task<DocumentDefinition> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
-        Task<DocumentDefinition> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentDefinition>> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
+        Task<GenericResult<DocumentDefinition>> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id);
     }
     public class DocumentDefinitionService : IDocumentDefinitionService
     {
@@ -30,18 +31,14 @@ namespace amorphie.contract.zeebe.Services
             _documentDefinitionAppService = documentDefinitionAppService;
         }
 
-        public async Task<DocumentDefinition> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentDefinition>> CreateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
         {
-            var documentDefinition = await _documentDefinitionAppService.CreateDocumentDefinition(inputDto, id);
-
-            return documentDefinition;
+            return await _documentDefinitionAppService.CreateDocumentDefinition(inputDto, id);
         }
 
-        public async Task<DocumentDefinition> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentDefinition>> UpdateDocumentDefinition(DocumentDefinitionInputDto inputDto, Guid id)
         {
-            var documentDefinition = await _documentDefinitionAppService.UpdateDocumentDefinition(inputDto, id);
-
-            return documentDefinition;
+            return await _documentDefinitionAppService.UpdateDocumentDefinition(inputDto, id);
         }
     }
 }
