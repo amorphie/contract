@@ -1,7 +1,6 @@
-using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.zeebe.Model;
+using System.Text.Json;
+using amorphie.contract.application;
 using amorphie.contract.zeebe.Services;
-using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
@@ -60,77 +59,47 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
           });
 
         }
-        static IResult DefinitionUpload(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration,
-           [FromServices] IDocumentDefinitionService IDocumentDefinitionService
-      )
+        static IResult DefinitionUpload([FromBody] dynamic body, [FromServices] IDocumentDefinitionService documentDefinitionService, [FromServices] JsonSerializerOptions options)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            DocumentDefinitionInputDto entityData = JsonSerializer.Deserialize<DocumentDefinitionInputDto>(serializeEntity, options);
 
-            var _ = IDocumentDefinitionService.DataModelToDocumentDefinition(entityData, messageVariables.InstanceIdGuid);
+            documentDefinitionService.CreateDocumentDefinition(entityData, messageVariables.InstanceIdGuid);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult DefinitionUpdate(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration,
-           [FromServices] IDocumentDefinitionService IDocumentDefinitionService
-      )
+        static IResult DefinitionUpdate([FromBody] dynamic body, [FromServices] IDocumentDefinitionService documentDefinitionService, [FromServices] JsonSerializerOptions options)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData").ToString();
-            var _ = IDocumentDefinitionService.DataModelToDocumentDefinitionUpdate(entityData, messageVariables.InstanceIdGuid);
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            DocumentDefinitionInputDto entityData = JsonSerializer.Deserialize<DocumentDefinitionInputDto>(serializeEntity, options);
+
+            documentDefinitionService.UpdateDocumentDefinition(entityData, messageVariables.InstanceIdGuid);
+
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult TimeoutDefinitionUpload(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+
+        static IResult TimeoutDefinitionUpload([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "TimeoutDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult DeleteProcessDefinitionUpload(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+
+        static IResult DeleteProcessDefinitionUpload([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "DeleteProcessDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult ErrorDefinitionUpload(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+
+        static IResult ErrorDefinitionUpload([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
@@ -138,7 +107,4 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
     }
-
-
-
 }

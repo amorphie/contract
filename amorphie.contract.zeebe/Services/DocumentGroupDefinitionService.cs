@@ -25,12 +25,12 @@ namespace amorphie.contract.zeebe.Services
             _documentGroupAppService = documentGroupAppService;
         }
 
-        public async Task<DocumentGroup> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentGroup>> CreateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
         {
             return await _documentGroupAppService.CreateDocumentGroup(inputDto, id);
         }
 
-        public async Task<DocumentGroup> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
+        public async Task<GenericResult<DocumentGroup>> UpdateDocumentGroup(DocumentGroupInputDto inputDto, Guid id)
         {
             return await _documentGroupAppService.UpdateDocumentGroup(inputDto, id);
         }

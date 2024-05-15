@@ -1,9 +1,8 @@
-using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.zeebe.Model;
-using Dapr.Client;
+using System.Text.Json;
+using amorphie.contract.application;
+using amorphie.contract.zeebe.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using amorphie.contract.zeebe.Services;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
@@ -59,63 +58,40 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
         }
-        // TEST
-        static IResult CreateDocumentGroupDefinition(
-            [FromBody] dynamic body,
-            [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration,
-            [FromServices] IDocumentGroupDefinitionService IDocumentGroupDefinitionService)
+
+        static IResult CreateDocumentGroupDefinition([FromBody] dynamic body, [FromServices] IDocumentGroupDefinitionService documentGroupDefinitionService, [FromServices] JsonSerializerOptions options)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            DocumentGroupInputDto entityData = JsonSerializer.Deserialize<DocumentGroupInputDto>(serializeEntity, options);
 
-            var _ = IDocumentGroupDefinitionService.CreateGroup(entityData, messageVariables.RecordIdGuid);
+            documentGroupDefinitionService.CreateDocumentGroup(entityData, messageVariables.RecordIdGuid);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult UpdateDocumentGroupDefinition(
-            [FromBody] dynamic body,
-            [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration,
-            [FromServices] IDocumentGroupDefinitionService IDocumentGroupDefinitionService)
+        static IResult UpdateDocumentGroupDefinition([FromBody] dynamic body, [FromServices] IDocumentGroupDefinitionService documentGroupDefinitionService, [FromServices] JsonSerializerOptions options)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            DocumentGroupInputDto entityData = JsonSerializer.Deserialize<DocumentGroupInputDto>(serializeEntity, options);
 
-            var _ = IDocumentGroupDefinitionService.UpdateGroup(entityData, messageVariables.RecordIdGuid);
+            documentGroupDefinitionService.UpdateDocumentGroup(entityData, messageVariables.RecordIdGuid);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult TimeoutDocumentGroupDefinition(
-            [FromBody] dynamic body,
-            [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration)
+        static IResult TimeoutDocumentGroupDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "TimeoutDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult DeleteDocumentGroupDefinition(
-            [FromBody] dynamic body,
-            [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration)
+
+        static IResult DeleteDocumentGroupDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
@@ -123,13 +99,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult ErrorDocumentGroupDefinition(
-            [FromBody] dynamic body,
-            [FromServices] ProjectDbContext dbContext,
-            HttpRequest request,
-            HttpContext httpContext,
-            [FromServices] DaprClient client,
-            IConfiguration configuration)
+        static IResult ErrorDocumentGroupDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
