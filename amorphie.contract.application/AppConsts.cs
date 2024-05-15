@@ -17,12 +17,14 @@ namespace amorphie.contract.application
         public static readonly string ConverterTemplateRender = "TemplateRender";
         public static readonly string ConverterByteRender = "ByteRender";
         public static readonly string ConverterZeebeRender = "ZeebeRender";
+        public static readonly string VerifyAndBase64Render = "VerifyAndBase64Render";
 
         #endregion
 
-        #region Document Status
+        #region Content Types
 
-    
+        public static readonly string[] AllowedContentTypes = ["application/pdf"];
+
         #endregion
     }
 }

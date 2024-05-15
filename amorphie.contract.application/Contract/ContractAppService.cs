@@ -43,7 +43,7 @@ namespace amorphie.contract.application.Contract
         {
             //TODO BankEntity kontrolü..
 
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, req.EBankEntity.Value, cts);
 
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 
@@ -66,9 +66,9 @@ namespace amorphie.contract.application.Contract
         }
 
         #region Private Methods
-        private async Task<GenericResult<GetContractInstanceResponseDto>> GetContractInstance(string contractCode, string userReference, string langCode, CancellationToken cancellationToken)
+        private async Task<GenericResult<GetContractInstanceResponseDto>> GetContractInstance(string contractCode, string userReference, string langCode, EBankEntity eBankEntity, CancellationToken cancellationToken)
         {
-            var contractDefinition = await _dbContext.ContractDefinition.AsNoTracking().FirstOrDefaultAsync(x => x.Code == contractCode, cancellationToken);
+            var contractDefinition = await _dbContext.ContractDefinition.AsNoTracking().FirstOrDefaultAsync(x => x.Code == contractCode && x.BankEntity == eBankEntity, cancellationToken);
 
             if (contractDefinition is null)
             {
@@ -327,7 +327,7 @@ namespace amorphie.contract.application.Contract
             }
             else
             {
-                var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, cts);
+                var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, req.EBankEntity.Value, cts);
 
                 ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 

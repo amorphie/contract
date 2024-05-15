@@ -1,10 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace amorphie.contract.application
 {
     public class DocumentInstanceInputDto
     {
         public DocumentContentDto DocumentContent { get; set; }
-        public string ContextType { get; set; } = default!;
-        public Guid Id { get; set; }
+
+        public Guid? ContractInstanceId { get; set; }
+        public string? ContractCode { get; set; }
+
+        [Required]
+        public required string RenderId { get; set; }
+
         public string DocumentCode { get; set; }
         public string DocumentVersion { get; set; }
         public string? Reference { get; private set; }
@@ -19,9 +27,11 @@ namespace amorphie.contract.application
             Owner = userReference;
             CustomerNo = customerNo;
         }
-        public override string ToString()
-        {
-            return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + DocumentContent.FileName;
-        }
+
+        // public override string ToString()
+        // {
+        //     return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + DocumentContent.FileName;
+        // }
     }
+
 }
