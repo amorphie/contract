@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using amorphie.contract.core.Model;
 
 namespace amorphie.contract.application
@@ -10,6 +11,7 @@ namespace amorphie.contract.application
         public Guid? ContractInstanceId { get; set; }
         public string? ContractCode { get; set; }
 
+        [JsonIgnore]
         public HeaderFilterModel HeaderModel
         {
             get => _headerModel ?? throw new InvalidOperationException("HeaderModel is not set.");

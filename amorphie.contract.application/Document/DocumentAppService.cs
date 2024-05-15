@@ -132,8 +132,12 @@ namespace amorphie.contract.application
 
                 return GenericResult<bool>.Fail($"Doküman bulunamadı.");
             }
+            else if (documentInstance.Status == ApprovalStatus.Approved)
+            {
+                return GenericResult<bool>.Success(true);
+            }
 
-            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInstance.Id, ApprovalStatus.Approved);
+            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInstance.Id, ApprovalStatus.Approved, input.HeaderModel.UserReference);
 
             var documentContent = await _minioService.DownloadFile(documentInstance.DocumentContent.MinioObjectName, new CancellationToken());
             byte[] fileByteArray = Convert.FromBase64String(documentContent.FileContent);
@@ -149,7 +153,8 @@ namespace amorphie.contract.application
                 DocumentDefinitionCode = documentDef.Code,
                 DocumentDefinitionVersion = documentDef.Semver,
                 Reference = input.HeaderModel.UserReference,
-                ApprovalStatus = ApprovalStatus.TemporarilyApproved
+                ApprovalStatus = ApprovalStatus.Approved,
+                ContractDefinitionCode = input.ContractCode
             };
 
             await _minioService.UploadFile(uploadFileModel);
@@ -184,12 +189,17 @@ namespace amorphie.contract.application
         public async Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input)
         {
 
+            if (_dbContext.Document.Any(x => x.Id == input.RenderId))
+            {
+                return GenericResult<DocumentInstanceOutputDto>.Fail("Render edilen doküman zaten başka bir hesap için tanımlanmış");
+            }
+
             if (!AppConsts.AllowedContentTypes.Contains(input.DocumentContent.ContentType))
             {
                 return GenericResult<DocumentInstanceOutputDto>.Fail($"İzin verilmeyen doküman tipi gönderildi. {input.DocumentCode}, {input.DocumentVersion}, {input.DocumentContent.ContentType}");
             }
 
-            var originalContent = await _templateEngineAppService.GetRenderPdf(input.RenderId);
+            var originalContent = await _templateEngineAppService.GetRenderPdf(input.RenderId.ToString());
 
             if (!originalContent.IsSuccess)
             {
@@ -224,7 +234,7 @@ namespace amorphie.contract.application
 
             var documentDto = new DocumentDto
             {
-                Id = Guid.NewGuid(),
+                Id = input.RenderId,
                 DocumentContent = input.DocumentContent,
                 CustomerId = customerId.Data,
                 DocumentDefinitionId = docdef.Id,
@@ -243,7 +253,8 @@ namespace amorphie.contract.application
                 DocumentDefinitionCode = docdef.Code,
                 DocumentDefinitionVersion = docdef.Semver,
                 Reference = input.Reference,
-                ApprovalStatus = ApprovalStatus.TemporarilyApproved
+                ApprovalStatus = ApprovalStatus.TemporarilyApproved,
+                ContractDefinitionCode = input.ContractCode
             };
 
             var documentInsertResponse = await AddAsync(documentDto, uploadFileModel.ObjectName);
@@ -254,7 +265,7 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(uploadFileModel);
 
-            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.TemporarilyApproved);
+            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.TemporarilyApproved, input.Reference);
 
             return GenericResult<DocumentInstanceOutputDto>.Success(new DocumentInstanceOutputDto
             {
@@ -317,18 +328,24 @@ namespace amorphie.contract.application
 
         }
 
-        private async Task SaveUserSignedContract(string contractCode, Guid? contractInstanceId, Guid documentInstanceId, ApprovalStatus approvalStatus)
+        private async Task SaveUserSignedContract(string contractCode, Guid? contractInstanceId, Guid documentInstanceId, ApprovalStatus approvalStatus, string userReference)
         {
 
             if (!String.IsNullOrEmpty(contractCode) && contractInstanceId.HasValue && contractInstanceId != Guid.Empty)
             {
-                var upsertResult = await _userSignedContractAppService.UpsertAsync(new UserSignedContractInputDto
+
+                var userSigned = new UserSignedContractInputDto
                 {
                     ContractCode = contractCode,
                     ContractInstanceId = contractInstanceId.Value,
                     DocumentInstanceIds = [documentInstanceId],
                     ApprovalStatus = approvalStatus,
-                });
+                };
+
+                userSigned.SetHeaderParameters(userReference);
+
+                var upsertResult = await _userSignedContractAppService.UpsertAsync(userSigned);
+
 
                 if (!upsertResult.IsSuccess)
                 {

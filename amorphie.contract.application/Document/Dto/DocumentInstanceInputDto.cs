@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace amorphie.contract.application
 {
@@ -11,7 +10,7 @@ namespace amorphie.contract.application
         public string? ContractCode { get; set; }
 
         [Required]
-        public required string RenderId { get; set; }
+        public required Guid RenderId { get; set; }
 
         public string DocumentCode { get; set; }
         public string DocumentVersion { get; set; }
