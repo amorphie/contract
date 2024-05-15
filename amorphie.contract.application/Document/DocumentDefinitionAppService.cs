@@ -82,15 +82,17 @@ namespace amorphie.contract.application
 
             CreateDocumentTag(inputDto.Tags, id);
 
-
-            if (inputDto.IntegrationRecord.IsDysRecord)
+            if (inputDto.IntegrationRecord != null)
             {
-                CreateDocumentDys(inputDto.Metadatas.Where(x => !String.IsNullOrEmpty(x.Code)).ToList(), inputDto.IntegrationRecord, id);
-            }
+                if (inputDto.IntegrationRecord.IsDysRecord)
+                {
+                    CreateDocumentDys(inputDto.Metadatas.Where(x => !String.IsNullOrEmpty(x.Code)).ToList(), inputDto.IntegrationRecord, id);
+                }
 
-            if (inputDto.IntegrationRecord.IsTsizlRecord)
-            {
-                CreateDocumentTsizl(inputDto.IntegrationRecord, id);
+                if (inputDto.IntegrationRecord.IsTsizlRecord)
+                {
+                    CreateDocumentTsizl(inputDto.IntegrationRecord, id);
+                }
             }
 
             _dbContext.SaveChanges();
@@ -152,15 +154,17 @@ namespace amorphie.contract.application
 
             CreateDocumentTag(inputDto.Tags, id);
 
-
-            if (inputDto.IntegrationRecord.IsDysRecord)
+            if (inputDto.IntegrationRecord != null)
             {
-                CreateDocumentDys(inputDto.Metadatas.Where(x => !String.IsNullOrEmpty(x.Code)).ToList(), inputDto.IntegrationRecord, id);
-            }
+                if (inputDto.IntegrationRecord.IsDysRecord)
+                {
+                    CreateDocumentDys(inputDto.Metadatas.Where(x => !String.IsNullOrEmpty(x.Code)).ToList(), inputDto.IntegrationRecord, id);
+                }
 
-            if (inputDto.IntegrationRecord.IsTsizlRecord)
-            {
-                CreateDocumentTsizl(inputDto.IntegrationRecord, id);
+                if (inputDto.IntegrationRecord.IsTsizlRecord)
+                {
+                    CreateDocumentTsizl(inputDto.IntegrationRecord, id);
+                }
             }
 
             _dbContext.SaveChanges();
@@ -195,8 +199,13 @@ namespace amorphie.contract.application
             _dbContext.DocumentTagsDetail.AddRange(entityList);
         }
 
-        private Guid CreateAndGetIdDocumentOperation(List<Guid> list, bool manuelControl)
+        private Guid? CreateAndGetIdDocumentOperation(List<Guid> list, bool manuelControl)
         {
+            if (list == null || !list.IsNotEmpty())
+            {
+                return null;
+            }
+
             var entityList = list.Select(x => new DocumentOperationsTagsDetail
             {
                 TagId = x,
