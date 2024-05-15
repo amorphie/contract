@@ -274,27 +274,27 @@ namespace amorphie.contract.zeebe.Modules
                 PropertyNameCaseInsensitive = true
             }) as ApprovedDocumentList;
 
-            foreach (var i in contractDocumentModel.Document.Where(x => x.Approved))
-            {
-                var input = new DocumentInstanceInputDto
-                {
-                    Id = i.RenderId,
-                    DocumentCode = i.DocumentDefinitionCode,
-                    DocumentVersion = i.DocumentSemanticVersion,
-                    DocumentContent = new DocumentContentDto
-                    {
-                        FileName = i.DocumentDefinitionCode + ".pdf",
-                        ContentType = "application/pdf",
-                        FileContext = i.RenderId.ToString(),
-                    },
-                    ContextType = AppConsts.ConverterTemplateRender
-                };
+            // foreach (var i in contractDocumentModel.Document.Where(x => x.Approved))
+            // {
+            //     var input = new DocumentInstanceInputDto
+            //     {
+            //         Id = i.RenderId,
+            //         DocumentCode = i.DocumentDefinitionCode,
+            //         DocumentVersion = i.DocumentSemanticVersion,
+            //         DocumentContent = new DocumentContentDto
+            //         {
+            //             FileName = i.DocumentDefinitionCode + ".pdf",
+            //             ContentType = "application/pdf",
+            //             FileContext = i.RenderId.ToString(),
+            //         },
+            //         ContextType = AppConsts.ConverterTemplateRender
+            //     };
 
-                input.SetHeaderParameters(headerModel.UserReference, customerNo);
+            //     input.SetHeaderParameters(headerModel.UserReference, customerNo);
 
-                await documentAppService.Instance(input);
+            //     await documentAppService.Instance(input);
 
-            }
+            // }
             messageVariables.additionalData = contractDocumentModel;
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));

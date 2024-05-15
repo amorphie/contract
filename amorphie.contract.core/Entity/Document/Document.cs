@@ -30,5 +30,11 @@ namespace amorphie.contract.core.Entity.Document
 
         public List<Metadata> InstanceMetadata { get; set; } = new();
 
+
+        public void SetApprovalStatusToApproved()
+        {
+            Status = ApprovalStatus.Approved;
+        }
+
     }
 }

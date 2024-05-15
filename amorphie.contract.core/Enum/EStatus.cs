@@ -9,6 +9,9 @@ namespace amorphie.contract.core.Enum
 
         //Signed but now it has new version.
         HasNewVersion = 6,
-        Rejected = 7
+        Rejected = 7,
+
+        //Before document validation flow
+        TemporarilyApproved = 8
     }
 }

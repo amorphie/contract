@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Extensions;
 
 namespace amorphie.contract.core.Model.Minio;
 
@@ -36,7 +37,7 @@ public class UploadFileModel
     {
         get
         {
-            return $"{DocumentDefinitionCode}/{Reference}_{DocumentDefinitionVersion}_{FileName}".Trim(' ');
+            return $"{DocumentDefinitionCode}/{Reference}_{DocumentDefinitionVersion}_{FileName}{FileExtension.GetFileExtensionFromMimeType(ContentType)}".Trim();
         }
     }
     public Dictionary<string, string> MetaDataHeader
