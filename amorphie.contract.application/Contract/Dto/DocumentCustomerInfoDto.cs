@@ -7,5 +7,8 @@ namespace amorphie.contract.application.Contract.Dto
         public string SemVer { get; init; }
         public bool IsSigned { get; init; }
         public Guid? DocumentInstanceId { get; set; }
+        public DocumentOnlineSignDto DocumentOnlineSign { get; set; }
+        public Dictionary<string, string> Titles { get; set; } = default!;
+
     }
 }

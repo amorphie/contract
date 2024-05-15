@@ -6,8 +6,9 @@ using Minio.DataModel.Args;
 using Microsoft.Extensions.Configuration;
 using amorphie.contract.core.Enum;
 using amorphie.contract.infrastructure.Extensions;
-using Minio.DataModel;
+
 using amorphie.contract.core.Model.Minio;
+
 
 namespace amorphie.contract.infrastructure.Services
 {
@@ -37,26 +38,22 @@ namespace amorphie.contract.infrastructure.Services
                            .Build();
 
         }
-        public async Task UploadFile(byte[] data, string objectName, string contentType, string customMetadata)
+        public async Task UploadFile(UploadFileModel uploadFileModel)
         {
-            MemoryStream stream = new MemoryStream(data);
-            var headers = new Dictionary<string, string>
-                {
-                    { "x-amz-meta-custom-metadata", "customMetadata" }
-                };
+            bool isExist = await IsBucketExist(BucketName);
+
+            if (!isExist)
+                await CreateBucket(BucketName);
 
             var putObjectArgs = new PutObjectArgs()
                              .WithBucket(BucketName)
-                             .WithObject(objectName)
-
-                             // .WithFileName(filePath)
-                             .WithStreamData(stream)
-                             .WithObjectSize(stream.Length)
-                             .WithContentType(contentType)
-                             .WithHeaders(headers);
+                             .WithObject(uploadFileModel.ObjectName)
+                             .WithStreamData(uploadFileModel.MemoryStream)
+                             .WithObjectSize(uploadFileModel.MemoryStream.Length)
+                             .WithContentType(uploadFileModel.ContentType)
+                             .WithHeaders(uploadFileModel.MetaDataHeader);
 
             await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-            Console.WriteLine("Successfully uploaded " + objectName);
         }
         private async Task<bool> IsBucketExist(string bucketName)
         {
@@ -73,41 +70,6 @@ namespace amorphie.contract.infrastructure.Services
             await minioClient.MakeBucketAsync(args);
         }
 
-        public async Task UploadFile()
-        {
-            try
-            {
-
-                bool isExist = await IsBucketExist(BucketName);
-                Console.WriteLine(isExist);
-
-                if (!isExist)
-                    await CreateBucket(BucketName);
-
-                byte[] data = System.Text.Encoding.UTF8.GetBytes("hello world");
-                MemoryStream stream = new MemoryStream(data);
-
-                var objectName = "golden-oldies.txt";
-                var putObjectArgs = new PutObjectArgs()
-                                 .WithBucket(BucketName)
-                                 .WithObject(objectName)
-
-                                 // .WithFileName(filePath)
-                                 .WithStreamData(stream)
-                                 .WithObjectSize(stream.Length)
-                                 .WithContentType("application/octet-stream");
-
-
-
-
-                await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-                Console.WriteLine("Successfully uploaded " + objectName);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
 
         public async Task<string> GetDocumentUrl(string objectName, CancellationToken token)
         {
@@ -129,30 +91,7 @@ namespace amorphie.contract.infrastructure.Services
             return cachedPresignedUrl;
         }
 
-        public async Task UploadFile(byte[] data, string objectName, string contentType)
-        {
-            MemoryStream stream = new MemoryStream(data);
-            var headers = new Dictionary<string, string>
-                {
-                    { "x-amz-meta-custom-metadata", "customMetadata" }
-                };
 
-            var putObjectArgs = new PutObjectArgs()
-                             .WithBucket(BucketName)
-                             .WithObject(objectName)
-
-                             // .WithFileName(filePath)
-                             .WithStreamData(stream)
-                             .WithObjectSize(stream.Length)
-                             .WithContentType(contentType)
-                             .WithHeaders(headers);
-
-
-
-
-            await minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-            Console.WriteLine("Successfully uploaded " + objectName);
-        }
 
         public async Task<GetMinioObjectModel> DownloadFile(string objectName, CancellationToken cancellationToken)
         {
