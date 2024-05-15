@@ -8,6 +8,7 @@ using amorphie.contract.core.Services;
 using Microsoft.OpenApi.Models;
 using Dapr.Client;
 using Newtonsoft.Json;
+using amorphie.contract.core.Model.Minio;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -129,8 +130,12 @@ namespace amorphie.contract.zeebe.Modules
             };
             var filebytes = ExtensionService.StringToBytes(entityData.GetProperty("file-byte-array").ToString(), entityData.GetProperty("file-size").ToString());
 
-
-            _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
+            // UploadFileModel uploadFileModel= new UploadFileModel{
+            //     Data = filebytes,
+            //     ContentType = entityData.GetProperty("file-type").ToString(),
+                
+            // };
+            // _ = minioService.UploadFile(uploadFileModel);
 
             document.DocumentDefinitionId = documentDefinitionId;//sonra
             var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
