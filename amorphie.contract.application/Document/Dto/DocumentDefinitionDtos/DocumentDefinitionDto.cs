@@ -14,7 +14,6 @@ namespace amorphie.contract.application
         public string? Name { get; set; }
         public Guid Id { get; set; }
         public string? Code { get; set; }
-        public string? Status { get; set; }
         public string Semver { get; set; }
 
         public string? BaseStatus { get; set; }
