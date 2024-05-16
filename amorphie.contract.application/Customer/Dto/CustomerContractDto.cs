@@ -8,7 +8,7 @@ namespace amorphie.contract.application.Customer.Dto
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Title { get; set; }
-        public string Status { get; set; }
+        public string contractStatus { get; set; }
         [JsonIgnore]
         public bool? IsDeleted { get; set; }
 
