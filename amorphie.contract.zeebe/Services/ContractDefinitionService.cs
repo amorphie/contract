@@ -26,17 +26,17 @@ namespace amorphie.contract.zeebe.Services
     {
         private readonly IContractDefinitionAppService _contractDefinitionAppService;
 
-        public ContractDefinitionService(ContractDefinitionAppService contractDefinitionAppService)
+        public ContractDefinitionService(IContractDefinitionAppService contractDefinitionAppService)
         {
             _contractDefinitionAppService = contractDefinitionAppService;
         }
 
-        public async Task<ContractDefinition> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<ContractDefinition>> CreateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
         {
             return await _contractDefinitionAppService.CreateContractDefinition(inputDto, id);
         }
 
-        public async Task<ContractDefinition> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
+        public async Task<GenericResult<ContractDefinition>> UpdateContractDefinition(ContractDefinitionInputDto inputDto, Guid id)
         {
             return await _contractDefinitionAppService.UpdateContractDefinition(inputDto, id);
         }
