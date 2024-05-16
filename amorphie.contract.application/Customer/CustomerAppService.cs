@@ -200,19 +200,22 @@ namespace amorphie.contract.application.Customer
                 customerContractDto.Title = contract.Titles.L(inputDto.GetLanguageCode());
 
                 if(contract.CustomerContractDocuments != null)
-                {
                     customerContractDto.CustomerContractDocuments = CustomerContractDocumentMapper(contract.CustomerContractDocuments, customerDocument, inputDto, allContractDocumentIds);
-                }
                 if(contract.CustomerContractDocumentGroups != null)
-                {
                     customerContractDto.CustomerContractDocumentGroups = CustomerContractDocumentGroupMapper(contract.CustomerContractDocumentGroups, customerDocument, inputDto, allContractDocumentIds);
-                }
+
                 var allValid = customerContractDtos.Find(
-                    x=> x.CustomerContractDocuments.All(y => y.DocumentStatus == ApprovalStatus.Approved.ToString() || y.DocumentStatus == ApprovalStatus.HasNewVersion.ToString())
+                    x => x.CustomerContractDocuments.All(y => y.DocumentStatus == ApprovalStatus.Approved.ToString() || y.DocumentStatus == ApprovalStatus.HasNewVersion.ToString())
                     && 
                     x.CustomerContractDocumentGroups.All(y => y.DocumentGroupStatus == ApprovalStatus.Approved.ToString())
                 );
-                customerContractDto.Status = allValid!=null ? ApprovalStatus.Approved.ToString(): ApprovalStatus.InProgress.ToString();
+
+                if(allValid != null)
+                    customerContractDto.ContractStatus = ApprovalStatus.Approved.ToString();
+                else if(contract.IsDeleted != null && contract.IsDeleted.Value)
+                    customerContractDto.ContractStatus = ApprovalStatus.Canceled.ToString();
+                else
+                    customerContractDto.ContractStatus = ApprovalStatus.InProgress.ToString();
                 customerContractDtos.Add(customerContractDto);
                 
             }
