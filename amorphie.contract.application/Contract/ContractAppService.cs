@@ -286,6 +286,7 @@ namespace amorphie.contract.application.Contract
                 docGroupInstanceDtos
             .Where(k => k.DocumentGroupDetailInstance.DocumentInstances.Any(x => x.IsSigned && x.DocumentInstanceId.HasValue))
                 .SelectMany(d => d.DocumentGroupDetailInstance.DocumentInstances)
+                    .Where(x => x.DocumentInstanceId.HasValue)
                 .Select(x => x.DocumentInstanceId.Value)).ToList();
 
             var userSignedInput = new UserSignedContractInputDto
