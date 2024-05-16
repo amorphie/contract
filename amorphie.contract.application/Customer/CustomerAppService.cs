@@ -211,11 +211,11 @@ namespace amorphie.contract.application.Customer
                 );
 
                 if(allValid != null)
-                    customerContractDto.contractStatus = ApprovalStatus.Approved.ToString();
+                    customerContractDto.ContractStatus = ApprovalStatus.Approved.ToString();
                 else if(contract.IsDeleted != null && contract.IsDeleted.Value)
-                    customerContractDto.contractStatus = ApprovalStatus.Canceled.ToString();
+                    customerContractDto.ContractStatus = ApprovalStatus.Canceled.ToString();
                 else
-                    customerContractDto.contractStatus = ApprovalStatus.InProgress.ToString();
+                    customerContractDto.ContractStatus = ApprovalStatus.InProgress.ToString();
                 customerContractDtos.Add(customerContractDto);
                 
             }
