@@ -100,7 +100,7 @@ namespace amorphie.contract.application
             {
                 Id = documentDto.Id,
                 DocumentDefinitionId = documentDto.DocumentDefinitionId,
-                Status = ApprovalStatus.Approved,
+                Status = documentDto.Status,
                 CustomerId = documentDto.CustomerId,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
                 DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
