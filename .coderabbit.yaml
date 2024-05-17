@@ -11,5 +11,10 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+    base_branches:
+      - dev
+      - test
+      - preprod
+      - master
 chat:
   auto_reply: true
