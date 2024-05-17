@@ -95,8 +95,6 @@ namespace amorphie.contract.zeebe.Modules
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
             
-            headerModel.UserReference = "11223344558";
-
             if (String.IsNullOrWhiteSpace(headerModel.UserReference))
             {
                 var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
@@ -227,8 +225,6 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<GetDocumentsToApproveInputDtoZeebe>(body, ZeebeConsts.GetDocumentsToApproveInputDto) as GetDocumentsToApproveInputDtoZeebe;
-
-            headerModel.UserReference = "11223344558";
 
             if (String.IsNullOrWhiteSpace(headerModel.UserReference))
             {
