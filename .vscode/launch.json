@@ -28,30 +28,6 @@
             "requireExactSource" : false
         },
         {
-            "name": "amorphie-contract-hub",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "dapr-debug-amorphie-contract-hub",
-            "program": "${workspaceFolder}/amorphie.contract.hub/bin/Debug/net8.0/amorphie.contract.hub.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/amorphie.contract.hub",
-            "stopAtEntry": false,
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:4200",
-                "DAPR_HTTP_PORT": "4201",
-                "DAPR_GRPC_PORT": "4202",
-                "DAPR_SECRET_STORE_NAME" : "transaction-secretstore",
-                "DAPR_STATE_STORE_NAME" : "statestore"
-            },
-            "postDebugTask": "daprd-down-amorphie-contract-hub",
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
-                "uriFormat": "%s/swagger/"
-            }
-        },
-        {
             "name": "amorphie-contract-zeebe",
             "type": "coreclr",
             "request": "launch",
