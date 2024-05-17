@@ -231,6 +231,23 @@ namespace amorphie.contract.application.Customer
                     }
                 }
             }
+            foreach (var i in contractModels)
+            {
+                foreach (var j in i.CustomerContractDocumentGroups)
+                {
+                    foreach (var k in j.CustomerContractGroupDocuments)
+                    {
+                        if (documents.Any(x => x.DocumentDefinitionId == k.Id))
+                        {
+                            k.ApprovalDate = documents.FirstOrDefault(x => x.DocumentDefinitionId == k.Id).ApprovalDate;
+                        }
+                        else
+                        {
+                            k.ApprovalDate = null;
+                        }
+                    }
+                }
+            }
             return GenericResult<List<CustomerContractDto>>.Success(contractModels);
         }
 
