@@ -79,7 +79,9 @@ namespace amorphie.contract.application.Contract
                 DocumentGroup = ObjectMapperApp.Mapper.Map<List<DocumentGroupInstanceDto>>(contractDocumentGroupDetails, opt => opt.Items[Lang.LangCode] = req.LangCode)
             };
 
-            if (contractInstanceDto.Document.Count == 0)
+            var requiredDocumentCount = contractInstanceDto.Document.Where(k => k.IsRequired).Count();
+
+            if (requiredDocumentCount == 0)
                 contractInstanceDto.Status = EStatus.Completed.ToString();
 
 
@@ -118,7 +120,7 @@ namespace amorphie.contract.application.Contract
             var listDocument = contractDefinition.ContractDocumentDetails
                 .Where(d => !customerDocument.Contains(d.DocumentDefinitionId));
 
-           var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
+            var listDocumentGroup = contractDefinition.ContractDocumentGroupDetails.ToList();
 
             var contractDocumentDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentDetailDto>>(listDocument, opt => opt.Items[Lang.LangCode] = req.LangCode);
             var contractDocumentGroupDetails = ObjectMapperApp.Mapper.Map<List<ContractDocumentGroupDetailDto>>(listDocumentGroup, opt => opt.Items[Lang.LangCode] = req.LangCode);
