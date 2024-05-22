@@ -25,6 +25,7 @@ using Polly.Timeout;
 using Polly;
 using Refit;
 using Microsoft.OpenApi.Models;
+using Elastic.Apm.SerilogEnricher;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -99,10 +100,13 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplicationServices();
 
+builder.Logging.ClearProviders();
+
 builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 {
     loggerConfiguration
-        .ReadFrom.Configuration(builder.Configuration);
+        .ReadFrom.Configuration(builder.Configuration)
+         .Enrich.WithElasticApmCorrelationInfo();
 
 });
 
