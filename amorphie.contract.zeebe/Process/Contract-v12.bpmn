@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0">
   <bpmn:process id="Contract" name="Contrac" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
@@ -12,11 +12,11 @@
         <bpmn:incoming>Flow_15ecgxi</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:serviceTask id="Activity_0jowvcz" name="Contract">
+        <bpmn:documentation>ContractOutputDto</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="contractinstance" retries="1" />
           <zeebe:ioMapping>
             <zeebe:input source="={&#10;  &#34;ContractCode&#34; : if ContractInstance.contractName = null then&#10;    TRXcontractstartStartContract.Data.entityData.ContractCode else ContractInstance.contractName,&#10;  &#34;ContractInstanceId&#34; : InstanceId,&#10;  &#34;IsContractMainFlow&#34; : IsContractMainFlow&#10;}" target="ContractInputDto" />
-            <zeebe:output source="=XContractOutputDto" target="ContractOutputDto" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0angrvf</bpmn:incoming>
@@ -217,9 +217,6 @@
   <bpmn:error id="Error_0aorfpc" name="Error_17h3s1o" errorCode="500" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Contract">
-      <bpmndi:BPMNShape id="Activity_0xjt6zp_di" bpmnElement="Activity_0xjt6zp">
-        <dc:Bounds x="220" y="300" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
         <dc:Bounds x="380" y="80" width="1430" height="390" />
       </bpmndi:BPMNShape>
@@ -392,6 +389,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0etpq4g_di" bpmnElement="Event_1eyq1q7">
         <dc:Bounds x="152" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xjt6zp_di" bpmnElement="Activity_0xjt6zp">
+        <dc:Bounds x="220" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1mf1mi5_di" bpmnElement="Event_03igwuu">
         <dc:Bounds x="637" y="452" width="36" height="36" />

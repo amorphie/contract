@@ -15,7 +15,7 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
-             app.MapPost("/contractbacktransition", ContractBackTransition)
+             app.MapPost("/contract-back-transition", ContractBackTransition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -23,7 +23,7 @@ namespace amorphie.contract.zeebe.Modules
                 operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                 return operation;
             });
-            app.MapPost("/customerapprovebycontract", CustomerApproveByContract)
+            app.MapPost("/customer-approve-by-contract", CustomerApproveByContract)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -128,7 +128,7 @@ namespace amorphie.contract.zeebe.Modules
             contractServiceInput.SetHeaderParameters(headerModel);
             var instanceDto = await contractAppService.CustomerApproveByContract(contractServiceInput, token);
 
-            messageVariables.Variables.Add(ZeebeConsts.XCustomerApproveByContractOutputDto, instanceDto.Data);
+            messageVariables.Variables.Add(ZeebeConsts.CustomerApproveByContractOutputDto, instanceDto.Data);
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
@@ -160,9 +160,9 @@ namespace amorphie.contract.zeebe.Modules
 
             var instanceDto = await contractAppService.Instance(contractServiceInput, token);
 
-            messageVariables.Variables.Add("XContractInstance", instanceDto.Data); //TODO kullanılmıyorsa silinecek.
+            // messageVariables.Variables.Add("XContractInstance", instanceDto.Data); //TODO kullanılmıyorsa silinecek.
 
-            messageVariables.Variables.Add(ZeebeConsts.XContractOutputDto, instanceDto.Data);
+            messageVariables.Variables.Add(ZeebeConsts.ContractOutputDto, instanceDto.Data);
 
             messageVariables.Variables.Add(ZeebeConsts.ContractStatus, instanceDto.Data.Status);
 
