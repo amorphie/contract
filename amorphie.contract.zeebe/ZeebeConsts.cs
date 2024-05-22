@@ -17,12 +17,15 @@ namespace amorphie.contract.zeebe
         public const string GetDocumentsToApproveInputDto = "GetDocumentsToApproveInputDto";
 
         public const string CustomerApproveByContractOutputDto = "CustomerApproveByContractOutputDto";
-        
+        public const string RenderedDocumentsForApproval = "RenderedDocumentsForApproval";
+
+
+
 
 
         #endregion
         public const string ContractStartBack = "contract-start-back";
-        
+
 
     }
 }
