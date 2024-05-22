@@ -1,13 +1,13 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: customerapprovebycontract
+  name: customer-approve-by-contract
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: customerapprovebycontract
+    value: customer-approve-by-contract
   - name: gatewayAddr
     value: localhost:26500
   - name: gatewayKeepAlive

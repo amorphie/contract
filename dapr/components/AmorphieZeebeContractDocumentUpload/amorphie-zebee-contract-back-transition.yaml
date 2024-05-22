@@ -1,13 +1,13 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: contractbacktransition
+  name: contract-back-transition
 spec:
   type: bindings.zeebe.jobworker
   version: v1
   metadata:
   - name: jobType
-    value: contractbacktransition
+    value: contract-back-transition
   - name: gatewayAddr
     value: localhost:26500
   - name: gatewayKeepAlive
