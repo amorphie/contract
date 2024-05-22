@@ -12,7 +12,7 @@ using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using Serilog.Core;
+using Serilog;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -88,7 +88,7 @@ namespace amorphie.contract.zeebe.Modules
                        });
 
         }
-        static async ValueTask<IResult> Render([FromBody] dynamic body, [FromServices] ITemplateEngineAppService templateEngineAppService, [FromServices] Logger _logger)
+        static async ValueTask<IResult> Render([FromBody] dynamic body, [FromServices] ITemplateEngineAppService templateEngineAppService)
         {
 
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
@@ -136,7 +136,7 @@ namespace amorphie.contract.zeebe.Modules
                         }
                         else
                         {
-                            _logger.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode , res.ErrorMessage);
+                            Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode , res.ErrorMessage);
                         }
 
                     }
@@ -145,7 +145,7 @@ namespace amorphie.contract.zeebe.Modules
             }
             else
             {
-                _logger.Warning("Renderlist Is Not Empty");
+                Log.Warning("Renderlist Is Not Empty");
 
             }
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
@@ -156,7 +156,7 @@ namespace amorphie.contract.zeebe.Modules
         }
 
 
-        static async ValueTask<IResult> GetDocumentsToApprove([FromBody] dynamic body, [FromServices] IDocumentAppService documentAppService ,[FromServices] Logger _logger)
+        static async ValueTask<IResult> GetDocumentsToApprove([FromBody] dynamic body, [FromServices] IDocumentAppService documentAppService)
         {
 
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
