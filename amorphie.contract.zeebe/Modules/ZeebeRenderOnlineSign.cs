@@ -76,6 +76,16 @@ namespace amorphie.contract.zeebe.Modules
 
             return operation;
         });
+            app.MapPost("/get-documents-to-approve", GetDocumentsToApprove)
+                       .Produces(StatusCodes.Status200OK)
+                       .WithOpenApi(operation =>
+                       {
+                           operation.Summary = "Get Documents To Approve on Zeebe";
+                           operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeRenderOnlineSign) } };
+
+                           return operation;
+                       });
+
         }
         static async ValueTask<IResult> Render([FromBody] dynamic body, [FromServices] ITemplateEngineAppService templateEngineAppService)
         {
@@ -83,8 +93,8 @@ namespace amorphie.contract.zeebe.Modules
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
-            var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body);
-
+            var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
+            
             if (String.IsNullOrWhiteSpace(headerModel.UserReference))
             {
                 var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
@@ -182,29 +192,67 @@ namespace amorphie.contract.zeebe.Modules
             // }
 
 
-            var list = new ApprovedDocumentList();
-            foreach (var cdto in documentRenderList)
-            {
-                var renderRequestModel = new TemplateRenderRequestModel(cdto);
-                templateEngineAppService.SendRenderPdf(renderRequestModel);
-                //TODO render edilip edilmediği hata kontrolü yok.
-                list.Document.Add(new ApprovedDocument
-                {
-                    DocumentDefinitionCode = cdto.DocumentDefinitionCode,
-                    DocumentSemanticVersion = cdto.DocumentSemanticVersion,
-                    ContractInstanceId = cdto.ContractInstanceId,
-                    RenderId = cdto.RenderId,
-                    Approved = cdto.Approved,
-                });
-            }
-            messageVariables.Variables.Add("documentRenderList", documentRenderList);
-            messageVariables.Variables.Add("ApprovedDocumentList", list);
-            messageVariables.additionalData = list;
+            // var list = new ApprovedDocumentList();
+            // foreach (var cdto in documentRenderList)
+            // {
+            //     var renderRequestModel = new TemplateRenderRequestModel(cdto);
+            //     templateEngineAppService.SendRenderPdf(renderRequestModel);
+            //     //TODO render edilip edilmediği hata kontrolü yok.
+            //     list.Document.Add(new ApprovedDocument
+            //     {
+            //         DocumentDefinitionCode = cdto.DocumentDefinitionCode,
+            //         DocumentSemanticVersion = cdto.DocumentSemanticVersion,
+            //         ContractInstanceId = cdto.ContractInstanceId,
+            //         RenderId = cdto.RenderId,
+            //         Approved = cdto.Approved,
+            //     });
+            // }
+            messageVariables.Variables.Add("documentRenderList", approvedTemplateDocumentList);
+            messageVariables.Variables.Add("ApprovedDocumentList", approvedTemplateDocumentList);
+            messageVariables.Variables.Add("DEV_ORTAMI", "DEV_ORTAMI_LOCAL");
+            messageVariables.additionalData = approvedTemplateDocumentList;
             messageVariables.Success = true;
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
         }
+
+
+        static async ValueTask<IResult> GetDocumentsToApprove([FromBody] dynamic body, [FromServices] IDocumentAppService documentAppService)
+        {
+
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+
+            var inputDto = ZeebeMessageHelper.MapToDto<GetDocumentsToApproveInputDtoZeebe>(body, ZeebeConsts.GetDocumentsToApproveInputDto) as GetDocumentsToApproveInputDtoZeebe;
+
+            if (String.IsNullOrWhiteSpace(headerModel.UserReference))
+            {
+                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
+                headerModel.UserReference = contractWithoutHeaderDto.Reference;
+                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
+                headerModel.SetBankEntity(banktEntity);
+            }
+
+            var getDto = new GetDocumentsToApproveInputDto
+            {
+                DocumentCodes = inputDto.DocumentList
+            };
+
+            getDto.SetHeaderModel(headerModel);
+
+            var responseDocumentList = await documentAppService.GetDocumentsToApprove(getDto);
+
+            if (!responseDocumentList.IsSuccess)
+            {
+
+            }
+
+            messageVariables.Variables.Add(ZeebeConsts.DocumentListToApprove, responseDocumentList.Data);
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
+
+
 
         static IResult NotValidated(
         [FromBody] dynamic body,
