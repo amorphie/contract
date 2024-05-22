@@ -15,7 +15,7 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
-            app.MapPost("/startcontract", StartContract)
+             app.MapPost("/contractbacktransition", ContractBackTransition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -23,7 +23,15 @@ namespace amorphie.contract.zeebe.Modules
                 operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                 return operation;
             });
-
+            app.MapPost("/customerapprovebycontract", CustomerApproveByContract)
+            .Produces(StatusCodes.Status200OK)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Maps ContractInstance service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+                return operation;
+            });
+         
             app.MapPost("/contractinstance", ContractInstance)
                       .Produces(StatusCodes.Status200OK)
                       .WithOpenApi(operation =>
@@ -32,7 +40,7 @@ namespace amorphie.contract.zeebe.Modules
                           operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                           return operation;
                       });
-         
+
             app.MapPost("/contractinstancestate", ContractInstanceState)
                                  .Produces(StatusCodes.Status200OK)
                                  .WithOpenApi(operation =>
@@ -50,7 +58,7 @@ namespace amorphie.contract.zeebe.Modules
                     operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                     return operation;
                 });
-                
+
             app.MapPost("/deletecontract", DeleteContract)
         .Produces(StatusCodes.Status200OK)
         .WithOpenApi(operation =>
@@ -69,19 +77,8 @@ namespace amorphie.contract.zeebe.Modules
         });
 
         }
-        static IResult StartContract(
-                 [FromBody] dynamic body,
-                [FromServices] ProjectDbContext dbContext,
-                 HttpRequest request,
-                 HttpContext httpContext,
-                 [FromServices] DaprClient client
-                 , IConfiguration configuration
-             )
-        {
-            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
 
-        }
+
         static async ValueTask<IResult> ContractInstanceState(
     [FromBody] dynamic body,
    [FromServices] ProjectDbContext dbContext,
@@ -109,7 +106,33 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-    
+        static async ValueTask<IResult> ContractBackTransition([FromBody] dynamic body)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var backTransitionDto = ZeebeMessageHelper.MapToDto<BackTransitionDto>(body);
+            messageVariables.additionalData = backTransitionDto == null ? ZeebeConsts.ContractStartBack : backTransitionDto;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
+
+        static async ValueTask<IResult> CustomerApproveByContract([FromBody] dynamic body, [FromServices] IContractAppService contractAppService,
+               [FromServices] IUserSignedContractAppService userSignedContractAppService, CancellationToken token)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+
+            var inputDto = ZeebeMessageHelper.MapToDto<CustomerApproveByContractInputDto>(body);
+            var contractServiceInput = new ContractApproveInputDto
+            {
+                ContractName = inputDto.ContractCode
+            };
+            contractServiceInput.SetHeaderParameters(headerModel);
+            var instanceDto = await contractAppService.CustomerApproveByContract(contractServiceInput, token);
+
+            messageVariables.Variables.Add(ZeebeConsts.XCustomerApproveByContractOutputDto, instanceDto.Data);
+
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+
+        }
         static async ValueTask<IResult> ContractInstance([FromBody] dynamic body, [FromServices] IContractAppService contractAppService,
         [FromServices] IUserSignedContractAppService userSignedContractAppService, CancellationToken token)
         {
