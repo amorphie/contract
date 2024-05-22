@@ -25,6 +25,7 @@ using Polly.Timeout;
 using Polly.Retry;
 using Polly.Extensions.Http;
 using Polly;
+using Elastic.Apm.SerilogEnricher;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,13 +43,18 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddHealthChecks().AddNpgSql(postgreSql);
 
+builder.Logging.ClearProviders();
 
 builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 {
     loggerConfiguration
-        .ReadFrom.Configuration(builder.Configuration);
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.WithElasticApmCorrelationInfo();
 
 });
+
+
+
 
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(postgreSql));
