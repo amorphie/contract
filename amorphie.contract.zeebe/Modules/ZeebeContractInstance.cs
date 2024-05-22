@@ -15,7 +15,7 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
-             app.MapPost("/backtransition", BackTransition)
+             app.MapPost("/contractbacktransition", ContractBackTransition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -106,7 +106,7 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static async ValueTask<IResult> BackTransition([FromBody] dynamic body)
+        static async ValueTask<IResult> ContractBackTransition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var backTransitionDto = ZeebeMessageHelper.MapToDto<BackTransitionDto>(body);
