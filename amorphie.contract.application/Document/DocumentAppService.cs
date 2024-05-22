@@ -4,10 +4,12 @@ using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Dto;
+using amorphie.contract.application.Documents.Dto.Zeebe;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity.Document;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Model.Dys;
@@ -402,6 +404,46 @@ namespace amorphie.contract.application
             return GenericResult<DocumentDownloadOutputDto>.Success(res);
         }
 
+        public async Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input)
+        {
+            var documents = await _dbContext.DocumentDefinition
+                                    .AsNoTracking()
+                                    .Where(k => input.DocumentCodes.Select(k => k.Code).Any(x => x == k.Code)).ToListAsync();
+
+
+            List<DocumentInstanceDto> documentInstanceDtos = new();
+
+            foreach (var doc in documents)
+            {
+                var lastVersion = Versioning.FindHighestVersion(documents.Where(x => x.Code == doc.Code).Select(x => x.Semver).ToArray());
+
+                if (doc.Semver == lastVersion)
+                {
+                    var template = doc?.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == input.HeaderModel.LangCode);
+
+                    DocumentInstanceDto docInstance = new DocumentInstanceDto()
+                    {
+                        Code = doc.Code,
+                        MinVersion = doc.Semver,
+                        LastVersion = lastVersion,
+                        Name = doc.Titles.L(input.HeaderModel.LangCode),
+                        DocumentDetail = new DocumentInstanceDetailDto()
+                        {
+                            OnlineSign = new DocumentInstanceOnlineSignDto
+                            {
+                                TemplateCode = template.Code,
+                                Version = template.Version
+                            }
+                        }
+                    };
+
+                    documentInstanceDtos.Add(docInstance);
+                }
+            }
+
+            return GenericResult<List<DocumentInstanceDto>>.Success(documentInstanceDtos);
+        }
+
     }
 
     public interface IDocumentAppService
@@ -412,6 +454,7 @@ namespace amorphie.contract.application
         Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);
         Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
         Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
+        Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
     }
 }
 
