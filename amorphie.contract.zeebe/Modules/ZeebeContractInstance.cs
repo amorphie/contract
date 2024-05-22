@@ -121,12 +121,12 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<CustomerApproveByContractInputDto>(body);
-            var contractServiceInput = new ContractApproveInputDto
+            var contractServiceInput = new ContractApprovedAndPendingDocumentsInputDto
             {
                 ContractName = inputDto.ContractCode
             };
-            contractServiceInput.SetHeaderParameters(headerModel);
-            var instanceDto = await contractAppService.CustomerApproveByContract(contractServiceInput, token);
+            contractServiceInput.SetHeaderModel(headerModel);
+            var instanceDto = await contractAppService.GetContractApprovedAndPendingDocuments(contractServiceInput, token);
 
             messageVariables.Variables.Add(ZeebeConsts.CustomerApproveByContractOutputDto, instanceDto.Data);
 

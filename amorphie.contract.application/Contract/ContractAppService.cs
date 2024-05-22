@@ -16,7 +16,7 @@ namespace amorphie.contract.application.Contract
         Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts);
         Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts);
         Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts);
-        Task<GenericResult<ContractInstanceDto>> CustomerApproveByContract(ContractApproveInputDto req, CancellationToken cts);
+        Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts);
     }
     public class ContractAppService : IContractAppService
     {
@@ -39,12 +39,10 @@ namespace amorphie.contract.application.Contract
             return GenericResult<bool>.Success(contractDefinition);
         }
        
-        public async Task<GenericResult<ContractInstanceDto>> CustomerApproveByContract(ContractApproveInputDto req, CancellationToken cts)
+        public async Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts)
         {
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, req.EBankEntity.Value, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
-            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
-            var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
             var contractInstanceDto = new ContractInstanceDto()
             {
                 ContractCode = req.ContractName,
