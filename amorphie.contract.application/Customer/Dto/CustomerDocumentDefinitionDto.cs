@@ -4,17 +4,15 @@ using amorphie.contract.core.Enum;
 
 namespace amorphie.contract.application.Customer.Dto
 {
-    public class CustomerDocumentDto
+    public class CustomerDocumentDefinitionDto
     {
-        public Guid? Id { get; set; }
+        public Guid? DocumentId { get; set; }
         public Guid? DocumentDefinitionId { get; set; }
-        public ApprovalStatus? Status { get; set; }
-        public Guid? DocumentContentId { get; set; }
-        public DateTime? CreatedAt { get; set; }
         //DocDef İçin Opsiyonel
         public string? Code { get; set; }
         public string? Version { get; set; }
-
+        public OnlineSignDto? OnlineSign { get; set; }
+        public Dictionary<string, string>? Titles { get; set; } = default!;
     }
 
 }
