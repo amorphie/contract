@@ -15,57 +15,57 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDefinitions
     {
         public static void MapZeebeContractCategoryDefinitionEndpoints(this WebApplication app)
         {
-            app.MapPost("/contractcategorydefinitionupdate", ContractCategoryDefinitionUpdate)
+            app.MapPost("/contract-category-definition-update", ContractCategoryDefinitionUpdate)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps contractcategorydefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
                 return operation;
             });
 
-            app.MapPost("/contractcategorydefinition", ContractCategoryDefinition)
+            app.MapPost("/contract-category-definition", ContractCategoryDefinition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps contractcategorydefinition service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
                 return operation;
             });
 
-            app.MapPost("/contractcategorydetailadd", ContractCategoryDetailAdd)
+            app.MapPost("/contract-category-detail-add", ContractCategoryDetailAdd)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
                 operation.Summary = "Maps contractcategorydetailadd service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
                 return operation;
             });
 
-            app.MapPost("/errorcontractcategorydefinition", ErrorContractCategoryDefinition)
+            app.MapPost("/error-contract-category-definition", ErrorContractCategoryDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps errorcontractcategorydefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
 
               return operation;
           });
-            app.MapPost("/deletecontractcategorydefinition", DeleteContractCategoryDefinition)
+            app.MapPost("/delete-contract-category-definition", DeleteContractCategoryDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps deletecontractcategorydefinition service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
 
               return operation;
           });
-            app.MapPost("/timeoutcontractcategorydefinition", TimeoutContractCategoryDefinition)
+            app.MapPost("/timeout-contract-category-definition", TimeoutContractCategoryDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
               operation.Summary = "Maps Render service worker on Zeebe";
-              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractDefinition) } };
+              operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractCategoryDefinition) } };
 
               return operation;
           });

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -12,16 +11,13 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:hstore", ",,");
-
             migrationBuilder.CreateTable(
                 name: "ContractCategory",
                 schema: "Cont",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Titles = table.Column<Dictionary<string, string>>(type: "hstore", nullable: false),
+                    Titles = table.Column<string>(type: "jsonb", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByBehalfOf = table.Column<Guid>(type: "uuid", nullable: true),
@@ -96,9 +92,6 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
             migrationBuilder.DropTable(
                 name: "ContractCategory",
                 schema: "Cont");
-
-            migrationBuilder.AlterDatabase()
-                .OldAnnotation("Npgsql:PostgresExtension:hstore", ",,");
         }
     }
 }

@@ -30,7 +30,7 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("InstanceState", InstanceState);
-        routeGroupBuilder.MapGet("GetCategories", GetCategories);
+        routeGroupBuilder.MapGet("getCategories", GetCategories);
 
     }
 

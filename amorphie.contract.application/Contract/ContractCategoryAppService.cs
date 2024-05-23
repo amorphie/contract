@@ -114,9 +114,11 @@ namespace amorphie.contract.application.Contract
 
                 _dbContext.ContractCategoryDetail.AddRange(entityList);
             }
+
+            _dbContext.SaveChanges();
         }
 
-        private async void CreateCategoryContractDetails(List<ContractCategoryDetailDto> list, Guid id)
+        private void CreateCategoryContractDetails(List<ContractCategoryDetailDto> list, Guid id)
 		{
 			List<ContractCategoryDetail> entityList = new List<ContractCategoryDetail>();
 			foreach (var item in list)
@@ -133,7 +135,7 @@ namespace amorphie.contract.application.Contract
 			_dbContext.AddRange(entityList);
 		}
 
-        private async void UpdateCategoryContractDetails(List<ContractCategoryDetail> entityList, List<ContractCategoryDetailDto> list, Guid id)
+        private void UpdateCategoryContractDetails(List<ContractCategoryDetail> entityList, List<ContractCategoryDetailDto> list, Guid id)
         {
             if (list.Count == 0 && entityList.Count > 0)
             {
