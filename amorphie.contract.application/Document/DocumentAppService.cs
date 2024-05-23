@@ -1,10 +1,9 @@
 using System.Data;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Dto;
-using amorphie.contract.application.ConverterFactory;
+using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Dto;
-using amorphie.contract.application.Documents.Dto.Zeebe;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core;
 using amorphie.contract.core.Entity.Document;
@@ -18,7 +17,6 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
 using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -34,13 +32,12 @@ namespace amorphie.contract.application
         private readonly ITSIZLProducer _tsizlProducer;
         private readonly ITemplateEngineAppService _templateEngineAppService;
         private readonly ICustomerAppService _customerAppService;
-        private readonly FileConverterFactory _fileConverterFactory;
         private readonly IUserSignedContractAppService _userSignedContractAppService;
-
+        private readonly IContractAppService _contractAppService;
         private readonly IPdfManager _pdfManager;
         private readonly ILogger _logger;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, FileConverterFactory fileConverterFactory, IUserSignedContractAppService userSignedContractAppService, IPdfManager pdfManager, ILogger logger)
+        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, IUserSignedContractAppService userSignedContractAppService, IContractAppService contractAppService, IPdfManager pdfManager, ILogger logger)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
@@ -48,8 +45,8 @@ namespace amorphie.contract.application
             _tsizlProducer = tsizlProducer;
             _templateEngineAppService = templateEngineAppService;
             _customerAppService = customerAppService;
-            _fileConverterFactory = fileConverterFactory;
             _userSignedContractAppService = userSignedContractAppService;
+            _contractAppService = contractAppService;
             _pdfManager = pdfManager;
             _logger = logger;
         }
@@ -139,6 +136,16 @@ namespace amorphie.contract.application
                 return GenericResult<bool>.Success(true);
             }
 
+            if (!String.IsNullOrWhiteSpace(input.ContractCode))
+            {
+                var contractExists = await CheckIfContractExistsAsync(input.ContractCode, input.HeaderModel.EBankEntity);
+
+                if (!contractExists)
+                {
+                    return GenericResult<bool>.Fail($"Kontrat bulunamadı. {input.ContractCode}");
+                }
+            }
+
             await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInstance.Id, ApprovalStatus.Approved, input.HeaderModel.UserReference);
 
             var documentContent = await _minioService.DownloadFile(documentInstance.DocumentContent.MinioObjectName, new CancellationToken());
@@ -191,15 +198,24 @@ namespace amorphie.contract.application
 
         public async Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input)
         {
-
-            if (_dbContext.Document.Any(x => x.Id == input.RenderId))
-            {
-                return GenericResult<DocumentInstanceOutputDto>.Fail("Render edilen doküman zaten başka bir hesap için tanımlanmış");
-            }
-
             if (!AppConsts.AllowedContentTypes.Contains(input.DocumentContent.ContentType))
             {
                 return GenericResult<DocumentInstanceOutputDto>.Fail($"İzin verilmeyen doküman tipi gönderildi. {input.DocumentCode}, {input.DocumentVersion}, {input.DocumentContent.ContentType}");
+            }
+
+            if (_dbContext.Document.Any(x => x.Id == input.RenderId))
+            {
+                return GenericResult<DocumentInstanceOutputDto>.Fail("İlgili render edilmiş doküman zaten başka bir hesap için tanımlanmış.");
+            }
+
+            if (!String.IsNullOrWhiteSpace(input.ContractCode))
+            {
+                var contractExists = await CheckIfContractExistsAsync(input.ContractCode, input.HeaderModel.EBankEntity);
+
+                if (!contractExists)
+                {
+                    return GenericResult<DocumentInstanceOutputDto>.Fail($"Kontrat bulunamadı. {input.ContractCode}");
+                }
             }
 
             var originalContent = await _templateEngineAppService.GetRenderPdf(input.RenderId.ToString());
@@ -228,10 +244,10 @@ namespace amorphie.contract.application
                 CheckRequiredMetadata(docdef.DefinitionMetadata, input.InstanceMetadata);
             }
 
-            var customerId = await _customerAppService.GetIdByReference(input.Reference);
+            var customerId = await _customerAppService.GetIdByReference(input.HeaderModel.UserReference);
             if (!customerId.IsSuccess)
             {
-                var customerInputDto = new CustomerInputDto(input.Owner, input.Reference, input.CustomerNo);
+                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo);
                 customerId = await _customerAppService.AddAsync(customerInputDto);
             }
 
@@ -255,7 +271,7 @@ namespace amorphie.contract.application
                 ContentType = input.DocumentContent.ContentType,
                 DocumentDefinitionCode = docdef.Code,
                 DocumentDefinitionVersion = docdef.Semver,
-                Reference = input.Reference,
+                Reference = input.HeaderModel.UserReference,
                 ApprovalStatus = ApprovalStatus.TemporarilyApproved,
                 ContractDefinitionCode = input.ContractCode
             };
@@ -268,7 +284,7 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(uploadFileModel);
 
-            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.TemporarilyApproved, input.Reference);
+            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.TemporarilyApproved, input.HeaderModel.UserReference);
 
             return GenericResult<DocumentInstanceOutputDto>.Success(new DocumentInstanceOutputDto
             {
@@ -278,6 +294,19 @@ namespace amorphie.contract.application
 
 
         #region Private Methods
+
+        private async Task<bool> CheckIfContractExistsAsync(string contractCode, EBankEntity eBankEntity)
+        {
+            var checkExistContract = await _contractAppService.GetExist(new ContractGetExistInputDto
+            {
+                Code = contractCode,
+                EBankEntity = eBankEntity
+
+            }, CancellationToken.None);
+
+            return checkExistContract.Data;
+        }
+
 
         private async Task SendToDys(DocumentDysRequestModel documentDys, IEnumerable<Metadata> metaData)
         {
