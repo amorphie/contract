@@ -129,9 +129,10 @@ namespace amorphie.contract.application
             {
                 _logger.Error("Document not found. {UserReference} - {DocumentInstanceId}", input.HeaderModel.UserReference, input.DocumentInstanceId);
 
-                return GenericResult<bool>.Fail($"Doküman bulunamadı.");
+                return GenericResult<bool>.Fail("Doküman bulunamadı.");
             }
-            else if (documentInstance.Status == ApprovalStatus.Approved)
+
+            if (documentInstance.Status == ApprovalStatus.Approved)
             {
                 return GenericResult<bool>.Success(true);
             }
@@ -222,7 +223,7 @@ namespace amorphie.contract.application
 
             if (!originalContent.IsSuccess)
             {
-                return GenericResult<DocumentInstanceOutputDto>.Fail($"Orjinal dokümanın render bilgisi bulunamadı.");
+                return GenericResult<DocumentInstanceOutputDto>.Fail("Orjinal dokümanın render bilgisi bulunamadı.");
             }
 
             var isVerified = _pdfManager.VerifyPdfContent(originalContent.Data, input.DocumentContent.FileContext);
@@ -415,8 +416,10 @@ namespace amorphie.contract.application
 
             var userReference = inputDto.GetUserReference();
 
-            var customerDoc = await _dbContext.Document.AsNoTracking().FirstOrDefaultAsync(
-               c => c.Customer != null && c.Customer.Reference == userReference && c.DocumentContentId == contentId);
+            var customerDoc = await _dbContext.Document
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                            c => c.Customer.Reference == userReference && c.DocumentContentId == contentId);
 
             if (customerDoc is null)
                 throw new FileNotFoundException($"{inputDto.ObjectId} file not found for {userReference}");
@@ -450,7 +453,7 @@ namespace amorphie.contract.application
                 {
                     var template = doc?.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == input.HeaderModel.LangCode);
 
-                    DocumentInstanceDto docInstance = new DocumentInstanceDto()
+                    DocumentInstanceDto docInstance = new()
                     {
                         Code = doc.Code,
                         MinVersion = doc.Semver,
