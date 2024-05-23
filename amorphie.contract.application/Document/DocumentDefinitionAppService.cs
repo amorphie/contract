@@ -114,7 +114,7 @@ namespace amorphie.contract.application
 
             var highestVersion = Versioning.FindHighestVersion(versionList);
 
-            if (Versioning.CompareVersion(inputDto.Version, highestVersion))
+            if (!Versioning.CompareVersion(inputDto.Version, highestVersion))
             {
                 return GenericResult<DocumentDefinition>.Fail($"Versiyon {highestVersion} dan daha büyük olmalı");
             }
