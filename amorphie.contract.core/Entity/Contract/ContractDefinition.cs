@@ -10,6 +10,7 @@ namespace amorphie.contract.core.Entity.Contract
     {
         public EBankEntity BankEntity { get; set; } = default!;
         public ICollection<ContractDocumentDetail> ContractDocumentDetails { get; set; } = new List<ContractDocumentDetail>();
+        public ICollection<ContractCategoryDetail> ContractCategoryDetails { get; set; } = new List<ContractCategoryDetail>();
         public ICollection<ContractDocumentGroupDetail> ContractDocumentGroupDetails { get; set; } = new List<ContractDocumentGroupDetail>();
         public ICollection<ContractTag> ContractTags { get; set; } = new List<ContractTag>();
         public ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();

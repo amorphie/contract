@@ -41,6 +41,7 @@ namespace amorphie.contract.application.Contract
 
             _dbContext.ContractDefinition.Add(contractDefinition);
 
+            CreateContractCategoryDetail(inputDto.CategoryIds, id);
             CreateContractDocumentGroupDetail(inputDto.DocumentGroups, id);
             CreateContractDocumentDetail(inputDto.Documents, id);
             CreateContractTag(inputDto.Tags, id);
@@ -70,6 +71,7 @@ namespace amorphie.contract.application.Contract
 
             _dbContext.ContractDefinition.Update(contractDefinition);
 
+            UpdateContractCategoryDetail(contractDefinition.ContractCategoryDetails.ToList(), inputDto.CategoryIds, id);
             UpdateContractDocumentGroupDetail(contractDefinition.ContractDocumentGroupDetails.ToList(), inputDto.DocumentGroups, id);
             UpdateContractDocumentDetail(contractDefinition.ContractDocumentDetails.ToList(), inputDto.Documents, id);
             UpdateContractTag(contractDefinition.ContractTags.ToList(), inputDto.Tags, id);
@@ -83,6 +85,22 @@ namespace amorphie.contract.application.Contract
         }
 
         #region CreateMethods
+        public void CreateContractCategoryDetail(List<Guid> list, Guid id)
+        {
+            List<ContractCategoryDetail> entityList = new List<ContractCategoryDetail>();
+
+            foreach (Guid categoryId in list)
+            {
+                entityList.Add(new ContractCategoryDetail
+                {
+                    ContractDefinitionId = id,
+                    ContractCategoryId = categoryId
+                });
+            }
+
+            _dbContext.ContractCategoryDetail.AddRange(entityList);
+        }
+
         private void CreateContractDocumentGroupDetail(List<ContractDocumentGroupInputDto> list, Guid contractId)
         {
             List<ContractDocumentGroupDetail> entityList = new List<ContractDocumentGroupDetail>();
@@ -185,6 +203,26 @@ namespace amorphie.contract.application.Contract
                 ContractDefinitionId = existingContractDefinition.Id
             };
             _dbContext.ContractDefinitionHistory.Add(contractDefinitionHistory);
+        }
+
+        public void UpdateContractCategoryDetail(List<ContractCategoryDetail> entityList, List<Guid> list, Guid id)
+        {
+            if (list.Count == 0 && entityList.Count > 0)
+            {
+                _dbContext.ContractCategoryDetail.RemoveRange(entityList);
+            }
+            else if (list.Count > 0 && entityList.Count == 0)
+            {
+                CreateContractCategoryDetail(list, id);
+            }
+            else
+            {
+                var removeEntities = entityList.Where(x => !list.Any(z => x.ContractCategoryId == z)).ToList();
+                _dbContext.ContractCategoryDetail.RemoveRange(removeEntities);
+
+                var addedList = list.Where(x => !entityList.Any(z => x == z.ContractCategoryId)).ToList();
+                CreateContractCategoryDetail(addedList, id);
+            }
         }
 
         private void UpdateContractDocumentGroupDetail(List<ContractDocumentGroupDetail> entityList, List<ContractDocumentGroupInputDto> list, Guid id)

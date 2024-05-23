@@ -58,6 +58,8 @@ public class ProjectDbContext : DbContext
     public DbSet<ContractDefinitionHistory> ContractDefinitionHistory { get; set; }
     public DbSet<UserSignedContract> UserSignedContract { get; set; }
     public DbSet<UserSignedContractDetail> UserSignedContractDetail { get; set; }
+    public DbSet<ContractCategory> ContractCategory { get; set; }
+    public DbSet<ContractCategoryDetail> ContractCategoryDetail { get; set; }
 
     #endregion
 

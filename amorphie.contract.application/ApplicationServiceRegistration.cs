@@ -23,6 +23,7 @@ namespace amorphie.contract.application
             services.AddTransient<IDocumentAppService, DocumentAppService>();
             services.AddTransient<IDocumentDysAppService, DocumentDysAppService>();
             services.AddTransient<IUserSignedContractAppService, UserSignedContractAppService>();
+            services.AddScoped<IContractCategoryAppService, ContractCategoryAppService>();
 
             services.AddScoped<IFileContentProvider, ByteArrayConverter>();
             services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
