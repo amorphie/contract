@@ -246,11 +246,14 @@ namespace amorphie.contract.application.Customer
                 customerContractDtos.Add(customerContractDto);
 
             }
-            var otherContract = await GetOtherDocuments(documentQuery, allContractDocumentIds, inputDto);
-            customerContractDtos.Add(otherContract);
-            if (othersOnly)
+            if (String.IsNullOrEmpty(inputDto.Code))
             {
-                customerContractDtos = new List<CustomerContractDto> { otherContract };
+                var otherContract = await GetOtherDocuments(documentQuery, allContractDocumentIds, inputDto);
+                customerContractDtos.Add(otherContract);
+                if (othersOnly)
+                {
+                    customerContractDtos = new List<CustomerContractDto> { otherContract };
+                }
             }
             return customerContractDtos;
         }
