@@ -68,8 +68,8 @@ public class DocumentModule
     async ValueTask<GenericResult<DocumentInstanceOutputDto>> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
     CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
-        var headerModels = HeaderHelper.GetHeader(httpContext);
-        input.SetHeaderParameters(headerModels.UserReference, headerModels.CustomerNo);
+        var headerModel = HeaderHelper.GetHeader(httpContext);
+        input.SetHeaderModel(headerModel);
         var response = await documentAppService.Instance(input);
 
         return response;

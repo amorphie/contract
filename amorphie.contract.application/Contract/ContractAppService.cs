@@ -35,10 +35,12 @@ namespace amorphie.contract.application.Contract
         public async Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition
+                .AsNoTracking()
                 .AnyAsync(x => x.Code == req.Code && x.BankEntity == req.EBankEntity, cts);
+
             return GenericResult<bool>.Success(contractDefinition);
         }
-       
+
         public async Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts)
         {
             var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
