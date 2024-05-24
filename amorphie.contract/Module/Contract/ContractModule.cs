@@ -62,7 +62,7 @@ public class ContractModule
             Id = x.Id,
             Code = x.Code,
             Title = x.Titles.L(langCode),
-            CategoryContracts = x.ContractCategoryDetails.ToDictionary(d => d.ContractDefinition.Code, d => d.ContractDefinition.Titles.L(langCode))
+            Contracts = x.ContractCategoryDetails.ToDictionary(d => d.ContractDefinition.Code, d => d.ContractDefinition.Titles.L(langCode))
         }).ToList();
 
         return Results.Ok(GenericResult<List<ContractCategoryResponseDto>>.Success(response));
