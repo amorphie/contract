@@ -144,7 +144,7 @@ namespace amorphie.contract.zeebe.Modules
 
             var contractServiceInput = new ContractInstanceInputDto
             {
-                ContractName = inputDto.ContractCode,
+                ContractCode = inputDto.ContractCode,
                 ContractInstanceId = ZeebeMessageHelper.StringToGuid(inputDto.ContractInstanceId),
             };
 
@@ -153,7 +153,7 @@ namespace amorphie.contract.zeebe.Modules
                 HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
             }
 
-            contractServiceInput.SetHeaderParameters(headerModel);
+            contractServiceInput.SetHeaderModel(headerModel);
 
             var instanceDto = await contractAppService.Instance(contractServiceInput, token);
 

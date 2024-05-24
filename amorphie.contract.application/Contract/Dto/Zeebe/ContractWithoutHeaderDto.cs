@@ -5,6 +5,6 @@ public class ContractWithoutHeaderDto
     public string? Reference { get; set; }
     public string BankEntity { get; set; }
 
-    public string CustomerNo { get; set; }
+    public string? CustomerNo { get; set; }
 }
 

@@ -60,7 +60,9 @@ public static class HeaderHelperZeebe
         ArgumentException.ThrowIfNullOrEmpty(contractWithoutHeaderDto.Reference, nameof(contractWithoutHeaderDto.Reference));
 
         model.UserReference = contractWithoutHeaderDto.Reference;
-        model.CustomerNo = contractWithoutHeaderDto.CustomerNo;
+        model.CustomerNo = !string.IsNullOrEmpty(contractWithoutHeaderDto.CustomerNo)
+                ? (long?)Convert.ToInt64(contractWithoutHeaderDto.CustomerNo)
+                : null;
 
         var banktEntity = model.GetBankEntity(contractWithoutHeaderDto.BankEntity);
         model.SetBankEntity(banktEntity);
