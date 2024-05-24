@@ -35,7 +35,7 @@ public class ContractModule
         // throw new ClientSideException("sdas", "InstanceState");
 
         var headerModels = HeaderHelper.GetHeader(httpContext);
-        input.SetHeaderParameters(headerModels);
+        input.SetHeaderModel(headerModels);
         var response = await contractAppService.Instance(input, token);
 
         return Results.Ok(response);
