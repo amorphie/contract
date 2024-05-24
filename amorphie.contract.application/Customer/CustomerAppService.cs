@@ -219,9 +219,9 @@ namespace amorphie.contract.application.Customer
                 customerContractDto.Title = contract.Titles.L(inputDto.GetLanguageCode());
 
                 if (contract.CustomerContractDocuments != null)
-                    customerContractDto.CustomerContractDocuments = CustomerContractDocumentMapper(contract.CustomerContractDocuments, customerDocumentsWithDefinitionDtos, inputDto, allContractDocumentIds);
+                    customerContractDto.CustomerContractDocuments = CustomerContractDocumentMapper(contract.IsDeleted, contract.CustomerContractDocuments, customerDocumentsWithDefinitionDtos, inputDto, allContractDocumentIds);
                 if (contract.CustomerContractDocumentGroups != null)
-                    customerContractDto.CustomerContractDocumentGroups = CustomerContractDocumentGroupMapper(contract.CustomerContractDocumentGroups, customerDocumentsWithDefinitionDtos, inputDto, allContractDocumentIds);
+                    customerContractDto.CustomerContractDocumentGroups = CustomerContractDocumentGroupMapper(contract.IsDeleted, contract.CustomerContractDocumentGroups, customerDocumentsWithDefinitionDtos, inputDto, allContractDocumentIds);
 
                 var validContractDocument = customerContractDto.CustomerContractDocuments.All(x => x.DocumentStatus == ApprovalStatus.Approved.ToString() || x.DocumentStatus == ApprovalStatus.HasNewVersion.ToString());
                 var validContractDocumentGroup = customerContractDto.CustomerContractDocumentGroups.All(x => x.DocumentGroupStatus == ApprovalStatus.Approved.ToString());
@@ -237,7 +237,7 @@ namespace amorphie.contract.application.Customer
                             ||
                             validContractDocumentGroup
                         );
-                if (allValid)
+                if (allValid && contract.IsDeleted.HasValue && !contract.IsDeleted.Value)
                     customerContractDto.ContractStatus = ApprovalStatus.Approved.ToString();
                 else if (contract.IsDeleted != null && contract.IsDeleted.Value)
                     customerContractDto.ContractStatus = ApprovalStatus.Canceled.ToString();
@@ -246,11 +246,14 @@ namespace amorphie.contract.application.Customer
                 customerContractDtos.Add(customerContractDto);
 
             }
-            var otherContract = await GetOtherDocuments(documentQuery, allContractDocumentIds, inputDto);
-            customerContractDtos.Add(otherContract);
-            if (othersOnly)
+            if (String.IsNullOrEmpty(inputDto.Code))
             {
-                customerContractDtos = new List<CustomerContractDto> { otherContract };
+                var otherContract = await GetOtherDocuments(documentQuery, allContractDocumentIds, inputDto);
+                customerContractDtos.Add(otherContract);
+                if (othersOnly)
+                {
+                    customerContractDtos = new List<CustomerContractDto> { otherContract };
+                }
             }
             return customerContractDtos;
         }
@@ -258,6 +261,7 @@ namespace amorphie.contract.application.Customer
         // Bu metod Bir müşteriye ait contractın dökümanlarını Versiyonlarına göre, silindi silinmedi durumlarına göre check eder ve statusleri doldurur.
         // Eğer döküman hiçbir şekilde onaylanmamışsa dökümana dair minioUrl, approvalDate değerlerini null getirir.
         private List<CustomerContractDocumentDto> CustomerContractDocumentMapper(
+            bool? contractIsDeleted,
             IEnumerable<CustomerContractDocumentDto> customerContractDocuments,
             List<CustomerDocumentsWithDefinitionDto> customerDocumentsWithDefinitionDtos,
             GetCustomerDocumentsByContractInputDto inputDto,
@@ -276,10 +280,13 @@ namespace amorphie.contract.application.Customer
                 customerContractDocumentDto.Render = contractDocument.Render;
                 customerContractDocumentDto.Version = contractDocument.Version;
                 var document = customerDocument.Find(d => d.DocumentDefinitionId == contractDocument.Id);
-                if (document == null && contractDocument.IsDeleted || customerContractDocumentDtos.Exists(x => x.Code == contractDocument.Code && x.Version == contractDocument.Version))
+                if (document == null && contractDocument.IsDeleted
+                    || customerContractDocumentDtos.Exists(x => x.Code == contractDocument.Code && x.Version == contractDocument.Version))
                     continue;
                 if (document == null)
                 {
+                    if (contractIsDeleted.HasValue && contractIsDeleted.Value)
+                        continue;
                     customerContractDocumentDto.DocumentStatus = ApprovalStatus.InProgress.ToString();
                     var customerDocumentWithDefs = customerDocumentsWithDefinitionDtos.Select(x => x.CustomerDocumentDefinitionDto).Where(x => x.Code == contractDocument.Code).ToList();
                     var findDocumentWithDefVersion = customerDocumentWithDefs.Select(x => x.Version).ToArray();
@@ -315,6 +322,7 @@ namespace amorphie.contract.application.Customer
         }
         // CustomerContractDocumentMapper ta yapılan işi Group özelinde yapar
         private List<CustomerContractDocumentGroupDto> CustomerContractDocumentGroupMapper(
+            bool? contractIsDeleted,
             IEnumerable<CustomerContractDocumentGroupDto> customerContractDocumentGroup,
             List<CustomerDocumentsWithDefinitionDto> customerDocumentsWithDefinitionDtos,
             GetCustomerDocumentsByContractInputDto inputDto,
@@ -340,10 +348,13 @@ namespace amorphie.contract.application.Customer
                     customerContractDocumentDto.Render = contractDocumentGroupDocument.Render;
                     customerContractDocumentDto.Version = contractDocumentGroupDocument.Version;
                     var document = customerDocument.Find(d => d.DocumentDefinitionId == contractDocumentGroupDocument.Id);
-                    if (document == null && contractDocumentGroupDocument.IsDeleted || customerContractDocumentDtos.Exists(x => x.Code == contractDocumentGroupDocument.Code && x.Version == contractDocumentGroupDocument.Version))
+                    if (document == null && contractDocumentGroupDocument.IsDeleted
+                        || customerContractDocumentDtos.Exists(x => x.Code == contractDocumentGroupDocument.Code && x.Version == contractDocumentGroupDocument.Version))
                         continue;
                     if (document == null)
                     {
+                        if (contractIsDeleted.HasValue && contractIsDeleted.Value)
+                            continue;
                         customerContractDocumentDto.DocumentStatus = ApprovalStatus.InProgress.ToString();
                         var customerDocumentWithDefs = customerDocumentsWithDefinitionDtos.Select(x => x.CustomerDocumentDefinitionDto).Where(x => x.Code == contractDocumentGroupDocument.Code).ToList();
                         var findDocumentWithDefVersion = customerDocumentWithDefs.Select(x => x.Version).ToArray();

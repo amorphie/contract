@@ -96,13 +96,11 @@ namespace amorphie.contract.zeebe.Modules
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
 
-            if (String.IsNullOrWhiteSpace(headerModel.UserReference))
+            if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
-                headerModel.UserReference = contractWithoutHeaderDto.Reference;
-                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
-                headerModel.SetBankEntity(banktEntity);
+                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
             }
+
 
             List<DocumentForApproval> documentForApprovalList = new();
 
@@ -136,7 +134,7 @@ namespace amorphie.contract.zeebe.Modules
                         }
                         else
                         {
-                            Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode , res.ErrorMessage);
+                            Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode, res.ErrorMessage);
                         }
 
                     }
@@ -164,12 +162,9 @@ namespace amorphie.contract.zeebe.Modules
 
             var inputDto = ZeebeMessageHelper.MapToDto<GetDocumentsToApproveInputDtoZeebe>(body, ZeebeConsts.GetDocumentsToApproveInputDto) as GetDocumentsToApproveInputDtoZeebe;
 
-            if (String.IsNullOrWhiteSpace(headerModel.UserReference))
+            if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
-                headerModel.UserReference = contractWithoutHeaderDto.Reference;
-                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
-                headerModel.SetBankEntity(banktEntity);
+                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
             }
 
             var getDto = new GetDocumentsToApproveInputDto
@@ -215,10 +210,7 @@ namespace amorphie.contract.zeebe.Modules
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
-                headerModel.UserReference = contractWithoutHeaderDto.Reference;
-                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
-                headerModel.SetBankEntity(banktEntity);
+                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
             }
 
             List<ApproveDocumentInstanceInputDto> approvedDocumentIntances = new();

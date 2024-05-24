@@ -1,3 +1,3 @@
 namespace amorphie.contract.application.Contract.Dto.Zeebe;
 
-public record ValidatedInputDto(List<Guid> DocumentInstanceIds, string? ContractCode, string? ContractInstanceId);
+public record ValidatedInputDto(List<Guid> DocumentInstanceIds, string? ContractCode, Guid? ContractInstanceId);
