@@ -24,7 +24,6 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("InstanceState", InstanceState);
-        routeGroupBuilder.MapGet("getCategories", GetCategories);
     }
 
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
@@ -47,25 +46,6 @@ public class ContractModule
 
         var response = await contractAppService.InstanceState(input, token);
         return Results.Ok(response);
-    }
-
-    async ValueTask<IResult> GetCategories([FromServices] ProjectDbContext dbContext, [AsParameters] GetAllContractCategoryInputDto inputDto, HttpContext httpContext)
-    {
-        var langCode = HeaderHelper.GetHeaderLangCode(httpContext);
-
-        var query = dbContext.ContractCategory.AsQueryable();
-        query = ContractHelperExtensions.LikeWhere(query, inputDto.Code);
-        var list = query.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToList();
-
-        var response = list.Select(x => new ContractCategoryResponseDto
-        {
-            Id = x.Id,
-            Code = x.Code,
-            Title = x.Titles.L(langCode),
-            Contracts = x.ContractCategoryDetails.ToDictionary(d => d.ContractDefinition.Code, d => d.ContractDefinition.Titles.L(langCode))
-        }).ToList();
-
-        return Results.Ok(GenericResult<List<ContractCategoryResponseDto>>.Success(response));
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };
