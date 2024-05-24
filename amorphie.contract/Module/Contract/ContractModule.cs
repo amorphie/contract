@@ -1,20 +1,14 @@
-using amorphie.core.Module.minimal_api;
-using amorphie.contract.infrastructure.Contexts;
-using Microsoft.AspNetCore.Mvc;
-using amorphie.contract.core.Entity.Contract;
-using amorphie.contract.application;
 using amorphie.contract.application.Contract;
-using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.Contract.Dto;
-using amorphie.contract.Extensions;
-using amorphie.contract.core.Model;
-using amorphie.contract.core.Enum;
-using amorphie.core.Base;
-using amorphie.contract.infrastructure.Services.Kafka;
-using amorphie.contract.core.Response;
-using Microsoft.AspNetCore.Components.Forms;
-using amorphie.contract.core.Extensions;
+using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.Extensions;
+using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Response;
+using amorphie.contract.Extensions;
+using amorphie.contract.infrastructure.Contexts;
+using amorphie.core.Module.minimal_api;
+using Microsoft.AspNetCore.Mvc;
 
 namespace amorphie.contract;
 
@@ -31,7 +25,6 @@ public class ContractModule
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("InstanceState", InstanceState);
         routeGroupBuilder.MapGet("getCategories", GetCategories);
-
     }
 
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,
@@ -58,20 +51,21 @@ public class ContractModule
 
     async ValueTask<IResult> GetCategories([FromServices] ProjectDbContext dbContext, [AsParameters] GetAllContractCategoryInputDto inputDto, HttpContext httpContext)
     {
-        var lang = HeaderHelper.GetHeaderLangCode(httpContext);
+        var langCode = HeaderHelper.GetHeaderLangCode(httpContext);
 
         var query = dbContext.ContractCategory.AsQueryable();
         query = ContractHelperExtensions.LikeWhere(query, inputDto.Code);
         var list = query.Skip(inputDto.Page * inputDto.PageSize).Take(inputDto.PageSize).ToList();
 
-        var response = list.Select(x => new
+        var response = list.Select(x => new ContractCategoryResponseDto
         {
-            x.Id,
-            x.Code,
-            Title = x.Titles.L(lang),
-        });
+            Id = x.Id,
+            Code = x.Code,
+            Title = x.Titles.L(langCode),
+            CategoryContracts = x.ContractCategoryDetails.ToDictionary(d => d.ContractDefinition.Code, d => d.ContractDefinition.Titles.L(langCode))
+        }).ToList();
 
-        return Results.Ok(response);
+        return Results.Ok(GenericResult<List<ContractCategoryResponseDto>>.Success(response));
     }
 
     public override string[]? PropertyCheckList => new string[] { "Code" };
