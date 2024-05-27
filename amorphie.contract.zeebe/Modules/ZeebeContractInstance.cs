@@ -79,29 +79,17 @@ namespace amorphie.contract.zeebe.Modules
         }
 
 
-        static async ValueTask<IResult> ContractInstanceState(
-    [FromBody] dynamic body,
-   [FromServices] ProjectDbContext dbContext,
-    HttpRequest request,
-    HttpContext httpContext,
-    [FromServices] DaprClient client
-    , IConfiguration configuration,
-    [FromServices] IContractAppService contractAppService, CancellationToken token
-)
+        static async ValueTask<IResult> ContractInstanceState([FromBody] dynamic body,[FromServices] IContractAppService contractAppService, CancellationToken token)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            var contractName = body.GetProperty("ContractInstanceState").GetProperty("contractName").ToString();
-            var reference = body.GetProperty("ContractInstanceState").GetProperty("reference").ToString();
-            var language = body.GetProperty("ContractInstanceState").GetProperty("language").ToString();
-            string bankEntity = body.GetProperty("ContractInstanceState").GetProperty("bankEntity").ToString();
-            var contract = new ContractInstanceStateInputDto
-            {
-                ContractName = contractName,
-            };
-            contract.SetHeaderParameters(new HeaderFilterModel(bankEntity, language, "", reference, null));
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+            var inputDto = ZeebeMessageHelper.MapToDto<ContractInstanceStateInputDto>(body);
 
-            var response = await contractAppService.InstanceState(contract, token);
-            messageVariables.Variables.Add("ContractInstanceStateResult", response);
+            inputDto.SetHeaderParameters(headerModel);
+
+            var response = await contractAppService.InstanceState(inputDto, token);
+
+            messageVariables.Variables.Add(ZeebeConsts.ContractInstanceStateResult, response);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
