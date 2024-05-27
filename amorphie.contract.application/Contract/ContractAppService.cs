@@ -326,7 +326,7 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts)
         {
-            var userSignedInput = new IsUserApprovedContractInputDto(req.ContractName, req.Reference);
+            var userSignedInput = new IsUserApprovedContractInputDto(req.ContractCode, req.HeaderModel.UserReference);
 
             var isUserApprovedContact = await _userSignedContractAppService.IsUserApprovedContract(userSignedInput);
 
@@ -341,7 +341,7 @@ namespace amorphie.contract.application.Contract
             }
             else
             {
-                var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, req.EBankEntity.Value, cts);
+                var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
 
                 ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 
