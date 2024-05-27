@@ -58,7 +58,7 @@ namespace amorphie.contract.application.Contract
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
 
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.Reference, req.LangCode, req.EBankEntity.Value, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
 
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 
@@ -70,7 +70,7 @@ namespace amorphie.contract.application.Contract
 
             var contractInstanceDto = new ContractInstanceDto()
             {
-                ContractCode = req.ContractName,
+                ContractCode = req.ContractCode,
                 ContractInstanceId = contractInstanceId,
                 DocumentList = unSignedDocuments,
                 Status = contractStatus.ToString(),
@@ -307,17 +307,17 @@ namespace amorphie.contract.application.Contract
 
             var userSignedInput = new UserSignedContractInputDto
             {
-                ContractCode = req.ContractName,
+                ContractCode = req.ContractCode,
                 ContractInstanceId = contractInstanceId,
                 DocumentInstanceIds = allDocumentInstanceIds,
                 ApprovalStatus = contractStatus
             };
-            userSignedInput.SetHeaderParameters(req.Reference);
+            userSignedInput.SetHeaderParameters(req.HeaderModel.UserReference);
 
             var result = await _userSignedContractAppService.UpsertAsync(userSignedInput);
             if (!result.IsSuccess)
             {
-                _logger.Error("Failed to upsert userSignedContract. {Message} - {ContractCode} {ContractInstanceId}", result.ErrorMessage, req.ContractName, req.ContractInstanceId);
+                _logger.Error("Failed to upsert userSignedContract. {Message} - {ContractCode} {ContractInstanceId}", result.ErrorMessage, req.ContractCode, req.ContractInstanceId);
             }
 
         }

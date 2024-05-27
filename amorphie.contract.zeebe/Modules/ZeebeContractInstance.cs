@@ -15,14 +15,14 @@ namespace amorphie.contract.zeebe.Modules
 
         public static void MapZeebeContractInstanceEndpoints(this WebApplication app)
         {
-             app.MapPost("/contract-back-transition", ContractBackTransition)
-            .Produces(StatusCodes.Status200OK)
-            .WithOpenApi(operation =>
-            {
-                operation.Summary = "Maps ContractInstance service worker on Zeebe";
-                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
-                return operation;
-            });
+            app.MapPost("/contract-back-transition", ContractBackTransition)
+           .Produces(StatusCodes.Status200OK)
+           .WithOpenApi(operation =>
+           {
+               operation.Summary = "Maps ContractInstance service worker on Zeebe";
+               operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+               return operation;
+           });
             app.MapPost("/customer-approve-by-contract", CustomerApproveByContract)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
@@ -31,7 +31,7 @@ namespace amorphie.contract.zeebe.Modules
                 operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                 return operation;
             });
-         
+
             app.MapPost("/contractinstance", ContractInstance)
                       .Produces(StatusCodes.Status200OK)
                       .WithOpenApi(operation =>
@@ -138,29 +138,24 @@ namespace amorphie.contract.zeebe.Modules
         {
 
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            var headerModel = HeaderHelperZeebe.GetHeader(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body) as HeaderFilterModel;
 
             var inputDto = ZeebeMessageHelper.MapToDto<ContractInputDto>(body);
 
             var contractServiceInput = new ContractInstanceInputDto
             {
-                ContractName = inputDto.ContractCode,
+                ContractCode = inputDto.ContractCode,
                 ContractInstanceId = ZeebeMessageHelper.StringToGuid(inputDto.ContractInstanceId),
             };
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
-                headerModel.UserReference = contractWithoutHeaderDto.Reference;
-                var banktEntity = headerModel.GetBankEntity(contractWithoutHeaderDto.BankEntity);
-                headerModel.SetBankEntity(banktEntity);
+                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
             }
 
-            contractServiceInput.SetHeaderParameters(headerModel);
+            contractServiceInput.SetHeaderModel(headerModel);
 
             var instanceDto = await contractAppService.Instance(contractServiceInput, token);
-
-            // messageVariables.Variables.Add("XContractInstance", instanceDto.Data); //TODO kullanılmıyorsa silinecek.
 
             messageVariables.Variables.Add(ZeebeConsts.ContractOutputDto, instanceDto.Data);
 

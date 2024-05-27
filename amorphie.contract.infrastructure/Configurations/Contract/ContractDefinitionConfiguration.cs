@@ -11,6 +11,7 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
         {
 
             builder.Navigation(k => k.ContractDocumentDetails).AutoInclude();
+            builder.Navigation(k => k.ContractCategoryDetails).AutoInclude();
             builder.Navigation(k => k.ContractDocumentGroupDetails).AutoInclude();
             builder.Navigation(k => k.ContractTags).AutoInclude();
             builder.Navigation(k => k.ContractValidations).AutoInclude();

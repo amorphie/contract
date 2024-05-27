@@ -26,6 +26,7 @@ using Polly.Retry;
 using Polly.Extensions.Http;
 using Polly;
 using Elastic.Apm.SerilogEnricher;
+using amorphie.contract.zeebe.Modules.ZeebeDefinitions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -130,6 +131,7 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+app.MapZeebeContractCategoryDefinitionEndpoints();
 
 app.MapZeebeContractInstanceEndpoints();
 app.MapZeebeRenderOnlineSignEndpoints();

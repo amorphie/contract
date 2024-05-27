@@ -1,3 +1,4 @@
+using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.core.Enum;
 using amorphie.contract.core.Model;
 
@@ -51,6 +52,20 @@ public static class HeaderHelperZeebe
         }
 
         return new HeaderFilterModel(businessLine, langCode, clientId, reference, customerNo);
+    }
+
+    public static void SetHeaderFromWithoutDto(dynamic body, HeaderFilterModel model)
+    {
+        var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
+        ArgumentException.ThrowIfNullOrEmpty(contractWithoutHeaderDto.Reference, nameof(contractWithoutHeaderDto.Reference));
+
+        model.UserReference = contractWithoutHeaderDto.Reference;
+        model.CustomerNo = !string.IsNullOrEmpty(contractWithoutHeaderDto.CustomerNo)
+                ? (long?)Convert.ToInt64(contractWithoutHeaderDto.CustomerNo)
+                : null;
+
+        var banktEntity = model.GetBankEntity(contractWithoutHeaderDto.BankEntity);
+        model.SetBankEntity(banktEntity);
     }
 
 }
