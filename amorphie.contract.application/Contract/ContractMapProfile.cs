@@ -29,6 +29,8 @@ namespace amorphie.contract.application.Contract
             CreateMap<ContractDefinition, ContractDefinitionHistoryModel>()
                     .ReverseMap();
 
+            CreateMap<ContractCategory, ContractCategoryDto>()
+                    .ReverseMap();
         }
     }
 

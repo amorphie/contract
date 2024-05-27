@@ -1,16 +1,14 @@
-using amorphie.core.Module.minimal_api;
-using amorphie.contract.infrastructure.Contexts;
-using Microsoft.AspNetCore.Mvc;
-using amorphie.contract.core.Entity.Contract;
-using amorphie.contract.application;
 using amorphie.contract.application.Contract;
-using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.Contract.Request;
+using amorphie.contract.application.Extensions;
+using amorphie.contract.core.Entity.Contract;
+using amorphie.contract.core.Extensions;
+using amorphie.contract.core.Response;
 using amorphie.contract.Extensions;
-using amorphie.contract.core.Model;
-using amorphie.contract.core.Enum;
-using amorphie.core.Base;
-using amorphie.contract.infrastructure.Services.Kafka;
+using amorphie.contract.infrastructure.Contexts;
+using amorphie.core.Module.minimal_api;
+using Microsoft.AspNetCore.Mvc;
 
 namespace amorphie.contract;
 
@@ -26,7 +24,6 @@ public class ContractModule
         base.AddRoutes(routeGroupBuilder);
         routeGroupBuilder.MapPost("Instance", Instance);
         routeGroupBuilder.MapGet("InstanceState", InstanceState);
-
     }
 
     async ValueTask<IResult> Instance([FromServices] IContractAppService contractAppService,

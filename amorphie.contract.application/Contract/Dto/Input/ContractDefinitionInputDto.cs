@@ -14,6 +14,7 @@ namespace amorphie.contract.application.Contract.Dto.Input
         public List<Guid> Tags { get; set; }
         [Required]
         public Dictionary<string, string> Titles { get; set; }
+        public List<Guid> CategoryIds { get; set; }
         public List<Metadata> Metadatas { get; set; }
         public List<ContractDocumentInputDto> Documents { get; set; }
         public List<ContractDocumentGroupInputDto> DocumentGroups { get; set; }
