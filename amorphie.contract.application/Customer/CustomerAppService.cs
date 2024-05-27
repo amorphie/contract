@@ -367,6 +367,7 @@ namespace amorphie.contract.application.Customer
                         var compareVersionDefinition = Versioning.CompareVersion(longestVersionDefinition, contractDocumentGroupDocument.Version);
                         if (compareVersionDefinition && longestVersionDefinition != contractDocumentGroupDocument.Version)
                         {
+
                             var customerDocumentWithDef = customerDocumentWithDefs.Where(x => x.Version == longestVersionDefinition).FirstOrDefault();
                             var documentWithDef = customerDocument.Where(x => x.DocumentDefinitionId == customerDocumentWithDef.DocumentDefinitionId).FirstOrDefault();
                             customerContractDocumentDto.Version = customerDocumentWithDef.Version;
