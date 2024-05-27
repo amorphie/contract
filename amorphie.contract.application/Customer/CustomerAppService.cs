@@ -295,10 +295,14 @@ namespace amorphie.contract.application.Customer
                     if (compareVersionDefinition && longestVersionDefinition != contractDocument.Version)
                     {
                         var customerDocumentWithDef = customerDocumentWithDefs.Where(x => x.Version == longestVersionDefinition).FirstOrDefault();
+                        var documentWithDef = customerDocument.Where(x => x.DocumentDefinitionId == customerDocumentWithDef.DocumentDefinitionId).FirstOrDefault();
                         customerContractDocumentDto.Version = customerDocumentWithDef.Version;
                         customerContractDocumentDto.OnlineSign = customerDocumentWithDef.OnlineSign;
                         customerContractDocumentDto.Titles = customerDocumentWithDef.Titles;
                         customerContractDocumentDto.DocumentStatus = ApprovalStatus.Approved.ToString();
+                        customerContractDocumentDto.MinioUrl = documentWithDef?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={documentWithDef.DocumentContentId}";
+                        customerContractDocumentDto.ApprovalDate = documentWithDef?.CreatedAt == null ? null : documentWithDef.CreatedAt;
+                        customerContractDocumentDto.OnlineSign = contractDocument.OnlineSign;
                         allContractDocumentIds.Add(customerDocumentWithDef.DocumentDefinitionId);
                         customerContractDocumentDtos.Add(customerContractDocumentDto);
                         continue;
@@ -364,10 +368,12 @@ namespace amorphie.contract.application.Customer
                         if (compareVersionDefinition && longestVersionDefinition != contractDocumentGroupDocument.Version)
                         {
                             var customerDocumentWithDef = customerDocumentWithDefs.Where(x => x.Version == longestVersionDefinition).FirstOrDefault();
+                            var documentWithDef = customerDocument.Where(x => x.DocumentDefinitionId == customerDocumentWithDef.DocumentDefinitionId).FirstOrDefault();
                             customerContractDocumentDto.Version = customerDocumentWithDef.Version;
                             customerContractDocumentDto.OnlineSign = customerDocumentWithDef.OnlineSign;
                             customerContractDocumentDto.Titles = customerDocumentWithDef.Titles;
-                            customerContractDocumentDto.DocumentStatus = ApprovalStatus.Approved.ToString();
+                            customerContractDocumentDto.MinioUrl = documentWithDef?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={documentWithDef.DocumentContentId}";
+                            customerContractDocumentDto.ApprovalDate = documentWithDef?.CreatedAt == null ? null : documentWithDef.CreatedAt;
                             allContractDocumentIds.Add(customerDocumentWithDef.DocumentDefinitionId);
                             customerContractDocumentDtos.Add(customerContractDocumentDto);
                             continue;
