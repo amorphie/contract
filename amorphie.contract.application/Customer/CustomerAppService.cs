@@ -136,16 +136,16 @@ namespace amorphie.contract.application.Customer
             var customDocument = customerDocumentsWithDefinitionDtos.Where(x => x.CustomerDocumentDto.Id != null).Select(x => x.CustomerDocumentDto).ToList();
 
             // Bir userin kontraktlarının silinmiş döküman ve kontraktları da dahil olmak üzere hepsini getirir.
-            var querableDocumentIds = customDocument.Select(d => d.DocumentDefinitionId).ToList();
+            var querableDocumentIds = customDocument.Select(d => d.Code).ToList();
             List<CustomerContractDto> quearableContract = contractQuery.IgnoreAutoIncludes().IgnoreQueryFilters()
                 .Where(c =>
                             (
-                                c.ContractDocumentDetails.Any(cdd => querableDocumentIds.Contains(cdd.DocumentDefinitionId))
+                                c.ContractDocumentDetails.Any(cdd => querableDocumentIds.Contains(cdd.DocumentDefinition.Code))
                                 &&
                                 _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId && uc.ApprovalStatus != ApprovalStatus.Canceled)
                             )
                             ||
-                                c.ContractDocumentGroupDetails.Any(cdgd => cdgd.DocumentGroup.DocumentGroupDetails.Any(dgd => querableDocumentIds.Contains(dgd.DocumentDefinitionId))
+                                c.ContractDocumentGroupDetails.Any(cdgd => cdgd.DocumentGroup.DocumentGroupDetails.Any(dgd => querableDocumentIds.Contains(dgd.DocumentDefinition.Code))
                                 &&
                                 _dbContext.UserSignedContract.Any(uc => uc.ContractCode == c.Code && uc.CustomerId == userId && uc.ApprovalStatus != ApprovalStatus.Canceled)
                             )
@@ -298,7 +298,8 @@ namespace amorphie.contract.application.Customer
                         customerContractDocumentDto.Version = customerDocumentWithDef.Version;
                         customerContractDocumentDto.OnlineSign = customerDocumentWithDef.OnlineSign;
                         customerContractDocumentDto.Titles = customerDocumentWithDef.Titles;
-                        allContractDocumentIds.Add(contractDocument.Id);
+                        customerContractDocumentDto.DocumentStatus = ApprovalStatus.Approved.ToString();
+                        allContractDocumentIds.Add(customerDocumentWithDef.DocumentDefinitionId);
                         customerContractDocumentDtos.Add(customerContractDocumentDto);
                         continue;
                     }
@@ -366,7 +367,8 @@ namespace amorphie.contract.application.Customer
                             customerContractDocumentDto.Version = customerDocumentWithDef.Version;
                             customerContractDocumentDto.OnlineSign = customerDocumentWithDef.OnlineSign;
                             customerContractDocumentDto.Titles = customerDocumentWithDef.Titles;
-                            allContractDocumentIds.Add(contractDocumentGroupDocument.Id);
+                            customerContractDocumentDto.DocumentStatus = ApprovalStatus.Approved.ToString();
+                            allContractDocumentIds.Add(customerDocumentWithDef.DocumentDefinitionId);
                             customerContractDocumentDtos.Add(customerContractDocumentDto);
                             continue;
                         }
