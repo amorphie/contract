@@ -4,5 +4,5 @@ namespace amorphie.contract.application.Contract.Dto.Zeebe;
 
 public class BackTransitionDto
 {
-public string?  BackTransitionId;
+    public string? BackTransitionId { get; set; }
 }
