@@ -7,7 +7,7 @@ namespace amorphie.contract.application.Customer.Dto
 {
     public class CustomerContractDocumentDto
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Title { get; set; }
         public string Code { get; set; }
         public string DocumentStatus { get; set; } = AppConsts.NotValid;

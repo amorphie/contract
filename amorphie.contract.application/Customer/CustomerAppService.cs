@@ -269,7 +269,22 @@ namespace amorphie.contract.application.Customer
         {
             List<CustomerContractDocumentDto> customerContractDocumentDtos = new List<CustomerContractDocumentDto>();
             var customerDocument = customerDocumentsWithDefinitionDtos.Where(x => x.CustomerDocumentDto.Id != null).Select(x => x.CustomerDocumentDto).ToList();
-            foreach (var contractDocument in customerContractDocuments)
+            var notContaionsCustomerDocument = customerDocumentsWithDefinitionDtos.Where(x => x.CustomerDocumentDto.Id != null
+                && customerContractDocuments.Select(a => a.Code).Contains(x.CustomerDocumentDto.Code)
+                && !customerContractDocuments.Select(b => b.Id).Contains(x.CustomerDocumentDto.DocumentDefinitionId)).ToList();
+            var customerContractDocumentsList = customerContractDocuments.ToList();
+            customerContractDocumentsList.AddRange(notContaionsCustomerDocument.Select(x => new CustomerContractDocumentDto
+            {
+                Id = x.CustomerDocumentDto?.DocumentDefinitionId,
+                Code = x.CustomerDocumentDto?.Code,
+                Version = x.CustomerDocumentDto?.Version,
+                Required = true,
+                Render = false,
+                DocumentStatus = ApprovalStatus.InProgress.ToString(),
+                OnlineSign = x.CustomerDocumentDefinitionDto?.OnlineSign,
+                Titles = x.CustomerDocumentDefinitionDto?.Titles
+            }));
+            foreach (var contractDocument in customerContractDocumentsList)
             {
                 var findCustomerDocumentVersion = customerContractDocuments.Where(x => x.Code == contractDocument.Code && !x.IsDeleted).Select(x => x.Version).ToArray();
                 CustomerContractDocumentDto customerContractDocumentDto = new CustomerContractDocumentDto();
@@ -279,6 +294,7 @@ namespace amorphie.contract.application.Customer
                 customerContractDocumentDto.Required = contractDocument.Required;
                 customerContractDocumentDto.Render = contractDocument.Render;
                 customerContractDocumentDto.Version = contractDocument.Version;
+
                 var document = customerDocument.Find(d => d.DocumentDefinitionId == contractDocument.Id);
                 if (document == null && contractDocument.IsDeleted
                     || customerContractDocumentDtos.Exists(x => x.Code == contractDocument.Code && x.Version == contractDocument.Version))
@@ -302,7 +318,7 @@ namespace amorphie.contract.application.Customer
                         customerContractDocumentDto.DocumentStatus = ApprovalStatus.Approved.ToString();
                         customerContractDocumentDto.MinioUrl = documentWithDef?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={documentWithDef.DocumentContentId}";
                         customerContractDocumentDto.ApprovalDate = documentWithDef?.CreatedAt == null ? null : documentWithDef.CreatedAt;
-                        customerContractDocumentDto.OnlineSign = contractDocument.OnlineSign;
+                        customerContractDocumentDto.OnlineSign = customerDocumentWithDef.OnlineSign;
                         allContractDocumentIds.Add(customerDocumentWithDef.DocumentDefinitionId);
                         customerContractDocumentDtos.Add(customerContractDocumentDto);
                         continue;
@@ -320,9 +336,10 @@ namespace amorphie.contract.application.Customer
                 customerContractDocumentDto.MinioUrl = document?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={document.DocumentContentId}";
                 customerContractDocumentDto.ApprovalDate = document?.CreatedAt == null ? null : document.CreatedAt;
                 customerContractDocumentDto.OnlineSign = contractDocument.OnlineSign;
-                allContractDocumentIds.Add(contractDocument.Id);
+                allContractDocumentIds.Add((Guid)contractDocument.Id);
                 customerContractDocumentDtos.Add(customerContractDocumentDto);
             }
+            var sonKalan = customerDocumentsWithDefinitionDtos.Where(x => customerContractDocumentDtos.Select(a => a.Code).Contains(x.CustomerDocumentDefinitionDto.Code)).ToList();
             return customerContractDocumentDtos;
         }
         // CustomerContractDocumentMapper ta yapılan işi Group özelinde yapar
@@ -343,6 +360,24 @@ namespace amorphie.contract.application.Customer
                 customerContractDocumentGroupDto.Code = contractDocumentGroup.Code;
                 customerContractDocumentGroupDto.Title = contractDocumentGroup.Titles.L(inputDto.GetLanguageCode());
                 customerContractDocumentGroupDto.CustomerContractGroupDocuments = new List<CustomerContractDocumentDto>();
+                var notContainsCustomerDocument = customerDocumentsWithDefinitionDtos
+                    .Where(x => x.CustomerDocumentDto.Id != null
+                                && customerDocument.Select(a => a.Code).Contains(x.CustomerDocumentDto.Code)
+                                && !customerDocument.Select(b => b.Id).Contains(x.CustomerDocumentDto.DocumentDefinitionId))
+                    .ToList();
+
+                var customerContractDocumentsList = contractDocumentGroup.CustomerContractGroupDocuments.ToList();
+                customerContractDocumentsList.AddRange(notContainsCustomerDocument.Select(x => new CustomerContractDocumentDto
+                {
+                    Id = x.CustomerDocumentDto?.DocumentDefinitionId,
+                    Code = x.CustomerDocumentDto?.Code,
+                    Version = x.CustomerDocumentDto?.Version,
+                    Required = true,
+                    Render = false,
+                    DocumentStatus = ApprovalStatus.InProgress.ToString(),
+                    OnlineSign = x.CustomerDocumentDefinitionDto?.OnlineSign,
+                    Titles = x.CustomerDocumentDefinitionDto?.Titles
+                }));
                 foreach (var contractDocumentGroupDocument in contractDocumentGroup.CustomerContractGroupDocuments)
                 {
                     var findCustomerDocumentVersion = contractDocumentGroup.CustomerContractGroupDocuments.Where(x => x.Code == contractDocumentGroupDocument.Code && !x.IsDeleted).Select(x => x.Version).ToArray();
@@ -392,7 +427,7 @@ namespace amorphie.contract.application.Customer
                     customerContractDocumentDto.MinioUrl = document?.DocumentContentId == null ? null : $"{_baseUrl}{_downloadEndpoint}?ObjectId={document.DocumentContentId}";
                     customerContractDocumentDto.ApprovalDate = document?.CreatedAt == null ? null : document.CreatedAt;
                     customerContractDocumentDto.OnlineSign = contractDocumentGroupDocument.OnlineSign;
-                    allContractDocumentIds.Add(contractDocumentGroupDocument.Id);
+                    allContractDocumentIds.Add((Guid)contractDocumentGroupDocument.Id);
                     customerContractDocumentDtos.Add(customerContractDocumentDto);
                 }
                 customerContractDocumentGroupDto.AtLeastRequiredDocument = contractDocumentGroup.AtLeastRequiredDocument;
