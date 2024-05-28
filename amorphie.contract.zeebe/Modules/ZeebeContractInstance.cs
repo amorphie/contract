@@ -79,7 +79,7 @@ namespace amorphie.contract.zeebe.Modules
         }
 
 
-        static async ValueTask<IResult> ContractInstanceState([FromBody] dynamic body,[FromServices] IContractAppService contractAppService, CancellationToken token)
+        static async ValueTask<IResult> ContractInstanceState([FromBody] dynamic body, [FromServices] IContractAppService contractAppService, CancellationToken token)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var headerModel = HeaderHelperZeebe.GetHeader(body);
@@ -97,8 +97,9 @@ namespace amorphie.contract.zeebe.Modules
         static async ValueTask<IResult> ContractBackTransition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            var backTransitionDto = ZeebeMessageHelper.MapToDto<BackTransitionDto>(body);
-            messageVariables.additionalData = backTransitionDto.BackTransitionId == null ? ZeebeConsts.ContractStartBack : backTransitionDto.BackTransitionId;
+            var backTransitionDto = ZeebeMessageHelper.MapToDto<BackTransitionDto>(body) as BackTransitionDto;
+            backTransitionDto.BackTransitionId = backTransitionDto.BackTransitionId == null ? ZeebeConsts.ContractStartBack : backTransitionDto.BackTransitionId;
+            messageVariables.additionalData = backTransitionDto;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
