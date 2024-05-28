@@ -5,7 +5,6 @@
       <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
       <bpmn:incoming>Flow_0lhurtd</bpmn:incoming>
       <bpmn:outgoing>Flow_0ou83v3</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1h0penx</bpmn:outgoing>
       <bpmn:startEvent id="Event_0clot0e" name="Start">
         <bpmn:outgoing>Flow_0angrvf</bpmn:outgoing>
       </bpmn:startEvent>
@@ -276,18 +275,12 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_0r1h9m7" messageRef="Message_2n60jlh" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="Flow_0wnu9o9" sourceRef="Event_1huljzn" targetRef="Activity_1pt62py" />
-    <bpmn:intermediateCatchEvent id="Event_1huljzn" name="contract-start-back-">
-      <bpmn:incoming>Flow_1h0penx</bpmn:incoming>
-      <bpmn:outgoing>Flow_0wnu9o9</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1yw4hsy" messageRef="Message_1pbuk9j" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:sequenceFlow id="Flow_1h0penx" sourceRef="Activity_1t3gbcf" targetRef="Event_1huljzn" />
     <bpmn:sequenceFlow id="Flow_0f365u6" sourceRef="Event_0urlzyo" targetRef="Activity_0xjt6zp" />
     <bpmn:serviceTask id="Activity_1pt62py" name="contract-back-transition">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="contract-back-transition" retries="1" />
         <zeebe:ioMapping>
-          <zeebe:input source="=if ContractBackTransitionDto = null then &#10;{&#10;  &#34;BackTransitionId&#34;:  TRXcontractstartStartContract.Data.entityData.BackTransitionId&#10;}&#10;&#10;else  &#10;{&#10;  &#34;BackTransitionId&#34;: BackTransitionId &#10;}" target="BackTransitionDto" />
+          <zeebe:input source="=if BackTransitionId = null then &#10;{&#10;  &#34;BackTransitionId&#34;:  TRXcontractstartStartContract.Data.entityData.BackTransitionId&#10;}&#10;&#10;else  &#10;{&#10;  &#34;BackTransitionId&#34;: BackTransitionId &#10;}" target="BackTransitionDto" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0wnu9o9</bpmn:incoming>
@@ -295,6 +288,10 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_0s90per" sourceRef="Activity_1pt62py" targetRef="Activity_006en84" />
     <bpmn:sequenceFlow id="Flow_1qmdlbb" sourceRef="Activity_006en84" targetRef="Event_0urlzyo" />
+    <bpmn:boundaryEvent id="Event_1huljzn" name="contract-start-back-" attachedToRef="Activity_1t3gbcf">
+      <bpmn:outgoing>Flow_0wnu9o9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_12upnw7" messageRef="Message_1pbuk9j" />
+    </bpmn:boundaryEvent>
   </bpmn:process>
   <bpmn:message id="Message_0dem2ek" name="DeleteContractDefinition">
     <bpmn:extensionElements>
@@ -348,12 +345,6 @@
         <dc:Bounds x="232" y="532" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="144" y="537" width="78" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_00cmafo_di" bpmnElement="Event_1huljzn">
-        <dc:Bounds x="422" y="532" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="344" y="536" width="68" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_059fdsi" bpmnElement="Activity_1pt62py">
@@ -563,6 +554,12 @@
       <bpmndi:BPMNShape id="BPMNShape_1g4smfu" bpmnElement="Event_08va2c9">
         <dc:Bounds x="1662" y="692" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0sf3i07_di" bpmnElement="Event_1huljzn">
+        <dc:Bounds x="432" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="456" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ou83v3_di" bpmnElement="Flow_0ou83v3">
         <di:waypoint x="1810" y="240" />
         <di:waypoint x="1912" y="240" />
@@ -624,12 +621,10 @@
         <di:waypoint x="1930" y="258" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0wnu9o9_di" bpmnElement="Flow_0wnu9o9">
-        <di:waypoint x="440" y="568" />
+        <di:waypoint x="450" y="488" />
+        <di:waypoint x="450" y="559" />
+        <di:waypoint x="440" y="559" />
         <di:waypoint x="440" y="630" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1h0penx_di" bpmnElement="Flow_1h0penx">
-        <di:waypoint x="440" y="470" />
-        <di:waypoint x="440" y="532" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0f365u6_di" bpmnElement="Flow_0f365u6">
         <di:waypoint x="250" y="532" />
