@@ -98,7 +98,7 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var backTransitionDto = ZeebeMessageHelper.MapToDto<BackTransitionDto>(body);
-            messageVariables.additionalData = backTransitionDto == null ? ZeebeConsts.ContractStartBack : backTransitionDto;
+            messageVariables.additionalData = backTransitionDto.BackTransitionId == null ? ZeebeConsts.ContractStartBack : backTransitionDto.BackTransitionId;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
