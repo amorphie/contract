@@ -29,6 +29,7 @@ namespace amorphie.contract.core.Model.Proxy
     public class DocumentForApproval
     {
         public string DocumentDefinitionCode { get; set; }
+        public bool IsRequired { get; set; }
         public string DocumentSemanticVersion { get; set; }
         public Guid ContractInstanceId { get; set; }
 
