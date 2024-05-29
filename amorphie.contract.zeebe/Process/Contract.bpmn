@@ -219,7 +219,10 @@ or ContractDMNInput.DesicionId != null </bpmn:conditionExpression>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_1pj6c5c</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1t2s5mu">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT60M</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=if ContractSettings = null and ContractSettings.SetTimeout = null then 
+  "PT60M"
+else 
+  ContractSettings.SetTimeout</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:scriptTask id="Activity_0xjt6zp">
@@ -235,7 +238,7 @@ or ContractDMNInput.DesicionId != null </bpmn:conditionExpression>
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
         <zeebe:taskHeaders>
-          <zeebe:header key="TARGET_STATE" value="error" />
+          <zeebe:header key="TARGET_STATE" value="contract-timeout-error-state" />
           <zeebe:header key="PAGE_URL" value="ERROR_PAGE" />
           <zeebe:header key="PAGE_TYPE" value="popup" />
         </zeebe:taskHeaders>
