@@ -11,7 +11,8 @@ namespace amorphie.contract.application.Contract.Dto
         }
 
         [Required]
-        public string ContractCode { get; set; }
+        public string Code { get; set; }
+        public string Title { get; set; }
         public string Status { get; set; }
 
         [Required]

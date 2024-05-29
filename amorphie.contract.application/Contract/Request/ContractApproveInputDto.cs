@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using amorphie.contract.core.Enum;
-using amorphie.contract.core.Model;
 
 namespace amorphie.contract.application.Contract.Request
 {
@@ -8,7 +6,7 @@ namespace amorphie.contract.application.Contract.Request
     {
 
         [Required]
-        public required string ContractName { get; set; }
+        public required string ContractCode { get; set; }
         public Guid ContractInstanceId { get; set; } //bunu ilerde bulundurucaz anyvalid le ilerledigimizden suan kullanılmıyor
       
     }

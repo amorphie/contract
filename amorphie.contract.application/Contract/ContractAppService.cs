@@ -44,11 +44,11 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts)
         {
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
             var contractInstanceDto = new ContractInstanceDto()
             {
-                ContractCode = req.ContractName,
+                Code = req.ContractCode,
                 DocumentList = contractInstaceResponseDto.Data.DocumentList,
                 Status = contractStatus.ToString(),
                 DocumentGroupList = contractInstaceResponseDto.Data.DocumentGroupList
@@ -71,7 +71,8 @@ namespace amorphie.contract.application.Contract
 
             var contractInstanceDto = new ContractInstanceDto()
             {
-                ContractCode = req.ContractCode,
+                Code = req.ContractCode,
+                Title = contractInstaceResponseDto.Data.ContractTitle,
                 ContractInstanceId = contractInstanceId,
                 DocumentList = unSignedDocuments,
                 Status = contractStatus.ToString(),
@@ -144,7 +145,8 @@ namespace amorphie.contract.application.Contract
             var response = new GetContractInstanceResponseDto
             {
                 DocumentList = documentInstanceDtos,
-                DocumentGroupList = docGroupInstanceDtos
+                DocumentGroupList = docGroupInstanceDtos,
+                ContractTitle = contractDefinition.Titles.L(langCode)
             };
 
             return GenericResult<GetContractInstanceResponseDto>.Success(response);
