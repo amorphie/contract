@@ -81,6 +81,11 @@ public static class ZeebeMessageHelper
 
     public static T MapToDto<T>(dynamic body)
     {
+        if (body.ToString().IndexOf(typeof(T).Name) == -1)
+        {
+            return default;
+        }
+
         var jsonDto = body.GetProperty(typeof(T).Name).ToString();
 
         var resultDto = JsonSerializer.Deserialize<T>(jsonDto, options: new JsonSerializerOptions
@@ -93,6 +98,12 @@ public static class ZeebeMessageHelper
 
     public static T MapToDto<T>(dynamic body, string variableName)
     {
+
+        if (body.ToString().IndexOf(variableName) == -1)
+        {
+            return default;
+        }
+
         var jsonDto = body.GetProperty(variableName).ToString();
 
         var options = new JsonSerializerOptions
