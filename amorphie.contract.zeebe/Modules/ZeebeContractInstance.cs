@@ -1,6 +1,8 @@
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
+using amorphie.contract.application.DMN.Dto;
+using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
@@ -78,7 +80,6 @@ namespace amorphie.contract.zeebe.Modules
 
         }
 
-
         static async ValueTask<IResult> ContractInstanceState([FromBody] dynamic body, [FromServices] IContractAppService contractAppService, CancellationToken token)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
@@ -94,6 +95,7 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
+
         static async ValueTask<IResult> ContractBackTransition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
@@ -130,11 +132,13 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body) as HeaderFilterModel;
 
             var inputDto = ZeebeMessageHelper.MapToDto<ContractInputDto>(body);
+            var dmnResult = ZeebeMessageHelper.MapToDto<List<DmnResultDto>>(body, ZeebeConsts.DmnResult) as List<DmnResultDto>;
 
             var contractServiceInput = new ContractInstanceInputDto
             {
                 ContractCode = inputDto.ContractCode,
                 ContractInstanceId = ZeebeMessageHelper.StringToGuid(inputDto.ContractInstanceId),
+                DmnResult = dmnResult,
             };
 
             if (String.IsNullOrEmpty(headerModel.UserReference))

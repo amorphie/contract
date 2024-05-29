@@ -7,6 +7,7 @@ using amorphie.contract.core.Response;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using Serilog;
+using amorphie.contract.application.DMN.Dto;
 
 namespace amorphie.contract.application.Contract
 {
@@ -43,7 +44,7 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts)
         {
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractName, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
             var contractInstanceDto = new ContractInstanceDto()
             {
@@ -58,7 +59,7 @@ namespace amorphie.contract.application.Contract
         public async Task<GenericResult<ContractInstanceDto>> Instance(ContractInstanceInputDto req, CancellationToken cts)
         {
 
-            var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
+            var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, req.DmnResult, cts);
 
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 
@@ -81,9 +82,12 @@ namespace amorphie.contract.application.Contract
         }
 
         #region Private Methods
-        private async Task<GenericResult<GetContractInstanceResponseDto>> GetContractInstance(string contractCode, string userReference, string langCode, EBankEntity eBankEntity, CancellationToken cancellationToken)
+        private async Task<GenericResult<GetContractInstanceResponseDto>> GetContractInstance(string contractCode, string userReference, string langCode, EBankEntity eBankEntity, IEnumerable<DmnResultDto> dmnResults, CancellationToken cancellationToken)
         {
-            var contractDefinition = await _dbContext.ContractDefinition.AsNoTracking().FirstOrDefaultAsync(x => x.Code == contractCode && x.BankEntity == eBankEntity, cancellationToken);
+            var contractDefinition = await _dbContext
+                    .ContractDefinition
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Code == contractCode && x.BankEntity == eBankEntity, cancellationToken);
 
             if (contractDefinition is null)
             {
@@ -126,14 +130,14 @@ namespace amorphie.contract.application.Contract
             List<DocumentInstanceDto> documentInstanceDtos = new();
             foreach (var contractDoc in contractDefinition.ContractDocumentDetails.OrderBy(k => k.Order))
             {
-                var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode);
+                var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode, dmnResults);
                 documentInstanceDtos.Add(documentInstanceDto);
             }
 
             List<DocumentGroupInstanceDto> docGroupInstanceDtos = new();
             foreach (var contractDocGroupDetail in contractDefinition.ContractDocumentGroupDetails)
             {
-                var documentGroupInstanceDto = MapToDocumentGroupInstanceDto(documents, contractDocGroupDetail, langCode);
+                var documentGroupInstanceDto = MapToDocumentGroupInstanceDto(documents, contractDocGroupDetail, langCode, dmnResults);
                 docGroupInstanceDtos.Add(documentGroupInstanceDto);
             }
 
@@ -171,7 +175,7 @@ namespace amorphie.contract.application.Contract
 
         }
 
-        private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode)
+        private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
         {
             var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).ToArray();
 
@@ -186,12 +190,13 @@ namespace amorphie.contract.application.Contract
             var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
             var template = documentLastVersion.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
 
+            DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
 
             var documentInstance = new DocumentInstanceDto
             {
                 Code = contractDoc.DocumentDefinition.Code,
                 UseExisting = contractDoc.UseExisting.ToString(),
-                IsRequired = contractDoc.Required,
+                IsRequired = dmnResultDto?.IsRequired ?? contractDoc.Required,
                 Status = ApprovalStatus.InProgress.ToString(),
                 MinVersion = contractDoc.DocumentDefinition.Semver,
                 LastVersion = findDocumentLastVersion,
@@ -223,7 +228,7 @@ namespace amorphie.contract.application.Contract
             return documentInstance;
         }
 
-        private DocumentGroupInstanceDto MapToDocumentGroupInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentGroupDetail contractDocGroupDetail, string langCode)
+        private DocumentGroupInstanceDto MapToDocumentGroupInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentGroupDetail contractDocGroupDetail, string langCode, IEnumerable<DmnResultDto> dmnResults)
         {
             var docGroupInstanceDto = new DocumentGroupInstanceDto
             {
@@ -250,12 +255,13 @@ namespace amorphie.contract.application.Contract
                 var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
                 var template = documentLastVersion.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
 
+                DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
 
                 var documentInstance = new DocumentInstanceDto
                 {
                     Code = contractDoc.DocumentDefinition.Code,
                     UseExisting = EUseExisting.AnyValid.ToString(),
-                    IsRequired = contractDocGroupDetail.Required,
+                    IsRequired = dmnResultDto?.IsRequired ?? contractDocGroupDetail.Required,
                     MinVersion = contractDoc.DocumentDefinition.Semver,
                     LastVersion = findDocumentLastVersion,
                     Name = documentLastVersion.Titles.L(langCode),
@@ -341,7 +347,7 @@ namespace amorphie.contract.application.Contract
             }
             else
             {
-                var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, cts);
+                var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
 
                 ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
 

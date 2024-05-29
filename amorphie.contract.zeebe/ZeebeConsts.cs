@@ -19,12 +19,12 @@ namespace amorphie.contract.zeebe
         public const string CustomerApproveByContractOutputDto = "CustomerApproveByContractOutputDto";
         public const string RenderedDocumentsForApproval = "RenderedDocumentsForApproval";
         public const string ContractInstanceStateResult = "ContractInstanceStateResult";
-
-
+        public const string DmnResult = "DmnResult";
 
 
 
         #endregion
+
         public const string ContractStartBack = "contract-start-back";
 
 
