@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
+  <bpmn:process id="Category-Definition" name="CategoryDefinition" isExecutable="true">
+    <bpmn:subProcess id="Activity_1t3gbcf">
+      <bpmn:incoming>Flow_0uy104u</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ou83v3</bpmn:outgoing>
+      <bpmn:startEvent id="Event_0clot0e" name="Start">
+        <bpmn:outgoing>Flow_0angrvf</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:endEvent id="Event_0s90jml" name="End">
+        <bpmn:incoming>Flow_15ecgxi</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:serviceTask id="Activity_0jowvcz" name="contract-category-definition">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="contract-category-definition" retries="1" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0angrvf</bpmn:incoming>
+        <bpmn:outgoing>Flow_0t3tpr9</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0angrvf" sourceRef="Event_0clot0e" targetRef="Activity_0jowvcz" />
+      <bpmn:sequenceFlow id="Flow_0t3tpr9" sourceRef="Activity_0jowvcz" targetRef="Activity_0chazy4" />
+      <bpmn:serviceTask id="Activity_0chazy4" name="amorphie-workflow-set-state">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="TARGET_STATE" value="default" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0t3tpr9</bpmn:incoming>
+        <bpmn:outgoing>Flow_15ecgxi</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_15ecgxi" sourceRef="Activity_0chazy4" targetRef="Event_0s90jml" />
+    </bpmn:subProcess>
+    <bpmn:intermediateThrowEvent id="Event_0155iei">
+      <bpmn:incoming>Flow_0ou83v3</bpmn:incoming>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0ou83v3" sourceRef="Activity_1t3gbcf" targetRef="Event_0155iei" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0uy104u</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0r741rv" messageRef="Message_35v4t9g" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0uy104u" sourceRef="StartEvent_1" targetRef="Activity_1t3gbcf" />
+  </bpmn:process>
+  <bpmn:message id="Message_0dem2ek" name="DeleteProcessRenderOnlineSign">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_2n60jlh">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:error id="Error_0kevwfd" name="Error_28dhdfu" errorCode="500" />
+  <bpmn:message id="Message_3qe4h8t" name="StartCategoryDefinitionInstance" />
+  <bpmn:message id="Message_35v4t9g" name="contract-category-start-instance" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Category-Definition">
+      <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
+        <dc:Bounds x="290" y="80" width="1430" height="410" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0clot0e_di" bpmnElement="Event_0clot0e">
+        <dc:Bounds x="392" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="399" y="325" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ss2739_di" bpmnElement="Event_0s90jml">
+        <dc:Bounds x="1642" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1650" y="305" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0l1nuf9" bpmnElement="Activity_0jowvcz">
+        <dc:Bounds x="890" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_09kmhv9" bpmnElement="Activity_0chazy4">
+        <dc:Bounds x="1350" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0angrvf_di" bpmnElement="Flow_0angrvf">
+        <di:waypoint x="428" y="300" />
+        <di:waypoint x="659" y="300" />
+        <di:waypoint x="659" y="270" />
+        <di:waypoint x="890" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t3tpr9_di" bpmnElement="Flow_0t3tpr9">
+        <di:waypoint x="990" y="270" />
+        <di:waypoint x="1350" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15ecgxi_di" bpmnElement="Flow_15ecgxi">
+        <di:waypoint x="1450" y="280" />
+        <di:waypoint x="1642" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0155iei_di" bpmnElement="Event_0155iei">
+        <dc:Bounds x="1822" y="242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1251s67_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="267" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0ou83v3_di" bpmnElement="Flow_0ou83v3">
+        <di:waypoint x="1720" y="260" />
+        <di:waypoint x="1822" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uy104u_di" bpmnElement="Flow_0uy104u">
+        <di:waypoint x="188" y="285" />
+        <di:waypoint x="290" y="285" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
