@@ -2,6 +2,7 @@
 using amorphie.contract.core.Enum;
 using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Model;
+using amorphie.contract.application.Common;
 
 namespace amorphie.contract.application.Contract.Dto.Input
 {
@@ -12,8 +13,15 @@ namespace amorphie.contract.application.Contract.Dto.Input
         [Required]
         public EBankEntity RegistrationType { get; set; }
         public List<Guid> Tags { get; set; }
+        public Dictionary<string, string> Titles
+        {
+            get
+            {
+                return TitleInput.ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
         [Required]
-        public Dictionary<string, string> Titles { get; set; }
+        public List<TitleInputDto> TitleInput { get; set; }
         public List<Guid> CategoryIds { get; set; }
         public List<Metadata> Metadatas { get; set; }
         public List<ContractDocumentInputDto> Documents { get; set; }

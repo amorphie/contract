@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using amorphie.contract.application.Common;
 
-namespace amorphie.contract.application
+namespace amorphie.contract.application.Contract.Dto.Input
 {
-	public class DocumentGroupInputDto
-	{
-        [Required]
+    public class ContractCategoryInputDto
+    {
         public string Code { get; set; }
-        public List<DocumentGroupDocumentInputDto> Documents { get; set; }
+        public List<ContractCategoryDetailDto> ContractCategoryDetails { get; set; } = new List<ContractCategoryDetailDto>();
         public Dictionary<string, string> Titles
         {
             get
@@ -18,4 +20,3 @@ namespace amorphie.contract.application
         public List<TitleInputDto> TitleInput { get; set; }
     }
 }
-
