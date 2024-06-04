@@ -140,7 +140,7 @@ namespace amorphie.contract.Module.Proxy
             }
         }
 
-        async ValueTask<IResult> RenderPdfFromTag(
+        async ValueTask<GenericResult<RenderResponseDto>> RenderPdfFromTag(
           [FromServices] ProjectDbContext context,
           [FromServices] ITagAppService tagAppService,
           [FromBody] TemplateRenderTagInputDto inputDto, 
@@ -161,20 +161,20 @@ namespace amorphie.contract.Module.Proxy
                 await context.TemplateRender.AddAsync(renderEntity);
                 context.SaveChanges();
 
-                return Results.Ok(new
-                {
-                    Data = new { TemplateRenderRequestModel = inputDto, Content = resultRenderPdf.Data },
-                    Success = true,
-                    ErrorMessage = "",
+                
+                return GenericResult<RenderResponseDto>.Success(new RenderResponseDto 
+                { 
+                    Content = resultRenderPdf.Data, 
+                    TemplateRenderRequestModel = inputDto
                 });
             }
             else
             {
-                return Results.Problem(detail: $"Tag Render Exception {resultRenderPdf.ErrorMessage}");
+                return GenericResult<RenderResponseDto>.Fail($"Tag Render Exception {resultRenderPdf.ErrorMessage}");
             }
         }
 
-         async ValueTask<IResult> GetRenderDataFromTag(
+         async ValueTask<GenericResult<Dictionary<string, string>>> GetRenderDataFromTag(
           [FromServices] ProjectDbContext context,
           [FromServices] ITagAppService tagAppService,
           [AsParameters] GetRenderDataTagInputDto inputDto,
@@ -185,16 +185,16 @@ namespace amorphie.contract.Module.Proxy
 
             if (resultRenderData.IsSuccess)
             {
-                return Results.Ok(resultRenderData);
+                return resultRenderData;
             }
             else
             {
-                return Results.Problem(detail: $"Tag Render Exception {resultRenderData.ErrorMessage}");
+                return GenericResult<Dictionary<string, string>>.Fail($"Tag Render Exception {resultRenderData.ErrorMessage}");
             }
         }
 
 
-        async ValueTask<IResult> RenderHtmlFromTag(
+        async ValueTask<GenericResult<RenderResponseDto>> RenderHtmlFromTag(
           [FromServices] ProjectDbContext context,
           [FromServices] ITagAppService tagAppService,
           [FromBody] TemplateRenderTagInputDto inputDto, 
@@ -215,16 +215,15 @@ namespace amorphie.contract.Module.Proxy
                 await context.TemplateRender.AddAsync(renderEntity);
                 context.SaveChanges();
 
-                return Results.Ok(new
-                {
-                    Data = new { TemplateRenderRequestModel = inputDto, Content = resultRenderHtml.Data },
-                    Success = true,
-                    ErrorMessage = "",
+                return GenericResult<RenderResponseDto>.Success(new RenderResponseDto 
+                { 
+                    Content = resultRenderHtml.Data, 
+                    TemplateRenderRequestModel = inputDto
                 });
             }
             else
             {
-                return Results.Problem(detail: $"Tag Render Exception {resultRenderHtml.ErrorMessage}");
+                return GenericResult<RenderResponseDto>.Fail($"Tag Render Exception {resultRenderHtml.ErrorMessage}");
             }
         }
 
