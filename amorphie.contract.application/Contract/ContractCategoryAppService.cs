@@ -11,8 +11,8 @@ namespace amorphie.contract.application.Contract
 {
 	public interface IContractCategoryAppService
     {
-        Task<GenericResult<ContractCategoryDto>> CreateContractCategory(ContractCategoryDto inputDto, Guid id);
-        Task<GenericResult<ContractCategoryDto>> UpdateContractCategory(ContractCategoryDto inputDto, Guid id);
+        Task<GenericResult<ContractCategory>> CreateContractCategory(ContractCategoryInputDto inputDto, Guid id);
+        Task<GenericResult<ContractCategory>> UpdateContractCategory(ContractCategoryInputDto inputDto, Guid id);
         Task ContractCategoryAdd(ContractCategoryDetailInputDto inputDto);
     }
 
@@ -25,13 +25,13 @@ namespace amorphie.contract.application.Contract
 			_dbContext = dbContext;
         }
 
-		public async Task<GenericResult<ContractCategoryDto>> CreateContractCategory(ContractCategoryDto inputDto, Guid id)
+		public async Task<GenericResult<ContractCategory>> CreateContractCategory(ContractCategoryInputDto inputDto, Guid id)
 		{
 			var isExist = _dbContext.ContractCategory.Any(x => x.Code == inputDto.Code);
 
 			if (isExist)
 			{
-				return GenericResult<ContractCategoryDto>.Fail("Kategori daha önce eklenmiş.");
+				return GenericResult<ContractCategory>.Fail("Kategori daha önce eklenmiş.");
 			}
 
 			ContractCategory contractCategory = new ContractCategory
@@ -47,10 +47,10 @@ namespace amorphie.contract.application.Contract
 
 			_dbContext.SaveChanges();
 
-            return GenericResult<ContractCategoryDto>.Success(inputDto);
+            return GenericResult<ContractCategory>.Success(contractCategory);
 		}
 
-        public async Task<GenericResult<ContractCategoryDto>> UpdateContractCategory(ContractCategoryDto inputDto, Guid id)
+        public async Task<GenericResult<ContractCategory>> UpdateContractCategory(ContractCategoryInputDto inputDto, Guid id)
         {
             var contractCategory = _dbContext.ContractCategory.FirstOrDefault(x => x.Code == inputDto.Code);
 
@@ -67,7 +67,7 @@ namespace amorphie.contract.application.Contract
 
             _dbContext.SaveChanges();
 
-            return GenericResult<ContractCategoryDto>.Success(inputDto);
+            return GenericResult<ContractCategory>.Success(contractCategory);
         }
 
 		public async Task DeleteContractCategory(Guid id)

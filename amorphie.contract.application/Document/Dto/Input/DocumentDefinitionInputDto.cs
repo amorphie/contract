@@ -1,4 +1,5 @@
 ﻿using System;
+using amorphie.contract.application.Common;
 using amorphie.contract.core.Model;
 
 namespace amorphie.contract.application
@@ -18,7 +19,14 @@ namespace amorphie.contract.application
         public List<Guid> RenderAllowedClients { get; set; }
         public List<Guid> UploadTags { get; set; }
         public List<Guid> UploadAllowedClients { get; set; }
-        public Dictionary<string, string> Titles { get; set; }
+        public Dictionary<string, string> Titles
+        {
+            get
+            {
+                return TitleInput.ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
+        public List<TitleInputDto> TitleInput { get; set; }
         public List<Metadata> Metadatas { get; set; }
         public List<TemplateInputDto> Templates { get; set; }
         public List<AllowedUploadFormatInputDto> AllowedUploadFormats { get; set; }

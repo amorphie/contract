@@ -76,7 +76,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDefinitions
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
-            ContractCategoryDto entityData = JsonSerializer.Deserialize<ContractCategoryDto>(serializeEntity, options);
+            ContractCategoryInputDto entityData = JsonSerializer.Deserialize<ContractCategoryInputDto>(serializeEntity, options);
 
             contractCategoryAppService.CreateContractCategory(entityData, messageVariables.InstanceIdGuid);
 
@@ -88,7 +88,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDefinitions
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
-            ContractCategoryDto entityData = JsonSerializer.Deserialize<ContractCategoryDto>(serializeEntity, options);
+            ContractCategoryInputDto entityData = JsonSerializer.Deserialize<ContractCategoryInputDto>(serializeEntity, options);
 
             contractCategoryAppService.UpdateContractCategory(entityData, messageVariables.InstanceIdGuid);
 
