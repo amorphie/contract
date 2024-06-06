@@ -66,6 +66,13 @@ builder.Services
                                 throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
     .AddPolicyHandler(retryPolicy);
 
+builder.Services
+    .AddRefitClient<ITagService>()
+    .ConfigureHttpClient(c =>
+        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
+                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
+    .AddPolicyHandler(retryPolicy);
+
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDysProducer, DysProducer>();
@@ -74,6 +81,7 @@ builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrati
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
 builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
+builder.Services.AddTransient<ITagAppService, TagAppService>();
 
 var assemblies = new Assembly[]
                 {
