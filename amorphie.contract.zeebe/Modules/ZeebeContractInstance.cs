@@ -215,7 +215,7 @@ namespace amorphie.contract.zeebe.Modules
             var contractDMNOutput = new ContractDMNOutputDto
             {
                 DecisionTableId = contractDecision.DecisionTableId,
-                ContractDMNInput = resultTags.Data
+                Tags = resultTags.Data
             };
 
             messageVariables.Variables.Add(ZeebeConsts.DecisionTableOutput, contractDMNOutput);
