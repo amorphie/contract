@@ -11,5 +11,10 @@ namespace amorphie.contract.application.TemplateEngine.Dto
         public string EntityName { get; set; }
         public string TagName { get; set; }
         public string Reference { get; set; }
+
+        public override string ToString()
+        {
+            return $"Domain Name: {DomainName}, Entity Name: {EntityName}, Tag Name: {TagName}, Reference: {Reference}";
+        }
     }
 }
