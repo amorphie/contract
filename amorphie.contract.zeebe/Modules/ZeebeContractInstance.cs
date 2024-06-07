@@ -5,6 +5,7 @@ using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.DMN.Dto;
 using amorphie.contract.application.TemplateEngine;
+using amorphie.contract.core.CustomException;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
@@ -203,9 +204,21 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
-            await tagAppService.SetTagMetadata(contractDecision.Metadata, inputDto.HeaderModel);
+            var resultTags = await tagAppService.GetTagMetadata(contractDecision.Metadata, inputDto.HeaderModel);
 
-            messageVariables.Variables.Add(ZeebeConsts.DecisionTableOutput, contractDecision);
+            if (!resultTags.IsSuccess)
+            {
+              
+                throw new ZeebeException(resultTags.ErrorMessage, nameof(GetContractDecisionTableIfExists));
+            }
+
+            var contractDMNOutput = new ContractDMNOutputDto
+            {
+                DecisionTableId = contractDecision.DecisionTableId,
+                ContractDMNInput = resultTags.Data
+            };
+
+            messageVariables.Variables.Add(ZeebeConsts.DecisionTableOutput, contractDMNOutput);
 
             messageVariables.Success = true;
 

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.TemplateEngine.Dto;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Response;
@@ -12,7 +13,7 @@ namespace amorphie.contract.application.TemplateEngine
         Task<GenericResult<string>> SendRenderPdf(TemplateRenderTagInputDto input);
         Task<GenericResult<string>> SendRenderHtml(TemplateRenderTagInputDto input);
         Task<GenericResult<Dictionary<string, string>>> GetRenderValues(GetRenderDataTagInputDto inputDto);
-        Task SetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel);
+        Task<GenericResult<Dictionary<string, string>>> GetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel);
     }
 
     public class TagAppService : ITagAppService
@@ -101,9 +102,10 @@ namespace amorphie.contract.application.TemplateEngine
             }
         }
 
-        public async Task SetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel)
+        public async Task<GenericResult<Dictionary<string, string>>> GetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel)
         {
             var cachedTagValue = new Dictionary<string, string>();
+            var resultTags = new Dictionary<string, string>();
 
             foreach (var item in metadata)
             {
@@ -117,7 +119,7 @@ namespace amorphie.contract.application.TemplateEngine
 
                     if (cachedTagValue.TryGetValue(item.Code, out var tagValue))
                     {
-                        item.Data = tagValue;
+                        resultTags[item.Code] = tagValue;
                     }
                     else
                     {
@@ -159,17 +161,17 @@ namespace amorphie.contract.application.TemplateEngine
 
                         if (cachedTagValue.TryGetValue(item.Code, out var newTagValue))
                         {
-                            item.Data = newTagValue;
+                            resultTags[item.Code] = newTagValue;
                         }
                         else
                         {
                             _logger.Warning("Tag service returned empty data {Code} - {Data}", item.Code, item.Data);
                         }
                     }
-
                 }
-
             }
+
+            return GenericResult<Dictionary<string, string>>.Success(resultTags);
         }
     }
 }
