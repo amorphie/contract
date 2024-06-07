@@ -81,7 +81,6 @@ builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrati
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
 builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
-builder.Services.AddTransient<ITagAppService, TagAppService>();
 
 var assemblies = new Assembly[]
                 {
