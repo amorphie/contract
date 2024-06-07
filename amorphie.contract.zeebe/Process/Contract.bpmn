@@ -96,7 +96,7 @@
       <bpmn:sequenceFlow id="Flow_0kgffyi" sourceRef="Activity_1f6k2nd" targetRef="Event_0s90jml" />
       <bpmn:businessRuleTask id="Activity_14otq8s" name="DMN">
         <bpmn:extensionElements>
-          <zeebe:calledDecision decisionId="=DecisionTableOutpuDto.DecisionTableId" resultVariable="DmnResult" />
+          <zeebe:calledDecision decisionId="=ContractDMNInputDto.decisionTableId" resultVariable="DmnResult" />
           <zeebe:ioMapping>
             <zeebe:input source="=DecisionTableOutpuDto" target="ContractDMNInputDto" />
           </zeebe:ioMapping>
@@ -413,12 +413,12 @@ else
         <dc:Bounds x="540" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0exq20o" bpmnElement="Gateway_1ac43cv" isMarkerVisible="true">
+        <dc:Bounds x="505" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1u6lpz3" bpmnElement="Activity_11id00y">
         <dc:Bounds x="490" y="100" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0exq20o" bpmnElement="Gateway_1ac43cv" isMarkerVisible="true">
-        <dc:Bounds x="505" y="205" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15ecgxi_di" bpmnElement="Flow_15ecgxi">
         <di:waypoint x="1616" y="260" />
