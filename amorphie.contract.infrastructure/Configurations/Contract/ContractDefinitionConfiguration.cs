@@ -27,6 +27,9 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
 
             builder.OwnsMany(d => d.DefinitionMetadata, builder => { builder.ToJson(); });
 
+            builder.Property(k => k.DecisionTableId).HasMaxLength(150);
+
+            builder.OwnsMany(d => d.DecisionTableMetadata, builder => { builder.ToJson(); });
         }
     }
 }

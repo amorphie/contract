@@ -1,13 +1,16 @@
+using amorphie.contract.application;
 using amorphie.contract.application.Contract;
+using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.DMN.Dto;
-using amorphie.contract.core.Extensions;
+using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace amorphie.contract.zeebe.Modules
@@ -51,6 +54,15 @@ namespace amorphie.contract.zeebe.Modules
                                      operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
                                      return operation;
                                  });
+
+            app.MapPost("/get-contract-decision-table", GetContractDecisionTableIfExists)
+            .Produces(StatusCodes.Status200OK)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Maps ContractInstance service worker on Zeebe";
+                operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+                return operation;
+            });
 
             app.MapPost("/timeoutcontract", TimeoutContract)
                 .Produces(StatusCodes.Status200OK)
@@ -160,6 +172,45 @@ namespace amorphie.contract.zeebe.Modules
         }
 
 
+        static async ValueTask<IResult> GetContractDecisionTableIfExists([FromBody] dynamic body,
+        [FromServices] ProjectDbContext dbContext,
+        [FromServices] ITagAppService tagAppService,
+        CancellationToken token)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var headerModel = HeaderHelperZeebe.GetHeader(body);
+            var inputDto = ZeebeMessageHelper.MapToDto<GetContractDecisionTableInputDto>(body) as GetContractDecisionTableInputDto;
+
+            inputDto.SetHeaderModel(headerModel);
+
+            var contractDecision = await dbContext.ContractDefinition
+                                  .Where(k => k.Code == inputDto.ContractCode &&
+                                              k.BankEntity == inputDto.HeaderModel.EBankEntity)
+                                  .Select(x =>
+                                     new ContractDecisionDto(
+                                         x.DecisionTableId,
+                                         ObjectMapperApp.Mapper.Map<List<MetadataDto>>(x.DecisionTableMetadata)))
+                                  .AsNoTracking()
+                                  .FirstOrDefaultAsync(token);
+
+            if (contractDecision is null)
+            {
+                Results.NotFound($"{inputDto.ContractCode} not found.");
+            }
+
+            if (String.IsNullOrEmpty(contractDecision.DecisionTableId))
+            {
+                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
+
+            await tagAppService.SetTagMetadata(contractDecision.Metadata, inputDto.HeaderModel);
+
+            messageVariables.Variables.Add(ZeebeConsts.DecisionTableOutput, contractDecision);
+
+            messageVariables.Success = true;
+
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
 
         static IResult TimeoutContract(
         [FromBody] dynamic body,

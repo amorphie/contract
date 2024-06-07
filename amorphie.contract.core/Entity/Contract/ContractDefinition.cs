@@ -16,6 +16,8 @@ namespace amorphie.contract.core.Entity.Contract
         public ICollection<ContractValidation> ContractValidations { get; set; } = new List<ContractValidation>();
         public Dictionary<string, string> Titles { get; set; } = default!;
         public List<Metadata> DefinitionMetadata { get; set; } = new();
+        public string? DecisionTableId { get; set; }
+        public List<Metadata> DecisionTableMetadata { get; set; } = new();
 
     }
 }
