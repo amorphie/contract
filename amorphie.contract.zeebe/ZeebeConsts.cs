@@ -20,7 +20,7 @@ namespace amorphie.contract.zeebe
         public const string RenderedDocumentsForApproval = "RenderedDocumentsForApproval";
         public const string ContractInstanceStateResult = "ContractInstanceStateResult";
 
-        public const string DecisionTableOutput = "DecisionTableOutpuDto";
+        public const string DecisionTagValueOutput = "DecisionTagValueOutpuDto";
 
         public const string DmnResult = "DmnResult";
 

@@ -98,7 +98,7 @@
         <bpmn:extensionElements>
           <zeebe:calledDecision decisionId="=ContractDMNInputDto.decisionTableId" resultVariable="DmnResult" />
           <zeebe:ioMapping>
-            <zeebe:input source="=DecisionTableOutpuDto" target="ContractDMNInputDto" />
+            <zeebe:input source="=DecisionTagValueOutpuDto" target="ContractDMNInputDto" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_14qtugk</bpmn:incoming>
@@ -115,7 +115,7 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=DecisionTableOutpuDto != null</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_16xnrgu" sourceRef="Gateway_1ac43cv" targetRef="Activity_0jowvcz" />
-      <bpmn:serviceTask id="Activity_11id00y" name="FetchContractDecisionTable">
+      <bpmn:serviceTask id="Activity_11id00y" name="FetchContractDecisionTableAndTags">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="get-contract-decision-table" retries="1" />
           <zeebe:ioMapping>
