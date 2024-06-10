@@ -208,17 +208,17 @@ namespace amorphie.contract.zeebe.Modules
 
             if (!resultTags.IsSuccess)
             {
-              
+
                 throw new ZeebeException(resultTags.ErrorMessage, nameof(GetContractDecisionTableIfExists));
             }
 
-            var contractDMNOutput = new ContractDMNOutputDto
+            ContractDecisionTagOutputDto contractDecisionTagOutputDto = new()
             {
                 DecisionTableId = contractDecision.DecisionTableId,
                 Tags = resultTags.Data
             };
 
-            messageVariables.Variables.Add(ZeebeConsts.DecisionTableOutput, contractDMNOutput);
+            messageVariables.Variables.Add(ZeebeConsts.DecisionTagValueOutput, contractDecisionTagOutputDto);
 
             messageVariables.Success = true;
 
