@@ -112,7 +112,7 @@
         <bpmn:outgoing>Flow_16xnrgu</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_14qtugk" sourceRef="Gateway_1ac43cv" targetRef="Activity_14otq8s">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=DecisionTableOutpuDto != null</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=DecisionTagValueOutpuDto != null</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_16xnrgu" sourceRef="Gateway_1ac43cv" targetRef="Activity_0jowvcz" />
       <bpmn:serviceTask id="Activity_11id00y" name="FetchContractDecisionTableAndTags">
