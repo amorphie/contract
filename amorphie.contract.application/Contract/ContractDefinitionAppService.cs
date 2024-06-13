@@ -33,11 +33,33 @@ namespace amorphie.contract.application.Contract
         {
             ContractDefinition contractDefinition = new ContractDefinition();
 
+            foreach (var item in inputDto?.Metadatas)  {
+                var check  = item.IsValidTag();
+
+                if (!check.HasValue)
+                    continue;
+
+                if (!check.Value)
+                    return GenericResult<ContractDefinition>.Fail("Geçersiz tag ifadesi!");
+            }
+
+            foreach (var item in inputDto?.DecisionTableMetadatas)  {
+                var check  = item.IsValidTag();
+
+                if (!check.HasValue)
+                    continue;
+
+                if (!check.Value)
+                    return GenericResult<ContractDefinition>.Fail("Geçersiz tag ifadesi!");
+            }
+
             contractDefinition.Id = id;
             contractDefinition.Code = inputDto.Code;
             contractDefinition.Titles = inputDto.Titles;
             contractDefinition.BankEntity = inputDto.RegistrationType;
             contractDefinition.DefinitionMetadata = inputDto.Metadatas;
+            contractDefinition.DecisionTableId = inputDto.DecisionTableId;
+            contractDefinition.DecisionTableMetadata = inputDto.DecisionTableMetadatas;
 
             _dbContext.ContractDefinition.Add(contractDefinition);
 
@@ -62,12 +84,34 @@ namespace amorphie.contract.application.Contract
                 throw new EntityNotFoundException("Contract Definition", id.ToString());
             }
 
+            foreach (var item in inputDto?.Metadatas)  {
+                var check  = item.IsValidTag();
+
+                if (!check.HasValue)
+                    continue;
+
+                if (!check.Value)
+                    return GenericResult<ContractDefinition>.Fail("Geçersiz tag ifadesi!");
+            }
+
+            foreach (var item in inputDto?.DecisionTableMetadatas)  {
+                var check  = item.IsValidTag();
+
+                if (!check.HasValue)
+                    continue;
+
+                if (!check.Value)
+                    return GenericResult<ContractDefinition>.Fail("Geçersiz tag ifadesi!");
+            }
+
             SetContractDefinitionHistory(contractDefinition);
 
             contractDefinition.Code = inputDto.Code;
             contractDefinition.Titles = inputDto.Titles;
             contractDefinition.ModifiedAt = DateTime.UtcNow;
             contractDefinition.DefinitionMetadata = inputDto.Metadatas;
+            contractDefinition.DecisionTableId = inputDto.DecisionTableId;
+            contractDefinition.DecisionTableMetadata = inputDto.DecisionTableMetadatas;
 
             _dbContext.ContractDefinition.Update(contractDefinition);
 
