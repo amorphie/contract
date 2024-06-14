@@ -20,6 +20,7 @@ namespace amorphie.contract.application.Contract.Dto.Input
                 return TitleInput.ToDictionary(x => x.Key, x => x.Value);
             }
         }
+        public string? DecisionTableId { get; set; }
         [Required]
         public List<TitleInputDto> TitleInput { get; set; }
         public List<Guid> CategoryIds { get; set; }
@@ -27,6 +28,7 @@ namespace amorphie.contract.application.Contract.Dto.Input
         public List<ContractDocumentInputDto> Documents { get; set; }
         public List<ContractDocumentGroupInputDto> DocumentGroups { get; set; }
         public List<ContractValidationInputDto> Validations { get; set; }
+        public List<Metadata> DecisionTableMetadatas { get; set; }
     }
 }
 

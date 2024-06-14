@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace amorphie.contract.core.Model
 {
     public class Metadata
@@ -8,9 +10,21 @@ namespace amorphie.contract.core.Model
         public bool IsRequired { get; set; }
         public string InputType { get; set; }
 
-        public bool IsValidTagData()
+        public bool IsTagData()
         {
             return Data.StartsWith("$tag.");
+        }
+
+        public bool? IsValidTag(){
+            if (IsTagData()){
+                string pattern = @"^\$tag\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+\.(reference|customerNo)$";
+                Regex regex = new Regex(pattern);
+                bool isValid = regex.IsMatch(Data);
+                return isValid;
+            }
+            else {
+                return null;
+            }
         }
     }
 }
