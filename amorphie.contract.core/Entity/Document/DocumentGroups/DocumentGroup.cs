@@ -7,8 +7,6 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
     [Table("DocumentGroup", Schema = "DocGroup")]
     public class DocumentGroup : BaseEntity
     {
-
-        public EStatus Status { get; set; } = default!;
         public ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
         public Dictionary<string, string> Titles { get; set; } = default!;
 

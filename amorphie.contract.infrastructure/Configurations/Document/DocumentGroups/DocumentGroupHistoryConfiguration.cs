@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Contract
 {
-    public class DocumentGroupHistoryConfiguration : ConfigurationBaseAudiEntity<DocumentGroupHistory>,
+    public class DocumentGroupHistoryConfiguration : ConfigurationBaseAuditEntity<DocumentGroupHistory>,
      IEntityTypeConfiguration<DocumentGroupHistory>
     {
         public virtual void Configure(EntityTypeBuilder<DocumentGroupHistory> builder)

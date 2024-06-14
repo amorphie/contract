@@ -11,7 +11,7 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("Contract", Schema = "Cont")]
-    public class Contract : AudiEntity
+    public class Contract : AuditEntity
     {
         //todo: burayı contractDef ile bagla confi düzenle 
         public string ContractName { get; set; }

@@ -9,9 +9,7 @@ namespace amorphie.contract.core.Mapping
         var config = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<MappingCommonProfile>();
-            // cfg.AddProfile<MappingContractProfile>();
             cfg.AddProfile<MappingDocumentProfile>();
-            cfg.AddProfile<MappingEAVProfile>();
         });
 
         return config.CreateMapper();

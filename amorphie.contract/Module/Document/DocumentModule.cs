@@ -34,6 +34,7 @@ public class DocumentModule
         routeGroupBuilder.MapGet("download", DownloadDocument);
         routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
         routeGroupBuilder.MapPost("sendToTSIZL", SendToTSIZL);
+        routeGroupBuilder.MapPost("approveInstance", ApproveInstance);
 
     }
 
@@ -64,12 +65,22 @@ public class DocumentModule
         return Results.Ok(response);
     }
 
-    async ValueTask<IResult> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
+    async ValueTask<GenericResult<DocumentInstanceOutputDto>> Instance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
     CancellationToken token, [FromBody] DocumentInstanceInputDto input)
     {
-        var headerModels = HeaderHelper.GetHeader(httpContext);
-        input.SetHeaderParameters(headerModels.UserReference, headerModels.CustomerNo);
+        var headerModel = HeaderHelper.GetHeader(httpContext);
+        input.SetHeaderModel(headerModel);
         var response = await documentAppService.Instance(input);
+
+        return response;
+    }
+
+    async ValueTask<IResult> ApproveInstance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
+CancellationToken token, [FromBody] ApproveDocumentInstanceInputDto input)
+    {
+        var headerModels = HeaderHelper.GetHeader(httpContext);
+        input.SetHeaderModel(headerModels);
+        var response = await documentAppService.ApproveInstance(input);
 
         return Results.Ok(new
         {

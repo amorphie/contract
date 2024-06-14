@@ -1,2 +1,39 @@
 sleep 5 &&
-curl -X POST 'http://vault:8200/v1/secret/data/vb1' -H "Content-Type: application/json" -H "X-Vault-Token: admin" -d '{ "data": {"pass": "my-password", "username":"my-username"} }'
+curl --location 'http://localhost:8200/v1/secret/data/contract-secretstore' -H 'Content-Type: application/json' -H 'X-Vault-Token: admin' -d '{
+    "data": {
+        "ElasticApm:Environment": "Dev",
+        "ElasticApm:SecretToken": "E92397h4g1F4SBOGTwru03Ka",
+        "ElasticApm:ServerUrl": "https://test-apm.burgan.com.tr",
+        "ElasticApm:ServiceName": "amorphie-contract",
+        "ElasticApm:TransactionIgnoreUrls": "/healthz,/swagger/*,/index.html\\\",/dapr/*",
+        "Serilog:MinimumLevel:Default": "Information",
+        "Serilog:MinimumLevel:Override:Microsoft": "Warning",
+        "Serilog:MinimumLevel:Override:Microsoft.AspNetCore": "Warning",
+        "Serilog:MinimumLevel:Override:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware": "Information",
+        "Serilog:MinimumLevel:Override:Microsoft.Hosting.Diagnostics": "Warning",
+        "Serilog:MinimumLevel:Override:System": "Warning",
+        "Serilog:MinimumLevel:Override:amorphie.workflow": "Information",
+        "Serilog:WriteTo:0:Args:formatter": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact",
+        "Serilog:WriteTo:0:Args:path": "/logs/log-amorphie-contract-.json",
+        "Serilog:WriteTo:0:Args:rollingInterval": "Day",
+        "Serilog:WriteTo:0:Name": "File",
+        "apisix:BaseUrl": "https://test-pubagw6.burgan.com.tr/ebanking/contract/",
+        "apisix:DownloadEndpoint": "document/download",
+        "contractdb": "Host=postgresql-cluster-postgresql-ha-pgpool.dev-amorphie-postgresql.svc.cluster.local:5432;Database=contract;Username=postgres;Password=XJdjk82xOv;Encoding=UTF8;ClientEncoding=UTF8;",
+        "dms:Url": "https://svpredms01.ebt.bank/Intertech.rota.dms.appserver/dmsservice.asmx",
+        "fora:ColleteralUrl": "https://sprecbapp01.ebt.bank/fora/Colleteral.asmx",
+        "fora:UserCode": "EBT\\\\CONTRACT",
+        "minio:AccessKey": "wUifnlQsiCEEfZ80",
+        "minio:BucketName": "contract-management",
+        "minio:EndPoint": "test-minio-api.burgan.com.tr",
+        "minio:SecretKey": "InECby1QO1OL9FRqrYKMLIpyqMpjFryA",
+        "pusula:CustomerServicesUrl": "https://pre-internext.ebt.bank/Pusula/CustomerServices.asmx",
+        "redisEndpoints": "test-amorphie-redis-redis-cluster.test-amorphie-redis.svc.cluster.local,6379,password=XXXXXXX",
+        "templateEngine:GetTemplateEndpoint": "/Template/Definition/name",
+        "templateEngine:HtmlRenderEndpoint": "amorphie-workflow-hub.test-amorphie-workflow-hub",
+        "templateEngine:PdfRenderEndpoint": "/Template/Render/pdf",
+        "templateEngine:RenderInstance": "/Template/Render/instance/pdf/{0}",
+        "templateEngine:Url": "https://test-template-engine.burgan.com.tr",
+        "tag:Url": "https://test-amorphie-tag-execute.burgan.com.tr"
+    }
+}'

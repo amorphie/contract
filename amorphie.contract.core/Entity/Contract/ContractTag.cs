@@ -11,7 +11,7 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractTag", Schema = "Cont")]
-    public class ContractTag : AudiEntity
+    public class ContractTag : AuditEntity
     {
         [Required]
         public Guid ContractDefinitionId { get; set; }

@@ -15,7 +15,7 @@ namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractDocumentDetail", Schema = "Cont")]
 
-    public class ContractDocumentDetail : AudiEntity
+    public class ContractDocumentDetail : AuditEntity
     {
         [Required]
 

@@ -11,8 +11,8 @@ using amorphie.core.Base;
 
 namespace amorphie.contract.core.Entity.Document.DocumentTypes
 {
-    [Table("DocumentOnlineSing", Schema = "DocTp")]
-    public class DocumentOnlineSing : AudiEntity
+    [Table("DocumentOnlineSign", Schema = "DocTp")]
+    public class DocumentOnlineSign : AuditEntity
     {
         public bool Required { get; set; }
         public ICollection<DocumentAllowedClientDetail> DocumentAllowedClientDetails { get; set; } = new List<DocumentAllowedClientDetail>();

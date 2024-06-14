@@ -26,9 +26,10 @@ namespace amorphie.contract.core.Model.Proxy
 
     }
 
-    public class ApprovedTemplateDocumentList
+    public class DocumentForApproval
     {
         public string DocumentDefinitionCode { get; set; }
+        public bool IsRequired { get; set; }
         public string DocumentSemanticVersion { get; set; }
         public Guid ContractInstanceId { get; set; }
 
@@ -47,7 +48,7 @@ namespace amorphie.contract.core.Model.Proxy
         public TemplateRenderRequestModel()
         {
         }
-        public TemplateRenderRequestModel(ApprovedTemplateDocumentList approvedDocumentList)
+        public TemplateRenderRequestModel(DocumentForApproval approvedDocumentList)
         {
             RenderId = approvedDocumentList.RenderId;
             RenderData = approvedDocumentList.RenderData;

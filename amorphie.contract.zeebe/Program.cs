@@ -25,6 +25,8 @@ using Polly.Timeout;
 using Polly.Retry;
 using Polly.Extensions.Http;
 using Polly;
+using Elastic.Apm.SerilogEnricher;
+using amorphie.contract.zeebe.Modules.ZeebeDefinitions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,12 +42,20 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
+builder.Services.AddHealthChecks();
+
+builder.Logging.ClearProviders();
+
 builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 {
     loggerConfiguration
-        .ReadFrom.Configuration(builder.Configuration);
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.WithElasticApmCorrelationInfo();
 
 });
+
+
+
 
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(postgreSql));
@@ -79,6 +89,12 @@ builder.Services
                                 throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
     .AddPolicyHandler(retryPolicy);
 
+builder.Services
+    .AddRefitClient<ITagService>()
+    .ConfigureHttpClient(c =>
+        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
+                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
+    .AddPolicyHandler(retryPolicy);
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
@@ -112,6 +128,8 @@ var db = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.MapHealthChecks("/healthz");
+
 app.UseHttpsRedirection();
 
 
@@ -119,6 +137,7 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+app.MapZeebeContractCategoryDefinitionEndpoints();
 
 app.MapZeebeContractInstanceEndpoints();
 app.MapZeebeRenderOnlineSignEndpoints();

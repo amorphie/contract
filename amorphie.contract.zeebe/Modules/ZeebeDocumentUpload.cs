@@ -8,6 +8,7 @@ using amorphie.contract.core.Services;
 using Microsoft.OpenApi.Models;
 using Dapr.Client;
 using Newtonsoft.Json;
+using amorphie.contract.core.Model.Minio;
 
 namespace amorphie.contract.zeebe.Modules
 {
@@ -113,7 +114,7 @@ namespace amorphie.contract.zeebe.Modules
             };
 
             var documentDefinitionIdString = entityData.GetProperty("document-definition-Id").ToString();
-            var status = EStatus.OnHold;
+            var status = ApprovalStatus.OnHold;
             if (status != null)
                 document.Status = status;
 
@@ -129,8 +130,12 @@ namespace amorphie.contract.zeebe.Modules
             };
             var filebytes = ExtensionService.StringToBytes(entityData.GetProperty("file-byte-array").ToString(), entityData.GetProperty("file-size").ToString());
 
-
-            _ = minioService.UploadFile(filebytes, fileName, entityData.GetProperty("file-type").ToString());
+            // UploadFileModel uploadFileModel= new UploadFileModel{
+            //     Data = filebytes,
+            //     ContentType = entityData.GetProperty("file-type").ToString(),
+                
+            // };
+            // _ = minioService.UploadFile(uploadFileModel);
 
             document.DocumentDefinitionId = documentDefinitionId;//sonra
             var documentDefinition = dbContext.DocumentDefinition.FirstOrDefault(x => x.Id == documentDefinitionId);
@@ -205,7 +210,7 @@ namespace amorphie.contract.zeebe.Modules
 
             core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
 
-            document.Status = EStatus.Passive;
+            document.Status = ApprovalStatus.Canceled;
             dbContext.Document.Update(document);
             dbContext.SaveChanges();
             messageVariables.Variables.Remove("document");
@@ -228,7 +233,7 @@ namespace amorphie.contract.zeebe.Modules
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             core.Entity.Document.Document document = JsonConvert.DeserializeObject<amorphie.contract.core.Entity.Document.Document>(body.GetProperty("document").ToString());
 
-            document.Status = EStatus.Active;
+            document.Status = ApprovalStatus.Approved;
             dbContext.Document.Update(document);
             dbContext.SaveChanges();
             messageVariables.Variables.Remove("document");

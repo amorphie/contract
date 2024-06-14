@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using amorphie.contract.core.Entity.Contract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,16 +9,12 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
     {
         public virtual void Configure(EntityTypeBuilder<ContractDefinition> builder)
         {
-            var list = new List<string>
-            {
-                "ContractDocumentDetails",
-                "ContractDocumentGroupDetails",
-                "ContractTag",
-                "ContractEntityProperty",
-                "ContractValidations"
-            };
-            NavigationBuilderAutoInclude(builder, list);
-            //
+
+            builder.Navigation(k => k.ContractDocumentDetails).AutoInclude();
+            builder.Navigation(k => k.ContractCategoryDetails).AutoInclude();
+            builder.Navigation(k => k.ContractDocumentGroupDetails).AutoInclude();
+            builder.Navigation(k => k.ContractTags).AutoInclude();
+            builder.Navigation(k => k.ContractValidations).AutoInclude();
             builder.HasIndex(x => new
             {
                 x.Code,
@@ -33,6 +25,11 @@ namespace amorphie.contract.infrastructure.Configurations.Contract
                 v => JsonSerializer.Serialize(v, new JsonSerializerOptions(JsonSerializerDefaults.General)),
                 v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))!);
 
+            builder.OwnsMany(d => d.DefinitionMetadata, builder => { builder.ToJson(); });
+
+            builder.Property(k => k.DecisionTableId).HasMaxLength(150);
+
+            builder.OwnsMany(d => d.DecisionTableMetadata, builder => { builder.ToJson(); });
         }
     }
 }

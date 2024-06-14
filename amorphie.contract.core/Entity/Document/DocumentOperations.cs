@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentOperations", Schema = "Doc")]
-    public class DocumentOperations : AudiEntity
+    public class DocumentOperations : AuditEntity
     {
         public bool DocumentManuelControl { get; set; }
         public ICollection<DocumentOperationsTagsDetail>? DocumentOperationsTagsDetail { get; set; } = new List<DocumentOperationsTagsDetail>();

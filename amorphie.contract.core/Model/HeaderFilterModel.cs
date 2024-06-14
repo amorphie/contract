@@ -38,5 +38,10 @@ namespace amorphie.contract.core.Model
                 // _ => throw new NotImplementedException($"{nameof(EBankEntity)} is not yet implemented.")
             };
         }
+
+        public void SetBankEntity(EBankEntity eBankEntity)
+        {
+            EBankEntity = eBankEntity;
+        }
     }
 }

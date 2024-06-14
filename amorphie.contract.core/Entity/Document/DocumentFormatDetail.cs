@@ -11,7 +11,7 @@ namespace amorphie.contract.core.Entity.Document
 {
     [Table("DocumentFormatDetail", Schema = "Doc")]
 
-    public class DocumentFormatDetail : AudiEntity
+    public class DocumentFormatDetail : AuditEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
