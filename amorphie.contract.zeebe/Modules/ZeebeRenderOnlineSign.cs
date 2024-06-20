@@ -233,7 +233,7 @@ namespace amorphie.contract.zeebe.Modules
             }
 
 
-            messageVariables.additionalData = approvedDocumentIntances;
+            messageVariables.additionalData = new application.ApprovedDocument(approvedDocumentIntances);
             messageVariables.Success = true;
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));

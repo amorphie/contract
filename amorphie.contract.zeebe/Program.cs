@@ -42,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
-builder.Services.AddHealthChecks().AddNpgSql(postgreSql);
+builder.Services.AddHealthChecks();
 
 builder.Logging.ClearProviders();
 
