@@ -1,5 +1,5 @@
 namespace amorphie.contract.application
 {
-    public record ApprovedDocument(List<ApproveDocumentInstanceInputDto> ApprovedDocuments);
+    public record ValidatedDocument(List<ApproveDocumentInstanceInputDto> ApproveDocuments);
 
 }
