@@ -97,9 +97,9 @@ namespace amorphie.contract.zeebe.Modules
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             var headerModel = HeaderHelperZeebe.GetHeader(body);
-            var inputDto = ZeebeMessageHelper.MapToDto<ContractInstanceStateInputDto>(body);
+            var inputDto = ZeebeMessageHelper.MapToDto<ContractInstanceStateInputDto>(body) as ContractInstanceStateInputDto;
 
-            inputDto.SetHeaderParameters(headerModel);
+            inputDto.SetHeaderModel(headerModel);
 
             var response = await contractAppService.InstanceState(inputDto, token);
 
