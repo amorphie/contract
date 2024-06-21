@@ -197,7 +197,7 @@ namespace amorphie.contract.zeebe.Modules
 
             if (contractDecision is null)
             {
-                Results.NotFound($"{inputDto.ContractCode} not found.");
+                return Results.NotFound($"{inputDto.ContractCode} not found.");
             }
 
             if (String.IsNullOrEmpty(contractDecision.DecisionTableId))
