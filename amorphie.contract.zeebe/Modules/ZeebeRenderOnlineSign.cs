@@ -148,7 +148,7 @@ namespace amorphie.contract.zeebe.Modules
 
             }
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
-            messageVariables.additionalData = documentForApprovalList;
+            messageVariables.additionalData = new RenderApprovalDocument(documentForApprovalList);
             messageVariables.Success = true;
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
