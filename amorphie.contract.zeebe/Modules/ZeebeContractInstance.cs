@@ -6,6 +6,7 @@ using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.DMN.Dto;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.CustomException;
+using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.zeebe.Extensions.HeaderHelperZeebe;
@@ -196,10 +197,15 @@ namespace amorphie.contract.zeebe.Modules
 
             if (contractDecision is null)
             {
-                Results.NotFound($"{inputDto.ContractCode} not found.");
+                return Results.NotFound($"{inputDto.ContractCode} not found.");
             }
 
             if (String.IsNullOrEmpty(contractDecision.DecisionTableId))
+            {
+                return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+            }
+
+            if (contractDecision.Metadata.IsNotEmpty())
             {
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
