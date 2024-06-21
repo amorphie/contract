@@ -37,7 +37,7 @@
             <zeebe:header key="TARGET_STATE" value="control-document-onlinesign" />
             <zeebe:header key="PAGE_URL" value="Approve_Documents_Page" />
             <zeebe:header key="VIEW_SOURCE" value="page" />
-            <zeebe:header key="NOTIFY_CLIENT" value="false" />
+            <zeebe:header key="NOTIFY_CLIENT" value="true" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1tgs8l5</bpmn:incoming>
