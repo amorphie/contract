@@ -95,10 +95,11 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
+            ContractWithoutHeaderDto? withoutHeaderDto = null;
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
+                withoutHeaderDto = HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
             }
 
 
@@ -114,6 +115,7 @@ namespace amorphie.contract.zeebe.Modules
                         var approvedTemplateDocument = new DocumentForApproval
                         {
                             ContractInstanceId = inputDto.ContractInstanceId,
+                            ContractCode = inputDto.ContractCode,
                             DocumentSemanticVersion = _document.LastVersion,
                             SemanticVersion = _document.DocumentDetail.OnlineSign.Version,
                             Name = _document.DocumentDetail.OnlineSign.TemplateCode,
@@ -148,7 +150,7 @@ namespace amorphie.contract.zeebe.Modules
 
             }
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
-            messageVariables.additionalData = new RenderApprovalDocument(documentForApprovalList);
+            messageVariables.additionalData = new RenderApprovalDocument(documentForApprovalList, withoutHeaderDto);
             messageVariables.Success = true;
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
@@ -165,7 +167,7 @@ namespace amorphie.contract.zeebe.Modules
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
+                HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
             }
 
             var getDto = new GetDocumentsToApproveInputDto
@@ -211,7 +213,7 @@ namespace amorphie.contract.zeebe.Modules
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
+                HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
             }
 
             List<ApproveDocumentInstanceInputDto> approvedDocumentIntances = new();

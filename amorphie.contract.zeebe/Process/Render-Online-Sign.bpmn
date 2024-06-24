@@ -15,7 +15,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="render" retries="1" />
           <zeebe:ioMapping>
-            <zeebe:input source="=if IsRenderOnlineMainFlow = false then &#10; {&#10;  &#34;ContractCode&#34;: RenderOnlineSignInputDto.contractCode,&#10;  &#34;ContractInstanceId&#34; : RenderOnlineSignInputDto.contractInstanceId,&#10;  &#34;DocumentList&#34; :  RenderOnlineSignInputDto.documentList,&#10;  &#34;IsRenderOnlineMainFlow&#34; : IsRenderOnlineMainFlow&#10; } &#10;else &#10;  {&#10;    &#34;ContractCode&#34;: TRXrenderonlinesignstart.Data.entityData.ContractCode,&#10;    &#34;ContractInstanceId&#34; : TRXrenderonlinesignstart.Data.entityData.ContractInstanceId,&#10;    &#34;DocumentList&#34;: GetDocumentsToApproveOutputDto,&#10;    &#34;IsRenderOnlineMainFlow&#34; : IsRenderOnlineMainFlow&#10;  }&#10;" target="RenderInputDto" />
+            <zeebe:input source="=if IsRenderOnlineMainFlow = false then &#10; {&#10;  &#34;ContractCode&#34;: RenderOnlineSignInputDto.code,&#10;  &#34;ContractInstanceId&#34; : RenderOnlineSignInputDto.contractInstanceId,&#10;  &#34;DocumentList&#34; :  RenderOnlineSignInputDto.documentList,&#10;  &#34;IsRenderOnlineMainFlow&#34; : IsRenderOnlineMainFlow&#10; } &#10;else &#10;  {&#10;    &#34;ContractCode&#34;: TRXrenderonlinesignstart.Data.entityData.ContractCode,&#10;    &#34;ContractInstanceId&#34; : TRXrenderonlinesignstart.Data.entityData.ContractInstanceId,&#10;    &#34;DocumentList&#34;: GetDocumentsToApproveOutputDto,&#10;    &#34;IsRenderOnlineMainFlow&#34; : IsRenderOnlineMainFlow&#10;  }&#10;" target="RenderInputDto" />
           </zeebe:ioMapping>
           <zeebe:properties>
             <zeebe:property />

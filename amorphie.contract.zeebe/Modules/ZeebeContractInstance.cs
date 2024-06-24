@@ -157,7 +157,7 @@ namespace amorphie.contract.zeebe.Modules
 
             if (String.IsNullOrEmpty(headerModel.UserReference))
             {
-                HeaderHelperZeebe.SetHeaderFromWithoutDto(body, headerModel);
+                HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
             }
 
             contractServiceInput.SetHeaderModel(headerModel);
