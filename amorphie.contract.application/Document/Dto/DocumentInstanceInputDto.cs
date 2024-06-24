@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using amorphie.contract.application.Contract.Dto.Zeebe;
 
 namespace amorphie.contract.application
 {
@@ -17,6 +18,8 @@ namespace amorphie.contract.application
         public long? CustomerNo { get; private set; }
         public List<MetadataDto>? InstanceMetadata { get; set; }
         public List<NoteDto>? Notes { get; set; }
+
+        public ContractWithoutHeaderDto? ContractWithoutHeader { get; set; }
 
         // public override string ToString()
         // {

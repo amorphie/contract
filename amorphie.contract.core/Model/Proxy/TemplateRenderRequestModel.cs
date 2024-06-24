@@ -32,7 +32,7 @@ namespace amorphie.contract.core.Model.Proxy
         public bool IsRequired { get; set; }
         public string DocumentSemanticVersion { get; set; }
         public Guid ContractInstanceId { get; set; }
-
+        public string ContractCode { get; set; }
         public bool Approved { get; set; }
         public string Name { get; set; }
         public Guid RenderId { get; set; }
