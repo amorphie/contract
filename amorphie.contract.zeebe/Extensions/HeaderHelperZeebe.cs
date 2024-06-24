@@ -54,7 +54,7 @@ public static class HeaderHelperZeebe
         return new HeaderFilterModel(businessLine, langCode, clientId, reference, customerNo);
     }
 
-    public static void SetHeaderFromWithoutDto(dynamic body, HeaderFilterModel model)
+    public static ContractWithoutHeaderDto SetAndGetHeaderFromWithoutDto(dynamic body, HeaderFilterModel model)
     {
         var contractWithoutHeaderDto = ZeebeMessageHelper.MapToDto<ContractWithoutHeaderDto>(body, ZeebeConsts.ContractWithoutHeaderDto);
         ArgumentException.ThrowIfNullOrEmpty(contractWithoutHeaderDto.Reference, nameof(contractWithoutHeaderDto.Reference));
@@ -66,6 +66,7 @@ public static class HeaderHelperZeebe
 
         var banktEntity = model.GetBankEntity(contractWithoutHeaderDto.BankEntity);
         model.SetBankEntity(banktEntity);
-    }
 
+        return contractWithoutHeaderDto;
+    }
 }
