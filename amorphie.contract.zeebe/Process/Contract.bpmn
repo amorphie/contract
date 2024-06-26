@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
   <bpmn:process id="Contract" name="Contrac" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
@@ -181,9 +181,9 @@
       <bpmn:sequenceFlow id="Flow_0jzrop3" sourceRef="Event_1vbuu44" targetRef="Gateway_0l57dbl" />
       <bpmn:sequenceFlow id="Flow_1crv3y2" sourceRef="Activity_0jad5z5" targetRef="Event_1rejrl0" />
     </bpmn:subProcess>
-    <bpmn:boundaryEvent id="Event_02zlf8t" name="DeleteContractDefinition" attachedToRef="Activity_1t3gbcf">
+    <bpmn:boundaryEvent id="Event_02zlf8t" name="Start Cancel Contract" attachedToRef="Activity_1t3gbcf">
       <bpmn:outgoing>Flow_0q5yxog</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_17mwuj4" messageRef="Message_0dem2ek" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_17mwuj4" messageRef="Message_2ta5mg9" />
     </bpmn:boundaryEvent>
     <bpmn:subProcess id="Activity_0nnjgg4">
       <bpmn:incoming>Flow_0q5yxog</bpmn:incoming>
@@ -196,9 +196,9 @@
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_16wo9dk" sourceRef="Activity_1fgbylm" targetRef="Event_1g54nzd" />
       <bpmn:sequenceFlow id="Flow_03q6bxk" sourceRef="Event_0yr7d5q" targetRef="Activity_1fgbylm" />
-      <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Process Contract Definition">
+      <bpmn:serviceTask id="Activity_1fgbylm" name="Cancel Contract">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="deletecontract" retries="1" />
+          <zeebe:taskDefinition type="cancelcontract" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_03q6bxk</bpmn:incoming>
         <bpmn:outgoing>Flow_16wo9dk</bpmn:outgoing>
@@ -372,6 +372,16 @@ else
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_13n4u7d" name="contract-back-transition">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_24vk9b0" name="startcancelcontract">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_2ta5mg9" name="startcancelcontract">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=InstanceId" />
     </bpmn:extensionElements>
@@ -649,7 +659,7 @@ else
       <bpmndi:BPMNShape id="Event_164xep2_di" bpmnElement="Event_02zlf8t">
         <dc:Bounds x="1487" y="452" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1463" y="495" width="88" height="27" />
+          <dc:Bounds x="1480" y="495" width="61" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ou83v3_di" bpmnElement="Flow_0ou83v3">
