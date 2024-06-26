@@ -18,9 +18,9 @@ public static class ZeebeMessageHelper
         targetObject.TriggeredBy = messageVariables.TriggeredBy;
         targetObject.TriggeredByBehalfOf = messageVariables.TriggeredByBehalfOf;
 
-        var data = JsonSerializer.Deserialize<ExpandoObject>(messageVariables.Data);
-        data.additionalData = messageVariables.additionalData;
-        targetObject.Data = data;
+        // var data = JsonSerializer.Deserialize<ExpandoObject>(messageVariables.Data);
+        // data.additionalData = messageVariables.additionalData;
+        // targetObject.Data = data;
 
         var TransitionNameR = messageVariables.TransitionName.Replace("-", "");
         messageVariables.Variables.Add($"TRX{TransitionNameR}", targetObject);

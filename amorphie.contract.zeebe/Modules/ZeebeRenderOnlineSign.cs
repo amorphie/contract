@@ -237,7 +237,8 @@ namespace amorphie.contract.zeebe.Modules
             }
 
 
-            messageVariables.additionalData = new ValidatedDocument(approvedDocumentIntances);
+            messageVariables.SetAdditionalData(new ValidatedDocument(approvedDocumentIntances), "BackTransitionID_TEst");
+
             messageVariables.Success = true;
 
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
