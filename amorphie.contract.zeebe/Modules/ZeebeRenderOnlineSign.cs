@@ -151,8 +151,7 @@ namespace amorphie.contract.zeebe.Modules
             }
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
 
-            // messageVariables.additionalData = ;
-            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, withoutHeaderDto), "string backTransitionId");
+            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, withoutHeaderDto), "BackTransitionID_TEst");
 
             messageVariables.Success = true;
 
