@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
+using Microsoft.AspNetCore.Mvc;
+
 namespace amorphie.contract.zeebe.Model
 {
     public class MessageVariables
@@ -28,7 +36,7 @@ namespace amorphie.contract.zeebe.Model
             additionalData = new
             {
                 BackTransitionId = backTransitionId,
-                additionalDataContent
+                ContractData = additionalDataContent
             };
         }
     }
