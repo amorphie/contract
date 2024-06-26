@@ -31,11 +31,13 @@ namespace amorphie.contract.zeebe.Model
         public Guid TriggeredByGuid { get; set; }
         public Guid TriggeredByBehalfOfGuid { get; set; }
 
-        public void SetAdditionalData(dynamic additionalDataContent, string backTransitionId)
+        public void SetAdditionalData(dynamic additionalDataContent)
         {
+            var _backTransitionId = ZeebeMessageHelper.GetPropertyValue(Body, "BackTransitionId");
+
             additionalData = new
             {
-                BackTransitionId = backTransitionId,
+                BackTransitionId = String.IsNullOrEmpty(_backTransitionId) ? ZeebeConsts.ContractStartBack : _backTransitionId,
                 ContractData = additionalDataContent
             };
         }
