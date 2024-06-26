@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace amorphie.contract.zeebe.Model
 {
     public class MessageVariables
@@ -29,5 +23,13 @@ namespace amorphie.contract.zeebe.Model
         public Guid TriggeredByGuid { get; set; }
         public Guid TriggeredByBehalfOfGuid { get; set; }
 
+        public void SetAdditionalData(dynamic additionalDataContent, string backTransitionId)
+        {
+            additionalData = new
+            {
+                BackTransitionId = backTransitionId,
+                additionalDataContent
+            };
+        }
     }
 }
