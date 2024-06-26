@@ -113,6 +113,19 @@ public static class ZeebeMessageHelper
 
         return resultDto;
     }
+
+    public static string GetPropertyValue(dynamic body, string variableName)
+    {
+
+        if (body.ToString().IndexOf(variableName) != -1)
+        {
+            return body.GetProperty(variableName).ToString();
+
+        }
+
+        return String.Empty;
+
+    }
 }
 
 
