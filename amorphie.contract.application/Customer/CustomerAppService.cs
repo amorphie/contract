@@ -101,7 +101,7 @@ namespace amorphie.contract.application.Customer
                 documentQuery = documentQuery.Where(x => x.CreatedAt <= inputDto.EndDate.Value);
             var userId = _dbContext.Customer.Where(x => x.Reference == userReference).Select(x => x.Id).FirstOrDefault();
 
-            var querableDocument = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
+            var querableDocument = documentQuery.Where(x => x.Customer.Reference == userReference).AsQueryable();
 
             //Contracta bağlı olmayan ama yeni versiyonu çıkmış olan bir döküman olacağından DocumentDefinition Tablosundana gidildi.
             List<CustomerDocumentsWithDefinitionDto> customerDocumentsWithDefinitionDtos =
