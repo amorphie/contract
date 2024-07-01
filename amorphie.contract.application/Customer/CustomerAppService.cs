@@ -96,9 +96,9 @@ namespace amorphie.contract.application.Customer
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
 
             if (inputDto.StartDate.HasValue)
-                documentQuery = documentQuery.Where(x => x.CreatedAt >= inputDto.StartDate.Value);
+                documentQuery = documentQuery.Where(x => x.CreatedAt.Date >= inputDto.StartDate.Value);
             if (inputDto.EndDate.HasValue)
-                documentQuery = documentQuery.Where(x => x.CreatedAt <= inputDto.EndDate.Value);
+                documentQuery = documentQuery.Where(x => x.CreatedAt.Date <= inputDto.EndDate.Value);
             var userId = _dbContext.Customer.Where(x => x.Reference == userReference).Select(x => x.Id).FirstOrDefault();
 
             var querableDocument = documentQuery.Where(x => x.Customer.Reference == userReference).AsQueryable();
