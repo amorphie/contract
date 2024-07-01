@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using amorphie.core.Zeebe.dapr;
 
 namespace amorphie.contract.core.Extensions;

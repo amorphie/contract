@@ -24,7 +24,7 @@
     <ProjectReference Include="..\amorphie.contract.infrastructure\amorphie.contract.infrastructure.csproj" />
     <ProjectReference Include="..\amorphie.contract.core\amorphie.contract.core.csproj" />
     <ProjectReference Include="..\amorphie.contract.application\amorphie.contract.application.csproj" />
-    <PackageReference Include="amorphie.core" Version="1.1.28" />
+    <PackageReference Include="amorphie.core" Version="1.1.30" />
     <PackageReference Include="amorphie.core.security" Version="1.0.1" />
     <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.25.3" />
 

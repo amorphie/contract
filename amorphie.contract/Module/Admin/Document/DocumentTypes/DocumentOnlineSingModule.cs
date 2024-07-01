@@ -6,10 +6,10 @@ using amorphie.contract.Module.Base;
 
 namespace amorphie.contract.Module.Admin.Document.DocumentTypes;
 
-public class DocumentOnlineSingModule
-    : AudiAdminModule<DocumentOnlineSing, DocumentOnlineSing, ProjectDbContext>
+public class DocumentOnlineSignModule
+    : AudiAdminModule<DocumentOnlineSign, DocumentOnlineSign, ProjectDbContext>
 {
-    public DocumentOnlineSingModule(WebApplication app) : base(app)
+    public DocumentOnlineSignModule(WebApplication app) : base(app)
     {
     }
     public override string[]? PropertyCheckList => new string[] { "Required" };

@@ -8,19 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Document.DocumentTypes
 {
-    public class DocumentUploadConfiguration : ConfigurationBaseAudiEntity<DocumentUpload>,
+    public class DocumentUploadConfiguration : ConfigurationBaseAuditEntity<DocumentUpload>,
          IEntityTypeConfiguration<DocumentUpload>
 
     {
         public void Configure(EntityTypeBuilder<DocumentUpload> builder)
         {
-            NavigationBuilderAutoInclude(builder, new List<string>
-            {
-                "DocumentFormatDetails",
-                "DocumentAllowedClientDetail",
-
-            });
-
+            builder.Navigation(k => k.DocumentFormatDetails).AutoInclude();
+            builder.Navigation(k => k.DocumentAllowedClientDetails).AutoInclude();
         }
     }
 }

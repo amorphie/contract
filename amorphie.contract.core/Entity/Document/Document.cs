@@ -2,11 +2,12 @@ using System.ComponentModel.DataAnnotations;
 using amorphie.contract.core.Entity.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model;
 
 namespace amorphie.contract.core.Entity.Document
 {
     [Table("Document", Schema = "Doc")]
-    public class Document : AudiEntity
+    public class Document : AuditEntity
     {
         [Required]
         public Guid DocumentDefinitionId { get; set; }
@@ -19,13 +20,21 @@ namespace amorphie.contract.core.Entity.Document
 
         public DocumentContent DocumentContent { get; set; } = default!;
 
-        public EStatus Status { get; set; } = default!;
-        public ICollection<DocumentInstanceEntityProperty>? DocumentInstanceEntityPropertys { get; set; } = new List<DocumentInstanceEntityProperty>();
+        public ApprovalStatus Status { get; set; } = default!;
         public ICollection<DocumentInstanceNote>? DocumentInstanceNotes { get; set; } = new List<DocumentInstanceNote>();
-        
+
         public Guid CustomerId { get; set; }
 
         [ForeignKey("CustomerId")]
         public Customer Customer { get; set; } = default!;
+
+        public List<Metadata> InstanceMetadata { get; set; } = new();
+
+
+        public void SetApprovalStatusToApproved()
+        {
+            Status = ApprovalStatus.Approved;
+        }
+
     }
 }

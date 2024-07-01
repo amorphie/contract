@@ -1,37 +1,30 @@
-using System.Text.Json.Serialization;
-using amorphie.contract.core.Model;
+using System.ComponentModel.DataAnnotations;
+using amorphie.contract.application.Contract.Dto.Zeebe;
 
 namespace amorphie.contract.application
 {
-    public class DocumentInstanceInputDto
+    public class DocumentInstanceInputDto : BaseHeader
     {
-        public Guid Id { get; set; }
-        [JsonPropertyName("file-type")]
-        public string FileType { get; set; }
-        [JsonPropertyName("file-byte-array")]
-        private byte[] fileByteArray { get; set; }
-        public string FileContext { get; set; }
-        public string FileContextType { get; set; }
-        [JsonPropertyName("file-name")]
-        public string FileName { get; set; }
+        public DocumentContentDto DocumentContent { get; set; }
+
+        public Guid? ContractInstanceId { get; set; }
+        public string? ContractCode { get; set; }
+
+        [Required]
+        public required Guid RenderId { get; set; }
+
         public string DocumentCode { get; set; }
         public string DocumentVersion { get; set; }
-        public string? Reference { get; private set; }
-        public string? Owner { get; private set; }
         public long? CustomerNo { get; private set; }
-        public List<DocumentMetadataInputDto>? InstanceMetadata { get; set; }
+        public List<MetadataDto>? InstanceMetadata { get; set; }
         public List<NoteDto>? Notes { get; set; }
 
-        public void SetHeaderParameters(string userReference, long? customerNo)
-        {
-            Reference = userReference;
-            Owner = userReference;
-            CustomerNo = customerNo;
+        public ContractWithoutHeaderDto? ContractWithoutHeader { get; set; }
 
-        }
-        public override string ToString()
-        {
-            return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + FileName;
-        }
+        // public override string ToString()
+        // {
+        //     return Id.ToString() + "##" + Reference + "##" + DocumentCode + "##" + DocumentVersion + "##" + DocumentContent.FileName;
+        // }
     }
+
 }

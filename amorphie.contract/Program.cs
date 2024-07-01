@@ -25,6 +25,7 @@ using Polly.Timeout;
 using Polly;
 using Refit;
 using Microsoft.OpenApi.Models;
+using Elastic.Apm.SerilogEnricher;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,9 +42,11 @@ builder.Services.AddSwaggerGen(c =>
     c.OperationFilter<AddRequiredHeaderParameter>();
 });
 
+builder.Services.AddHealthChecks().AddNpgSql(postgreSql);
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 
@@ -61,6 +64,13 @@ builder.Services
     .ConfigureHttpClient(c =>
         c.BaseAddress = new Uri(StaticValuesExtensions.TemplateEngineUrl ??
                                 throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
+    .AddPolicyHandler(retryPolicy);
+
+builder.Services
+    .AddRefitClient<ITagService>()
+    .ConfigureHttpClient(c =>
+        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
+                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
     .AddPolicyHandler(retryPolicy);
 
 
@@ -97,10 +107,13 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplicationServices();
 
+builder.Logging.ClearProviders();
+
 builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
 {
     loggerConfiguration
-        .ReadFrom.Configuration(builder.Configuration);
+        .ReadFrom.Configuration(builder.Configuration)
+         .Enrich.WithElasticApmCorrelationInfo();
 
 });
 
@@ -126,6 +139,8 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/amorphie.contract.v1/swagger.json", "amorphie.contract.v1");
     c.SwaggerEndpoint("/swagger/amorphie.contract.admin/swagger.json", "amorphie.contract.admin");
 });
+
+app.MapHealthChecks("/healthz");
 
 // app.UseHttpsRedirection();
 

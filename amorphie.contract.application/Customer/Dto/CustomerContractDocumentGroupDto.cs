@@ -12,7 +12,7 @@ namespace amorphie.contract.application.Customer.Dto
         public string DocumentGroupStatus { get; set; } = AppConsts.NotValid;
         public ushort AtLeastRequiredDocument { get; set; }
         public bool Required { get; set; }
-        public List<CustomerContractDocumentDto> CustomerContractGroupDocuments { get; set; }
+        public IEnumerable<CustomerContractDocumentDto> CustomerContractGroupDocuments { get; set; }
         [JsonIgnore]
         public List<MultilanguageText> MultiLanguageText { get; set; }
 

@@ -1,9 +1,8 @@
-using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.zeebe.Model;
-using Dapr.Client;
+using amorphie.contract.application.Contract.Dto.Input;
+using amorphie.contract.zeebe.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using amorphie.contract.zeebe.Services;
+using System.Text.Json;
 
 namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 {
@@ -11,7 +10,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
     {
         public static void MapZeebeContractDefinitionEndpoints(this WebApplication app)
         {
-            app.MapPost("/contractdefinitionupdate", contractdefinitionupdate)
+            app.MapPost("/contractdefinitionupdate", ContractDefinitionUpdate)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -20,7 +19,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
 
-            app.MapPost("/contractdefinition", contractdefinition)
+            app.MapPost("/contractdefinition", ContractDefinition)
             .Produces(StatusCodes.Status200OK)
             .WithOpenApi(operation =>
             {
@@ -29,7 +28,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
                 return operation;
             });
 
-            app.MapPost("/errorcontractdefinition", errorcontractdefinition)
+            app.MapPost("/errorcontractdefinition", ErrorContractDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -38,7 +37,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 
               return operation;
           });
-            app.MapPost("/deletecontractdefinition", deletecontractdefinition)
+            app.MapPost("/deletecontractdefinition", DeleteContractDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -47,7 +46,7 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 
               return operation;
           });
-            app.MapPost("/timeoutcontractdefinition", timeoutcontractdefinition)
+            app.MapPost("/timeoutcontractdefinition", TimeoutContractDefinition)
           .Produces(StatusCodes.Status200OK)
           .WithOpenApi(operation =>
           {
@@ -59,92 +58,52 @@ namespace amorphie.contract.zeebe.Modules.ZeebeDocumentDef
 
         }
 
-        static IResult contractdefinitionupdate(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration,
-           [FromServices] IContractDefinitionService IContractDefinitionService
-      )
+        static IResult ContractDefinition([FromBody] dynamic body, [FromServices] IContractDefinitionService contractDefinitionService, [FromServices] JsonSerializerOptions options)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            ContractDefinitionInputDto entityData = JsonSerializer.Deserialize<ContractDefinitionInputDto>(serializeEntity, options);
 
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-
-            var _ = IContractDefinitionService.DataModelToContractDefinitionUpdate(entityData, messageVariables.InstanceIdGuid);
-
-            messageVariables.Success = true;
-            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-        }
-        static IResult contractdefinition(
-          [FromBody] dynamic body,
-         [FromServices] ProjectDbContext dbContext,
-          HttpRequest request,
-          HttpContext httpContext,
-          [FromServices] DaprClient client
-          , IConfiguration configuration,
-           [FromServices] IContractDefinitionService IContractDefinitionService
-      )
-        {
-            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-
-
-            dynamic? entityData = messageVariables.Data.GetProperty("entityData");
-
-            var _ = IContractDefinitionService.DataModelToContractDefinition(entityData, messageVariables.InstanceIdGuid);
+            contractDefinitionService.CreateContractDefinition(entityData, messageVariables.InstanceIdGuid);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult timeoutcontractdefinition(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+        static IResult ContractDefinitionUpdate([FromBody] dynamic body, [FromServices] IContractDefinitionService contractDefinitionService, [FromServices] JsonSerializerOptions options)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
+            ContractDefinitionInputDto entityData = JsonSerializer.Deserialize<ContractDefinitionInputDto>(serializeEntity, options);
+
+            contractDefinitionService.UpdateContractDefinition(entityData, messageVariables.InstanceIdGuid);
+
+            messageVariables.Success = true;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
+
+        static IResult TimeoutContractDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "TimeoutDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
-
-
         }
-        static IResult deletecontractdefinition(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+
+        static IResult DeleteContractDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "DeleteProcessDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-        static IResult errorcontractdefinition(
-        [FromBody] dynamic body,
-        [FromServices] ProjectDbContext dbContext,
-        HttpRequest request,
-        HttpContext httpContext,
-        [FromServices] DaprClient client
-        , IConfiguration configuration
-        )
+
+        static IResult ErrorContractDefinition([FromBody] dynamic body)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
             messageVariables.Success = true;
             messageVariables.LastTransition = "ErrorDefinitionUpload";
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
-
-
-
     }
 }

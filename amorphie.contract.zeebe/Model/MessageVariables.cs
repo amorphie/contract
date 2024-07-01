@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using amorphie.contract.zeebe.Model.DocumentDefinitionDataModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace amorphie.contract.zeebe.Model
 {
@@ -29,5 +31,15 @@ namespace amorphie.contract.zeebe.Model
         public Guid TriggeredByGuid { get; set; }
         public Guid TriggeredByBehalfOfGuid { get; set; }
 
+        public void SetAdditionalData(dynamic additionalDataContent)
+        {
+            var _backTransitionId = ZeebeMessageHelper.GetPropertyValue(Body, "BackTransitionId");
+
+            additionalData = new
+            {
+                BackTransitionId = String.IsNullOrEmpty(_backTransitionId) ? ZeebeConsts.ContractStartBack : _backTransitionId,
+                ContractData = additionalDataContent
+            };
+        }
     }
 }

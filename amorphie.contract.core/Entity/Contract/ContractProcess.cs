@@ -11,7 +11,7 @@ using amorphie.core.Base;
 namespace amorphie.contract.core.Entity.Contract
 {
     [Table("ContractProcess", Schema = "Cont")]
-    public class ContractProcess : AudiEntity
+    public class ContractProcess : AuditEntity
     {
         public string Client { get; set; }
         public string User { get; set; }

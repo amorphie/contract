@@ -1,3 +1,5 @@
+using amorphie.contract.core.Entity.Common;
+
 namespace amorphie.contract.core
 {
     public class AppSettings
@@ -8,7 +10,13 @@ namespace amorphie.contract.core
         public Fora Fora { get; set; }
         public Apisix Apisix { get; set; }
         public Pusula Pusula { get; set; }
+        public Tag Tag { get; set; }
     }
+
+    public class Tag {
+        public string Url { get; set;}
+    }
+    
     public class TemplateEngine
     {
         public string Url { get; set; }
@@ -58,6 +66,7 @@ namespace amorphie.contract.core
         public static string TemplateEnginePdfRenderEndpoint { get; private set; }
         public static string TemplateEngineGetTemplateEndpoint { get; private set; }
         public static string TemplateEngineRenderInstance { get; private set; }
+        public static string TagUrl { get; private set; }
 
 
         public static string MinioUrl { get; private set; }
@@ -75,6 +84,7 @@ namespace amorphie.contract.core
         public static void SetStaticValues(AppSettings settings)
         {
             DmsUrl = settings.Dms.Url;
+            TagUrl = settings.Tag.Url;
 
             TemplateEngineUrl = settings.TemplateEngine.Url;
             TemplateEngineHtmlRenderEndpoint = settings.TemplateEngine.HtmlRenderEndpoint;

@@ -14,21 +14,21 @@ namespace amorphie.contract.application
         public string? Name { get; set; }
         public Guid Id { get; set; }
         public string? Code { get; set; }
-        public string? Status { get; set; }
         public string Semver { get; set; }
 
         public string? BaseStatus { get; set; }
-        public List<EntityPropertyDto>? EntityProperties { get; set; }
+        
         public List<TagDto>? Tags { get; set; }
         public DocumentUploadDto? DocumentUpload { get; set; }
 
 
-        public DocumentOnlineSingDto? DocumentOnlineSing { get; set; }
+        public DocumentOnlineSignDto? DocumentOnlineSign { get; set; }
         public DocumentOptimizeDto? DocumentOptimize { get; set; }
         public DocumentOperationsDto? DocumentOperations { get; set; }
         public DocumentDysDto? DocumentDys { get; set; }
         public DocumentTsizlDto? DocumentTsizl { get; set; }
         public Dictionary<string, string> Titles { get; set; } = default!;
+        public List<MetadataDto> DefinitionMetadata { get; set; } = default!;
 
     }
 
@@ -69,7 +69,7 @@ namespace amorphie.contract.application
         public List<DocumentFormatDetailDto>? DocumentFormatDetails { get; set; }
         public List<string>? DocumentAllowedClientDetails { get; set; }
     }
-    public class DocumentOnlineSingDto
+    public class DocumentOnlineSignDto
     {
         public List<string>? DocumentAllowedClientDetails { get; set; }
         public List<DocumentTemplateDetailsDto>? Templates { get; set; }
@@ -80,7 +80,7 @@ namespace amorphie.contract.application
     public class DocumentTemplateDetailsDto
     {
         public string Code { get; set; }
-        public string LanguageCode{ get; set; }
+        public string LanguageCode { get; set; }
         public string Version { get; set; } = default!;
 
     }
