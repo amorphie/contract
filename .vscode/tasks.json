@@ -78,11 +78,6 @@
             "dependsOn": "stop-mocks",
         },
         {
-            "appId": "amorphie-contract-hub",
-            "label": "daprd-down-amorphie-contract-hub",
-            "type": "daprd-down"
-        },
-        {
             "appId": "amorphie-contract-zeebe",
             "label": "daprd-down-amorphie-contract-zeebe",
             "type": "daprd-down"

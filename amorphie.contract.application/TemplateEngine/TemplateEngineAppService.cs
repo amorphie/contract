@@ -3,15 +3,20 @@ using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.core.Response;
 using amorphie.contract.infrastructure.Services.Refit;
 using amorphie.contract.Models.Proxy;
+using Serilog;
 
 namespace amorphie.contract.application.TemplateEngine
 {
     public class TemplateEngineAppService : ITemplateEngineAppService
     {
         private readonly ITemplateEngineService _templateEngineService;
-        public TemplateEngineAppService(ITemplateEngineService templateEngineService)
+
+        private readonly ILogger _logger;
+
+        public TemplateEngineAppService(ITemplateEngineService templateEngineService, ILogger logger)
         {
             _templateEngineService = templateEngineService;
+            _logger = logger;
         }
 
         public async Task<GenericResult<string>> GetRender(string renderId)
@@ -26,6 +31,9 @@ namespace amorphie.contract.application.TemplateEngine
             }
             catch (Exception ex)
             {
+
+                _logger.Error(ex, "Failed to get render. {RenderId}", renderId);
+
                 return GenericResult<string>.Fail($"failed to fetch getRender {ex.Message}");
             }
 
@@ -45,6 +53,7 @@ namespace amorphie.contract.application.TemplateEngine
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, "Failed to get render pdf. {RenderId}", renderId);
                 return GenericResult<string>.Fail($"failed to fetch getRenderPdf {ex.Message}");
             }
 
@@ -53,34 +62,52 @@ namespace amorphie.contract.application.TemplateEngine
 
         public async Task<GenericResult<string>> SendRenderPdf(TemplateRenderRequestModel requestModel)
         {
-            var result = await _templateEngineService.SendRenderPdf(requestModel);
-            var responseContent = await result.Content.ReadAsStringAsync();
-
-            if (!result.IsSuccessStatusCode)
+            try
             {
-                return GenericResult<string>.Fail($"Failed to send render pdf data {responseContent}");
+                var result = await _templateEngineService.SendRenderPdf(requestModel);
+                var responseContent = await result.Content.ReadAsStringAsync();
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return GenericResult<string>.Fail($"Failed to send render pdf data {responseContent}");
+                }
+
+                if (!String.IsNullOrEmpty(responseContent))
+                    responseContent = responseContent.Trim('\"');
+
+                return GenericResult<string>.Success(responseContent);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "failed to send render pdf. {Name}", requestModel.Name);
+                return GenericResult<string>.Fail($"failed to send render pdf {ex.Message}");
             }
 
-            if (!String.IsNullOrEmpty(responseContent))
-                responseContent = responseContent.Trim('\"');
-
-            return GenericResult<string>.Success(responseContent);
         }
 
         public async Task<GenericResult<string>> SendRenderHtml(TemplateRenderRequestModel requestModel)
         {
-            var result = await _templateEngineService.SendRenderHtml(requestModel);
-            var responseContent = await result.Content.ReadAsStringAsync();
-
-            if (!result.IsSuccessStatusCode)
+            try
             {
-                return GenericResult<string>.Fail($"Failed to send render html data {responseContent}");
+                var result = await _templateEngineService.SendRenderHtml(requestModel);
+                var responseContent = await result.Content.ReadAsStringAsync();
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return GenericResult<string>.Fail($"Failed to send render html data {responseContent}");
+                }
+
+                if (!String.IsNullOrEmpty(responseContent))
+                    responseContent = responseContent.Trim('\"');
+
+                return GenericResult<string>.Success(responseContent);
+
             }
-
-            if (!String.IsNullOrEmpty(responseContent))
-                responseContent = responseContent.Trim('\"');
-
-            return GenericResult<string>.Success(responseContent);
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "failed to send render html. {Name}", requestModel.Name);
+                return GenericResult<string>.Fail($"failed to send render html {ex.Message}");
+            }
         }
 
         public async Task<GenericResult<List<TemplateEngineDefinitionResponseModel>>> GetTemplateDefinitions(string name)

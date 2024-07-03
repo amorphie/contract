@@ -1,12 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace amorphie.contract.application
 {
     public class DocumentContentDto
     {
-        public string KiloBytesSize { get; set; }
-        public string ContentType { get; set; }
-        public string ContentTransferEncoding { get; set; }
-        public string Name { get; set; }
-        public string Id { get; set; }
+        [Required]
+        public required string ContentType { get; set; } = default!;
+
+        [Required]
+        public required string FileContext { get; set; } = default!;
+
+        [Required]
+        public required string FileName { get; set; } = default!;
     }
 
 }

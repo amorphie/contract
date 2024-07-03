@@ -6,8 +6,6 @@ using amorphie.contract.core.Enum;
 namespace amorphie.contract.core.Model.History;
 public class DocumentGroupHistoryModel : BaseEntity
 {
-    public EStatus Status { get; set; } = default!;
     public ICollection<DocumentGroupDetail> DocumentGroupDetails { get; set; } = new List<DocumentGroupDetail>();
     public ICollection<DocumentGroupHistory>? DocumentGroupHistories { get; set; } = new List<DocumentGroupHistory>();
-
 }

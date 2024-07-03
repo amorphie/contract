@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace amorphie.contract.infrastructure.Configurations.Contract
 {
-    public class ContractDefinitionHistoryConfiguration : ConfigurationBaseAudiEntity<ContractDefinitionHistory>,
+    public class ContractDefinitionHistoryConfiguration : ConfigurationBaseAuditEntity<ContractDefinitionHistory>,
      IEntityTypeConfiguration<ContractDefinitionHistory>
     {
         public virtual void Configure(EntityTypeBuilder<ContractDefinitionHistory> builder)

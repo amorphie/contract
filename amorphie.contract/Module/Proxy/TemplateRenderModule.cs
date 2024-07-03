@@ -13,6 +13,7 @@ using amorphie.contract.core.Model;
 using amorphie.contract.Extensions;
 using amorphie.contract.core.Response;
 using amorphie.contract.application.TemplateEngine;
+using amorphie.contract.application.TemplateEngine.Dto;
 
 namespace amorphie.contract.Module.Proxy
 {
@@ -28,9 +29,12 @@ namespace amorphie.contract.Module.Proxy
         {
             routeGroupBuilder.MapPost("render", RenderHtml);
             routeGroupBuilder.MapPost("render/pdf", RenderPdf);
+            routeGroupBuilder.MapPost("render/pdfFromTag/", RenderPdfFromTag);
+            routeGroupBuilder.MapPost("render/htmlFromTag/", RenderHtmlFromTag);
             routeGroupBuilder.MapGet("template/definition", GetTemplates);
             routeGroupBuilder.MapGet("instance/{renderId}", GetRender);
             routeGroupBuilder.MapGet("instance/pdf/{renderId}", GetRenderPdf);
+            routeGroupBuilder.MapGet("render/data", GetRenderDataFromTag);
         }
 
         async ValueTask<IResult> RenderHtml(
@@ -134,7 +138,93 @@ namespace amorphie.contract.Module.Proxy
             {
                 return Results.Problem(detail: $"Template Engine Render Exception {resultRenderPdf.ErrorMessage}");
             }
+        }
 
+        async ValueTask<GenericResult<RenderResponseDto>> RenderPdfFromTag(
+          [FromServices] ProjectDbContext context,
+          [FromServices] ITagAppService tagAppService,
+          [FromBody] TemplateRenderTagInputDto inputDto, 
+          HttpContext httpContext,
+          CancellationToken cancellationToken)
+        {
+            var resultRenderPdf = await tagAppService.SendRenderPdf(inputDto);
+
+            if (resultRenderPdf.IsSuccess)
+            {
+                TemplateRender renderEntity = new TemplateRender
+                {
+                    RenderData = JsonSerializer.Serialize(inputDto),
+                    TemplateName = inputDto.ViewTemplateName,
+                    RenderType = "Pdf"
+                };
+
+                await context.TemplateRender.AddAsync(renderEntity);
+                context.SaveChanges();
+
+                
+                return GenericResult<RenderResponseDto>.Success(new RenderResponseDto 
+                { 
+                    Content = resultRenderPdf.Data, 
+                    TemplateRenderRequestModel = inputDto
+                });
+            }
+            else
+            {
+                return GenericResult<RenderResponseDto>.Fail($"Tag Render Exception {resultRenderPdf.ErrorMessage}");
+            }
+        }
+
+         async ValueTask<GenericResult<Dictionary<string, string>>> GetRenderDataFromTag(
+          [FromServices] ProjectDbContext context,
+          [FromServices] ITagAppService tagAppService,
+          [AsParameters] GetRenderDataTagInputDto inputDto,
+          HttpContext httpContext,
+          CancellationToken cancellationToken)
+        {
+            var resultRenderData = await tagAppService.GetRenderValues(inputDto);
+
+            if (resultRenderData.IsSuccess)
+            {
+                return resultRenderData;
+            }
+            else
+            {
+                return GenericResult<Dictionary<string, string>>.Fail($"Tag Render Exception {resultRenderData.ErrorMessage}");
+            }
+        }
+
+
+        async ValueTask<GenericResult<RenderResponseDto>> RenderHtmlFromTag(
+          [FromServices] ProjectDbContext context,
+          [FromServices] ITagAppService tagAppService,
+          [FromBody] TemplateRenderTagInputDto inputDto, 
+          HttpContext httpContext,
+          CancellationToken cancellationToken)
+        {
+            var resultRenderHtml = await tagAppService.SendRenderHtml(inputDto);
+
+            if (resultRenderHtml.IsSuccess)
+            {
+                TemplateRender renderEntity = new TemplateRender
+                {
+                    RenderData = JsonSerializer.Serialize(inputDto),
+                    TemplateName = inputDto.ViewTemplateName,
+                    RenderType = "Html"
+                };
+
+                await context.TemplateRender.AddAsync(renderEntity);
+                context.SaveChanges();
+
+                return GenericResult<RenderResponseDto>.Success(new RenderResponseDto 
+                { 
+                    Content = resultRenderHtml.Data, 
+                    TemplateRenderRequestModel = inputDto
+                });
+            }
+            else
+            {
+                return GenericResult<RenderResponseDto>.Fail($"Tag Render Exception {resultRenderHtml.ErrorMessage}");
+            }
         }
 
         async ValueTask<IResult> GetTemplates(
@@ -151,22 +241,22 @@ namespace amorphie.contract.Module.Proxy
             {
                 List<TemplateEngineDefinitionResponseModel> responseList = response.Data;
 
-                var dbQuery = context!.DocumentOnlineSing.AsQueryable();
+                var dbQuery = context!.DocumentOnlineSign.AsQueryable();
 
 
                 // "%" karakteri varsa deseni kontrol et
                 if (query.Contains("%"))
                 {
                     // Deseni kontrol et ve LIKE operatörünü kullan
-                    dbQuery = dbQuery.Where(x =>x.Templates.Any(a=> EF.Functions.Like(a.Code, query)));
+                    dbQuery = dbQuery.Where(x => x.Templates.Any(a => EF.Functions.Like(a.Code, query)));
                 }
                 else
                 {
                     // "%" karakteri yoksa direkt olarak eşleşmeyi kontrol et
-                    dbQuery = dbQuery.Where(x => x.Templates.Any(a=>a.Code == query));
+                    dbQuery = dbQuery.Where(x => x.Templates.Any(a => a.Code == query));
                 }
 
-                var dbList = await dbQuery.SelectMany(x => x.Templates.Select(a=>a.Code)).ToListAsync(cancellationToken);
+                var dbList = await dbQuery.SelectMany(x => x.Templates.Select(a => a.Code)).ToListAsync(cancellationToken);
 
                 responseList = responseList.Where(x => !dbList.Contains(x.Name)).ToList();
 

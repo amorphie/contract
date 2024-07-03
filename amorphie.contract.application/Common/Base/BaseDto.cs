@@ -6,5 +6,3 @@ public class BaseDto : DtoBase
 {
     public string? Code { get; set; }
 }
-
-

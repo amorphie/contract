@@ -26,8 +26,8 @@ namespace amorphie.contract.application.Customer.Dto
                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Semver))
-               .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentOnlineSing != null))
-               .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSing))
+               .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentOnlineSign != null))
+               .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentOnlineSign))
                .ForMember(dest => dest.ApprovalDate, opt => opt.MapFrom(src => src.CreatedAt))
                .ReverseMap();
 
@@ -36,13 +36,13 @@ namespace amorphie.contract.application.Customer.Dto
                // [LANG]   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentDefinitionLanguageDetails.FirstOrDefault().MultiLanguage.Name))
                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.DocumentDefinition.Code))
                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.DocumentDefinition.Semver))
-               .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing != null))
+               .ForMember(dest => dest.Render, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSign != null))
                .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.Required))
-               .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSing))
+               .ForMember(dest => dest.OnlineSign, opt => opt.MapFrom(src => src.DocumentDefinition.DocumentOnlineSign))
                .ForMember(dest => dest.ApprovalDate, opt => opt.MapFrom(src => src.CreatedAt))
                .ForMember(dest => dest.Titles, opt => opt.MapFrom(src => src.DocumentDefinition.Titles)).ReverseMap();
 
-            CreateMap<DocumentOnlineSing, OnlineSignDto>()
+            CreateMap<DocumentOnlineSign, OnlineSignDto>()
                 .ForMember(dest => dest.AllovedClients, opt => opt.MapFrom(src => src.DocumentAllowedClientDetails.Select(x => x.DocumentAllowedClients.Code)))
                 .ForMember(dest => dest.ScaRequired, opt => opt.MapFrom(src => src.Required))
                 .ForMember(dest => dest.DocumentModelTemplate ,opt=> opt.MapFrom(src=>src.Templates) )

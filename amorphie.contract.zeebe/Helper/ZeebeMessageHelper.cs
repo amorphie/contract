@@ -14,12 +14,6 @@ public static class ZeebeMessageHelper
         messageVariables.Variables.Add("LastTransition", messageVariables.TransitionName);
         messageVariables.Variables.Add("Message", messageVariables.Message);
 
-        // if (messageVariables.Success)
-        //     messageVariables.Variables.Add("Status", "OK");
-        // else
-        // {
-        //     messageVariables.Variables.Add("Status", "NOTOK");
-        // }
         dynamic targetObject = new System.Dynamic.ExpandoObject();
         targetObject.TriggeredBy = messageVariables.TriggeredBy;
         targetObject.TriggeredByBehalfOf = messageVariables.TriggeredByBehalfOf;
@@ -75,13 +69,63 @@ public static class ZeebeMessageHelper
             RecordIdGuid = messageVariables.RecordIdGuid,
             TriggeredBy = triggeredByAsString,
             TriggeredByBehalfOf = triggeredByBehalfOfAsString,
-
             additionalData = AdditionalData,
-
-            InstanceIdGuid = messageVariables.InstanceIdGuid
-
+            InstanceIdGuid = messageVariables.InstanceIdGuid,
+            Message = String.Empty
         };
 
 
     }
+
+    public static T MapToDto<T>(dynamic body)
+    {
+        if (body.ToString().IndexOf(typeof(T).Name) == -1)
+        {
+            return default;
+        }
+
+        var jsonDto = body.GetProperty(typeof(T).Name).ToString();
+
+        var resultDto = JsonSerializer.Deserialize<T>(jsonDto, options: new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return resultDto;
+    }
+
+    public static T MapToDto<T>(dynamic body, string variableName)
+    {
+
+        if (body.ToString().IndexOf(variableName) == -1)
+        {
+            return default;
+        }
+
+        var jsonDto = body.GetProperty(variableName).ToString();
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        T resultDto = JsonSerializer.Deserialize<T>(jsonDto, options);
+
+        return resultDto;
+    }
+
+    public static string GetPropertyValue(dynamic body, string variableName)
+    {
+
+        if (body.ToString().IndexOf(variableName) != -1)
+        {
+            return body.GetProperty(variableName).ToString();
+
+        }
+
+        return String.Empty;
+
+    }
 }
+
+
