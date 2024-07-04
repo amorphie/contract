@@ -220,7 +220,7 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
-            if (contractDecision.Metadata.IsNotEmpty())
+            if (!contractDecision.Metadata.IsNotEmpty())
             {
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
