@@ -8,6 +8,7 @@ using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using Serilog;
 using amorphie.contract.application.DMN.Dto;
+using amorphie.contract.application.Contract.Dto.Input;
 
 namespace amorphie.contract.application.Contract
 {
@@ -18,6 +19,7 @@ namespace amorphie.contract.application.Contract
         Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts);
         Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts);
         Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts);
+        Task<GenericResult<bool>> CancelContract(CancelContractInputDto req, CancellationToken cts);
     }
     public class ContractAppService : IContractAppService
     {
@@ -32,7 +34,28 @@ namespace amorphie.contract.application.Contract
             _logger = logger;
         }
 
+        public async Task<GenericResult<bool>> CancelContract(CancelContractInputDto req, CancellationToken cts)
+        {
+            var contractQuery = _dbContext.UserSignedContract.AsQueryable();
 
+            if (req.ContractCode is not null)
+            {
+                throw new ArgumentNullException(nameof(req.ContractCode), $"Contract not found : {req.ContractCode}");
+            }
+            if (req.ContractInstanceId is not null)
+            {
+                contractQuery = contractQuery.Where(x => x.ContractInstanceId == req.ContractInstanceId);
+            }
+
+            var contractList = await contractQuery.ToListAsync(cts);
+            var documentInstanceCanceledList = new List<Guid>();
+            foreach (var contract in contractList)
+            {
+                contract.ApprovalStatus = ApprovalStatus.Canceled;
+                documentInstanceCanceledList.AddRange(contract.UserSignedContractDetails.Select(x => x.DocumentInstanceId).ToList());
+            }
+            return GenericResult<bool>.Success(true);
+        }
         public async Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition

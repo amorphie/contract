@@ -1,6 +1,7 @@
 using amorphie.contract.application;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Dto;
+using amorphie.contract.application.Contract.Dto.Input;
 using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Contract.Request;
 using amorphie.contract.application.DMN.Dto;
@@ -91,9 +92,23 @@ namespace amorphie.contract.zeebe.Modules
             operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
             return operation;
         });
-
+            app.MapPost("/cancelcontract", CancelContract)
+               .Produces(StatusCodes.Status200OK)
+               .WithOpenApi(operation =>
+               {
+                   operation.Summary = "Maps ErrorContract service worker on Zeebe";
+                   operation.Tags = new List<OpenApiTag> { new() { Name = nameof(ZeebeContractInstance) } };
+                   return operation;
+               });
         }
-
+        static async ValueTask<IResult> CancelContract([FromBody] dynamic body, [FromServices] IContractAppService contractAppService, CancellationToken token)
+        {
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
+            var cancelContractInputDto = ZeebeMessageHelper.MapToDto<CancelContractInputDto>(body) as CancelContractInputDto;
+            var cancelContractOutput = await contractAppService.CancelContract(cancelContractInputDto, token);
+            messageVariables.additionalData.Data = cancelContractOutput;
+            return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
+        }
         static async ValueTask<IResult> ContractInstanceState([FromBody] dynamic body, [FromServices] IContractAppService contractAppService, CancellationToken token)
         {
             var messageVariables = ZeebeMessageHelper.VariablesControl(body);
@@ -205,7 +220,7 @@ namespace amorphie.contract.zeebe.Modules
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
 
-            if (contractDecision.Metadata.IsNotEmpty())
+            if (!contractDecision.Metadata.IsNotEmpty())
             {
                 return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
             }
