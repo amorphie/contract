@@ -2,6 +2,7 @@ using System.Reflection;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
+using amorphie.contract.application.Migration;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Services;
@@ -35,6 +36,7 @@ namespace amorphie.contract.application
             services.AddScoped<IPdfManager, ITextPdfManager>();
 
             services.AddTransient<ITagAppService, TagAppService>();
+            services.AddTransient<IDysMigrationAppService, DysMigrationAppService>();
 
             return services;
         }
