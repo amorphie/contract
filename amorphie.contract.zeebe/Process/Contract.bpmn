@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
   <bpmn:process id="Contract" name="Contrac" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
@@ -51,12 +51,9 @@
       </bpmn:serviceTask>
       <bpmn:exclusiveGateway id="Gateway_107e6j2">
         <bpmn:incoming>Flow_0t3tpr9</bpmn:incoming>
-        <bpmn:outgoing>Flow_1wuzmag</bpmn:outgoing>
         <bpmn:outgoing>Flow_1pqqnko</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1wuzmag</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_1wuzmag" sourceRef="Gateway_107e6j2" targetRef="Gateway_10xypka">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status="Approved"</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1pqqnko" sourceRef="Gateway_107e6j2" targetRef="Activity_0bjgurb">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status = "InProgress"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
@@ -86,7 +83,7 @@
         <bpmn:outgoing>Flow_0kgffyi</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:exclusiveGateway id="Gateway_10xypka" default="Flow_1yq8mmj">
-        <bpmn:incoming>Flow_1wuzmag</bpmn:incoming>
+        <bpmn:incoming>Flow_1gt9gtq</bpmn:incoming>
         <bpmn:outgoing>Flow_1yq8mmj</bpmn:outgoing>
         <bpmn:outgoing>Flow_17whf24</bpmn:outgoing>
       </bpmn:exclusiveGateway>
@@ -136,6 +133,31 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=TRXcontractstartStartContract.Data.entityData.test = "test"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_01gn4qa" sourceRef="Gateway_0ev2u1z" targetRef="Activity_0jowvcz" />
+      <bpmn:sequenceFlow id="Flow_1wuzmag" sourceRef="Gateway_107e6j2" targetRef="Activity_0f8uwod">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status="Approved"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:serviceTask id="Activity_1qfv8m6" name="SendContractDocumentsMail">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="send-contract-documents-mail" retries="1" />
+          <zeebe:ioMapping>
+            <zeebe:input source="=FindMailAttachmentOutputDto" target="SendContractDocumentsMailDto" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0ngxzsh</bpmn:incoming>
+        <bpmn:outgoing>Flow_1gt9gtq</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1gt9gtq" sourceRef="Activity_1qfv8m6" targetRef="Gateway_10xypka" />
+      <bpmn:serviceTask id="Activity_0f8uwod" name="FindMailAttachments">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="get-document-codes-by-contract-code-for-email" retries="1" />
+          <zeebe:ioMapping>
+            <zeebe:input source="={&#10;  &#34;ContractCode&#34; : if ContractInstance.ContractCode = null then&#10;    TRXcontractstartStartContract.Data.entityData.ContractCode &#10;  else ContractInstance.ContractCode,&#10;  &#34;ContractInstanceId&#34; : InstanceId&#10;}" target="FindMailAttachmentDto" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1wuzmag</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ngxzsh</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0ngxzsh" sourceRef="Activity_0f8uwod" targetRef="Activity_1qfv8m6" />
     </bpmn:subProcess>
     <bpmn:intermediateThrowEvent id="Event_0155iei">
       <bpmn:incoming>Flow_0ou83v3</bpmn:incoming>
@@ -433,6 +455,14 @@ else
       <bpmndi:BPMNShape id="BPMNShape_0tntgxf" bpmnElement="Gateway_0ev2u1z" isMarkerVisible="true">
         <dc:Bounds x="405" y="85" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_13yn9ok" bpmnElement="Activity_0f8uwod">
+        <dc:Bounds x="1030" y="350" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1c3qhxs" bpmnElement="Activity_1qfv8m6">
+        <dc:Bounds x="1230" y="350" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15ecgxi_di" bpmnElement="Flow_15ecgxi">
         <di:waypoint x="1616" y="260" />
         <di:waypoint x="1732" y="260" />
@@ -440,7 +470,7 @@ else
       <bpmndi:BPMNEdge id="Flow_1wuzmag_di" bpmnElement="Flow_1wuzmag">
         <di:waypoint x="960" y="285" />
         <di:waypoint x="960" y="390" />
-        <di:waypoint x="1415" y="390" />
+        <di:waypoint x="1030" y="390" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pqqnko_di" bpmnElement="Flow_1pqqnko">
         <di:waypoint x="985" y="260" />
@@ -514,6 +544,14 @@ else
         <di:waypoint x="451" y="114" />
         <di:waypoint x="540" y="130" />
         <di:waypoint x="753" y="223" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ngxzsh_di" bpmnElement="Flow_0ngxzsh">
+        <di:waypoint x="1130" y="390" />
+        <di:waypoint x="1230" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gt9gtq_di" bpmnElement="Flow_1gt9gtq">
+        <di:waypoint x="1330" y="390" />
+        <di:waypoint x="1415" y="390" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0155iei_di" bpmnElement="Event_0155iei">
         <dc:Bounds x="1912" y="222" width="36" height="36" />

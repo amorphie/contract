@@ -38,6 +38,7 @@ namespace amorphie.contract.core.Entity.Contract
         public bool Required { get; set; }
         [Required]
         public short Order { get; set; }
+        public bool SendMail { get; set; }
 
     }
 }
