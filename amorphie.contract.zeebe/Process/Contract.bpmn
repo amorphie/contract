@@ -53,6 +53,7 @@
         <bpmn:incoming>Flow_0t3tpr9</bpmn:incoming>
         <bpmn:outgoing>Flow_1wuzmag</bpmn:outgoing>
         <bpmn:outgoing>Flow_1pqqnko</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0snnaa7</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_1wuzmag" sourceRef="Gateway_107e6j2" targetRef="Gateway_10xypka">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status="Approved"</bpmn:conditionExpression>
@@ -69,6 +70,7 @@
           </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1giqc15</bpmn:incoming>
+        <bpmn:incoming>Flow_010hc8w</bpmn:incoming>
         <bpmn:outgoing>Flow_1qogq3m</bpmn:outgoing>
       </bpmn:callActivity>
       <bpmn:sequenceFlow id="Flow_1giqc15" sourceRef="Activity_0bjgurb" targetRef="Activity_04az109" />
@@ -136,6 +138,22 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=TRXcontractstartStartContract.Data.entityData.test = "test"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_01gn4qa" sourceRef="Gateway_0ev2u1z" targetRef="Activity_0jowvcz" />
+      <bpmn:serviceTask id="Activity_0ai2cal" name="amorphie-workflow-set-state">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="TARGET_STATE" value="contract-check-sub-state" />
+            <zeebe:header key="NOTIFY_CLIENT" value="true" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0snnaa7</bpmn:incoming>
+        <bpmn:outgoing>Flow_010hc8w</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0snnaa7" sourceRef="Gateway_107e6j2" targetRef="Activity_0ai2cal">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status = "InProgress" and 
+ClientComponentType = "checkbox"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_010hc8w" sourceRef="Activity_0ai2cal" targetRef="Activity_04az109" />
     </bpmn:subProcess>
     <bpmn:intermediateThrowEvent id="Event_0155iei">
       <bpmn:incoming>Flow_0ou83v3</bpmn:incoming>
@@ -181,9 +199,9 @@
       <bpmn:sequenceFlow id="Flow_0jzrop3" sourceRef="Event_1vbuu44" targetRef="Gateway_0l57dbl" />
       <bpmn:sequenceFlow id="Flow_1crv3y2" sourceRef="Activity_0jad5z5" targetRef="Event_1rejrl0" />
     </bpmn:subProcess>
-    <bpmn:boundaryEvent id="Event_02zlf8t" name="DeleteContractDefinition" attachedToRef="Activity_1t3gbcf">
+    <bpmn:boundaryEvent id="Event_02zlf8t" name="Start Cancel Contract" attachedToRef="Activity_1t3gbcf">
       <bpmn:outgoing>Flow_0q5yxog</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_17mwuj4" messageRef="Message_0dem2ek" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_17mwuj4" messageRef="Message_2ta5mg9" />
     </bpmn:boundaryEvent>
     <bpmn:subProcess id="Activity_0nnjgg4">
       <bpmn:incoming>Flow_0q5yxog</bpmn:incoming>
@@ -196,9 +214,9 @@
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_16wo9dk" sourceRef="Activity_1fgbylm" targetRef="Event_1g54nzd" />
       <bpmn:sequenceFlow id="Flow_03q6bxk" sourceRef="Event_0yr7d5q" targetRef="Activity_1fgbylm" />
-      <bpmn:serviceTask id="Activity_1fgbylm" name="Delete Process Contract Definition">
+      <bpmn:serviceTask id="Activity_1fgbylm" name="Cancel Contract">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="deletecontract" retries="1" />
+          <zeebe:taskDefinition type="cancelcontract" retries="1" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_03q6bxk</bpmn:incoming>
         <bpmn:outgoing>Flow_16wo9dk</bpmn:outgoing>
@@ -376,6 +394,16 @@ else
       <zeebe:subscription correlationKey="=InstanceId" />
     </bpmn:extensionElements>
   </bpmn:message>
+  <bpmn:message id="Message_24vk9b0" name="startcancelcontract">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_2ta5mg9" name="startcancelcontract">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=InstanceId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Contract">
       <bpmndi:BPMNShape id="Activity_1t3gbcf_di" bpmnElement="Activity_1t3gbcf" isExpanded="true">
@@ -399,10 +427,6 @@ else
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_09kmhv9" bpmnElement="Activity_0chazy4">
         <dc:Bounds x="1516" y="220" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0t0kjd6" bpmnElement="Activity_0bjgurb">
-        <dc:Bounds x="1080" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_107e6j2_di" bpmnElement="Gateway_107e6j2" isMarkerVisible="true">
@@ -433,6 +457,14 @@ else
       <bpmndi:BPMNShape id="BPMNShape_0tntgxf" bpmnElement="Gateway_0ev2u1z" isMarkerVisible="true">
         <dc:Bounds x="405" y="85" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0t0kjd6" bpmnElement="Activity_0bjgurb">
+        <dc:Bounds x="1130" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0y7pjbq" bpmnElement="Activity_0ai2cal">
+        <dc:Bounds x="1130" y="284" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15ecgxi_di" bpmnElement="Flow_15ecgxi">
         <di:waypoint x="1616" y="260" />
         <di:waypoint x="1732" y="260" />
@@ -444,22 +476,24 @@ else
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pqqnko_di" bpmnElement="Flow_1pqqnko">
         <di:waypoint x="985" y="260" />
-        <di:waypoint x="1080" y="260" />
+        <di:waypoint x="1058" y="260" />
+        <di:waypoint x="1058" y="210" />
+        <di:waypoint x="1130" y="210" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0t3tpr9_di" bpmnElement="Flow_0t3tpr9">
         <di:waypoint x="850" y="260" />
         <di:waypoint x="935" y="260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1giqc15_di" bpmnElement="Flow_1giqc15">
-        <di:waypoint x="1180" y="260" />
-        <di:waypoint x="1230" y="260" />
-        <di:waypoint x="1230" y="250" />
+        <di:waypoint x="1230" y="210" />
+        <di:waypoint x="1255" y="210" />
+        <di:waypoint x="1255" y="250" />
         <di:waypoint x="1280" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qogq3m_di" bpmnElement="Flow_1qogq3m">
         <di:waypoint x="1330" y="220" />
-        <di:waypoint x="1330" y="200" />
-        <di:waypoint x="800" y="200" />
+        <di:waypoint x="1330" y="150" />
+        <di:waypoint x="800" y="150" />
         <di:waypoint x="800" y="220" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1yq8mmj_di" bpmnElement="Flow_1yq8mmj">
@@ -514,6 +548,18 @@ else
         <di:waypoint x="451" y="114" />
         <di:waypoint x="540" y="130" />
         <di:waypoint x="753" y="223" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0snnaa7_di" bpmnElement="Flow_0snnaa7">
+        <di:waypoint x="985" y="260" />
+        <di:waypoint x="1053" y="260" />
+        <di:waypoint x="1053" y="324" />
+        <di:waypoint x="1130" y="324" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_010hc8w_di" bpmnElement="Flow_010hc8w">
+        <di:waypoint x="1230" y="324" />
+        <di:waypoint x="1255" y="324" />
+        <di:waypoint x="1255" y="270" />
+        <di:waypoint x="1280" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0155iei_di" bpmnElement="Event_0155iei">
         <dc:Bounds x="1912" y="222" width="36" height="36" />
@@ -649,7 +695,7 @@ else
       <bpmndi:BPMNShape id="Event_164xep2_di" bpmnElement="Event_02zlf8t">
         <dc:Bounds x="1487" y="452" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1463" y="495" width="88" height="27" />
+          <dc:Bounds x="1480" y="495" width="61" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ou83v3_di" bpmnElement="Flow_0ou83v3">
