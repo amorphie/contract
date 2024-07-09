@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0e9zvyc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
   <bpmn:process id="Contract" name="Contrac" isExecutable="true">
     <bpmn:subProcess id="Activity_1t3gbcf">
       <bpmn:incoming>Flow_1dj8duy</bpmn:incoming>
@@ -53,6 +53,7 @@
         <bpmn:incoming>Flow_0t3tpr9</bpmn:incoming>
         <bpmn:outgoing>Flow_1wuzmag</bpmn:outgoing>
         <bpmn:outgoing>Flow_1pqqnko</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0snnaa7</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_1wuzmag" sourceRef="Gateway_107e6j2" targetRef="Gateway_10xypka">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status="Approved"</bpmn:conditionExpression>
@@ -69,6 +70,7 @@
           </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1giqc15</bpmn:incoming>
+        <bpmn:incoming>Flow_010hc8w</bpmn:incoming>
         <bpmn:outgoing>Flow_1qogq3m</bpmn:outgoing>
       </bpmn:callActivity>
       <bpmn:sequenceFlow id="Flow_1giqc15" sourceRef="Activity_0bjgurb" targetRef="Activity_04az109" />
@@ -136,6 +138,22 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=TRXcontractstartStartContract.Data.entityData.test = "test"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_01gn4qa" sourceRef="Gateway_0ev2u1z" targetRef="Activity_0jowvcz" />
+      <bpmn:serviceTask id="Activity_0ai2cal" name="amorphie-workflow-set-state">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="TARGET_STATE" value="contract-check-sub-state" />
+            <zeebe:header key="NOTIFY_CLIENT" value="true" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0snnaa7</bpmn:incoming>
+        <bpmn:outgoing>Flow_010hc8w</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0snnaa7" sourceRef="Gateway_107e6j2" targetRef="Activity_0ai2cal">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ContractOutputDto.status = "InProgress" and 
+ClientComponentType = "checkbox"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_010hc8w" sourceRef="Activity_0ai2cal" targetRef="Activity_04az109" />
     </bpmn:subProcess>
     <bpmn:intermediateThrowEvent id="Event_0155iei">
       <bpmn:incoming>Flow_0ou83v3</bpmn:incoming>
@@ -411,10 +429,6 @@ else
         <dc:Bounds x="1516" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0t0kjd6" bpmnElement="Activity_0bjgurb">
-        <dc:Bounds x="1080" y="220" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_107e6j2_di" bpmnElement="Gateway_107e6j2" isMarkerVisible="true">
         <dc:Bounds x="935" y="235" width="50" height="50" />
       </bpmndi:BPMNShape>
@@ -443,6 +457,14 @@ else
       <bpmndi:BPMNShape id="BPMNShape_0tntgxf" bpmnElement="Gateway_0ev2u1z" isMarkerVisible="true">
         <dc:Bounds x="405" y="85" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0t0kjd6" bpmnElement="Activity_0bjgurb">
+        <dc:Bounds x="1130" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0y7pjbq" bpmnElement="Activity_0ai2cal">
+        <dc:Bounds x="1130" y="284" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_15ecgxi_di" bpmnElement="Flow_15ecgxi">
         <di:waypoint x="1616" y="260" />
         <di:waypoint x="1732" y="260" />
@@ -454,22 +476,24 @@ else
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pqqnko_di" bpmnElement="Flow_1pqqnko">
         <di:waypoint x="985" y="260" />
-        <di:waypoint x="1080" y="260" />
+        <di:waypoint x="1058" y="260" />
+        <di:waypoint x="1058" y="210" />
+        <di:waypoint x="1130" y="210" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0t3tpr9_di" bpmnElement="Flow_0t3tpr9">
         <di:waypoint x="850" y="260" />
         <di:waypoint x="935" y="260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1giqc15_di" bpmnElement="Flow_1giqc15">
-        <di:waypoint x="1180" y="260" />
-        <di:waypoint x="1230" y="260" />
-        <di:waypoint x="1230" y="250" />
+        <di:waypoint x="1230" y="210" />
+        <di:waypoint x="1255" y="210" />
+        <di:waypoint x="1255" y="250" />
         <di:waypoint x="1280" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qogq3m_di" bpmnElement="Flow_1qogq3m">
         <di:waypoint x="1330" y="220" />
-        <di:waypoint x="1330" y="200" />
-        <di:waypoint x="800" y="200" />
+        <di:waypoint x="1330" y="150" />
+        <di:waypoint x="800" y="150" />
         <di:waypoint x="800" y="220" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1yq8mmj_di" bpmnElement="Flow_1yq8mmj">
@@ -524,6 +548,18 @@ else
         <di:waypoint x="451" y="114" />
         <di:waypoint x="540" y="130" />
         <di:waypoint x="753" y="223" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0snnaa7_di" bpmnElement="Flow_0snnaa7">
+        <di:waypoint x="985" y="260" />
+        <di:waypoint x="1053" y="260" />
+        <di:waypoint x="1053" y="324" />
+        <di:waypoint x="1130" y="324" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_010hc8w_di" bpmnElement="Flow_010hc8w">
+        <di:waypoint x="1230" y="324" />
+        <di:waypoint x="1255" y="324" />
+        <di:waypoint x="1255" y="270" />
+        <di:waypoint x="1280" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0155iei_di" bpmnElement="Event_0155iei">
         <dc:Bounds x="1912" y="222" width="36" height="36" />
