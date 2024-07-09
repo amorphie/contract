@@ -126,7 +126,8 @@ namespace amorphie.contract.zeebe.Modules
                             Identity = headerModel.UserReference,
                             DocumentDefinitionCode = _document.Code,
                             Approved = false,
-                            IsRequired = _document.IsRequired
+                            IsRequired = _document.IsRequired,
+                            Title = _document.Name,
                         };
 
 
