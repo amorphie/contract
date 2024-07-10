@@ -104,6 +104,7 @@ namespace amorphie.contract.application.TemplateEngine
 
         public async Task<GenericResult<Dictionary<string, string>>> GetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel)
         {
+            var cachedTagPath = new HashSet<GetRenderDataTagInputDto>();
             var cachedTagValue = new Dictionary<string, string>();
             var resultTags = new Dictionary<string, string>();
 
@@ -125,6 +126,19 @@ namespace amorphie.contract.application.TemplateEngine
                     {
                         var reference = tagKeywords[4];
 
+                        int startIndex = reference.IndexOf('[');
+                        int endIndex = reference.LastIndexOf(']');
+
+                        string tagPath = "";
+
+                        if (startIndex >= 0 && endIndex > startIndex)
+                        {
+                            string beforeBracket = reference.Substring(0, startIndex);
+                            string insideBracket = reference.Substring(startIndex + 1, endIndex - startIndex - 1);
+                            reference = beforeBracket;
+                            tagPath = insideBracket;
+                        }
+
                         if (!allowedQueries.Contains(reference))
                         {
                             throw new ArgumentException($"{reference} is not implemented reference keyword");
@@ -141,25 +155,32 @@ namespace amorphie.contract.application.TemplateEngine
                             Reference = referenceValue,
                         };
 
-                        var tagServiceResponse = await GetRenderValues(tagInput);
-
-                        if (!tagServiceResponse.IsSuccess)
+                        if (!cachedTagPath.Contains(tagInput))
                         {
-                            throw new Exception($"Failed to retrieve data from Tag service! {tagServiceResponse.ErrorMessage}");
-                        }
+                            var tagServiceResponse = await GetRenderValues(tagInput);
+                            cachedTagPath.Add(tagInput);
+                            if (!tagServiceResponse.IsSuccess)
+                            {
+                                throw new Exception($"Failed to retrieve data from Tag service! {tagServiceResponse.ErrorMessage}");
+                            }
 
-                        if (tagServiceResponse.Data is null || tagServiceResponse.Data.Count == 0)
+                            if (tagServiceResponse.Data is null || tagServiceResponse.Data.Count == 0)
+                            {
+                                _logger.Warning("Tag service returned empty data {Data}", tagInput.ToString());
+                                continue;
+                            }
+
+                            foreach (var kvp in tagServiceResponse.Data)
+                            {
+                                cachedTagValue[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        //pathMap varsa Metadatada code alanına denk gelecek yoksa item code ile tagdan gelen verinin keyi birebir eşleşmeli.
+                        if (!String.IsNullOrEmpty(tagPath) && cachedTagValue.TryGetValue(tagPath, out var tagPathValue))
                         {
-                            _logger.Warning("Tag service returned empty data {Data}", tagInput.ToString());
-                            continue;
+                            resultTags[item.Code] = tagPathValue;
                         }
-
-                        foreach (var kvp in tagServiceResponse.Data)
-                        {
-                            cachedTagValue[kvp.Key] = kvp.Value;
-                        }
-
-                        if (cachedTagValue.TryGetValue(item.Code, out var newTagValue))
+                        else if (cachedTagValue.TryGetValue(item.Code, out var newTagValue))
                         {
                             resultTags[item.Code] = newTagValue;
                         }

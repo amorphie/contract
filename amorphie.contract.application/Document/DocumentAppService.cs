@@ -36,8 +36,20 @@ namespace amorphie.contract.application
         private readonly IContractAppService _contractAppService;
         private readonly IPdfManager _pdfManager;
         private readonly ILogger _logger;
+        private readonly ITagAppService _tagAppService;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, IUserSignedContractAppService userSignedContractAppService, IContractAppService contractAppService, IPdfManager pdfManager, ILogger logger)
+        public DocumentAppService(
+            ProjectDbContext projectDbContext,
+            IMinioService minioService,
+            IDysProducer dysProducer,
+            ITSIZLProducer tsizlProducer,
+            ITemplateEngineAppService templateEngineAppService,
+            ICustomerAppService customerAppService,
+            IUserSignedContractAppService userSignedContractAppService,
+            IContractAppService contractAppService,
+            IPdfManager pdfManager,
+            ILogger logger,
+            ITagAppService tagAppService)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
@@ -49,6 +61,7 @@ namespace amorphie.contract.application
             _contractAppService = contractAppService;
             _pdfManager = pdfManager;
             _logger = logger;
+            _tagAppService = tagAppService;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -239,7 +252,19 @@ namespace amorphie.contract.application
                 return GenericResult<DocumentInstanceOutputDto>.Fail($"Document Code ve versiyona ait kayit bulunamadi! {input.DocumentCode}, {input.DocumentVersion}");
 
             // Metadata tag implementation -> IsTagImplemented
-
+            List<MetadataDto> metadataDtos = ObjectMapperApp.Mapper.Map<List<MetadataDto>>(docdef.DefinitionMetadata);
+            var getTagMetadata = await _tagAppService.GetTagMetadata(metadataDtos, input.HeaderModel);
+            if (getTagMetadata.IsSuccess && getTagMetadata.Data is not null)
+            {
+                foreach (var item in getTagMetadata.Data)
+                {
+                    input.InstanceMetadata.Add(new MetadataDto
+                    {
+                        Code = item.Key,
+                        Data = item.Value
+                    });
+                }
+            }
             if (docdef.DefinitionMetadata?.Any() == true) // && docdef?.DocumentDys is not null DYS olmayacak
             {
                 CheckRequiredMetadata(docdef.DefinitionMetadata, input.InstanceMetadata);
