@@ -116,6 +116,7 @@ namespace amorphie.contract.application
                 CustomerId = documentDto.CustomerId,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
                 DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
+                InstanceMetadata = ObjectMapperApp.Mapper.Map<List<Metadata>>(documentDto.Metadata)
             };
 
             document.DocumentContent.MinioObjectName = minioObjectName;
@@ -192,12 +193,13 @@ namespace amorphie.contract.application
 
                 var sendDysModel = new DocumentDysRequestModel(input.HeaderModel.UserReference,
                                                 documentDef.Code,
+                                                documentDef.Semver,
                                                 documentDef.DocumentDys.ReferenceId.ToString(),
                                                 documentDef.Code, documentContent.FileName,
                                                 documentContent.ContentType,
                                                 fileByteArray);
 
-                await SendToDys(sendDysModel, documentDef.DefinitionMetadata);
+                await SendToDys(sendDysModel, documentInstance.InstanceMetadata);
             }
 
             if (documentDef?.DocumentTsizl is not null)
@@ -252,22 +254,12 @@ namespace amorphie.contract.application
                 return GenericResult<DocumentInstanceOutputDto>.Fail($"Document Code ve versiyona ait kayit bulunamadi! {input.DocumentCode}, {input.DocumentVersion}");
 
             // Metadata tag implementation -> IsTagImplemented
-            List<MetadataDto> metadataDtos = ObjectMapperApp.Mapper.Map<List<MetadataDto>>(docdef.DefinitionMetadata);
-            var getTagMetadata = await _tagAppService.GetTagMetadata(metadataDtos, input.HeaderModel);
-            if (getTagMetadata.IsSuccess && getTagMetadata.Data is not null)
-            {
-                foreach (var item in getTagMetadata.Data)
-                {
-                    input.InstanceMetadata.Add(new MetadataDto
-                    {
-                        Code = item.Key,
-                        Data = item.Value
-                    });
-                }
-            }
+
+            var metadataDtoList = await TagMetadataAsync(docdef.DefinitionMetadata, input.InstanceMetadata, input.HeaderModel);
+
             if (docdef.DefinitionMetadata?.Any() == true) // && docdef?.DocumentDys is not null DYS olmayacak
             {
-                CheckRequiredMetadata(docdef.DefinitionMetadata, input.InstanceMetadata);
+                CheckRequiredMetadata(docdef.DefinitionMetadata, metadataDtoList);
             }
 
             var customerId = await _customerAppService.GetIdByReference(input.HeaderModel.UserReference);
@@ -284,7 +276,7 @@ namespace amorphie.contract.application
                 CustomerId = customerId.Data,
                 DocumentDefinitionId = docdef.Id,
                 Status = ApprovalStatus.TemporarilyApproved,
-                Metadata = input.InstanceMetadata,
+                Metadata = metadataDtoList,
                 Notes = input.Notes,
             };
 
@@ -338,12 +330,49 @@ namespace amorphie.contract.application
         {
             if (metaData is not null)
             {
+                if (metaData.Any(x => x.Code == "Field08TCKimlik"))
+                {
+                    documentDys.DocumentParameters.Remove("Field08TCKimlik");
+
+                }
+                if (metaData.Any(x => x.Code == "Field09VergiNo"))
+                {
+                    documentDys.DocumentParameters.Remove("Field09VergiNo");
+
+                }
                 foreach (var item in metaData)
                 {
                     documentDys.DocumentParameters.Add(item.Code, item.Data);
                 }
             }
             await _dysProducer.PublishDysData(documentDys);
+        }
+        private async Task<List<MetadataDto>> TagMetadataAsync(List<Metadata> docdefMetadata, List<MetadataDto> instanceMetadata, HeaderFilterModel headerModel)
+        {
+            var metadataDtos = ObjectMapperApp.Mapper.Map<List<MetadataDto>>(docdefMetadata);
+            var getTagMetadata = await _tagAppService.GetTagMetadata(metadataDtos, headerModel);
+
+            List<MetadataDto> metadataDtoList = new();
+            if (getTagMetadata.IsSuccess && getTagMetadata.Data is not null)
+            {
+                foreach (var item in getTagMetadata.Data)
+                {
+
+                    metadataDtoList.Add(new MetadataDto
+                    {
+                        Code = item.Key,
+                        Data = item.Value
+                    });
+                }
+                foreach (var item in instanceMetadata)
+                {
+                    if (!metadataDtoList.Exists(x => x.Code == item.Code))
+                    {
+                        metadataDtoList.Add(item);
+                    }
+                }
+            }
+            return metadataDtoList;
         }
 
         private GenericResult<bool> CheckRequiredMetadata(List<Metadata> docDefMetadata, List<MetadataDto> instanceMetadataList)
@@ -359,7 +388,6 @@ namespace amorphie.contract.application
                     }
                 }
             }
-
             return GenericResult<bool>.Success(true);
         }
         private List<RootDocumentDto> mapToRootDocumentDto(List<Document> documents)

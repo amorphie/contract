@@ -13,9 +13,11 @@ public class DocumentDysRequestModel
     public byte[] Content { get; set; }
     public DocumentDysRequestModel()
     { }
-    public DocumentDysRequestModel(string userReference, string documentCode, string dmsReferenceId, string description, string fileName, string mimeType, byte[] content)
+    public DocumentDysRequestModel(string userReference, string documentCode, string version, string dmsReferenceId, string description, string fileName, string mimeType, byte[] content)
     {
         ArgumentNullException.ThrowIfNull(userReference);
+
+        ArgumentNullException.ThrowIfNull(version);
 
         DocumentCode = documentCode;
         DocumentTypeDMSReferenceId = dmsReferenceId;
@@ -30,6 +32,7 @@ public class DocumentDysRequestModel
         else
             DocumentParameters.Add("Field08TCKimlik", userReference);
 
+        DocumentParameters.Add("AgreementVersion", version);
     }
 
     public string ConstructDocumentTags()
