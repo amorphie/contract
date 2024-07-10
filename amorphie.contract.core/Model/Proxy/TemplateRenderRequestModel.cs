@@ -41,8 +41,10 @@ namespace amorphie.contract.core.Model.Proxy
         public string SemanticVersion { get; set; }
         public string ProcessName { get; set; }
         public string Identity { get; set; }
+        public string Title { get; set; } = default!;
 
     }
+
     public class TemplateRenderRequestModel
     {
         public TemplateRenderRequestModel()
