@@ -102,6 +102,25 @@ namespace amorphie.contract.application.TemplateEngine
             }
         }
 
+        //Bracket kontrolü ve return eden metodu buraya alalım. reference ve tagFieldi dönsün
+        private (string reference, string tagField) GetReferenceAndTagField(string reference)
+        {
+            int startIndex = reference.IndexOf('[');
+            int endIndex = reference.LastIndexOf(']');
+
+            string tagField = "";
+
+            if (startIndex >= 0 && endIndex > startIndex)
+            {
+                string beforeBracket = reference.Substring(0, startIndex);
+                string insideBracket = reference.Substring(startIndex + 1, endIndex - startIndex - 1);
+                reference = beforeBracket;
+                tagField = insideBracket;
+            }
+
+            return (reference, tagField);
+        }
+
         public async Task<GenericResult<Dictionary<string, string>>> GetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel)
         {
             var cachedTagPath = new HashSet<GetRenderDataTagInputDto>();
@@ -118,26 +137,20 @@ namespace amorphie.contract.application.TemplateEngine
                         throw new InvalidOperationException($"Tag keywords are incorrectly defined {item.Data}");
                     }
 
-                    if (cachedTagValue.TryGetValue(item.Code, out var tagValue))
+                    var reference = tagKeywords[4];
+
+                    (reference, string tagField) = GetReferenceAndTagField(reference);
+
+                    if (!String.IsNullOrEmpty(tagField) && cachedTagValue.TryGetValue(tagField, out var tagFieldInit))
+                    {
+                        resultTags[item.Code] = tagFieldInit;
+                    }
+                    else if (cachedTagValue.TryGetValue(item.Code, out var tagValue))
                     {
                         resultTags[item.Code] = tagValue;
                     }
                     else
                     {
-                        var reference = tagKeywords[4];
-
-                        int startIndex = reference.IndexOf('[');
-                        int endIndex = reference.LastIndexOf(']');
-
-                        string tagPath = "";
-
-                        if (startIndex >= 0 && endIndex > startIndex)
-                        {
-                            string beforeBracket = reference.Substring(0, startIndex);
-                            string insideBracket = reference.Substring(startIndex + 1, endIndex - startIndex - 1);
-                            reference = beforeBracket;
-                            tagPath = insideBracket;
-                        }
 
                         if (!allowedQueries.Contains(reference))
                         {
@@ -175,8 +188,8 @@ namespace amorphie.contract.application.TemplateEngine
                                 cachedTagValue[kvp.Key] = kvp.Value;
                             }
                         }
-                        //pathMap varsa Metadatada code alanına denk gelecek yoksa item code ile tagdan gelen verinin keyi birebir eşleşmeli.
-                        if (!String.IsNullOrEmpty(tagPath) && cachedTagValue.TryGetValue(tagPath, out var tagPathValue))
+
+                        if (!String.IsNullOrEmpty(tagField) && cachedTagValue.TryGetValue(tagField, out var tagPathValue))
                         {
                             resultTags[item.Code] = tagPathValue;
                         }

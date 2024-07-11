@@ -330,19 +330,21 @@ namespace amorphie.contract.application
         {
             if (metaData is not null)
             {
-                if (metaData.Any(x => x.Code == "Field08TCKimlik"))
-                {
-                    documentDys.DocumentParameters.Remove("Field08TCKimlik");
-
-                }
-                if (metaData.Any(x => x.Code == "Field09VergiNo"))
-                {
-                    documentDys.DocumentParameters.Remove("Field09VergiNo");
-
-                }
                 foreach (var item in metaData)
                 {
-                    documentDys.DocumentParameters.Add(item.Code, item.Data);
+                    if (item.Code == "Field08TCKimlik")
+                    {
+                        documentDys.DocumentParameters["Field08TCKimlik"] = item.Data;
+                    }
+                    else if (item.Code == "Field09VergiNo")
+                    {
+                        documentDys.DocumentParameters["Field09VergiNo"] = item.Data;
+                    }
+                    else
+                    {
+
+                        documentDys.DocumentParameters.Add(item.Code, item.Data);
+                    }
                 }
             }
             await _dysProducer.PublishDysData(documentDys);
@@ -364,6 +366,9 @@ namespace amorphie.contract.application
                         Data = item.Value
                     });
                 }
+            }
+            if (instanceMetadata is not null)
+            {
                 foreach (var item in instanceMetadata)
                 {
                     if (!metadataDtoList.Exists(x => x.Code == item.Code))
