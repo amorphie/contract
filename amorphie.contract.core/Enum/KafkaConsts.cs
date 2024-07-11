@@ -8,7 +8,8 @@ public static class KafkaConsts
 
     #region Migration
 
-    public const string DysDocumentJoined = "CONTRACT.CALLBACK.dys-document-joined";
+    public const string DysDocument = "CONTRACT.CALLBACK.dys-document";
+    public const string DysDocumentTag = "CONTRACT.CALLBACK.dys-document-tag";
 
 
     #endregion

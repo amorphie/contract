@@ -12,7 +12,7 @@ public class FileConverterFactory
     {
         if (!_converters.TryGetValue(fileContextType, out var converter))
         {
-            converter = _converters["DefaultRender"];
+            throw new NotSupportedException($"Desteklenmeyen dosya türü: {fileContextType}");
         }
 
         return converter;

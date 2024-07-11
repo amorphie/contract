@@ -31,6 +31,7 @@ namespace amorphie.contract.application
             services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
             services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
             services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
+            services.AddScoped<IFileContentProvider, HtmlToPdfConverter>();
             services.AddScoped<FileConverterFactory>();
 
             services.AddScoped<IPdfManager, ITextPdfManager>();

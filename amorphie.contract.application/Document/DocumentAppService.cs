@@ -103,6 +103,7 @@ namespace amorphie.contract.application
                 CustomerId = documentDto.CustomerId,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
                 DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
+                InstanceMetadata = ObjectMapperApp.Mapper.Map<List<Metadata>>(documentDto.Metadata)
             };
 
             document.DocumentContent.MinioObjectName = minioObjectName;
@@ -248,7 +249,7 @@ namespace amorphie.contract.application
             var customerId = await _customerAppService.GetIdByReference(input.HeaderModel.UserReference);
             if (!customerId.IsSuccess)
             {
-                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo);
+                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo, "");
                 customerId = await _customerAppService.AddAsync(customerInputDto);
             }
 
@@ -476,6 +477,67 @@ namespace amorphie.contract.application
             return GenericResult<List<DocumentInstanceDto>>.Success(documentInstanceDtos);
         }
 
+        public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
+        {
+            var documentDto = new DocumentDto
+            {
+                Id = Guid.NewGuid(),
+                DocumentContent = input.DocumentContent,
+                CustomerId = input.CustomerId,
+                DocumentDefinitionId = input.DocumentDefinitionId,
+                Status = ApprovalStatus.TemporarilyApproved,
+                Metadata = input.InstanceMetadata,
+                Notes = input.Notes,
+            };
+
+            byte[] fileByteArray = Convert.FromBase64String(input.DocumentContent.FileContext);
+
+            string contractCodes = string.Join(",", input.DocumentMigrationContracts.Select(c => c.Code));
+
+            UploadFileModel uploadFileModel = new()
+            {
+                Data = fileByteArray,
+                FileName = documentDto.Id.ToString(),
+                ContentType = input.DocumentContent.ContentType,
+                DocumentDefinitionCode = input.DocumentCode,
+                DocumentDefinitionVersion = input.DocumentVersion,
+                Reference = input.UserReference,
+                ApprovalStatus = ApprovalStatus.Approved,
+                ContractDefinitionCode = contractCodes
+            };
+
+            var documentInsertResponse = await AddAsync(documentDto, uploadFileModel.ObjectName);
+            if (!documentInsertResponse.IsSuccess)
+            {
+                return GenericResult<bool>.Fail(documentInsertResponse.ErrorMessage);
+            }
+
+            await _minioService.UploadFile(uploadFileModel);
+
+            if (input.DocumentContentOriginal is not null)
+            {
+                UploadFileModel uploadFileModelOriginal = new()
+                {
+                    Data = Convert.FromBase64String(input.DocumentContentOriginal.FileContext),
+                    FileName = documentDto.Id.ToString(),
+                    ContentType = input.DocumentContentOriginal.ContentType,
+                    DocumentDefinitionCode = input.DocumentCode,
+                    DocumentDefinitionVersion = input.DocumentVersion,
+                    Reference = input.UserReference,
+                    ApprovalStatus = ApprovalStatus.Approved,
+                    ContractDefinitionCode = contractCodes
+                };
+
+                 await _minioService.UploadFile(uploadFileModelOriginal);
+            }
+
+            foreach (var c in input.DocumentMigrationContracts)
+            {
+                await SaveUserSignedContract(c.Code, Guid.NewGuid(), documentInsertResponse.Data, ApprovalStatus.Approved, input.UserReference);
+            }
+            return GenericResult<bool>.Success(true);
+
+        }
     }
 
     public interface IDocumentAppService
@@ -487,6 +549,7 @@ namespace amorphie.contract.application
         Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
         Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
         Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
+        Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);
     }
 }
 
