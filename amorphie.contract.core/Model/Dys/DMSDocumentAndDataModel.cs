@@ -16,28 +16,3 @@ public class DMSDocumentModel
     public bool IsDeleted { get; set; }
 
 }
-
-public class DMSDocumentFileModel
-{
-    // <MetaData>string</MetaData>
-    // <FInfo>
-    //   <ServerID>string</ServerID>
-    //   <Library>string</Library>
-    //   <Cabinet>string</Cabinet>
-    //   <Folder>string</Folder>
-    //   <ID>string</ID>
-    //   <DocID>long</DocID>
-    //   <MimeType>string</MimeType>
-    //   <FileName>string</FileName>
-    //   <IsLegacy>boolean</IsLegacy>
-    //   <CreateTime>dateTime</CreateTime>
-    // </FInfo>
-    // <BinaryData>base64Binary</BinaryData>
-    // <Annotation>base64Binary</Annotation>
-    public long DocId { get; set; }
-    public string FileName { get; set; }
-    public string MimeType { get; set; }
-    public byte[] FileContent { get; set; }
-}
-
-public record DmsDocumentAndFileModel(DMSDocumentModel DocumentModel, DMSDocumentFileModel DocumentFile);
