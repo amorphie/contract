@@ -18,7 +18,6 @@ public class DysMigrationModule
     {
     }
 
-
     public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentContentId" };
 
     public override string? UrlFragment => "migration";
@@ -76,20 +75,28 @@ public class DysMigrationModule
 
             try
             {
-                var result = await dysMigrationAppService.RunMigrationWorker(inputDto.Message.Data);
-
-                if (result.IsSuccess)
+                if (docMigrationProcessing.IsExceededMaxRetryCount())
                 {
-                    dysDocTag.IsDeleted = true;
-
-                    docMigrationProcessing.ChangeStatus(result.Data.Status);
+                    docMigrationProcessing.ChangeStatus(AppConsts.Abandoned);
                 }
                 else
                 {
-                    docMigrationProcessing.ChangeStatus(AppConsts.Failed, result.ErrorMessage);
+                    var result = await dysMigrationAppService.RunMigrationWorker(inputDto.Message.Data);
+
+                    if (result.IsSuccess)
+                    {
+                        dysDocTag.IsDeleted = true;
+
+                        docMigrationProcessing.ChangeStatus(result.Data.Status);
+                    }
+                    else
+                    {
+                        docMigrationProcessing.ChangeStatus(AppConsts.Failed, result.ErrorMessage);
+                    }
                 }
 
                 await dbContext.SaveChangesAsync();
+                return GenericResult<bool>.Success(true);
             }
             catch (Exception ex)
             {
@@ -97,11 +104,13 @@ public class DysMigrationModule
                 await dbContext.SaveChangesAsync();
                 throw;
             }
+
         }
 
 
 
         return GenericResult<bool>.Success(true);
+
     }
 }
 

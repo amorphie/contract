@@ -33,6 +33,8 @@ namespace amorphie.contract.application
         public static readonly string Completed = "completed";
         public static readonly string Canceled = "canceled";
         public static readonly string Failed = "failed";
+        public static readonly string Abandoned = "abandoned";
+
 
         #endregion
 
