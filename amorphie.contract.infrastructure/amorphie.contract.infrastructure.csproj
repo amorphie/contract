@@ -8,6 +8,10 @@
   <ItemGroup>
     <PackageReference Include="amorphie.core" Version="1.1.30" />
     <PackageReference Include="itext" Version="8.0.4" />
+    <PackageReference Include="itext.pdfhtml" Version="5.0.4" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="8.0.4" />
+    <PackageReference Include="itext.bouncy-castle-fips-adapter" Version="8.0.4" />
+    
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
