@@ -25,7 +25,7 @@ public class KafkaMessage<T>
 
 public class DysDocumentTagKafkaInputDto
 {
-    private static readonly HashSet<string> AllowedTagIds = new() { "1685", "1761" };
+    private static readonly HashSet<string> AllowedTagIds = new() { "1685" };
 
     public long DocId { get; set; }
     public string TagId { get; set; } = default!;
