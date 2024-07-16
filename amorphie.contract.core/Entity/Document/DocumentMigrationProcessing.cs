@@ -8,7 +8,8 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentMigrationProcessing : EntityBase, ISoftDelete
     {
 
-        private readonly int MaxRetryCount = 5;
+        private readonly int maxRetryCount = 5;
+        private readonly int maxLength = 500;
 
         public long DocId { get; set; }
         public required string TagId { get; set; } = default!;
@@ -23,6 +24,12 @@ namespace amorphie.contract.core.Entity.Document
             ArgumentNullException.ThrowIfNullOrWhiteSpace(status, nameof(status));
 
             Status = status;
+
+            if (!String.IsNullOrEmpty(errorMessage) && errorMessage.Length > maxLength)
+            {
+                errorMessage = errorMessage[..maxLength];
+            }
+
             ErrorMessage = errorMessage;
         }
 
@@ -33,7 +40,7 @@ namespace amorphie.contract.core.Entity.Document
 
         public bool IsExceededMaxRetryCount()
         {
-            return TryCount > MaxRetryCount;
+            return TryCount > maxRetryCount;
         }
     }
 
