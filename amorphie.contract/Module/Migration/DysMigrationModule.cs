@@ -25,44 +25,8 @@ public class DysMigrationModule
 
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
-        // routeGroupBuilder.MapPost("dysDocument", MigrateDocument);
         routeGroupBuilder.MapPost("dysDocumentTag", MigrateDocumentTag);
     }
-
-    // [Topic(KafkaConsts.KafkaName, KafkaConsts.DysDocument)]
-    // [HttpPost]
-    // public async Task<GenericResult<bool>> MigrateDocument([FromBody] KafkaData<DysDocumentKafkaInputDto> inputDto, [FromServices] ProjectDbContext dbContext)
-    // {
-
-    //     var migrationDysDocument = new DocumentMigrationDysDocument
-    //     {
-    //         Channel = inputDto.Message.Data.Channel,
-    //         DocCreatedAt = inputDto.Message.Data.CreatedAt,
-    //         DocId = inputDto.Message.Data.Id,
-    //         Notes = inputDto.Message.Data.Notes,
-    //         OwnerId = inputDto.Message.Data.OwnerId,
-    //         Title = inputDto.Message.Data.Title,
-    //         IsDeleted = Convert.ToBoolean(inputDto.Message.Data.IsDeleted),
-    //     };
-
-    //     var dysDoc = await dbContext.DocumentMigrationDysDocuments.FirstOrDefaultAsync(k => k.DocId == inputDto.Message.Data.Id);
-
-    //     if (dysDoc is null)
-    //     {
-    //         await dbContext.DocumentMigrationDysDocuments.AddAsync(migrationDysDocument);
-    //     }
-    //     else
-    //     {
-    //         dysDoc.IsDeleted = Convert.ToBoolean(inputDto.Message.Data.IsDeleted);
-    //         dysDoc.OwnerId = inputDto.Message.Data.OwnerId;
-    //         dysDoc.Title = inputDto.Message.Data.Title;
-    //         dysDoc.Notes = inputDto.Message.Data.Notes;
-    //     }
-
-    //     await dbContext.SaveChangesAsync();
-
-    //     return GenericResult<bool>.Success(true);
-    // }
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.DysDocumentTag)]
     [HttpPost]
@@ -71,20 +35,16 @@ public class DysMigrationModule
                                                 [FromServices] IDysMigrationAppService dysMigrationAppService)
     {
 
-        var migrationDysDocumentTag = new DocumentMigrationDysDocumentTag
-        {
-            DocId = inputDto.Message.Data.DocId,
-            TagId = inputDto.Message.Data.TagId,
-            TagValues = inputDto.Message.Data.ParseTagValue(),
-        };
-        // migration başarılı ise DocumentMigrationDysDocumentTags tablosuna isDeleted = 1 yap;
-        // eğer contract dan gönderilen dys kaydı geldiyse direkt geç. 
-
         var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags.FirstOrDefaultAsync(k => k.DocId == inputDto.Message.Data.DocId);
 
         if (dysDocTag is null)
         {
-            await dbContext.DocumentMigrationDysDocumentTags.AddAsync(migrationDysDocumentTag);
+            await dbContext.DocumentMigrationDysDocumentTags.AddAsync(new DocumentMigrationDysDocumentTag
+            {
+                DocId = inputDto.Message.Data.DocId,
+                TagId = inputDto.Message.Data.TagId,
+                TagValues = inputDto.Message.Data.ParseTagValue(),
+            });
         }
         else
         {
@@ -111,12 +71,11 @@ public class DysMigrationModule
             {
                 var result = await dysMigrationAppService.RunMigrationWorker(inputDto.Message.Data);
 
-
                 if (result.IsSuccess)
                 {
                     dysDocTag.IsDeleted = true;
-                
-                    docMigrationProcessing.ChangeStatus(AppConsts.Completed);
+
+                    docMigrationProcessing.ChangeStatus(result.Data.Status);
                 }
                 else
                 {
@@ -124,7 +83,7 @@ public class DysMigrationModule
                 }
 
                 await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
-                
+
                 await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -134,23 +93,12 @@ public class DysMigrationModule
                 await dbContext.SaveChangesAsync();
                 throw;
             }
-
-
-            // await dbContext.DocumentMigrationProcessings.AddAsync(new DocumentMigrationProcessing
-            // {
-            //     DocId = inputDto.Message.Data.DocId,
-            //     Status = AppConsts.NotStarted,
-            //     TagId = inputDto.Message.Data.TagId,
-            // });
         }
 
 
 
         return GenericResult<bool>.Success(true);
     }
-
-
-
 }
 
 

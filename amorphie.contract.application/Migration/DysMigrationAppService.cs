@@ -1,9 +1,9 @@
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Dto;
-using amorphie.contract.core.Entity.Document;
+using amorphie.contract.core;
 using amorphie.contract.core.Extensions;
-using amorphie.contract.core.Model.Documents;
+using amorphie.contract.core.Model.Dys;
 using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Contexts;
@@ -14,7 +14,7 @@ namespace amorphie.contract.application.Migration;
 
 public interface IDysMigrationAppService
 {
-    Task<GenericResult<bool>> RunMigrationWorker(DysDocumentTagKafkaInputDto inputDto);
+    Task<GenericResult<RunMigrationWorkerOutputDto>> RunMigrationWorker(DysDocumentTagKafkaInputDto inputDto);
 }
 
 public class DysMigrationAppService : IDysMigrationAppService
@@ -47,18 +47,13 @@ public class DysMigrationAppService : IDysMigrationAppService
         _fileConverterFactory = fileConverterFactory;
     }
 
-    public async Task<GenericResult<bool>> RunMigrationWorker(DysDocumentTagKafkaInputDto inputDto)
+    public async Task<GenericResult<RunMigrationWorkerOutputDto>> RunMigrationWorker(DysDocumentTagKafkaInputDto inputDto)
     {
 
         using var transaction = _dbContext.Database.BeginTransaction();
         try
         {
             int tagId = Convert.ToInt32(inputDto.TagId);
-
-            // var documentDys = await _dbContext.DocumentDys
-            //                                     .Include(k => k.DocumentDefinition)
-            //                                     .AsNoTracking()
-            //                                     .FirstOrDefaultAsync(k => k.ReferenceId == tagId);
 
             var documentDys = await (from c in _dbContext.DocumentDys
                                      join d in
@@ -75,16 +70,8 @@ public class DysMigrationAppService : IDysMigrationAppService
             {
                 string warMessage = $"Dys TagID {tagId} için doküman tanımı bulunamadı.";
                 _logger.Warning(warMessage);
-                return GenericResult<bool>.Fail(warMessage);
+                return GenericResult<RunMigrationWorkerOutputDto>.Fail(warMessage);
             }
-
-            // await _dbContext.DocumentMigrationAggregations.AddAsync(new DocumentMigrationAggregation
-            // {
-            //     ContractCodes = new[] { new DocumentMigrationContractModel { Code = "cont-enes-16042024" } },
-            //     DocumentCode = documentDys.Code,
-            // });
-
-            // await _dbContext.SaveChangesAsync();
 
             var checkDocumentForContract = await _dbContext.DocumentMigrationAggregations
                                                     .AsNoTracking()
@@ -93,10 +80,15 @@ public class DysMigrationAppService : IDysMigrationAppService
             {
                 string warMessage = $"Dys TagID: {tagId} ve Code:{documentDys.Code} için doküman aggregations tanımı bulunamadı.";
                 _logger.Warning(warMessage);
-                return GenericResult<bool>.Fail(warMessage);
+                return GenericResult<RunMigrationWorkerOutputDto>.Fail(warMessage);
             }
 
             var dmsDocument = await _dysIntegrationService.GetDocumentAndData(inputDto.DocId);
+            if (dmsDocument.Data.DocumentModel.OwnerId == StaticValuesExtensions.Fora.UserCode)
+            {
+                return GenericResult<RunMigrationWorkerOutputDto>.Success(new RunMigrationWorkerOutputDto(AppConsts.Canceled));
+            }
+
             long customerNo = Convert.ToInt64(dmsDocument.Data.DocumentModel.CustomerNo);
 
 
@@ -105,7 +97,7 @@ public class DysMigrationAppService : IDysMigrationAppService
             if (!customerDMSInfo.IsSuccess || customerDMSInfo is null)
             {
                 _logger.Error("CustomerInfo servisinden kayıt çekilemedi. {customerNo}", customerNo);
-                return GenericResult<bool>.Fail(customerDMSInfo.ErrorMessage);
+                return GenericResult<RunMigrationWorkerOutputDto>.Fail(customerDMSInfo.ErrorMessage);
             }
 
             var userReference = customerDMSInfo.Data.GetReference();
@@ -113,37 +105,9 @@ public class DysMigrationAppService : IDysMigrationAppService
             var customerInputDto = new CustomerInputDto(userReference, userReference, customerNo, customerDMSInfo.Data.TaxNo);
             var customerId = await _customerAppService.UpsertAsync(customerInputDto);
 
-            var instanceMetadata = new List<MetadataDto>();
+            var instanceMetadata = PrepareInstanceMetadata(inputDto);
 
-            foreach (var item in inputDto.ParseTagValue())
-            {
-                instanceMetadata.Add(new MetadataDto
-                {
-                    Code = item.Key,
-                    Data = item.Value,
-                    Title = item.Key
-                });
-            }
-
-            string fileBase64 = Convert.ToBase64String(dmsDocument.Data.DocumentFile.FileContent);
-            string fileMimeType = dmsDocument.Data.DocumentFile.MimeType;
-            DocumentContentDto? documentContentOrgFile = null;
-
-            // File checker and converter 
-            if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))
-            {
-                documentContentOrgFile = new DocumentContentDto
-                {
-                    ContentType = dmsDocument.Data.DocumentFile.MimeType,
-                    FileContext = fileBase64,
-                    FileName = dmsDocument.Data.DocumentFile.FileName
-                };
-
-                var converter = _fileConverterFactory.GetConverter(dmsDocument.Data.DocumentFile.MimeType);
-                var fl = await converter.GetFileContentAsync(fileBase64);
-                fileBase64 = Convert.ToBase64String(fl);
-                fileMimeType = FileExtension.Pdf;
-            }
+            var (fileBase64, fileMimeType, documentContentOrgFile) = await ProcessDocumentContent(dmsDocument.Data);
 
             var migrateDocumentInput = new MigrateDocumentInputDto
             {
@@ -171,11 +135,16 @@ public class DysMigrationAppService : IDysMigrationAppService
             var result = await _documentAppService.MigrateDocument(migrateDocumentInput);
 
             if (result.IsSuccess)
+            {
                 await transaction.CommitAsync();
+                return GenericResult<RunMigrationWorkerOutputDto>.Success(new RunMigrationWorkerOutputDto(AppConsts.Completed));
+            }
             else
+            {
                 transaction.Rollback();
+                return GenericResult<RunMigrationWorkerOutputDto>.Fail(result.ErrorMessage);
+            }
 
-            return result;
         }
         catch
         {
@@ -185,4 +154,43 @@ public class DysMigrationAppService : IDysMigrationAppService
     }
 
 
+
+    #region Private Methods
+
+    private async Task<(string fileBase64, string fileMimeType, DocumentContentDto? documentContentOrgFile)> ProcessDocumentContent(DmsDocumentAndFileModel dmsDocument)
+    {
+        string fileBase64 = Convert.ToBase64String(dmsDocument.DocumentFile.FileContent);
+        string fileMimeType = dmsDocument.DocumentFile.MimeType;
+        DocumentContentDto? documentContentOrgFile = null;
+
+        if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))
+        {
+            documentContentOrgFile = new DocumentContentDto
+            {
+                ContentType = dmsDocument.DocumentFile.MimeType,
+                FileContext = fileBase64,
+                FileName = dmsDocument.DocumentFile.FileName
+            };
+
+            var converter = _fileConverterFactory.GetConverter(dmsDocument.DocumentFile.MimeType);
+            var fl = await converter.GetFileContentAsync(fileBase64);
+            fileBase64 = Convert.ToBase64String(fl);
+            fileMimeType = FileExtension.Pdf;
+        }
+
+        return (fileBase64, fileMimeType, documentContentOrgFile);
+    }
+
+
+    private List<MetadataDto> PrepareInstanceMetadata(DysDocumentTagKafkaInputDto inputDto)
+    {
+        return inputDto.ParseTagValue().Select(item => new MetadataDto
+        {
+            Code = item.Key,
+            Data = item.Value,
+            Title = item.Key
+        }).ToList();
+    }
+
+    #endregion
 }
