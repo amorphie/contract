@@ -8,7 +8,7 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentMigrationProcessing : EntityBase, ISoftDelete
     {
 
-        private readonly int maxRetryCount = 5;
+        private readonly int maxRetryCount = 2;
         private readonly int maxLength = 500;
 
         public long DocId { get; set; }
