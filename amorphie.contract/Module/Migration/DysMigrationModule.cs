@@ -56,16 +56,23 @@ public class DysMigrationModule
         if (inputDto.Message.Data.IsAllowedTagId())
         {
             // RUN migration
+            var docMigrationProcessing = await dbContext.DocumentMigrationProcessings
+                    .FirstOrDefaultAsync(k => k.DocId == inputDto.Message.Data.DocId && k.TagId == inputDto.Message.Data.TagId);
 
-            var docMigrationProcessing = new DocumentMigrationProcessing
+            if (docMigrationProcessing is null)
             {
-                Status = AppConsts.NotStarted,
-                TagId = inputDto.Message.Data.TagId,
-                DocId = inputDto.Message.Data.DocId,
-                LastTryTime = DateTime.UtcNow,
-            };
+                docMigrationProcessing = new DocumentMigrationProcessing
+                {
+                    Status = AppConsts.NotStarted,
+                    TagId = inputDto.Message.Data.TagId,
+                    DocId = inputDto.Message.Data.DocId,
+                    LastTryTime = DateTime.UtcNow,
+                };
 
-            docMigrationProcessing.IncreaseTryCount();
+                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
+            }
+            else
+                docMigrationProcessing.IncreaseTryCount();
 
             try
             {
@@ -82,14 +89,11 @@ public class DysMigrationModule
                     docMigrationProcessing.ChangeStatus(AppConsts.Failed, result.ErrorMessage);
                 }
 
-                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
-
                 await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 docMigrationProcessing.ChangeStatus(AppConsts.Failed, ex.Message);
-                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
                 await dbContext.SaveChangesAsync();
                 throw;
             }
