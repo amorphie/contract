@@ -30,7 +30,10 @@ namespace amorphie.contract.core.Entity.Document
                 errorMessage = errorMessage[..maxLength];
             }
 
-            ErrorMessage = errorMessage;
+            if (!String.IsNullOrEmpty(errorMessage))
+            {
+                ErrorMessage = errorMessage;
+            }
         }
 
         public void IncreaseTryCount()
