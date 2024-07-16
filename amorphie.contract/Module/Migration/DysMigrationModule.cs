@@ -18,7 +18,6 @@ public class DysMigrationModule
     {
     }
 
-
     public override string[]? PropertyCheckList => new string[] { "DocumentDefinitionId", "DocumentContentId" };
 
     public override string? UrlFragment => "migration";
@@ -56,48 +55,62 @@ public class DysMigrationModule
         if (inputDto.Message.Data.IsAllowedTagId())
         {
             // RUN migration
+            var docMigrationProcessing = await dbContext.DocumentMigrationProcessings
+                    .FirstOrDefaultAsync(k => k.DocId == inputDto.Message.Data.DocId && k.TagId == inputDto.Message.Data.TagId);
 
-            var docMigrationProcessing = new DocumentMigrationProcessing
+            if (docMigrationProcessing is null)
             {
-                Status = AppConsts.NotStarted,
-                TagId = inputDto.Message.Data.TagId,
-                DocId = inputDto.Message.Data.DocId,
-                LastTryTime = DateTime.UtcNow,
-            };
+                docMigrationProcessing = new DocumentMigrationProcessing
+                {
+                    Status = AppConsts.NotStarted,
+                    TagId = inputDto.Message.Data.TagId,
+                    DocId = inputDto.Message.Data.DocId,
+                    LastTryTime = DateTime.UtcNow,
+                };
 
-            docMigrationProcessing.IncreaseTryCount();
+                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
+            }
+            else
+                docMigrationProcessing.IncreaseTryCount();
 
             try
             {
-                var result = await dysMigrationAppService.RunMigrationWorker(inputDto.Message.Data);
-
-                if (result.IsSuccess)
+                if (docMigrationProcessing.IsExceededMaxRetryCount())
                 {
-                    dysDocTag.IsDeleted = true;
-
-                    docMigrationProcessing.ChangeStatus(result.Data.Status);
+                    docMigrationProcessing.ChangeStatus(AppConsts.Abandoned);
                 }
                 else
                 {
-                    docMigrationProcessing.ChangeStatus(AppConsts.Failed, result.ErrorMessage);
+                    var result = await dysMigrationAppService.RunMigrationWorker(inputDto.Message.Data);
+
+                    if (result.IsSuccess)
+                    {
+                        dysDocTag.IsDeleted = true;
+
+                        docMigrationProcessing.ChangeStatus(result.Data.Status);
+                    }
+                    else
+                    {
+                        docMigrationProcessing.ChangeStatus(AppConsts.Failed, result.ErrorMessage);
+                    }
                 }
 
-                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
-
                 await dbContext.SaveChangesAsync();
+                return GenericResult<bool>.Success(true);
             }
             catch (Exception ex)
             {
                 docMigrationProcessing.ChangeStatus(AppConsts.Failed, ex.Message);
-                await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
                 await dbContext.SaveChangesAsync();
                 throw;
             }
+
         }
 
 
 
         return GenericResult<bool>.Success(true);
+
     }
 }
 

@@ -8,6 +8,8 @@ namespace amorphie.contract.core.Entity.Document
     public class DocumentMigrationProcessing : EntityBase, ISoftDelete
     {
 
+        private readonly int MaxRetryCount = 5;
+
         public long DocId { get; set; }
         public required string TagId { get; set; } = default!;
         public required string Status { get; set; } = default!;
@@ -27,6 +29,11 @@ namespace amorphie.contract.core.Entity.Document
         public void IncreaseTryCount()
         {
             TryCount++;
+        }
+
+        public bool IsExceededMaxRetryCount()
+        {
+            return TryCount > MaxRetryCount;
         }
     }
 
