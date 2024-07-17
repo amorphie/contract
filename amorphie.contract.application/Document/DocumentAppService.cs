@@ -536,13 +536,24 @@ namespace amorphie.contract.application
 
         public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
         {
+
+            var checkDocument = await _dbContext.Document
+                    .FirstOrDefaultAsync(k => k.DocumentDefinitionId == input.DocumentDefinitionId
+                                        && k.Status == ApprovalStatus.Approved
+                                        && k.CustomerId == input.CustomerId);
+
+            if (checkDocument is not null)
+            {
+                checkDocument.Status = ApprovalStatus.Canceled;
+            }
+
             var documentDto = new DocumentDto
             {
                 Id = Guid.NewGuid(),
                 DocumentContent = input.DocumentContent,
                 CustomerId = input.CustomerId,
                 DocumentDefinitionId = input.DocumentDefinitionId,
-                Status = ApprovalStatus.TemporarilyApproved,
+                Status = ApprovalStatus.Approved,
                 Metadata = input.InstanceMetadata,
                 Notes = input.Notes,
             };
@@ -585,8 +596,12 @@ namespace amorphie.contract.application
                     ContractDefinitionCode = contractCodes
                 };
 
-                 await _minioService.UploadFile(uploadFileModelOriginal);
+                await _minioService.UploadFile(uploadFileModelOriginal);
             }
+
+
+            //Eğer eski kayıtlı doküman varsa onu cancel' a çekip yenisini kaydediyoruz.
+            await _dbContext.SaveChangesAsync();
 
             foreach (var c in input.DocumentMigrationContracts)
             {
