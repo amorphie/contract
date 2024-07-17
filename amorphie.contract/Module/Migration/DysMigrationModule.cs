@@ -34,23 +34,7 @@ public class DysMigrationModule
                                                 [FromServices] IDysMigrationAppService dysMigrationAppService)
     {
 
-        var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags.FirstOrDefaultAsync(k => k.DocId == inputDto.Message.Data.DocId);
-
-        if (dysDocTag is null)
-        {
-            await dbContext.DocumentMigrationDysDocumentTags.AddAsync(new DocumentMigrationDysDocumentTag
-            {
-                DocId = inputDto.Message.Data.DocId,
-                TagId = inputDto.Message.Data.TagId,
-                TagValues = inputDto.Message.Data.ParseTagValue(),
-            });
-        }
-        else
-        {
-            dysDocTag.TagValues = inputDto.Message.Data.ParseTagValue();
-        }
-
-        await dbContext.SaveChangesAsync();
+        var dysDocTag = await UpsertDocumentMigrationDysDocTag(dbContext, inputDto.Message.Data);
 
         if (inputDto.Message.Data.IsAllowedTagId())
         {
@@ -117,6 +101,30 @@ public class DysMigrationModule
 
         return GenericResult<bool>.Success(true);
 
+    }
+
+    private async Task<DocumentMigrationDysDocumentTag> UpsertDocumentMigrationDysDocTag(ProjectDbContext dbContext, DysDocumentTagKafkaInputDto inputDto)
+    {
+        var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags.FirstOrDefaultAsync(k => k.DocId == inputDto.DocId);
+
+        if (dysDocTag is null)
+        {
+            dysDocTag = new DocumentMigrationDysDocumentTag
+            {
+                DocId = inputDto.DocId,
+                TagId = inputDto.TagId,
+                TagValues = inputDto.ParseTagValue(),
+            };
+
+            await dbContext.DocumentMigrationDysDocumentTags.AddAsync(dysDocTag);
+        }
+        else
+        {
+            dysDocTag.TagValues = inputDto.ParseTagValue();
+        }
+
+        await dbContext.SaveChangesAsync();
+        return dysDocTag;
     }
 }
 
