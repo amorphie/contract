@@ -204,6 +204,7 @@ namespace amorphie.contract.application.Contract
 
         private DocumentInstanceDto? MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
         {
+            //TODO: DMNResult' ı bir sonraki fazda bir patter ile kullan. 
             DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
             bool isVisible = dmnResultDto?.IsVisible ?? true;
             if (!isVisible)
