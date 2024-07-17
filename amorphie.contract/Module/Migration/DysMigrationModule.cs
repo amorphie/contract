@@ -98,6 +98,12 @@ public class DysMigrationModule
                 await dbContext.SaveChangesAsync();
                 return GenericResult<bool>.Success(true);
             }
+            catch (NotSupportedException fileSupportedEx)
+            {
+                docMigrationProcessing.ChangeStatus(AppConsts.Failed, fileSupportedEx.Message);
+                // desteklenmeyen bir dosya türü varsa tekrar deneme yapmaya gerek yok.
+                return GenericResult<bool>.Success(true);
+            }
             catch (Exception ex)
             {
                 docMigrationProcessing.ChangeStatus(AppConsts.Failed, ex.Message);
