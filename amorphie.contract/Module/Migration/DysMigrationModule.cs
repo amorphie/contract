@@ -105,7 +105,9 @@ public class DysMigrationModule
 
     private async Task<DocumentMigrationDysDocumentTag> UpsertDocumentMigrationDysDocTag(ProjectDbContext dbContext, DysDocumentTagKafkaInputDto inputDto)
     {
-        var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags.FirstOrDefaultAsync(k => k.DocId == inputDto.DocId);
+        var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags
+                                .IgnoreQueryFilters()
+                                .FirstOrDefaultAsync(k => k.DocId == inputDto.DocId);
 
         if (dysDocTag is null)
         {
@@ -120,6 +122,7 @@ public class DysMigrationModule
         }
         else
         {
+            dysDocTag.IsDeleted = false;
             dysDocTag.TagValues = inputDto.ParseTagValue();
         }
 
