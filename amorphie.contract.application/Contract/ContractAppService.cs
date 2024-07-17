@@ -155,7 +155,9 @@ namespace amorphie.contract.application.Contract
             foreach (var contractDoc in contractDefinition.ContractDocumentDetails.OrderBy(k => k.Order))
             {
                 var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode, dmnResults);
-                documentInstanceDtos.Add(documentInstanceDto);
+                if (documentInstanceDto is not null)
+                    documentInstanceDtos.Add(documentInstanceDto);
+
             }
 
             List<DocumentGroupInstanceDto> docGroupInstanceDtos = new();
@@ -200,8 +202,13 @@ namespace amorphie.contract.application.Contract
 
         }
 
-        private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
+        private DocumentInstanceDto? MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
         {
+            DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+            bool isVisible = dmnResultDto?.IsVisible ?? true;
+            if (!isVisible)
+                return null;
+
             var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).ToArray();
 
             var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode.Select(k => k.SemVer).ToArray());
@@ -213,9 +220,7 @@ namespace amorphie.contract.application.Contract
 
             // Checking contract document min version...
             var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-            var template = documentLastVersion.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
-
-            DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+            var template = documentLastVersion.DocumentOnlineSign?.Templates?.FirstOrDefault(x => x.LanguageCode == langCode);
 
             var documentInstance = new DocumentInstanceDto
             {
@@ -235,6 +240,7 @@ namespace amorphie.contract.application.Contract
                     }
                 }
             };
+
 
             if (customerDocument is not null)
             {
@@ -278,9 +284,12 @@ namespace amorphie.contract.application.Contract
 
                 // Checking contract document min version...
                 var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-                var template = documentLastVersion.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+                var template = documentLastVersion.DocumentOnlineSign.Templates?.FirstOrDefault(x => x.LanguageCode == langCode);
 
                 DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+                bool isVisible = dmnResultDto?.IsVisible ?? true;
+                if (!isVisible)
+                    continue;
 
                 var documentInstance = new DocumentInstanceDto
                 {
