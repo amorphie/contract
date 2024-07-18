@@ -161,7 +161,7 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body) as HeaderFilterModel;
 
             var inputDto = ZeebeMessageHelper.MapToDto<ContractInputDto>(body);
-            var dmnResult = ZeebeMessageHelper.MapToDto<List<DmnResultDto>>(body, ZeebeConsts.DmnResult) as List<DmnResultDto>;
+            var dmnResult = ZeebeMessageHelper.MapToDtoWithNullCheck<List<DmnResultDto>>(body, ZeebeConsts.DmnResult) as List<DmnResultDto>;
 
             var contractServiceInput = new ContractInstanceInputDto
             {

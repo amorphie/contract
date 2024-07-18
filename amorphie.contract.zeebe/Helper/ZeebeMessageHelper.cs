@@ -114,6 +114,31 @@ public static class ZeebeMessageHelper
         return resultDto;
     }
 
+    public static T MapToDtoWithNullCheck<T>(dynamic body, string variableName)
+    {
+
+        if (body.ToString().IndexOf(variableName) == -1)
+        {
+            return default;
+        }
+
+        var jsonDto = body.GetProperty(variableName).ToString();
+
+        if (String.IsNullOrWhiteSpace(jsonDto))
+        {
+            return default;
+        }
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        T resultDto = JsonSerializer.Deserialize<T>(jsonDto, options);
+
+        return resultDto;
+    }
+
     public static string GetPropertyValue(dynamic body, string variableName)
     {
 
