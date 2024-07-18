@@ -8,6 +8,7 @@ using Dapr;
 using amorphie.contract.core.Response;
 using amorphie.contract.application.Migration;
 using Microsoft.EntityFrameworkCore;
+using amorphie.contract.core.Services.Kafka;
 
 namespace amorphie.contract;
 
@@ -25,14 +26,21 @@ public class DysMigrationModule
     public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
     {
         routeGroupBuilder.MapPost("dysDocumentTag", MigrateDocumentTag);
+        routeGroupBuilder.MapGet("runWorker", MigrateDocumentByTagId);
     }
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.DysDocumentTag)]
     [HttpPost]
     public async Task<GenericResult<bool>> MigrateDocumentTag([FromBody] KafkaData<DysDocumentTagKafkaInputDto> inputDto,
-                                                [FromServices] ProjectDbContext dbContext,
-                                                [FromServices] IDysMigrationAppService dysMigrationAppService)
+                                               [FromServices] ProjectDbContext dbContext,
+                                               [FromServices] IDysMigrationAppService dysMigrationAppService)
     {
+
+        if (inputDto.Data is not null)
+        {
+            // dapr tarafından kendimiz publish ettiğimizde farklı formatta geldiği için message tekrar dolduruldu.
+            inputDto.Message.Data = inputDto.Data;
+        }
 
         var dysDocTag = await UpsertDocumentMigrationDysDocTag(dbContext, inputDto.Message.Data);
 
@@ -100,12 +108,40 @@ public class DysMigrationModule
 
         }
 
+        return GenericResult<bool>.Success(true);
+    }
 
+    public async ValueTask<GenericResult<bool>> MigrateDocumentByTagId([
+            FromServices] ProjectDbContext dbContext,
+            [FromServices] IDysProducer dysProducer,
+            CancellationToken token,
+            string tagId)
+    {
+
+        var dysDocuments = await dbContext.DocumentMigrationDysDocumentTags
+                                    .Where(k => k.TagId == tagId).ToListAsync(token);
+
+
+        foreach (var item in dysDocuments)
+        {
+
+            var docDto = new DysDocumentTagKafkaInputDto
+            {
+                DocId = item.DocId,
+                TagId = item.TagId,
+                TagValue = item.TagValuesOrg,
+                IncludeAllowedTagId = tagId
+            };
+
+            await dysProducer.PublishDysDataAgainToContract(docDto);
+        }
 
         return GenericResult<bool>.Success(true);
 
     }
 
+
+    #region  Private Methods
     private async Task<DocumentMigrationDysDocumentTag> UpsertDocumentMigrationDysDocTag(ProjectDbContext dbContext, DysDocumentTagKafkaInputDto inputDto)
     {
         var dysDocTag = await dbContext.DocumentMigrationDysDocumentTags
@@ -119,6 +155,7 @@ public class DysMigrationModule
                 DocId = inputDto.DocId,
                 TagId = inputDto.TagId,
                 TagValues = inputDto.ParseTagValue(),
+                TagValuesOrg = inputDto.TagValue
             };
 
             await dbContext.DocumentMigrationDysDocumentTags.AddAsync(dysDocTag);
@@ -127,11 +164,14 @@ public class DysMigrationModule
         {
             dysDocTag.IsDeleted = false;
             dysDocTag.TagValues = inputDto.ParseTagValue();
+            dysDocTag.TagValuesOrg = inputDto.TagValue;
         }
 
         await dbContext.SaveChangesAsync();
         return dysDocTag;
     }
+
+    #endregion
 }
 
 
