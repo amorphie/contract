@@ -10,6 +10,7 @@ namespace amorphie.contract.core.Entity.Document
         public long DocId { get; set; }
         public string TagId { get; set; } = default!;
         public Dictionary<string, string> TagValues { get; set; } = default!;
+        public string TagValuesOrg { get; set; } = default!;
         public bool IsDeleted { get; set; }
     }
 

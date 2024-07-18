@@ -4,13 +4,29 @@ public class DysDocumentTagKafkaInputDto
 {
     private static readonly HashSet<string> AllowedTagIds = new() { "1685" };
 
+
+    public DysDocumentTagKafkaInputDto()
+    { }
+
     public long DocId { get; set; }
-    public string TagId { get; set; } = default!;
-    public string TagValue { get; set; } = default!;
+    public string TagId { get; set; }
+    public string TagValue { get; set; }
+
+    public string? IncludeAllowedTagId { get; set; }
 
     public bool IsAllowedTagId()
     {
+        if (!String.IsNullOrEmpty(IncludeAllowedTagId))
+        {
+            AllowedTagIds.Add(IncludeAllowedTagId);
+        }
+
         return AllowedTagIds.Contains(TagId);
+    }
+
+    public void SetAllowedTagId(string tagId)
+    {
+        AllowedTagIds.Add(tagId);
     }
 
     public Dictionary<string, string> ParseTagValue()
