@@ -162,7 +162,7 @@ namespace amorphie.contract.zeebe.Modules
             }
             else
             {
-                var renderInputDto = inputDto.DocumentList.Select(x => new { x.Code, x.LastVersion }).ToList();
+                var renderInputDto = inputDto.DocumentList.Where(x=>x.Status!= ApprovalStatus.Approved.ToString()).Select(x => new { x.Code, x.LastVersion }).ToList();
                 documentForApprovalList = documentForApproval.Where(x => renderInputDto.Any(d => d.Code == x.DocumentDefinitionCode && d.LastVersion == x.DocumentSemanticVersion)).ToList();
             }
 
