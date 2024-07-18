@@ -89,7 +89,7 @@ namespace amorphie.contract.application.Contract
             Guid contractInstanceId = req.ContractInstanceId;
             await SaveUserSignedContract(contractInstanceId, req, contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList, contractStatus);
 
-            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
+            var documentList = contractInstaceResponseDto.Data.DocumentList.ToList();
             var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
 
             var contractInstanceDto = new ContractInstanceDto()
@@ -97,7 +97,7 @@ namespace amorphie.contract.application.Contract
                 Code = req.ContractCode,
                 Title = contractInstaceResponseDto.Data.ContractTitle,
                 ContractInstanceId = contractInstanceId,
-                DocumentList = unSignedDocuments,
+                DocumentList = documentList,
                 Status = contractStatus.ToString(),
                 DocumentGroupList = unSignedDocumentGroups
             };
@@ -134,6 +134,8 @@ namespace amorphie.contract.application.Contract
                                        DocumentDefinitionId = df.Id,
                                        DocumentCode = df.Code,
                                        SemVer = df.Semver,
+                                       DocumentContentId = userDoc != null ? userDoc.DocumentContentId : (Guid?)null,
+                                       DocumentCreatedAt = userDoc != null ? userDoc.CreatedAt : (DateTime?)null,
                                        IsSigned = userDoc.Customer != null && userDoc.Status == ApprovalStatus.Approved,
                                        DocumentInstanceId = userDoc != null ? userDoc.Id : (Guid?)null,
                                        DocumentOnlineSign = new DocumentOnlineSignDto
@@ -248,12 +250,18 @@ namespace amorphie.contract.application.Contract
                 documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
                 documentInstance.Status = ApprovalStatus.Approved.ToString();
                 documentInstance.Sign();
+                documentInstance.MinioUrl = MinioExtension.DocumentDownloadMinioUrl(customerDocument?.DocumentContentId.ToString());
+                documentInstance.DocumentCreatedAt = customerDocument.DocumentCreatedAt;
             }
             else
             {
-                if (documents.Any(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned))
+                var signedHasNewVersionDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned);
+
+                if (signedHasNewVersionDocument != null)
                 {
                     documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
+                    documentInstance.MinioUrl = MinioExtension.DocumentDownloadMinioUrl(signedHasNewVersionDocument?.DocumentContentId.ToString());
+                    documentInstance.DocumentCreatedAt = signedHasNewVersionDocument.DocumentCreatedAt;
                 }
             }
 
