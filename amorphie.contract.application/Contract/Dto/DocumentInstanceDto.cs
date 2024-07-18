@@ -7,13 +7,14 @@ namespace amorphie.contract.application.Contract.Dto
     {
         [JsonIgnore]
         public Guid? DocumentInstanceId { get; set; }
+        public string? MinioUrl { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
         public string Code { get; set; }
         public string? UseExisting { get; set; }
         public string? MinVersion { get; set; }
         public bool IsRequired { get; set; }
-
+         public DateTime? DocumentCreatedAt { get; set; }
         public string? LastVersion { get; set; }
 
         [JsonIgnore]
@@ -23,6 +24,7 @@ namespace amorphie.contract.application.Contract.Dto
         {
             IsSigned = true;
         }
+        
 
         public DocumentInstanceDetailDto DocumentDetail { get; set; } = new DocumentInstanceDetailDto();
 
