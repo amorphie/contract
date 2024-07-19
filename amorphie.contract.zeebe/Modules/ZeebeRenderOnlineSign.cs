@@ -96,7 +96,7 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
-            var documentForApproval = ZeebeMessageHelper.MapToDto<List<DocumentForApproval>>(body) as List<DocumentForApproval>;
+            var documentForApproval = ZeebeMessageHelper.MapToDto<List<DocumentForApproval>>(body,ZeebeConsts.RenderedDocumentsForApproval) as List<DocumentForApproval>;
             List<DocumentForApproval> documentForApprovalList = new();
             ContractWithoutHeaderDto? withoutHeaderDto = null;
 
