@@ -149,7 +149,10 @@
         <bpmn:messageEventDefinition id="MessageEventDefinition_1dy4sze" messageRef="Message_3mi5hid" />
       </bpmn:intermediateCatchEvent>
       <bpmn:sequenceFlow id="Flow_05tzll8" sourceRef="Gateway_0o7eoit" targetRef="Activity_1wu5hx5">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if ClientComponent.IsInculededApprovedDocuments != null then ClientComponent.IsInculededApprovedDocuments else TRXcontractstartStartContract.Data.entityData.ClientComponent.  IsInculededApprovedDocuments
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if ClientComponent.IsInculededApprovedDocuments != null then ClientComponent.IsInculededApprovedDocuments 
+else if TRXcontractstartStartContract.Data.entityData.ClientComponent.IsInculededApprovedDocuments = true then 
+  true
+else false
  
  
  </bpmn:conditionExpression>
@@ -158,7 +161,7 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="amorphie-workflow-set-state" retries="1" />
           <zeebe:taskHeaders>
-            <zeebe:header key="TARGET_STATE" value="default" />
+            <zeebe:header key="TARGET_STATE" value="auto-continue-input-state" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_05tzll8</bpmn:incoming>

@@ -182,8 +182,8 @@ namespace amorphie.contract.zeebe.Modules
             messageVariables.Variables.Add(ZeebeConsts.ContractOutputDto, instanceDto.Data);
 
             messageVariables.Variables.Add(ZeebeConsts.ContractStatus, instanceDto.Data.Status);
-            
-            messageVariables.SetAdditionalData(instanceDto.Data.DocumentApprovedList);
+
+            messageVariables.SetAdditionalData(new ApprovedDocument(instanceDto.Data.DocumentApprovedList));
 
             messageVariables.Success = true;
 
