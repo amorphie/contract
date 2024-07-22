@@ -1,13 +1,12 @@
+using amorphie.contract.core.Extensions;
+
 namespace amorphie.contract.application
 {
 
     public static class AppConsts
     {
         #region Contract Status
-        public static readonly string InProgress = "in-progress";
-        public static readonly string Valid = "valid";
         public static readonly string NotValid = "not-valid";
-        public static readonly string Expired = "expired";
 
         #endregion
 
@@ -23,8 +22,21 @@ namespace amorphie.contract.application
 
         #region Content Types
 
-        public static readonly string[] AllowedContentTypes = ["application/pdf"];
+        public static readonly string[] AllowedContentTypes = [FileExtension.Pdf];
 
         #endregion
+
+        #region Global Processing
+
+        public static readonly string NotStarted = "notStarted";
+        public static readonly string InProgress = "inProgress";
+        public static readonly string Completed = "completed";
+        public static readonly string Canceled = "canceled";
+        public static readonly string Failed = "failed";
+        public static readonly string Abandoned = "abandoned";
+
+
+        #endregion
+
     }
 }

@@ -12,6 +12,7 @@ namespace amorphie.contract.application
 
         [Required]
         public required string FileName { get; set; } = default!;
+
     }
 
 }

@@ -2,6 +2,7 @@ using System.Reflection;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
+using amorphie.contract.application.Migration;
 using amorphie.contract.application.CustomerApi;
 using amorphie.contract.application.MessagingGateway;
 using amorphie.contract.application.TemplateEngine;
@@ -36,11 +37,13 @@ namespace amorphie.contract.application
             services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
             services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
             services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
+            services.AddScoped<IFileContentProvider, HtmlToPdfConverter>();
             services.AddScoped<FileConverterFactory>();
 
             services.AddScoped<IPdfManager, ITextPdfManager>();
 
             services.AddTransient<ITagAppService, TagAppService>();
+            services.AddTransient<IDysMigrationAppService, DysMigrationAppService>();
 
             return services;
         }

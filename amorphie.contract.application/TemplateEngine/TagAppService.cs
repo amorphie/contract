@@ -102,8 +102,28 @@ namespace amorphie.contract.application.TemplateEngine
             }
         }
 
+        //Bracket kontrolü ve return eden metodu buraya alalım. reference ve tagFieldi dönsün
+        private (string reference, string tagField) GetReferenceAndTagField(string reference)
+        {
+            int startIndex = reference.IndexOf('[');
+            int endIndex = reference.LastIndexOf(']');
+
+            string tagField = "";
+
+            if (startIndex >= 0 && endIndex > startIndex)
+            {
+                string beforeBracket = reference.Substring(0, startIndex);
+                string insideBracket = reference.Substring(startIndex + 1, endIndex - startIndex - 1);
+                reference = beforeBracket;
+                tagField = insideBracket;
+            }
+
+            return (reference, tagField);
+        }
+
         public async Task<GenericResult<Dictionary<string, string>>> GetTagMetadata(List<MetadataDto> metadata, HeaderFilterModel headerModel)
         {
+            var cachedTagPath = new HashSet<GetRenderDataTagInputDto>();
             var cachedTagValue = new Dictionary<string, string>();
             var resultTags = new Dictionary<string, string>();
 
@@ -117,13 +137,20 @@ namespace amorphie.contract.application.TemplateEngine
                         throw new InvalidOperationException($"Tag keywords are incorrectly defined {item.Data}");
                     }
 
-                    if (cachedTagValue.TryGetValue(item.Code, out var tagValue))
+                    var reference = tagKeywords[4];
+
+                    (reference, string tagField) = GetReferenceAndTagField(reference);
+
+                    if (!String.IsNullOrEmpty(tagField) && cachedTagValue.TryGetValue(tagField, out var tagFieldInit))
+                    {
+                        resultTags[item.Code] = tagFieldInit;
+                    }
+                    else if (cachedTagValue.TryGetValue(item.Code, out var tagValue))
                     {
                         resultTags[item.Code] = tagValue;
                     }
                     else
                     {
-                        var reference = tagKeywords[4];
 
                         if (!allowedQueries.Contains(reference))
                         {
@@ -141,25 +168,32 @@ namespace amorphie.contract.application.TemplateEngine
                             Reference = referenceValue,
                         };
 
-                        var tagServiceResponse = await GetRenderValues(tagInput);
-
-                        if (!tagServiceResponse.IsSuccess)
+                        if (!cachedTagPath.Contains(tagInput))
                         {
-                            throw new Exception($"Failed to retrieve data from Tag service! {tagServiceResponse.ErrorMessage}");
+                            var tagServiceResponse = await GetRenderValues(tagInput);
+                            cachedTagPath.Add(tagInput);
+                            if (!tagServiceResponse.IsSuccess)
+                            {
+                                throw new Exception($"Failed to retrieve data from Tag service! {tagServiceResponse.ErrorMessage}");
+                            }
+
+                            if (tagServiceResponse.Data is null || tagServiceResponse.Data.Count == 0)
+                            {
+                                _logger.Warning("Tag service returned empty data {Data}", tagInput.ToString());
+                                continue;
+                            }
+
+                            foreach (var kvp in tagServiceResponse.Data)
+                            {
+                                cachedTagValue[kvp.Key] = kvp.Value;
+                            }
                         }
 
-                        if (tagServiceResponse.Data is null || tagServiceResponse.Data.Count == 0)
+                        if (!String.IsNullOrEmpty(tagField) && cachedTagValue.TryGetValue(tagField, out var tagPathValue))
                         {
-                            _logger.Warning("Tag service returned empty data {Data}", tagInput.ToString());
-                            continue;
+                            resultTags[item.Code] = tagPathValue;
                         }
-
-                        foreach (var kvp in tagServiceResponse.Data)
-                        {
-                            cachedTagValue[kvp.Key] = kvp.Value;
-                        }
-
-                        if (cachedTagValue.TryGetValue(item.Code, out var newTagValue))
+                        else if (cachedTagValue.TryGetValue(item.Code, out var newTagValue))
                         {
                             resultTags[item.Code] = newTagValue;
                         }

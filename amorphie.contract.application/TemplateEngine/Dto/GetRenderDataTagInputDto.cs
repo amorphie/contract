@@ -16,5 +16,22 @@ namespace amorphie.contract.application.TemplateEngine.Dto
         {
             return $"Domain Name: {DomainName}, Entity Name: {EntityName}, Tag Name: {TagName}, Reference: {Reference}";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            var other = (GetRenderDataTagInputDto)obj;
+            return DomainName == other.DomainName &&
+                EntityName == other.EntityName &&
+                TagName == other.TagName &&
+                Reference == other.Reference;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(DomainName, EntityName, TagName, Reference);
+        }
     }
 }

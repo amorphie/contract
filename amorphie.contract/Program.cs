@@ -85,7 +85,6 @@ var app = builder.Build();
 app.UseRouting();
 app.UseCors();
 app.UseAllElasticApm(app.Configuration);
-app.UseCloudEvents();
 app.UseApiExceptionHandleMiddlewareExtensions();
 app.UseApiHeaderHandleMiddlewareExtensions();
 app.MapSubscribeHandler();

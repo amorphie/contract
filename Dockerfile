@@ -1,11 +1,11 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.6 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.7 AS base
 WORKDIR /app
 
 RUN adduser amorphie-contractuser --disabled-password --gecos "" && chown -R amorphie-contractuser:amorphie-contractuser /app
 USER amorphie-contractuser
 
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.302 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.303 AS build
 WORKDIR /src
 ENV DOTNET_NUGET_SIGNATURE_VERIFICATION=false
 

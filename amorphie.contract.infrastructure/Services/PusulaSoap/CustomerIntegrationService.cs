@@ -39,24 +39,57 @@ public class CustomerIntegrationService : ICustomerIntegrationService
 
     public async Task<GenericResult<PusulaCustomerInfoResponseModel>> GetCustomerInfo(long customerNo)
     {
+        var customerInfoResponse = new PusulaCustomerInfoResponseModel();
 
-        var result = await customerServicesSoapClient.LoadCustomerGeneralNewAsync(customerNo);
-
-        foreach (System.Data.DataTable table in result.Tables)
+        try
         {
-            foreach (System.Data.DataRow row in table.Rows)
+            var result = await customerServicesSoapClient.LoadCustomerGeneralNewAsync(customerNo);
+            bool foundMainB = false, foundCitizen = false, foundTaxNo = false;
+
+            foreach (System.Data.DataTable table in result.Tables)
             {
-                var mainBranchCode = row["MainBranchCode"];
-
-                if (mainBranchCode != DBNull.Value)
+                foreach (System.Data.DataRow row in table.Rows)
                 {
-                    var _mainBranchCode = Convert.ToInt32(mainBranchCode);
-                    return GenericResult<PusulaCustomerInfoResponseModel>.Success(new PusulaCustomerInfoResponseModel(_mainBranchCode));
-                }
-            }
-        }
+                    var mainBranchCode = row["MainBranchCode"];
 
-        _logger.Error("MainBranchCode not found. {customerNo}", customerNo);
-        return GenericResult<PusulaCustomerInfoResponseModel>.Fail("MainBranchCode not found");
+                    if (mainBranchCode != DBNull.Value)
+                    {
+                        foundMainB = true;
+                        var _mainBranchCode = Convert.ToInt32(mainBranchCode);
+                        customerInfoResponse.MainBranchCode = _mainBranchCode;
+                    }
+
+                    var citizenshipNumber = row["CitizenshipNumber"];
+                    if (citizenshipNumber != DBNull.Value)
+                    {
+                        foundCitizen = true;
+                        var _citizenshipNumber = Convert.ToString(citizenshipNumber);
+                        customerInfoResponse.CitizenshipNumber = _citizenshipNumber;
+                    }
+
+                    var taxNo = row["TaxNo"];
+                    if (taxNo != DBNull.Value)
+                    {
+                        foundTaxNo = true;
+                        var _taxNo = Convert.ToString(taxNo);
+                        customerInfoResponse.TaxNo = _taxNo;
+                    }
+
+                    if (foundMainB && foundCitizen && foundTaxNo)
+                        break;
+                }
+
+                if (foundMainB && foundCitizen && foundTaxNo)
+                    break;
+            }
+
+            return GenericResult<PusulaCustomerInfoResponseModel>.Success(customerInfoResponse);
+
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to fetch LoadCustomerGeneralNew {customerNo}", customerNo);
+            return GenericResult<PusulaCustomerInfoResponseModel>.Fail($"Failed to fetch LoadCustomerGeneralNew {customerNo} Err:{ex.Message}");
+        }
     }
 }

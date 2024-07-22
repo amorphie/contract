@@ -97,11 +97,20 @@ public class ProjectDbContext : DbContext
 
 
     #endregion
-    
+
     public DbSet<Customer> Customer { get; set; }
     public DbSet<CustomerCommunication> CustomerCommunication { get; set; }
     public DbSet<Contract> Contract { get; set; }
     protected IConfiguration Configuration { get; }
+
+    #region Dys Migration
+
+    public DbSet<DocumentMigrationAggregation> DocumentMigrationAggregations { get; set; }
+    // public DbSet<DocumentMigrationDysDocument> DocumentMigrationDysDocuments { get; set; }
+    public DbSet<DocumentMigrationDysDocumentTag> DocumentMigrationDysDocumentTags { get; set; }
+    public DbSet<DocumentMigrationProcessing> DocumentMigrationProcessings { get; set; }
+
+    #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
