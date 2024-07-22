@@ -168,8 +168,7 @@ namespace amorphie.contract.zeebe.Modules
 
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
 
-            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, inputDto.DocumentList
-                    .Where(x => x.Status == ApprovalStatus.Approved.ToString()).ToList(), withoutHeaderDto));
+            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList,  withoutHeaderDto));
 
             messageVariables.Success = true;
 
