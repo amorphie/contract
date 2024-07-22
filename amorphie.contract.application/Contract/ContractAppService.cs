@@ -89,15 +89,16 @@ namespace amorphie.contract.application.Contract
             Guid contractInstanceId = req.ContractInstanceId;
             await SaveUserSignedContract(contractInstanceId, req, contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList, contractStatus);
 
-            var documentList = contractInstaceResponseDto.Data.DocumentList.ToList();
+            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
             var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
 
             var contractInstanceDto = new ContractInstanceDto()
             {
                 Code = req.ContractCode,
                 Title = contractInstaceResponseDto.Data.ContractTitle,
+                DocumentApprovedList = contractInstaceResponseDto.Data.DocumentApprovedList,
                 ContractInstanceId = contractInstanceId,
-                DocumentList = documentList,
+                DocumentList = unSignedDocuments,
                 Status = contractStatus.ToString(),
                 DocumentGroupList = unSignedDocumentGroups
             };
@@ -153,12 +154,16 @@ namespace amorphie.contract.application.Contract
                                    .ToListAsync();
 
 
+
+
             List<DocumentInstanceDto> documentInstanceDtos = new();
+
             foreach (var contractDoc in contractDefinition.ContractDocumentDetails.OrderBy(k => k.Order))
             {
                 var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode, dmnResults);
                 if (documentInstanceDto is not null)
                     documentInstanceDtos.Add(documentInstanceDto);
+
 
             }
 
@@ -169,9 +174,20 @@ namespace amorphie.contract.application.Contract
                 docGroupInstanceDtos.Add(documentGroupInstanceDto);
             }
 
+            List<DocumentInstanceResultDto> documentApprovedDtos = new();
+            documentApprovedDtos.AddRange(documents.Where(a => a.IsSigned).Select(x => new DocumentInstanceResultDto
+            {
+                ApprovalDate = x.DocumentCreatedAt.Value,
+                Code = x.DocumentCode,
+                Name = x.Titles.L(langCode),
+                Version = x.SemVer,
+                MinioUrl = MinioExtension.DocumentDownloadMinioUrl(x.DocumentContentId.ToString())
+            }).ToList());
+
             var response = new GetContractInstanceResponseDto
             {
                 DocumentList = documentInstanceDtos,
+                DocumentApprovedList = documentApprovedDtos,
                 DocumentGroupList = docGroupInstanceDtos,
                 ContractTitle = contractDefinition.Titles.L(langCode)
             };
@@ -250,8 +266,7 @@ namespace amorphie.contract.application.Contract
                 documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
                 documentInstance.Status = ApprovalStatus.Approved.ToString();
                 documentInstance.Sign();
-                documentInstance.MinioUrl = MinioExtension.DocumentDownloadMinioUrl(customerDocument?.DocumentContentId.ToString());
-                documentInstance.DocumentCreatedAt = customerDocument.DocumentCreatedAt;
+
             }
             else
             {
@@ -260,8 +275,7 @@ namespace amorphie.contract.application.Contract
                 if (signedHasNewVersionDocument != null)
                 {
                     documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
-                    documentInstance.MinioUrl = MinioExtension.DocumentDownloadMinioUrl(signedHasNewVersionDocument?.DocumentContentId.ToString());
-                    documentInstance.DocumentCreatedAt = signedHasNewVersionDocument.DocumentCreatedAt;
+
                 }
             }
 

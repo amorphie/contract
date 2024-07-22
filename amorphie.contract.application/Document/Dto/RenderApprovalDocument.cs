@@ -4,6 +4,6 @@ using amorphie.contract.core.Model.Proxy;
 
 namespace amorphie.contract.application
 {
-    public record RenderApprovalDocument(List<DocumentForApproval> DocumentsForApproval,List<DocumentInstanceDto>? ApprovedDocuments, ContractWithoutHeaderDto? ContractWithoutHeader );
+    public record RenderApprovalDocument(List<DocumentForApproval> DocumentsForApproval, ContractWithoutHeaderDto? ContractWithoutHeader );
 
 }
