@@ -11,12 +11,24 @@ namespace amorphie.contract.core
         public Apisix Apisix { get; set; }
         public Pusula Pusula { get; set; }
         public Tag Tag { get; set; }
+        public MessagingGateway MessagingGateway { get; set; }
+        public CustomerApi CustomerApi { get; set; }
     }
 
     public class Tag {
         public string Url { get; set;}
     }
-    
+
+    public class MessagingGateway
+    {
+        public string Url { get; set; }
+    }
+
+    public class CustomerApi
+    {
+        public string Url { get; set; }
+    }
+
     public class TemplateEngine
     {
         public string Url { get; set; }
@@ -67,6 +79,8 @@ namespace amorphie.contract.core
         public static string TemplateEngineGetTemplateEndpoint { get; private set; }
         public static string TemplateEngineRenderInstance { get; private set; }
         public static string TagUrl { get; private set; }
+        public static string MessagingGatewayUrl { get; private set; }
+        public static string CustomerApiUrl { get; private set; }
 
 
         public static string MinioUrl { get; private set; }
@@ -85,6 +99,8 @@ namespace amorphie.contract.core
         {
             DmsUrl = settings.Dms.Url;
             TagUrl = settings.Tag.Url;
+            MessagingGatewayUrl = settings.MessagingGateway.Url;
+            CustomerApiUrl = settings.CustomerApi.Url;
 
             TemplateEngineUrl = settings.TemplateEngine.Url;
             TemplateEngineHtmlRenderEndpoint = settings.TemplateEngine.HtmlRenderEndpoint;

@@ -18,6 +18,7 @@ namespace amorphie.contract.core.Entity.Document.DocumentGroups
         [ForeignKey("DocumentGroupId")]
 
         public DocumentGroup DocumentGroup { get; set; } = default!;
+        public bool SendMail { get; set; }
 
     }
 }
