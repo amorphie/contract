@@ -97,3 +97,7 @@ ON "Doc"."DocumentMigrationProcessing" ("DocId");
 -- Create Index on TagId
 CREATE INDEX "IX_DocumentMigrationProcessing_TagId"
 ON "Doc"."DocumentMigrationProcessing" ("TagId");
+
+-- Insert new migration record into EF Migration History table
+INSERT INTO "public"."__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20240710202119_ContractMigrationsv29', '8.0.4');
