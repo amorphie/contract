@@ -28,7 +28,7 @@ namespace amorphie.contract.zeebe.Services
 
         public async Task<GenericResult<bool>> SendDocumentsToCustomer(SendDocumentsToCustomerInputDto inputDto)
         {
-            return await _messagingGatewayAppService.SendMailTaskService(inputDto);
+            return await _messagingGatewayAppService.SendDocumentsToCustomer(inputDto);
         }
 
         public async Task<GenericResult<FindMailAttachmentOutputDto>> FindMailAttachmentCodes(FindMailAttachmentDto contractInstanceDto)
