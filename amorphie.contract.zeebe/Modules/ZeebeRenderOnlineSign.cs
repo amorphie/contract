@@ -96,22 +96,20 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
-            var documentForApproval = ZeebeMessageHelper.MapToDto<List<DocumentForApproval>>(body,ZeebeConsts.RenderedDocumentsForApproval) as List<DocumentForApproval>;
+
+            var contractOutPutDto = ZeebeMessageHelper.MapToDto<ContractInstanceDto>(body, ZeebeConsts.ContractOutputDto) as ContractInstanceDto;
+
+            var documentForApproval = ZeebeMessageHelper.MapToDto<List<DocumentForApproval>>(body, ZeebeConsts.RenderedDocumentsForApproval) as List<DocumentForApproval>;
+            
             List<DocumentForApproval> documentForApprovalList = new();
             ContractWithoutHeaderDto? withoutHeaderDto = null;
 
-
             if (documentForApproval is null)
             {
-
-
                 if (String.IsNullOrEmpty(headerModel.UserReference))
                 {
                     withoutHeaderDto = HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
                 }
-
-
-
                 if (inputDto.DocumentList.IsNotEmpty())
                 {
 
@@ -162,13 +160,13 @@ namespace amorphie.contract.zeebe.Modules
             }
             else
             {
-                var renderInputDto = inputDto.DocumentList.Where(x=>x.Status!= ApprovalStatus.Approved.ToString()).Select(x => new { x.Code, x.LastVersion }).ToList();
+                var renderInputDto = inputDto.DocumentList.Where(x => x.Status != ApprovalStatus.Approved.ToString()).Select(x => new { x.Code, x.LastVersion }).ToList();
                 documentForApprovalList = documentForApproval.Where(x => renderInputDto.Any(d => d.Code == x.DocumentDefinitionCode && d.LastVersion == x.DocumentSemanticVersion)).ToList();
             }
 
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
 
-            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList,  withoutHeaderDto));
+            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, contractOutPutDto?.DocumentApprovedList, withoutHeaderDto));
 
             messageVariables.Success = true;
 
