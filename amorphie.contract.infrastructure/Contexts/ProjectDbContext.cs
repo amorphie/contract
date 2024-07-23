@@ -99,6 +99,7 @@ public class ProjectDbContext : DbContext
     #endregion
 
     public DbSet<Customer> Customer { get; set; }
+    public DbSet<CustomerCommunication> CustomerCommunication { get; set; }
     public DbSet<Contract> Contract { get; set; }
     protected IConfiguration Configuration { get; }
 
