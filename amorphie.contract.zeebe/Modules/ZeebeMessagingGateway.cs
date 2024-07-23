@@ -16,7 +16,7 @@ namespace amorphie.contract.zeebe.Modules
 {
     public static class ZeebeMessagingGateway
     {
-        public static void MapZeebeContractDefinitionEndpoints(this WebApplication app)
+        public static void MapZeebeContractMailEndpoints(this WebApplication app)
         {
             app.MapPost("/get-document-codes-by-contract-code-for-email", GetDocumentCodesByContractCodeForEmail)
             .Produces(StatusCodes.Status200OK)
