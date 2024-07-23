@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using amorphie.contract.core.Response;
 using amorphie.contract.infrastructure.Services.Refit;
 using iText.Svg.Renderers.Path.Impl;
+using Serilog;
 
 namespace amorphie.contract.application.CustomerApi
 {
@@ -17,10 +18,12 @@ namespace amorphie.contract.application.CustomerApi
     public class CustomerApiAppService : ICustomerApiAppService
     {
         private readonly ICustomerApiService _customerApiService;
+        private readonly ILogger _logger;
 
-        public CustomerApiAppService(ICustomerApiService customerApiService)
+        public CustomerApiAppService(ICustomerApiService customerApiService, ILogger logger)
         {
             _customerApiService = customerApiService;
+            _logger = logger;
         }
 
         public async Task<GenericResult<string>> GetCustomerEmail(string reference)
@@ -31,6 +34,7 @@ namespace amorphie.contract.application.CustomerApi
 
             if (!response.IsSuccessStatusCode)
             {
+                _logger.Error("Failed to get Customer Info: {ResponseContent}", responseContent);
                 return GenericResult<string>.Fail($"Failed to get Customer Info {responseContent}");
             }
 
@@ -39,17 +43,29 @@ namespace amorphie.contract.application.CustomerApi
             //     return GenericResult<List<TemplateEngineDefinitionResponseModel>>.Success(new List<TemplateEngineDefinitionResponseModel>());
             // }
 
-            var jsonObject = JsonDocument.Parse(responseContent);
-            JsonElement root = jsonObject.RootElement;
-            
-            JsonElement customer = root.GetProperty("customerList")[0];
+            try
+            {
+                var jsonObject = JsonDocument.Parse(responseContent);
+                JsonElement root = jsonObject.RootElement;
 
-            string email = customer.GetProperty("email").GetString();
+                JsonElement customer = root.GetProperty("customerList")[0];
 
-            if (String.IsNullOrEmpty(email))
-                return GenericResult<string>.Fail($"Customer email address not found.");
+                string email = customer.GetProperty("email").GetString();
 
-            return GenericResult<string>.Success(email);
+                if (String.IsNullOrEmpty(email))
+                {
+                    _logger.Error("Customer email address not found for reference: {Reference}", reference);
+                    return GenericResult<string>.Fail($"Customer email address not found.");
+                }
+
+                return GenericResult<string>.Success(email);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error parsing customer info response");
+                return GenericResult<string>.Fail("Error parsing customer info response.");
+            }
+
         }
     }
 }

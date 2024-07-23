@@ -47,89 +47,137 @@ namespace amorphie.contract.application.MessagingGateway
 
         public async Task<GenericResult<string>> SendTemplatedMail(SendTemplatedMailRequestModel requestModel)
         {
-            var result = await _messagingGatewayService.SendTemplatedMail(requestModel);
-            var responseContent = await result.Content.ReadAsStringAsync();
+            try
+            {
+                var result = await _messagingGatewayService.SendTemplatedMail(requestModel);
+                if (!result.IsSuccessStatusCode)
+                {
+                    // Log the error and return a failure result
+                    _logger.Error("Failed to send templated mail: {ReasonPhrase}", result.ReasonPhrase);
+                    return GenericResult<string>.Fail("Failed to send templated mail.");
+                }
+                var responseContent = await result.Content.ReadAsStringAsync();
 
-            return GenericResult<string>.Success(responseContent);
+                return GenericResult<string>.Success(responseContent);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "An exception occurred while sending templated mail.");
+                return GenericResult<string>.Fail("An error occurred while sending templated mail.");
+            }
         }
 
         public async Task<GenericResult<FindMailAttachmentOutputDto>> FindContractAttachments(FindMailAttachmentDto contractInstanceDto)
         {
-            var contractDefinition = _dbContext.ContractDefinition.Where(x => x.Code == contractInstanceDto.ContractCode).FirstOrDefault();
-
-            var mailAttachDocumentCodesOfContract = contractDefinition.ContractDocumentDetails.Where(x => x.SendMail)
-            .Select(x => x.DocumentDefinition.Code)
-                .Concat(contractDefinition.ContractDocumentGroupDetails
-                    .SelectMany(x => x.DocumentGroup.DocumentGroupDetails.Where(x => x.SendMail))
-                    .Select(cd => cd.DocumentDefinition.Code))
-            .ToList();
-
-            return GenericResult<FindMailAttachmentOutputDto>.Success(new FindMailAttachmentOutputDto
+            try
             {
-                RelatedInstanceId = contractInstanceDto.ContractInstanceId.ToString(),
-                DocumentCodes = mailAttachDocumentCodesOfContract
-            });
+                var contractDefinition = _dbContext.ContractDefinition.Where(x => x.Code == contractInstanceDto.ContractCode).FirstOrDefault();
+
+                if (contractDefinition == null)
+                {
+                    _logger.Error("Contract definition not found for code: {ContractCode}", contractInstanceDto.ContractCode);
+                    return GenericResult<FindMailAttachmentOutputDto>.Fail("Contract definition not found.");
+                }
+
+                var mailAttachDocumentCodesOfContract = contractDefinition.ContractDocumentDetails.Where(x => x.SendMail)
+                .Select(x => x.DocumentDefinition.Code)
+                    .Concat(contractDefinition.ContractDocumentGroupDetails
+                        .SelectMany(x => x.DocumentGroup.DocumentGroupDetails.Where(x => x.SendMail))
+                        .Select(cd => cd.DocumentDefinition.Code))
+                .ToList();
+
+                return GenericResult<FindMailAttachmentOutputDto>.Success(new FindMailAttachmentOutputDto
+                {
+                    RelatedInstanceId = contractInstanceDto.ContractInstanceId.ToString(),
+                    DocumentCodes = mailAttachDocumentCodesOfContract
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "An exception occurred while finding contract attachments.");
+                return GenericResult<FindMailAttachmentOutputDto>.Fail("An error occurred while finding contract attachments.");
+            }
         }
 
         public async Task<GenericResult<bool>> SendDocumentsToCustomer(SendDocumentsToCustomerInputDto inputDto)
         {
-            List<SendTemplatedMailAttachmentModel> attachments = new List<SendTemplatedMailAttachmentModel>();
-
-            var documents = _dbContext.Document.Where(x => inputDto.DocumentCodes.Contains(x.DocumentDefinition.Code) && x.Customer.Reference == inputDto.TCKN);
-
-            foreach (var doc in documents)
+            try
             {
-                var documentContent = await _minioService.DownloadFile(doc.DocumentContent.MinioObjectName, new CancellationToken());
+                List<SendTemplatedMailAttachmentModel> attachments = new List<SendTemplatedMailAttachmentModel>();
 
-                attachments.Add(new SendTemplatedMailAttachmentModel()
+                var documents = _dbContext.Document.Where(x => inputDto.DocumentCodes.Contains(x.DocumentDefinition.Code) && x.Customer.Reference == inputDto.TCKN);
+
+                foreach (var doc in documents)
                 {
-                    Name = documentContent.FileName,
-                    Data = documentContent.FileContent
-                });
-            }
+                    var documentContent = await _minioService.DownloadFile(doc.DocumentContent.MinioObjectName, new CancellationToken());
 
-            dynamic templateParams = new
-            {
-                test = "TestMailBody"
-            };
-
-            var emailResponse = await _customerApiAppService.GetCustomerEmail(inputDto.TCKN);
-
-            var templateMailDto = new SendTemplatedMailRequestModel
-            {
-                Sender = inputDto.Sender,
-                Email = emailResponse.Data,
-                Template = "mailtest1", //ContractTemplate
-                TemplateParams = JsonSerializer.Serialize(templateParams),
-                Attachments = attachments,
-                CustomerNo = 0,
-                CitizenshipNo = inputDto.TCKN,
-                IsVerified = false, //SendToOnlyWhitelistMails
-                InstantReminder = false, //ThisWorksOnlyTest
-                Process = new SendTemplatedMailProcessModel
-                {
-                    Name = "SendContractDocuments",
-                    ItemId = inputDto.RelatedInstanceId,
-                    Action = "",
-                    Identity = "AmorphieContract"
+                    attachments.Add(new SendTemplatedMailAttachmentModel()
+                    {
+                        Name = documentContent.FileName,
+                        Data = documentContent.FileContent
+                    });
                 }
-            };
 
-            var result = await _messagingGatewayService.SendTemplatedMail(templateMailDto);
-            // var responseContent = await result.Content.ReadAsStringAsync();
+                dynamic templateParams = new
+                {
+                    test = "TestMailBody"
+                };
 
-            var customerId = await _customerAppService.GetIdByReference(inputDto.TCKN);
-            _dbContext.CustomerCommunication.Add(new CustomerCommunication
+                var emailResponse = await _customerApiAppService.GetCustomerEmail(inputDto.TCKN);
+
+                if (emailResponse == null || string.IsNullOrEmpty(emailResponse.Data))
+                {
+                    _logger.Error("Failed to retrieve email for customer: {TCKN}", inputDto.TCKN);
+                    return GenericResult<bool>.Fail("Failed to retrieve customer email.");
+                }
+
+                var templateMailDto = new SendTemplatedMailRequestModel
+                {
+                    Sender = inputDto.Sender,
+                    Email = emailResponse.Data,
+                    Template = "mailtest1", //ContractTemplate
+                    TemplateParams = JsonSerializer.Serialize(templateParams),
+                    Attachments = attachments,
+                    CustomerNo = 0,
+                    CitizenshipNo = inputDto.TCKN,
+                    IsVerified = false, //SendToOnlyWhitelistMails
+                    InstantReminder = false, //ThisWorksOnlyTest
+                    Process = new SendTemplatedMailProcessModel
+                    {
+                        Name = "SendContractDocuments",
+                        ItemId = inputDto.RelatedInstanceId,
+                        Action = "",
+                        Identity = "AmorphieContract"
+                    }
+                };
+
+                var result = await _messagingGatewayService.SendTemplatedMail(templateMailDto);
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    _logger.Error("Failed to send templated mail: {ReasonPhrase}", result.ReasonPhrase);
+                    return GenericResult<bool>.Fail("Failed to send templated mail.");
+                }
+                // var responseContent = await result.Content.ReadAsStringAsync();
+
+                var customerId = await _customerAppService.GetIdByReference(inputDto.TCKN);
+                _dbContext.CustomerCommunication.Add(new CustomerCommunication
+                {
+                    CustomerId = customerId.Data,
+                    EmailAddress = emailResponse.Data,
+                    DocumentList = attachments.Select(x => x.Name).ToList(),
+                    IsSuccess = result.IsSuccessStatusCode
+                });
+
+                _dbContext.SaveChanges();
+
+                return GenericResult<bool>.Success(result.IsSuccessStatusCode);
+            }
+            catch (Exception ex)
             {
-                CustomerId = customerId.Data,
-                EmailAddress = emailResponse.Data,
-                DocumentList = attachments.Select(x => x.Name).ToList(),
-                IsSuccess = result.IsSuccessStatusCode
-            });
-
-            _dbContext.SaveChanges();
-
-            return GenericResult<bool>.Success(result.IsSuccessStatusCode);
+                _logger.Error(ex, "An exception occurred while sending documents to customer.");
+                return GenericResult<bool>.Fail("An error occurred while sending documents to customer.");
+            }
         }
     }
 }
