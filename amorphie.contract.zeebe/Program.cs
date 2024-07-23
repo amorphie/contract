@@ -82,19 +82,7 @@ AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
     .Or<TimeoutRejectedException>()
     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000));
 
-builder.Services
-    .AddRefitClient<ITemplateEngineService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TemplateEngineUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
-    .AddPolicyHandler(retryPolicy);
-
-builder.Services
-    .AddRefitClient<ITagService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
-    .AddPolicyHandler(retryPolicy);
+builder.Services.AddRefitClients();
 
 builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
@@ -137,6 +125,7 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+app.MapZeebeContractMailEndpoints();
 app.MapZeebeContractCategoryDefinitionEndpoints();
 
 app.MapZeebeContractInstanceEndpoints();
