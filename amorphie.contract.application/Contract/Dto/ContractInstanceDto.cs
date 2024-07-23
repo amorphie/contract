@@ -18,6 +18,7 @@ namespace amorphie.contract.application.Contract.Dto
         [Required]
         public Guid ContractInstanceId { get; set; }
         public List<DocumentInstanceDto> DocumentList { get; set; } = new List<DocumentInstanceDto>();
+        public List<DocumentInstanceResultDto> DocumentApprovedList { get; set; } = new List<DocumentInstanceResultDto>();
         public List<DocumentGroupInstanceDto> DocumentGroupList { get; set; } = new List<DocumentGroupInstanceDto>();
 
     }

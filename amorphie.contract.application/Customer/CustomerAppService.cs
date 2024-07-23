@@ -23,6 +23,7 @@ namespace amorphie.contract.application.Customer
     {
         Task<GenericResult<Guid>> GetIdByReference(string userReference);
         Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto);
+        Task<GenericResult<Guid>> UpsertAsync(CustomerInputDto inputDto);
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts);
@@ -71,7 +72,8 @@ namespace amorphie.contract.application.Customer
             {
                 Reference = inputDto.Reference,
                 Owner = inputDto.Owner,
-                CustomerNo = inputDto.CustomerNo
+                CustomerNo = inputDto.CustomerNo,
+                TaxNo = inputDto.TaxNo,
             };
 
             _dbContext.Customer.Add(customer);
@@ -79,6 +81,19 @@ namespace amorphie.contract.application.Customer
             await _dbContext.SaveChangesAsync();
 
             return GenericResult<Guid>.Success(customer.Id);
+        }
+
+        public async Task<GenericResult<Guid>> UpsertAsync(CustomerInputDto inputDto)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(nameof(inputDto.Reference));
+
+            var customerId = await GetIdByReference(inputDto.Reference);
+            if (!customerId.IsSuccess)
+            {
+                customerId = await AddAsync(inputDto);
+            }
+
+            return customerId;
         }
 
         public async Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token)

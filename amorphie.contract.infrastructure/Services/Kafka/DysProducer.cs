@@ -34,4 +34,21 @@ public class DysProducer : IDysProducer
         await _daprClient.PublishEventAsync(KafkaConsts.KafkaName, topicName, requestModel);
     }
 
+    /// <summary>
+    /// Contract uygulamasının dokümanları tekrar migrate etmesi için ya da belirli bir TagID dokümanlarının tekrar migrate edilmesi için bu topic' e data yazılır.
+    /// </summary>
+    /// <param name="requestModel"></param>
+    /// <returns></returns>
+    public async Task PublishDysDataAgainToContract(object kafkaDataModelDto)
+    {
+        var topicName = KafkaConsts.DysDocumentTag;
+
+        _logger.Information(
+            "Publishing event {@Event} to {PubsubName}.{TopicName}",
+            nameof(DysProducer),
+            KafkaConsts.KafkaName,
+            topicName);
+
+        await _daprClient.PublishEventAsync(KafkaConsts.KafkaName, topicName, kafkaDataModelDto);
+    }
 }

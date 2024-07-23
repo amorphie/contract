@@ -5,6 +5,9 @@ namespace amorphie.contract.application.Contract.Dto
         public Guid DocumentDefinitionId { get; init; }
         public string DocumentCode { get; init; }
         public string SemVer { get; init; }
+        public Guid? DocumentContentId { get; init; }
+        public DateTime? DocumentCreatedAt { get; set; }
+
         public bool IsSigned { get; init; }
         public Guid? DocumentInstanceId { get; set; }
         public DocumentOnlineSignDto DocumentOnlineSign { get; set; }

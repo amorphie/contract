@@ -4,6 +4,7 @@ using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Dto.Zeebe;
 using amorphie.contract.application.Documents.Dto.Zeebe;
 using amorphie.contract.application.TemplateEngine;
+using amorphie.contract.core.Enum;
 using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Model;
 using amorphie.contract.core.Model.Proxy;
@@ -95,64 +96,77 @@ namespace amorphie.contract.zeebe.Modules
             var headerModel = HeaderHelperZeebe.GetHeader(body);
 
             var inputDto = ZeebeMessageHelper.MapToDto<RenderInputDto>(body) as RenderInputDto;
+
+            var contractOutPutDto = ZeebeMessageHelper.MapToDto<ContractInstanceDto>(body, ZeebeConsts.ContractOutputDto) as ContractInstanceDto;
+
+            var documentForApproval = ZeebeMessageHelper.MapToDto<List<DocumentForApproval>>(body, ZeebeConsts.RenderedDocumentsForApproval) as List<DocumentForApproval>;
+            
+            List<DocumentForApproval> documentForApprovalList = new();
             ContractWithoutHeaderDto? withoutHeaderDto = null;
 
-            if (String.IsNullOrEmpty(headerModel.UserReference))
+            if (documentForApproval is null)
             {
-                withoutHeaderDto = HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
-            }
-
-
-            List<DocumentForApproval> documentForApprovalList = new();
-
-            if (inputDto.DocumentList.IsNotEmpty())
-            {
-
-                foreach (var _document in inputDto.DocumentList)
+                if (String.IsNullOrEmpty(headerModel.UserReference))
                 {
-                    if (_document.DocumentDetail is not null)
-                    {
-                        var approvedTemplateDocument = new DocumentForApproval
-                        {
-                            ContractInstanceId = inputDto.ContractInstanceId,
-                            ContractCode = inputDto.ContractCode,
-                            DocumentSemanticVersion = _document.LastVersion,
-                            SemanticVersion = _document.DocumentDetail.OnlineSign.Version,
-                            Name = _document.DocumentDetail.OnlineSign.TemplateCode,
-                            RenderId = Guid.NewGuid(),
-                            RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
-                            RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
-                            ProcessName = nameof(ZeebeRenderOnlineSign),
-                            Identity = headerModel.UserReference,
-                            DocumentDefinitionCode = _document.Code,
-                            Approved = false,
-                            IsRequired = _document.IsRequired,
-                            Title = _document.Name,
-                        };
+                    withoutHeaderDto = HeaderHelperZeebe.SetAndGetHeaderFromWithoutDto(body, headerModel);
+                }
+                if (inputDto.DocumentList.IsNotEmpty())
+                {
 
-
-                        var res = await templateEngineAppService.SendRenderPdf(new TemplateRenderRequestModel(approvedTemplateDocument));
-                        if (res.IsSuccess)
+                    var tasks = inputDto.DocumentList
+                        .Where(x => x.Status != ApprovalStatus.Approved.ToString() && x.DocumentDetail is not null)
+                        .Select(async _document =>
                         {
-                            documentForApprovalList.Add(approvedTemplateDocument);
-                        }
-                        else
-                        {
-                            Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode, res.ErrorMessage);
-                        }
+                            var approvedTemplateDocument = new DocumentForApproval
+                            {
+                                ContractInstanceId = inputDto.ContractInstanceId,
+                                ContractCode = inputDto.ContractCode,
+                                DocumentSemanticVersion = _document.LastVersion,
+                                SemanticVersion = _document.DocumentDetail.OnlineSign.Version,
+                                Name = _document.DocumentDetail.OnlineSign.TemplateCode,
+                                RenderId = Guid.NewGuid(),
+                                RenderData = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                                RenderDataForLog = "{\"customer\":{\"customerIdentity\":\"" + headerModel.UserReference + "\"}, \"customerIdentity\":" + headerModel.UserReference + "}",
+                                ProcessName = nameof(ZeebeRenderOnlineSign),
+                                Identity = headerModel.UserReference,
+                                DocumentDefinitionCode = _document.Code,
+                                Approved = false,
+                                IsRequired = _document.IsRequired,
+                                Title = _document.Name,
+                            };
 
-                    }
+                            var res = await templateEngineAppService.SendRenderPdf(new TemplateRenderRequestModel(approvedTemplateDocument));
+                            if (res.IsSuccess)
+                            {
+                                lock (documentForApprovalList)
+                                {
+                                    documentForApprovalList.Add(approvedTemplateDocument);
+                                }
+                            }
+                            else
+                            {
+                                Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode, res.ErrorMessage);
+                            }
+                        }).ToList();
+
+                    await Task.WhenAll(tasks);
+
+                }
+                else
+                {
+                    Log.Warning("Renderlist Is Not Empty");
 
                 }
             }
             else
             {
-                Log.Warning("Renderlist Is Not Empty");
-
+                var renderInputDto = inputDto.DocumentList.Where(x => x.Status != ApprovalStatus.Approved.ToString()).Select(x => new { x.Code, x.LastVersion }).ToList();
+                documentForApprovalList = documentForApproval.Where(x => renderInputDto.Any(d => d.Code == x.DocumentDefinitionCode && d.LastVersion == x.DocumentSemanticVersion)).ToList();
             }
+
             messageVariables.Variables.Add(ZeebeConsts.RenderedDocumentsForApproval, documentForApprovalList);
 
-            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, withoutHeaderDto));
+            messageVariables.SetAdditionalData(new RenderApprovalDocument(documentForApprovalList, contractOutPutDto?.DocumentApprovedList, withoutHeaderDto));
 
             messageVariables.Success = true;
 
