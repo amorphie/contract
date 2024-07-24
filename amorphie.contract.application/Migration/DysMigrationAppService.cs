@@ -9,6 +9,7 @@ using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using static amorphie.contract.application.DocumentAppService;
 
 namespace amorphie.contract.application.Migration;
 

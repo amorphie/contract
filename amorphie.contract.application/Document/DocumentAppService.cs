@@ -19,6 +19,7 @@ using amorphie.contract.core.Services.Kafka;
 using amorphie.contract.infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using static amorphie.contract.application.DocumentAppService;
 
 
 namespace amorphie.contract.application
@@ -539,7 +540,7 @@ namespace amorphie.contract.application
         {
             throw new NotImplementedException();
         }
-            
+
 
         public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
         {
@@ -617,19 +618,20 @@ namespace amorphie.contract.application
             return GenericResult<bool>.Success(true);
 
 
-    }
+        }
 
-    public interface IDocumentAppService
-    {
-        Task<GenericResult<Guid>> AddAsync(DocumentDto documentDto, string minioObjectName);
-        public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
-        public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
-        Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);
-        Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
-        Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input);
-        Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
-        Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
-        Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);
+        public interface IDocumentAppService
+        {
+            Task<GenericResult<Guid>> AddAsync(DocumentDto documentDto, string minioObjectName);
+            public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
+            public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
+            Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);
+            Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
+            Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input);
+            Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
+            Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
+            Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);
+        }
     }
 }
 

@@ -14,6 +14,7 @@ using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using static amorphie.contract.application.DocumentAppService;
 
 namespace amorphie.contract.zeebe.Modules
 {

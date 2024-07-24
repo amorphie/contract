@@ -11,6 +11,7 @@ using amorphie.contract.Extensions;
 using amorphie.contract.core.Model.Colleteral;
 using amorphie.contract.core.Response;
 using amorphie.core.Base;
+using static amorphie.contract.application.DocumentAppService;
 
 namespace amorphie.contract;
 

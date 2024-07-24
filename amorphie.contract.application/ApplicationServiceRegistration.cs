@@ -9,6 +9,7 @@ using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using static amorphie.contract.application.DocumentAppService;
 
 namespace amorphie.contract.application
 {
