@@ -534,6 +534,13 @@ namespace amorphie.contract.application
             return GenericResult<List<DocumentInstanceDto>>.Success(documentInstanceDtos);
         }
 
+
+        public Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input)
+        {
+            throw new NotImplementedException();
+        }
+            
+
         public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
         {
 
@@ -609,7 +616,7 @@ namespace amorphie.contract.application
             }
             return GenericResult<bool>.Success(true);
 
-        }
+
     }
 
     public interface IDocumentAppService
@@ -619,6 +626,7 @@ namespace amorphie.contract.application
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
         Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);
         Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
+        Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input);
         Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
         Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
         Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);
