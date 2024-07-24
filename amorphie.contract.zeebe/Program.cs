@@ -19,8 +19,6 @@ using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
 using Serilog;
 using amorphie.contract.application.TemplateEngine;
-using Refit;
-using amorphie.contract.infrastructure.Services.Refit;
 using Polly.Timeout;
 using Polly.Retry;
 using Polly.Extensions.Http;
@@ -95,6 +93,7 @@ builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrati
 builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
 builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
 builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
+builder.Services.AddScoped<IMessagingGatewayService, MessagingGatewayService>();
 
 
 
