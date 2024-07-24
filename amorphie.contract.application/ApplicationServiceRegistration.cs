@@ -2,6 +2,9 @@ using System.Reflection;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
+using amorphie.contract.application.Migration;
+using amorphie.contract.application.CustomerApi;
+using amorphie.contract.application.MessagingGateway;
 using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Services;
@@ -25,16 +28,22 @@ namespace amorphie.contract.application
             services.AddTransient<IDocumentDysAppService, DocumentDysAppService>();
             services.AddTransient<IUserSignedContractAppService, UserSignedContractAppService>();
             services.AddScoped<IContractCategoryAppService, ContractCategoryAppService>();
+            services.AddTransient<ITagAppService, TagAppService>();
+            services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
+            services.AddScoped<IMessagingGatewayAppService, MessagingGatewayAppService>();
+            services.AddScoped<ICustomerApiAppService, CustomerApiAppService>();
 
             services.AddScoped<IFileContentProvider, ByteArrayConverter>();
             services.AddScoped<IFileContentProvider, ZeebeRenderConverter>();
             services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
             services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
+            services.AddScoped<IFileContentProvider, HtmlToPdfConverter>();
             services.AddScoped<FileConverterFactory>();
 
             services.AddScoped<IPdfManager, ITextPdfManager>();
 
             services.AddTransient<ITagAppService, TagAppService>();
+            services.AddTransient<IDysMigrationAppService, DysMigrationAppService>();
 
             return services;
         }

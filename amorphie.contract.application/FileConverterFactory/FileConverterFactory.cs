@@ -10,9 +10,12 @@ public class FileConverterFactory
     }
     public IFileContentProvider GetConverter(string fileContextType)
     {
+        if (!String.IsNullOrEmpty(fileContextType) && fileContextType.Contains(" "))
+            fileContextType = fileContextType.Trim().Replace(" ", "");
+
         if (!_converters.TryGetValue(fileContextType, out var converter))
         {
-            converter = _converters["DefaultRender"];
+            throw new NotSupportedException($"Desteklenmeyen dosya türü: {fileContextType}");
         }
 
         return converter;

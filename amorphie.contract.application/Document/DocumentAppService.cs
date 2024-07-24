@@ -36,8 +36,20 @@ namespace amorphie.contract.application
         private readonly IContractAppService _contractAppService;
         private readonly IPdfManager _pdfManager;
         private readonly ILogger _logger;
+        private readonly ITagAppService _tagAppService;
 
-        public DocumentAppService(ProjectDbContext projectDbContext, IMinioService minioService, IDysProducer dysProducer, ITSIZLProducer tsizlProducer, ITemplateEngineAppService templateEngineAppService, ICustomerAppService customerAppService, IUserSignedContractAppService userSignedContractAppService, IContractAppService contractAppService, IPdfManager pdfManager, ILogger logger)
+        public DocumentAppService(
+            ProjectDbContext projectDbContext,
+            IMinioService minioService,
+            IDysProducer dysProducer,
+            ITSIZLProducer tsizlProducer,
+            ITemplateEngineAppService templateEngineAppService,
+            ICustomerAppService customerAppService,
+            IUserSignedContractAppService userSignedContractAppService,
+            IContractAppService contractAppService,
+            IPdfManager pdfManager,
+            ILogger logger,
+            ITagAppService tagAppService)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
@@ -49,6 +61,7 @@ namespace amorphie.contract.application
             _contractAppService = contractAppService;
             _pdfManager = pdfManager;
             _logger = logger;
+            _tagAppService = tagAppService;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -103,6 +116,7 @@ namespace amorphie.contract.application
                 CustomerId = documentDto.CustomerId,
                 DocumentContent = ObjectMapperApp.Mapper.Map<DocumentContent>(documentDto.DocumentContent),
                 DocumentInstanceNotes = ObjectMapperApp.Mapper.Map<List<DocumentInstanceNote>>(documentDto.Notes),
+                InstanceMetadata = ObjectMapperApp.Mapper.Map<List<Metadata>>(documentDto.Metadata)
             };
 
             document.DocumentContent.MinioObjectName = minioObjectName;
@@ -179,12 +193,13 @@ namespace amorphie.contract.application
 
                 var sendDysModel = new DocumentDysRequestModel(input.HeaderModel.UserReference,
                                                 documentDef.Code,
+                                                documentDef.Semver,
                                                 documentDef.DocumentDys.ReferenceId.ToString(),
                                                 documentDef.Code, documentContent.FileName,
                                                 documentContent.ContentType,
                                                 fileByteArray);
 
-                await SendToDys(sendDysModel, documentDef.DefinitionMetadata);
+                await SendToDys(sendDysModel, documentInstance.InstanceMetadata);
             }
 
             if (documentDef?.DocumentTsizl is not null)
@@ -240,15 +255,17 @@ namespace amorphie.contract.application
 
             // Metadata tag implementation -> IsTagImplemented
 
+            var metadataDtoList = await TagMetadataAsync(docdef.DefinitionMetadata, input.InstanceMetadata, input.HeaderModel);
+
             if (docdef.DefinitionMetadata?.Any() == true) // && docdef?.DocumentDys is not null DYS olmayacak
             {
-                CheckRequiredMetadata(docdef.DefinitionMetadata, input.InstanceMetadata);
+                CheckRequiredMetadata(docdef.DefinitionMetadata, metadataDtoList);
             }
 
             var customerId = await _customerAppService.GetIdByReference(input.HeaderModel.UserReference);
             if (!customerId.IsSuccess)
             {
-                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo);
+                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo, "");
                 customerId = await _customerAppService.AddAsync(customerInputDto);
             }
 
@@ -259,7 +276,7 @@ namespace amorphie.contract.application
                 CustomerId = customerId.Data,
                 DocumentDefinitionId = docdef.Id,
                 Status = ApprovalStatus.TemporarilyApproved,
-                Metadata = input.InstanceMetadata,
+                Metadata = metadataDtoList,
                 Notes = input.Notes,
             };
 
@@ -315,10 +332,52 @@ namespace amorphie.contract.application
             {
                 foreach (var item in metaData)
                 {
-                    documentDys.DocumentParameters.Add(item.Code, item.Data);
+                    if (item.Code == "Field08TCKimlik")
+                    {
+                        documentDys.DocumentParameters["Field08TCKimlik"] = item.Data;
+                    }
+                    else if (item.Code == "Field09VergiNo")
+                    {
+                        documentDys.DocumentParameters["Field09VergiNo"] = item.Data;
+                    }
+                    else
+                    {
+
+                        documentDys.DocumentParameters.Add(item.Code, item.Data);
+                    }
                 }
             }
             await _dysProducer.PublishDysData(documentDys);
+        }
+        private async Task<List<MetadataDto>> TagMetadataAsync(List<Metadata> docdefMetadata, List<MetadataDto> instanceMetadata, HeaderFilterModel headerModel)
+        {
+            var metadataDtos = ObjectMapperApp.Mapper.Map<List<MetadataDto>>(docdefMetadata);
+            var getTagMetadata = await _tagAppService.GetTagMetadata(metadataDtos, headerModel);
+
+            List<MetadataDto> metadataDtoList = new();
+            if (getTagMetadata.IsSuccess && getTagMetadata.Data is not null)
+            {
+                foreach (var item in getTagMetadata.Data)
+                {
+
+                    metadataDtoList.Add(new MetadataDto
+                    {
+                        Code = item.Key,
+                        Data = item.Value
+                    });
+                }
+            }
+            if (instanceMetadata is not null)
+            {
+                foreach (var item in instanceMetadata)
+                {
+                    if (!metadataDtoList.Exists(x => x.Code == item.Code))
+                    {
+                        metadataDtoList.Add(item);
+                    }
+                }
+            }
+            return metadataDtoList;
         }
 
         private GenericResult<bool> CheckRequiredMetadata(List<Metadata> docDefMetadata, List<MetadataDto> instanceMetadataList)
@@ -334,7 +393,6 @@ namespace amorphie.contract.application
                     }
                 }
             }
-
             return GenericResult<bool>.Success(true);
         }
         private List<RootDocumentDto> mapToRootDocumentDto(List<Document> documents)
@@ -476,10 +534,89 @@ namespace amorphie.contract.application
             return GenericResult<List<DocumentInstanceDto>>.Success(documentInstanceDtos);
         }
 
+
         public Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input)
         {
             throw new NotImplementedException();
         }
+            
+
+        public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
+        {
+
+            var checkDocument = await _dbContext.Document
+                    .FirstOrDefaultAsync(k => k.DocumentDefinitionId == input.DocumentDefinitionId
+                                        && k.Status == ApprovalStatus.Approved
+                                        && k.CustomerId == input.CustomerId);
+
+            if (checkDocument is not null)
+            {
+                checkDocument.Status = ApprovalStatus.Canceled;
+            }
+
+            var documentDto = new DocumentDto
+            {
+                Id = Guid.NewGuid(),
+                DocumentContent = input.DocumentContent,
+                CustomerId = input.CustomerId,
+                DocumentDefinitionId = input.DocumentDefinitionId,
+                Status = ApprovalStatus.Approved,
+                Metadata = input.InstanceMetadata,
+                Notes = input.Notes,
+            };
+
+            byte[] fileByteArray = Convert.FromBase64String(input.DocumentContent.FileContext);
+
+            string contractCodes = string.Join(",", input.DocumentMigrationContracts.Select(c => c.Code));
+
+            UploadFileModel uploadFileModel = new()
+            {
+                Data = fileByteArray,
+                FileName = documentDto.Id.ToString(),
+                ContentType = input.DocumentContent.ContentType,
+                DocumentDefinitionCode = input.DocumentCode,
+                DocumentDefinitionVersion = input.DocumentVersion,
+                Reference = input.UserReference,
+                ApprovalStatus = ApprovalStatus.Approved,
+                ContractDefinitionCode = contractCodes
+            };
+
+            var documentInsertResponse = await AddAsync(documentDto, uploadFileModel.ObjectName);
+            if (!documentInsertResponse.IsSuccess)
+            {
+                return GenericResult<bool>.Fail(documentInsertResponse.ErrorMessage);
+            }
+
+            await _minioService.UploadFile(uploadFileModel);
+
+            if (input.DocumentContentOriginal is not null)
+            {
+                UploadFileModel uploadFileModelOriginal = new()
+                {
+                    Data = Convert.FromBase64String(input.DocumentContentOriginal.FileContext),
+                    FileName = documentDto.Id.ToString(),
+                    ContentType = input.DocumentContentOriginal.ContentType,
+                    DocumentDefinitionCode = input.DocumentCode,
+                    DocumentDefinitionVersion = input.DocumentVersion,
+                    Reference = input.UserReference,
+                    ApprovalStatus = ApprovalStatus.Approved,
+                    ContractDefinitionCode = contractCodes
+                };
+
+                await _minioService.UploadFile(uploadFileModelOriginal);
+            }
+
+
+            //Eğer eski kayıtlı doküman varsa onu cancel' a çekip yenisini kaydediyoruz.
+            await _dbContext.SaveChangesAsync();
+
+            foreach (var c in input.DocumentMigrationContracts)
+            {
+                await SaveUserSignedContract(c.Code, Guid.NewGuid(), documentInsertResponse.Data, ApprovalStatus.Approved, input.UserReference);
+            }
+            return GenericResult<bool>.Success(true);
+
+
     }
 
     public interface IDocumentAppService
@@ -492,6 +629,7 @@ namespace amorphie.contract.application
         Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input);
         Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
         Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
+        Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);
     }
 }
 
