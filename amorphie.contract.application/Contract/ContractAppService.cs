@@ -69,12 +69,17 @@ namespace amorphie.contract.application.Contract
         {
             var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
+
+            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
+            var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
+
             var contractInstanceDto = new ContractInstanceDto()
             {
                 Code = req.ContractCode,
-                DocumentList = contractInstaceResponseDto.Data.DocumentList,
+                DocumentList = unSignedDocuments,
+                DocumentApprovedList = contractInstaceResponseDto.Data.DocumentApprovedList,
                 Status = contractStatus.ToString(),
-                DocumentGroupList = contractInstaceResponseDto.Data.DocumentGroupList
+                DocumentGroupList = unSignedDocumentGroups
             };
 
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
