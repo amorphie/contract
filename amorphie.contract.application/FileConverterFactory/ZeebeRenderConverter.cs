@@ -7,8 +7,8 @@ public class ZeebeRenderConverter : IFileContentProvider
         return Task.FromResult(Convert.FromBase64String(fileContext)); //TODO: SubFlow için düzenle
     }
 
-    public string GetName()
+    public IEnumerable<string> GetNames()
     {
-        return AppConsts.ConverterZeebeRender;
+        return new[] { AppConsts.ConverterZeebeRender };
     }
 }

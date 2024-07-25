@@ -82,17 +82,9 @@ AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
 
 builder.Services.AddRefitClients();
 
-builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
-builder.Services.AddScoped<IContractAppService, ContractAppService>();
-builder.Services.AddScoped<IDysProducer, DysProducer>();
-builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
-builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
-builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
-builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
-builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
 builder.Services.AddScoped<IMessagingGatewayService, MessagingGatewayService>();
 
 

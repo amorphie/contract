@@ -16,8 +16,9 @@ public class HtmlToPdfConverter : IFileContentProvider
         }
     }
 
-    public string GetName()
+    public IEnumerable<string> GetNames()
     {
-        return FileExtension.Html;
+        return new[] { FileExtension.Html };
     }
 }
+
