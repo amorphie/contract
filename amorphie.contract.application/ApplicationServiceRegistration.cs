@@ -9,6 +9,10 @@ using amorphie.contract.application.TemplateEngine;
 using amorphie.contract.core.Services;
 using amorphie.contract.infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using amorphie.contract.infrastructure.Services.DysSoap;
+using amorphie.contract.infrastructure.Services.PusulaSoap;
+using amorphie.contract.core.Services.Kafka;
+using amorphie.contract.infrastructure.Services.Kafka;
 
 namespace amorphie.contract.application
 {
@@ -38,13 +42,26 @@ namespace amorphie.contract.application
             services.AddScoped<IFileContentProvider, TemplateRenderConverter>();
             services.AddScoped<IFileContentProvider, DefaultRenderConverter>();
             services.AddScoped<IFileContentProvider, HtmlToPdfConverter>();
+            services.AddScoped<IFileContentProvider, JpegToPdfConverter>();
+            services.AddScoped<IFileContentProvider, TiffToPdfConverter>();
+            services.AddScoped<IFileContentProvider, OtherImageToPdfConverter>();
+            services.AddScoped<IFileContentProvider, BmpToPdfConverter>();
+            services.AddScoped<IFileContentProvider, PngToPdfConverter>();
+ 
             services.AddScoped<FileConverterFactory>();
 
             services.AddScoped<IPdfManager, ITextPdfManager>();
 
-            services.AddTransient<ITagAppService, TagAppService>();
             services.AddTransient<IDysMigrationAppService, DysMigrationAppService>();
 
+
+
+            services.AddSingleton<IMinioService, MinioService>();
+            services.AddTransient<IDysIntegrationService, DysIntegrationService>();
+            services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
+            services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
+            services.AddScoped<IDysProducer, DysProducer>();
+            services.AddScoped<ITSIZLProducer, TSIZLProducer>();
             return services;
         }
     }

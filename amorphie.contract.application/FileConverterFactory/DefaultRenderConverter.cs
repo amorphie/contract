@@ -1,3 +1,4 @@
+
 namespace amorphie.contract.application.ConverterFactory;
 
 public class DefaultRenderConverter : IFileContentProvider
@@ -9,5 +10,10 @@ public class DefaultRenderConverter : IFileContentProvider
     public string GetName()
     {
         return AppConsts.ConverterDefaultRender;
+    }
+
+    public IEnumerable<string> GetNames()
+    {
+        return new[] { AppConsts.ConverterDefaultRender };
     }
 }

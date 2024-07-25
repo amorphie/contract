@@ -15,8 +15,9 @@ public class TemplateRenderConverter : IFileContentProvider
         var content = await _templateEngineAppService.GetRenderPdf(fileContext);
         return Convert.FromBase64String(content.Data);
     }
-    public string GetName()
+
+    public IEnumerable<string> GetNames()
     {
-        return AppConsts.ConverterTemplateRender;
+        return new[] { AppConsts.ConverterTemplateRender };
     }
 }
