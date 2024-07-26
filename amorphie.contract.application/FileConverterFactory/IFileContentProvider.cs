@@ -4,5 +4,6 @@ public interface IFileContentProvider
 {
     Task<byte[]> GetFileContentAsync(string fileContext);
 
-    string GetName();
+    IEnumerable<string> GetNames();
+
 }

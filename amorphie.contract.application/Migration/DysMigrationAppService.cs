@@ -166,6 +166,7 @@ public class DysMigrationAppService : IDysMigrationAppService
 
         if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))
         {
+
             documentContentOrgFile = new DocumentContentDto
             {
                 ContentType = dmsDocument.DocumentFile.MimeType,
@@ -173,10 +174,28 @@ public class DysMigrationAppService : IDysMigrationAppService
                 FileName = dmsDocument.DocumentFile.FileName
             };
 
-            var converter = _fileConverterFactory.GetConverter(dmsDocument.DocumentFile.MimeType);
-            var fl = await converter.GetFileContentAsync(fileBase64);
-            fileBase64 = Convert.ToBase64String(fl);
-            fileMimeType = FileExtension.Pdf;
+            // Starting convert
+            IFileContentProvider? converter = null;
+            try
+            {
+                converter = _fileConverterFactory.GetConverter(dmsDocument.DocumentFile.MimeType);
+                var fl = await converter.GetFileContentAsync(fileBase64);
+                fileBase64 = Convert.ToBase64String(fl);
+                fileMimeType = FileExtension.Pdf;
+
+            }
+            catch (NotSupportedException _)
+            {
+                // orjinal doküman türü ile devam et.
+                fileMimeType = dmsDocument.DocumentFile.MimeType;
+                string warMessage = $"Dys DocID: {dmsDocument.DocumentModel.DocId} için desteklenmeyen bir dosya tipi bulundu. Dosya orjinal haliyle kaydedilecek. Customer No: {dmsDocument.DocumentModel.CustomerNo}";
+                _logger.Warning(warMessage);
+
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         return (fileBase64, fileMimeType, documentContentOrgFile);
