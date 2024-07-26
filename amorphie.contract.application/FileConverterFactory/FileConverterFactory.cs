@@ -6,7 +6,9 @@ public class FileConverterFactory
 
     public FileConverterFactory(IEnumerable<IFileContentProvider> converters)
     {
-        _converters = converters.ToDictionary(c => c.GetName(), c => c);
+        _converters = converters
+           .SelectMany(c => c.GetNames().Select(name => new { Name = name, Converter = c }))
+           .ToDictionary(x => x.Name, x => x.Converter);
     }
     public IFileContentProvider GetConverter(string fileContextType)
     {
