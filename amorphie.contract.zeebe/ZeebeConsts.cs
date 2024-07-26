@@ -23,6 +23,8 @@ namespace amorphie.contract.zeebe
         public const string DecisionTagValueOutput = "DecisionTagValueOutpuDto";
 
         public const string DmnResult = "DmnResult";
+        public const string FindMailAttachmentOutputDto = "FindMailAttachmentOutputDto";
+        public const string SendContractDocumentsMailOutputDto = "SendContractDocumentsMailOutputDto";
 
 
 

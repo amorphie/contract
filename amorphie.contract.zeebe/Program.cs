@@ -19,8 +19,6 @@ using amorphie.contract.infrastructure.Services.DysSoap;
 using amorphie.contract.infrastructure.Services.PusulaSoap;
 using Serilog;
 using amorphie.contract.application.TemplateEngine;
-using Refit;
-using amorphie.contract.infrastructure.Services.Refit;
 using Polly.Timeout;
 using Polly.Retry;
 using Polly.Extensions.Http;
@@ -82,31 +80,12 @@ AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
     .Or<TimeoutRejectedException>()
     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000));
 
-builder.Services
-    .AddRefitClient<ITemplateEngineService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TemplateEngineUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
-    .AddPolicyHandler(retryPolicy);
+builder.Services.AddRefitClients();
 
-builder.Services
-    .AddRefitClient<ITagService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
-    .AddPolicyHandler(retryPolicy);
-
-builder.Services.AddSingleton<IMinioService, MinioService>();
 builder.Services.AddScoped<IDocumentDefinitionService, DocumentDefinitionService>();
 builder.Services.AddScoped<IDocumentGroupDefinitionService, DocumentGroupDefinitionService>();
 builder.Services.AddScoped<IContractDefinitionService, ContractDefinitionService>();
-builder.Services.AddScoped<IContractAppService, ContractAppService>();
-builder.Services.AddScoped<IDysProducer, DysProducer>();
-builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
-builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
-builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
-builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
-builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
+builder.Services.AddScoped<IMessagingGatewayService, MessagingGatewayService>();
 
 
 
@@ -137,6 +116,7 @@ app.MapZeebeDocumentUploadEndpoints();
 app.MapZeebeDocumentDefinitionEndpoints();
 app.MapZeebeContractDefinitionEndpoints();
 app.MapZeebeDocumentGroupDefinitionEndpoints();
+app.MapZeebeContractMailEndpoints();
 app.MapZeebeContractCategoryDefinitionEndpoints();
 
 app.MapZeebeContractInstanceEndpoints();

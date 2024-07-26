@@ -8,8 +8,8 @@ public class ByteArrayConverter : IFileContentProvider
         return Task.FromResult(bytes);
     }
 
-    public string GetName()
+    public IEnumerable<string> GetNames()
     {
-        return  AppConsts.ConverterByteRender;
+        return new[] { AppConsts.ConverterByteRender };
     }
 }

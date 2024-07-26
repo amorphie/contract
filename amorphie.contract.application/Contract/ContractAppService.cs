@@ -8,6 +8,7 @@ using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Entity.Contract;
 using Serilog;
 using amorphie.contract.application.DMN.Dto;
+using amorphie.contract.application.Contract.Dto.Input;
 
 namespace amorphie.contract.application.Contract
 {
@@ -18,6 +19,7 @@ namespace amorphie.contract.application.Contract
         Task<GenericResult<bool>> InstanceState(ContractInstanceStateInputDto req, CancellationToken cts);
         Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts);
         Task<GenericResult<ContractInstanceDto>> GetContractApprovedAndPendingDocuments(ContractApprovedAndPendingDocumentsInputDto req, CancellationToken cts);
+        Task<GenericResult<bool>> CancelContract(CancelContractInputDto req, CancellationToken cts);
     }
     public class ContractAppService : IContractAppService
     {
@@ -32,7 +34,28 @@ namespace amorphie.contract.application.Contract
             _logger = logger;
         }
 
+        public async Task<GenericResult<bool>> CancelContract(CancelContractInputDto req, CancellationToken cts)
+        {
+            var contractQuery = _dbContext.UserSignedContract.AsQueryable();
 
+            if (req.ContractCode is not null)
+            {
+                throw new ArgumentNullException(nameof(req.ContractCode), $"Contract not found : {req.ContractCode}");
+            }
+            if (req.ContractInstanceId is not null)
+            {
+                contractQuery = contractQuery.Where(x => x.ContractInstanceId == req.ContractInstanceId);
+            }
+
+            var contractList = await contractQuery.ToListAsync(cts);
+            var documentInstanceCanceledList = new List<Guid>();
+            foreach (var contract in contractList)
+            {
+                contract.ApprovalStatus = ApprovalStatus.Canceled;
+                documentInstanceCanceledList.AddRange(contract.UserSignedContractDetails.Select(x => x.DocumentInstanceId).ToList());
+            }
+            return GenericResult<bool>.Success(true);
+        }
         public async Task<GenericResult<bool>> GetExist(ContractGetExistInputDto req, CancellationToken cts)
         {
             var contractDefinition = await _dbContext.ContractDefinition
@@ -46,12 +69,17 @@ namespace amorphie.contract.application.Contract
         {
             var contractInstaceResponseDto = await GetContractInstance(req.ContractCode, req.HeaderModel.UserReference, req.HeaderModel.LangCode, req.HeaderModel.EBankEntity, null, cts);
             ApprovalStatus contractStatus = SetAndGetContractDocumentStatus(contractInstaceResponseDto.Data.DocumentList, contractInstaceResponseDto.Data.DocumentGroupList);
+
+            var unSignedDocuments = contractInstaceResponseDto.Data.DocumentList.Where(k => !k.IsSigned).ToList();
+            var unSignedDocumentGroups = contractInstaceResponseDto.Data.DocumentGroupList.Where(k => k.Status != ApprovalStatus.Approved.ToString()).ToList();
+
             var contractInstanceDto = new ContractInstanceDto()
             {
                 Code = req.ContractCode,
-                DocumentList = contractInstaceResponseDto.Data.DocumentList,
+                DocumentList = unSignedDocuments,
+                DocumentApprovedList = contractInstaceResponseDto.Data.DocumentApprovedList,
                 Status = contractStatus.ToString(),
-                DocumentGroupList = contractInstaceResponseDto.Data.DocumentGroupList
+                DocumentGroupList = unSignedDocumentGroups
             };
 
             return GenericResult<ContractInstanceDto>.Success(contractInstanceDto);
@@ -73,6 +101,7 @@ namespace amorphie.contract.application.Contract
             {
                 Code = req.ContractCode,
                 Title = contractInstaceResponseDto.Data.ContractTitle,
+                DocumentApprovedList = contractInstaceResponseDto.Data.DocumentApprovedList,
                 ContractInstanceId = contractInstanceId,
                 DocumentList = unSignedDocuments,
                 Status = contractStatus.ToString(),
@@ -111,6 +140,8 @@ namespace amorphie.contract.application.Contract
                                        DocumentDefinitionId = df.Id,
                                        DocumentCode = df.Code,
                                        SemVer = df.Semver,
+                                       DocumentContentId = userDoc != null ? userDoc.DocumentContentId : (Guid?)null,
+                                       DocumentCreatedAt = userDoc != null ? userDoc.CreatedAt : (DateTime?)null,
                                        IsSigned = userDoc.Customer != null && userDoc.Status == ApprovalStatus.Approved,
                                        DocumentInstanceId = userDoc != null ? userDoc.Id : (Guid?)null,
                                        DocumentOnlineSign = new DocumentOnlineSignDto
@@ -128,11 +159,17 @@ namespace amorphie.contract.application.Contract
                                    .ToListAsync();
 
 
+
+
             List<DocumentInstanceDto> documentInstanceDtos = new();
+
             foreach (var contractDoc in contractDefinition.ContractDocumentDetails.OrderBy(k => k.Order))
             {
                 var documentInstanceDto = MapToDocumentInstanceDto(documents, contractDoc, langCode, dmnResults);
-                documentInstanceDtos.Add(documentInstanceDto);
+                if (documentInstanceDto is not null)
+                    documentInstanceDtos.Add(documentInstanceDto);
+
+
             }
 
             List<DocumentGroupInstanceDto> docGroupInstanceDtos = new();
@@ -142,9 +179,20 @@ namespace amorphie.contract.application.Contract
                 docGroupInstanceDtos.Add(documentGroupInstanceDto);
             }
 
+            List<DocumentInstanceResultDto> documentApprovedDtos = new();
+            documentApprovedDtos.AddRange(documents.Where(a => a.IsSigned).Select(x => new DocumentInstanceResultDto
+            {
+                ApprovalDate = x.DocumentCreatedAt.Value,
+                Code = x.DocumentCode,
+                Name = x.Titles.L(langCode),
+                Version = x.SemVer,
+                MinioUrl = MinioExtension.DocumentDownloadMinioUrl(x.DocumentContentId.ToString())
+            }).ToList());
+
             var response = new GetContractInstanceResponseDto
             {
                 DocumentList = documentInstanceDtos,
+                DocumentApprovedList = documentApprovedDtos,
                 DocumentGroupList = docGroupInstanceDtos,
                 ContractTitle = contractDefinition.Titles.L(langCode)
             };
@@ -177,8 +225,14 @@ namespace amorphie.contract.application.Contract
 
         }
 
-        private DocumentInstanceDto MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
+        private DocumentInstanceDto? MapToDocumentInstanceDto(IEnumerable<DocumentCustomerInfoDto> documents, ContractDocumentDetail contractDoc, string langCode, IEnumerable<DmnResultDto> dmnResults)
         {
+            //TODO: DMNResult' ı bir sonraki fazda bir patter ile kullan. 
+            DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+            bool isVisible = dmnResultDto?.IsVisible ?? true;
+            if (!isVisible)
+                return null;
+
             var documentsVersionByCode = documents.Where(k => k.DocumentCode == contractDoc.DocumentDefinition.Code).ToArray();
 
             var findDocumentLastVersion = Versioning.FindHighestVersion(documentsVersionByCode.Select(k => k.SemVer).ToArray());
@@ -190,9 +244,7 @@ namespace amorphie.contract.application.Contract
 
             // Checking contract document min version...
             var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-            var template = documentLastVersion.DocumentOnlineSign?.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
-
-            DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+            var template = documentLastVersion.DocumentOnlineSign?.Templates?.FirstOrDefault(x => x.LanguageCode == langCode);
 
             var documentInstance = new DocumentInstanceDto
             {
@@ -213,17 +265,22 @@ namespace amorphie.contract.application.Contract
                 }
             };
 
+
             if (customerDocument is not null)
             {
                 documentInstance.DocumentInstanceId = customerDocument.DocumentInstanceId;
                 documentInstance.Status = ApprovalStatus.Approved.ToString();
                 documentInstance.Sign();
+
             }
             else
             {
-                if (documents.Any(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned))
+                var signedHasNewVersionDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned);
+
+                if (signedHasNewVersionDocument != null)
                 {
                     documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
+
                 }
             }
 
@@ -255,9 +312,12 @@ namespace amorphie.contract.application.Contract
 
                 // Checking contract document min version...
                 var customerDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && Versioning.CompareVersion(findUserSignedLastVersion, contractDoc.DocumentDefinition.Semver) && k.IsSigned);
-                var template = documentLastVersion.DocumentOnlineSign.Templates.FirstOrDefault(x => x.LanguageCode == langCode);
+                var template = documentLastVersion.DocumentOnlineSign.Templates?.FirstOrDefault(x => x.LanguageCode == langCode);
 
                 DmnResultDto? dmnResultDto = dmnResults?.FirstOrDefault(x => x.DocumentCode == contractDoc.DocumentDefinition.Code);
+                bool isVisible = dmnResultDto?.IsVisible ?? true;
+                if (!isVisible)
+                    continue;
 
                 var documentInstance = new DocumentInstanceDto
                 {

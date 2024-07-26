@@ -17,7 +17,7 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -527,6 +527,9 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<bool>("Required")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("SendMail")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("UseExisting")
                         .HasColumnType("integer");
 
@@ -912,11 +915,67 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                         .HasColumnType("text");
 
                     b.Property<string>("Reference")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("TaxNo")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Customer", "Cus");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.CustomerCommunication", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DocumentList")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("CustomerCommunication", "Cus");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.Document", b =>
@@ -1471,6 +1530,9 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Property<Guid?>("ModifiedByBehalfOf")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("SendMail")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentDefinitionId");
@@ -1522,6 +1584,219 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.HasIndex("DocumentId");
 
                     b.ToTable("DocumentInstanceNote", "Doc");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentMigrationAggregation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DocumentCode")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentCode")
+                        .IsUnique();
+
+                    b.ToTable("DocumentMigrationAggregations", "Doc");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentMigrationDysDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DocCreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocId")
+                        .IsUnique();
+
+                    b.ToTable("DocumentMigrationDysDocuments", "Doc");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentMigrationDysDocumentTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TagId")
+                        .IsRequired()
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
+
+                    b.Property<string>("TagValues")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("TagValuesOrg")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocId")
+                        .IsUnique();
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("DocumentMigrationDysDocumentTags", "Doc");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentMigrationProcessing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CreatedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastTryTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ModifiedByBehalfOf")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("TagId")
+                        .IsRequired()
+                        .HasMaxLength(350)
+                        .HasColumnType("character varying(350)");
+
+                    b.Property<int>("TryCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("DocumentMigrationProcessing", "Doc");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperations", b =>
@@ -2156,6 +2431,17 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                     b.Navigation("UserSignedContract");
                 });
 
+            modelBuilder.Entity("amorphie.contract.core.Entity.CustomerCommunication", b =>
+                {
+                    b.HasOne("amorphie.contract.core.Entity.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.Document", b =>
                 {
                     b.HasOne("amorphie.contract.core.Entity.Customer", "Customer")
@@ -2398,6 +2684,34 @@ namespace amorphie.contract.infrastructure.Migrations.Pg
                         .IsRequired();
 
                     b.Navigation("Document");
+                });
+
+            modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentMigrationAggregation", b =>
+                {
+                    b.OwnsMany("amorphie.contract.core.Model.Documents.DocumentMigrationContractModel", "ContractCodes", b1 =>
+                        {
+                            b1.Property<Guid>("DocumentMigrationAggregationId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Code")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("DocumentMigrationAggregationId", "Id");
+
+                            b1.ToTable("DocumentMigrationAggregations", "Doc");
+
+                            b1.ToJson("ContractCodes");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DocumentMigrationAggregationId");
+                        });
+
+                    b.Navigation("ContractCodes");
                 });
 
             modelBuilder.Entity("amorphie.contract.core.Entity.Document.DocumentOperationsTagsDetail", b =>

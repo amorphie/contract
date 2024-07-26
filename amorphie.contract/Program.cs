@@ -53,43 +53,8 @@ builder.Services.AddScoped<IBBTIdentity, FakeIdentity>();
 var settings = builder.Configuration.Get<AppSettings>();
 StaticValuesExtensions.SetStaticValues(settings);
 
-//wait 1s and retry again 3 times when get timeout
-AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
-    .HandleTransientHttpError()
-    .Or<TimeoutRejectedException>()
-    .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000));
-
-builder.Services
-    .AddRefitClient<ITemplateEngineService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TemplateEngineUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TemplateEngineUrl")))
-    .AddPolicyHandler(retryPolicy);
-
-builder.Services
-    .AddRefitClient<ITagService>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri(StaticValuesExtensions.TagUrl ??
-                                throw new ArgumentNullException("Parameter is not suplied.", "TagUrl")))
-    .AddPolicyHandler(retryPolicy);
-
-
-builder.Services.AddSingleton<IMinioService, MinioService>();
-builder.Services.AddScoped<IDysProducer, DysProducer>();
-builder.Services.AddTransient<IDysIntegrationService, DysIntegrationService>();
-builder.Services.AddTransient<IColleteralIntegrationService, ColleteralIntegrationService>();
-builder.Services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
-builder.Services.AddScoped<ITSIZLProducer, TSIZLProducer>();
-builder.Services.AddTransient<ITemplateEngineAppService, TemplateEngineAppService>();
-
-var assemblies = new Assembly[]
-                {
-                      typeof(DocumentDefinitionValidator).Assembly,
-                    //   typeof(MappingDocumentProfile).Assembly,
-                };
-builder.Services.AddAutoMapper(assemblies);
-builder.Services.AddValidatorsFromAssemblyContaining<DocumentDefinitionValidator>(includeInternalTypes: true);
-builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddRefitClients();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddDbContext<ProjectDbContext>
     (options => options.UseNpgsql(postgreSql));
@@ -104,8 +69,6 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
-
-builder.Services.AddApplicationServices();
 
 builder.Logging.ClearProviders();
 
@@ -122,7 +85,6 @@ var app = builder.Build();
 app.UseRouting();
 app.UseCors();
 app.UseAllElasticApm(app.Configuration);
-app.UseCloudEvents();
 app.UseApiExceptionHandleMiddlewareExtensions();
 app.UseApiHeaderHandleMiddlewareExtensions();
 app.MapSubscribeHandler();

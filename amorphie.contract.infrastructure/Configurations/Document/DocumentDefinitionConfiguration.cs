@@ -16,7 +16,7 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
             builder.Navigation(k => k.DocumentOperations).AutoInclude();
             builder.Navigation(k => k.DocumentDys).AutoInclude();
             builder.Navigation(k => k.DocumentTsizl).AutoInclude();
-            
+
             builder.HasIndex(x => new
             {
                 x.Code,
@@ -30,4 +30,5 @@ namespace amorphie.contract.infrastructure.Configurations.Definition
             builder.OwnsMany(d => d.DefinitionMetadata, builder => { builder.ToJson(); });
         }
     }
+
 }

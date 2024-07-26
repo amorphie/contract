@@ -4,6 +4,7 @@ using System.ServiceModel.Security;
 using System.Text;
 using amorphie.contract.core;
 using amorphie.contract.core.Model.Dys;
+using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
 using Serilog;
 
@@ -69,5 +70,43 @@ public class DysIntegrationService : IDysIntegrationService
         _logger.Information("DYS document was created {cmdData} - {AddDocumentResult}", cmdData.ToString(), dmsdocResult.AddDocumentResult);
 
         return dmsdocResult.AddDocumentResult;
+    }
+
+    public async Task<GenericResult<DmsDocumentAndFileModel>> GetDocumentAndData(long docId)
+    {
+        var getDmsDocumentTask = dmsServiceSoapClient.GetDMSDocumentAsync(docId);
+
+        var getDmsDocumentFileTask = dmsServiceSoapClient.GetDocumentAsync(Convert.ToString(docId));
+
+        await Task.WhenAll(getDmsDocumentTask, getDmsDocumentFileTask);
+
+        var document = await getDmsDocumentTask;
+        var docModel = new DMSDocumentModel
+        {
+            ApplicationNo = document.ApplicationNo,
+            Channel = document.Channel,
+            CustomerNo = document.CustomerNo,
+            DocCreatedAt = document.CreateTime,
+            TagId = document.TagID,
+            DocId = document.ID,
+            IsExpired = document.IsExpired,
+            Notes = document.Notes,
+            OwnerId = document.OwnerID,
+            Title = document.Title,
+            WfInstanceID = document.WfInstanceID,
+        };
+
+        var documentFile = await getDmsDocumentFileTask;
+        var docFileModel = new DMSDocumentFileModel
+        {
+            DocId = documentFile.FInfo.DocID,
+            FileContent = documentFile.BinaryData,
+            FileName = documentFile.FInfo.FileName,
+            MimeType = documentFile.FInfo.MimeType,
+        };
+
+        var result = new DmsDocumentAndFileModel(docModel, docFileModel);
+
+        return GenericResult<DmsDocumentAndFileModel>.Success(result);
     }
 }

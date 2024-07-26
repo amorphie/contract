@@ -32,8 +32,6 @@ namespace amorphie.contract.infrastructure.Middleware
 
         private async Task HandleExceptionAsync(Exception ex, HttpContext httpContext)
         {
-
-
             var messages = new List<string>();
             var statusCode = (int)HttpStatusCode.InternalServerError;
             var title = "Server error";

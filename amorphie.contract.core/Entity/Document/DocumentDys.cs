@@ -20,4 +20,5 @@ namespace amorphie.contract.core.Entity.Document
         [ForeignKey("DocumentDefinitionId")]
         public DocumentDefinition DocumentDefinition { get; set; } = default!;
     }
+
 }
