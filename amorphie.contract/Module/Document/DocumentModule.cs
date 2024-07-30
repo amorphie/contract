@@ -13,6 +13,7 @@ using amorphie.contract.core.Response;
 using amorphie.core.Base;
 using static amorphie.contract.application.DocumentAppService;
 
+
 namespace amorphie.contract;
 
 public class DocumentModule
@@ -112,27 +113,28 @@ CancellationToken token, [FromBody] ApproveDocumentInstanceInputDto input)
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.SendDocumentInstanceDataToDYSTopicName)]
     [HttpPost]
-    public async Task<GenericResult<bool>> AddDocumentToDys([FromBody] DocumentDysRequestModel documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
+    public async Task<GenericResult<bool>> AddDocumentToDys([FromBody] KafkaData<DocumentDysRequestModel> documentDysRequestModel, [FromServices] IDysIntegrationService dysIntegrationService)
     {
-        await dysIntegrationService.AddDysDocument(documentDysRequestModel);
+        await dysIntegrationService.AddDysDocument(documentDysRequestModel.Data);
 
         return GenericResult<bool>.Success(true);
     }
 
     [Topic(KafkaConsts.KafkaName, KafkaConsts.SendEngagementDataToTSIZLTopicName)]
     [HttpPost]
-    public async Task<GenericResult<bool>> SendToTSIZL([FromBody] DoAutomaticEngagementPlainRequestDto requestModel, [FromServices] IColleteralIntegrationService colleteralIntegrationService, [FromServices] ICustomerIntegrationService customerIntegrationService)
+    public async Task<GenericResult<bool>> SendToTSIZL([FromBody] KafkaData<DoAutomaticEngagementPlainRequestDto> requestModel, [FromServices] IColleteralIntegrationService colleteralIntegrationService, [FromServices] ICustomerIntegrationService customerIntegrationService)
     {
-        var customerInfo = await customerIntegrationService.GetCustomerInfo(requestModel.AccountNumber);
+
+        var customerInfo = await customerIntegrationService.GetCustomerInfo(requestModel.Data.AccountNumber);
 
         if (!customerInfo.IsSuccess)
         {
             return GenericResult<bool>.Fail(customerInfo.ErrorMessage);
         }
 
-        requestModel.SetAccountBranchCode(customerInfo.Data.MainBranchCode);
+        requestModel.Data.SetAccountBranchCode(customerInfo.Data.MainBranchCode);
 
-        await colleteralIntegrationService.AddTSIZLDocument(requestModel);
+        await colleteralIntegrationService.AddTSIZLDocument(requestModel.Data);
 
         return GenericResult<bool>.Success(true);
     }
