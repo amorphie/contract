@@ -13,6 +13,8 @@ namespace amorphie.contract.application
         [Required]
         public required string FileName { get; set; } = default!;
 
+        public bool HasNotSupportedFile { get; set; }
+
     }
 
 }

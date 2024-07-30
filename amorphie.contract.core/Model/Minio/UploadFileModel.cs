@@ -33,13 +33,26 @@ public class UploadFileModel
             return new MemoryStream(Data);
         }
     }
+
+    private string _objectName;
+
     public string ObjectName
     {
         get
         {
-            return $"{DocumentDefinitionCode}/{Reference}_{DocumentDefinitionVersion}_{FileName}{FileExtension.GetFileExtensionFromMimeType(ContentType)}".Trim();
+            return string.IsNullOrWhiteSpace(_objectName)
+                ? $"{DocumentDefinitionCode}/{Reference}_{DocumentDefinitionVersion}_{FileName}{FileExtension.GetFileExtensionFromMimeType(ContentType)}".Trim()
+                : _objectName;
+
         }
+        private set { _objectName = value; }
     }
+
+    public void SetObjectName(string fileNameWithExtension)
+    {
+        ObjectName = $"{DocumentDefinitionCode}/{Reference}_{DocumentDefinitionVersion}_{fileNameWithExtension}".Trim();
+    }
+
     public Dictionary<string, string> MetaDataHeader
     {
         get
