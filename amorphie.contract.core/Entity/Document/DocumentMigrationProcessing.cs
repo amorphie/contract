@@ -11,6 +11,9 @@ namespace amorphie.contract.core.Entity.Document
         private readonly int maxRetryCount = 1;
         private readonly int maxLength = 500;
 
+        // min
+        private readonly int maxTimeout = 2;
+
         public long DocId { get; set; }
         public required string TagId { get; set; } = default!;
         public required string Status { get; set; } = default!;
@@ -44,6 +47,16 @@ namespace amorphie.contract.core.Entity.Document
         public bool IsExceededMaxRetryCount()
         {
             return TryCount > maxRetryCount;
+        }
+
+        public bool IsTimeout()
+        {
+            if (LastTryTime.HasValue)
+            {
+                return (DateTime.UtcNow - LastTryTime.Value).TotalMinutes > maxTimeout;
+            }
+            
+            return false;
         }
     }
 
