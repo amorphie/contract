@@ -22,6 +22,9 @@ public class DysIntegrationService : IDysIntegrationService
     public DysIntegrationService(ILogger logger)
     {
         binding = new BasicHttpsBinding();
+        binding.MaxReceivedMessageSize = 200000000;
+        binding.MaxBufferSize = 200000000;
+        binding.MaxBufferPoolSize = 200000000;
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
         endpointAddress = new EndpointAddress(StaticValuesExtensions.DmsUrl);
 

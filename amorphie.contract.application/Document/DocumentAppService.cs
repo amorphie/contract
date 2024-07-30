@@ -536,6 +536,8 @@ namespace amorphie.contract.application
 
         public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
         {
+            // desteklenmeyen dosya tipini orjinal isimde tut ve 2 kere yazma.
+            bool hasNotSupportedFile = input.DocumentContentOriginal?.HasNotSupportedFile == true;
 
             var checkDocument = await _dbContext.Document
                     .FirstOrDefaultAsync(k => k.DocumentDefinitionId == input.DocumentDefinitionId
@@ -574,6 +576,11 @@ namespace amorphie.contract.application
                 ContractDefinitionCode = contractCodes
             };
 
+            if (hasNotSupportedFile)
+            {
+                uploadFileModel.SetObjectName(input.DocumentContentOriginal.FileName);
+            }
+
             var documentInsertResponse = await AddAsync(documentDto, uploadFileModel.ObjectName);
             if (!documentInsertResponse.IsSuccess)
             {
@@ -582,7 +589,7 @@ namespace amorphie.contract.application
 
             await _minioService.UploadFile(uploadFileModel);
 
-            if (input.DocumentContentOriginal is not null)
+            if (input.DocumentContentOriginal is not null && !hasNotSupportedFile)
             {
                 UploadFileModel uploadFileModelOriginal = new()
                 {

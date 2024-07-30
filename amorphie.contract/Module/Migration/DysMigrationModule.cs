@@ -62,7 +62,7 @@ public class DysMigrationModule
 
                 await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
             }
-            else if (!String.IsNullOrEmpty(docMigrationProcessing.ErrorMessage))
+            else if (!String.IsNullOrEmpty(docMigrationProcessing.ErrorMessage) || docMigrationProcessing.IsTimeout())
             {
                 // Qlik replicate den UPDATE işlemi geliyorsa bunu tryCount olarak saydırma. Try count sadece hata alınıp tekrar denendiğinde sayılmalı.
                 docMigrationProcessing.IncreaseTryCount();

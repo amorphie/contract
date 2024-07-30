@@ -187,6 +187,9 @@ public class DysMigrationAppService : IDysMigrationAppService
             {
                 // orjinal doküman türü ile devam et.
                 fileMimeType = dmsDocument.DocumentFile.MimeType;
+                // desteklenmeyen dosya tipi ise sadece orjinal haliyle minio kaydı yap.
+                documentContentOrgFile.HasNotSupportedFile = true;
+
                 string warMessage = $"Dys DocID: {dmsDocument.DocumentModel.DocId} için desteklenmeyen bir dosya tipi bulundu. Dosya orjinal haliyle kaydedilecek. Customer No: {dmsDocument.DocumentModel.CustomerNo}";
                 _logger.Warning(warMessage);
 
