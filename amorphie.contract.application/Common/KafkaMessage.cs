@@ -1,4 +1,4 @@
-namespace amorphie.contract.application.Migration;
+namespace amorphie.contract.application;
 
 public class KafkaMessage<T>
 {
