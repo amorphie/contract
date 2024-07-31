@@ -62,12 +62,14 @@ public class DysMigrationModule
 
                 await dbContext.DocumentMigrationProcessings.AddAsync(docMigrationProcessing);
             }
-            else if (!String.IsNullOrEmpty(docMigrationProcessing.ErrorMessage))
+            else if (!String.IsNullOrEmpty(docMigrationProcessing.ErrorMessage) || docMigrationProcessing.IsTimeout())
             {
                 // Qlik replicate den UPDATE işlemi geliyorsa bunu tryCount olarak saydırma. Try count sadece hata alınıp tekrar denendiğinde sayılmalı.
                 docMigrationProcessing.IncreaseTryCount();
             }
 
+            await dbContext.SaveChangesAsync();
+            
             try
             {
                 if (docMigrationProcessing.IsExceededMaxRetryCount())
@@ -96,6 +98,7 @@ public class DysMigrationModule
             catch (NotSupportedException fileSupportedEx)
             {
                 docMigrationProcessing.ChangeStatus(AppConsts.Failed, fileSupportedEx.Message);
+                await dbContext.SaveChangesAsync();
                 // desteklenmeyen bir dosya türü varsa tekrar deneme yapmaya gerek yok.
                 return GenericResult<bool>.Success(true);
             }
