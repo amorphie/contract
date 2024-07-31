@@ -33,9 +33,10 @@ public class OtherImageToPdfConverter : IFileContentProvider
         }
     }
 
+    // DYS migration kapsamında gelen dosyaların uzantıları ve byte halleri arasında tutarsızlık olduğu için direkt ImageDataFactory de toplandı.
     public IEnumerable<string> GetNames()
     {
-        return new[] { FileExtension.Jpg, FileExtension.XPng, FileExtension.PJpeg, FileExtension.Gif };
+        return new[] { FileExtension.Jpg, FileExtension.XPng, FileExtension.PJpeg, FileExtension.Gif, FileExtension.Png };
     }
 }
 
