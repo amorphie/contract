@@ -21,6 +21,9 @@ public class CustomerIntegrationService : ICustomerIntegrationService
     public CustomerIntegrationService(ILogger logger)
     {
         binding = new BasicHttpsBinding();
+        binding.MaxReceivedMessageSize = 100000000;
+        binding.MaxBufferSize = 100000000;
+        binding.MaxBufferPoolSize = 100000000;
         binding.Security.Mode = BasicHttpsSecurityMode.Transport;
         endpointAddress = new EndpointAddress(StaticValuesExtensions.Pusula.CustomerServicesUrl);
 
