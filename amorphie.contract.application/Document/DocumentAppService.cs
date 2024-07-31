@@ -602,7 +602,8 @@ namespace amorphie.contract.application
                     ApprovalStatus = ApprovalStatus.Approved,
                     ContractDefinitionCode = contractCodes
                 };
-
+                uploadFileModelOriginal.SetObjectName(input.DocumentContentOriginal.FileName);
+                
                 await _minioService.UploadFile(uploadFileModelOriginal);
             }
 
