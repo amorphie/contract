@@ -68,6 +68,8 @@ public class DysMigrationModule
                 docMigrationProcessing.IncreaseTryCount();
             }
 
+            await dbContext.SaveChangesAsync();
+            
             try
             {
                 if (docMigrationProcessing.IsExceededMaxRetryCount())
@@ -96,6 +98,7 @@ public class DysMigrationModule
             catch (NotSupportedException fileSupportedEx)
             {
                 docMigrationProcessing.ChangeStatus(AppConsts.Failed, fileSupportedEx.Message);
+                await dbContext.SaveChangesAsync();
                 // desteklenmeyen bir dosya türü varsa tekrar deneme yapmaya gerek yok.
                 return GenericResult<bool>.Success(true);
             }
