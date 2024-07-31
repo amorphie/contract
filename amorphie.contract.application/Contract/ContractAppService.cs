@@ -265,6 +265,11 @@ namespace amorphie.contract.application.Contract
                 }
             };
 
+            // If UseExisting is selected as “Never”, do not set it as Approved.
+            if (contractDoc.UseExisting == EUseExisting.Never)
+            {
+                return documentInstance;
+            }
 
             if (customerDocument is not null)
             {
@@ -277,10 +282,9 @@ namespace amorphie.contract.application.Contract
             {
                 var signedHasNewVersionDocument = documents.FirstOrDefault(k => k.DocumentCode == contractDoc.DocumentDefinition.Code && k.IsSigned);
 
-                if (signedHasNewVersionDocument != null)
+                if (signedHasNewVersionDocument is not null)
                 {
                     documentInstance.Status = ApprovalStatus.HasNewVersion.ToString();
-
                 }
             }
 
