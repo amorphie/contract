@@ -2,6 +2,7 @@ using System.Data;
 using amorphie.contract.application.Contract;
 using amorphie.contract.application.Contract.Dto;
 using amorphie.contract.application.Contract.Request;
+using amorphie.contract.application.ConverterFactory;
 using amorphie.contract.application.Customer;
 using amorphie.contract.application.Customer.Dto;
 using amorphie.contract.application.TemplateEngine;
@@ -38,6 +39,7 @@ namespace amorphie.contract.application
         private readonly IPdfManager _pdfManager;
         private readonly ILogger _logger;
         private readonly ITagAppService _tagAppService;
+        private readonly FileConverterFactory _fileConverterFactory;
 
         public DocumentAppService(
             ProjectDbContext projectDbContext,
@@ -50,7 +52,7 @@ namespace amorphie.contract.application
             IContractAppService contractAppService,
             IPdfManager pdfManager,
             ILogger logger,
-            ITagAppService tagAppService)
+            ITagAppService tagAppService, FileConverterFactory fileConverterFactory)
         {
             _dbContext = projectDbContext;
             _minioService = minioService;
@@ -63,6 +65,7 @@ namespace amorphie.contract.application
             _pdfManager = pdfManager;
             _logger = logger;
             _tagAppService = tagAppService;
+            _fileConverterFactory = fileConverterFactory;
         }
 
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
@@ -327,6 +330,7 @@ namespace amorphie.contract.application
         }
 
 
+
         private async Task SendToDys(DocumentDysRequestModel documentDys, IEnumerable<Metadata> metaData)
         {
             if (metaData is not null)
@@ -536,11 +540,137 @@ namespace amorphie.contract.application
         }
 
 
-        public Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<GenericResult<DocumentUploadInstanceOutputDto>> DocumentUploadInstance(DocumentUploadInstanceInputDto input)
 
+        {
+
+            if (!AppConsts.AllowedContentTypes.Contains(input.DocumentContent.ContentType))// bu kısmı ve size ı sonradan db den kontrol edicez document def altında var 
+            {
+                return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"İzin verilmeyen doküman tipi gönderildi. {input.DocumentCode}, {input.DocumentVersion} , {input.DocumentContent.ContentType}");
+            }
+
+            if (!String.IsNullOrWhiteSpace(input.ContractCode))
+            {
+                var contractExists = await CheckIfContractExistsAsync(input.ContractCode, input.HeaderModel.EBankEntity);
+
+                if (!contractExists)
+                {
+                    return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"Kontrat bulunamadı. {input.ContractCode}");
+                }
+            }
+            var docdef = _dbContext.DocumentDefinition.FirstOrDefault(x => x.Code == input.DocumentCode && x.Semver == input.DocumentVersion);
+
+            if (docdef is null)
+                return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"Document Code ve versiyona ait kayit bulunamadi! {input.DocumentCode}, {input.DocumentVersion}");
+
+
+            var customerId = await _customerAppService.GetIdByReference(input.HeaderModel.UserReference);
+            if (!customerId.IsSuccess)
+            {
+                var customerInputDto = new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo, "");
+                customerId = await _customerAppService.AddAsync(customerInputDto);
+            }
+
+            var metadataDtoList = await TagMetadataAsync(docdef.DefinitionMetadata, input.InstanceMetadata, input.HeaderModel);
+
+            if (docdef.DefinitionMetadata?.Any() == true) // && docdef?.DocumentDys is not null DYS olmayacak
+            {
+                CheckRequiredMetadata(docdef.DefinitionMetadata, metadataDtoList);
+            }
+
+            var documentDto = new DocumentDto
+            {
+                Id = input.DocumentInstanceId,
+                DocumentContent = input.DocumentContent,
+                CustomerId = customerId.Data,
+                DocumentDefinitionId = docdef.Id,
+                Status = ApprovalStatus.InProgress,
+                Metadata = metadataDtoList,
+                Notes = input.Notes,
+            };
+
+            string minioObjectNameForPdf = String.Empty;
+
+            byte[] fileByteArray = Convert.FromBase64String(input.DocumentContent.FileContext);
+            UploadFileModel uploadFileModel = new()
+            {
+                Data = fileByteArray,
+                FileName = documentDto.Id.ToString(),
+                ContentType = input.DocumentContent.ContentType,
+                DocumentDefinitionCode = docdef.Code,
+                DocumentDefinitionVersion = docdef.Semver,
+                Reference = input.HeaderModel.UserReference,
+                ApprovalStatus = ApprovalStatus.InProgress,
+                ContractDefinitionCode = input.ContractCode
+            };
+            minioObjectNameForPdf = uploadFileModel.ObjectName;
+            await _minioService.UploadFile(uploadFileModel);
+
+            if (input.DocumentContent.ContentType != FileExtension.Pdf)
+            {
+                var pdfFile = await DocumentContentConvertPDF(input.DocumentContent);
+                byte[] fileByteArrayToPDF = Convert.FromBase64String(pdfFile.FileContext);
+
+                UploadFileModel uploadFileModelForPdf = new()
+                {
+                    Data = fileByteArrayToPDF,
+                    FileName = documentDto.Id.ToString(),
+                    ContentType = input.DocumentContent.ContentType,
+                    DocumentDefinitionCode = docdef.Code,
+                    DocumentDefinitionVersion = docdef.Semver,
+                    Reference = input.HeaderModel.UserReference,
+                    ApprovalStatus = ApprovalStatus.Orjinal,
+                    ContractDefinitionCode = input.ContractCode
+                };
+                minioObjectNameForPdf = uploadFileModelForPdf.ObjectName;
+                await _minioService.UploadFile(uploadFileModelForPdf);
+
+            }
+
+            var documentInsertResponse = await AddAsync(documentDto, minioObjectNameForPdf);//bunun içine bir tablo daha ac orjinal documentcontent i tutsun  burdaki responseyide onda bulundur.
+            if (!documentInsertResponse.IsSuccess)
+            {
+                return GenericResult<DocumentUploadInstanceOutputDto>.Fail(documentInsertResponse.ErrorMessage);
+            }
+
+            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.InProgress, input.HeaderModel.UserReference);
+
+            return GenericResult<DocumentUploadInstanceOutputDto>.Success(new DocumentUploadInstanceOutputDto
+            {
+                DocumentInstanceId = documentInsertResponse.Data
+            });
+
+        }
+        private async Task<DocumentContentDto> DocumentContentConvertPDF(DocumentContentDto documentContent)
+        {
+            string fileBase64 = documentContent.FileContext;
+            string fileMimeType = documentContent.ContentType;
+            DocumentContentDto documentContentN = null;
+
+            if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))//TODO: bak
+            {
+                // Starting convert
+                IFileContentProvider? converter = null;
+                try
+                {
+                    converter = _fileConverterFactory.GetConverter(documentContent.ContentType);
+                    var fl = await converter.GetFileContentAsync(fileBase64);
+
+                    documentContentN = new DocumentContentDto
+                    {
+                        FileContext = Convert.ToBase64String(fl),
+                        FileName = documentContent.FileName,
+                        ContentType = FileExtension.Pdf
+                    };
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+
+            return documentContentN;
+        }
 
         public async Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input)
         {
@@ -611,7 +741,7 @@ namespace amorphie.contract.application
                     ContractDefinitionCode = contractCodes
                 };
                 uploadFileModelOriginal.SetObjectName(input.DocumentContentOriginal.FileName);
-                
+
                 await _minioService.UploadFile(uploadFileModelOriginal);
             }
 
@@ -635,7 +765,7 @@ namespace amorphie.contract.application
             public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
             Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);
             Task<GenericResult<DocumentInstanceOutputDto>> Instance(DocumentInstanceInputDto input);
-            Task<GenericResult<DocumentUploadInputDto>> DocumentUpload(DocumentUploadInputDto input);
+            Task<GenericResult<DocumentUploadInstanceOutputDto>> DocumentUploadInstance(DocumentUploadInstanceInputDto input);
             Task<GenericResult<DocumentDownloadOutputDto>> DownloadDocument(DocumentDownloadInputDto inputDto, CancellationToken cancellationToken);
             Task<GenericResult<List<DocumentInstanceDto>>> GetDocumentsToApprove(GetDocumentsToApproveInputDto input);
             Task<GenericResult<bool>> MigrateDocument(MigrateDocumentInputDto input);

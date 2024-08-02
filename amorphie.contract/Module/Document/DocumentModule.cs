@@ -37,7 +37,7 @@ public class DocumentModule
         routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
         routeGroupBuilder.MapPost("sendToTSIZL", SendToTSIZL);
         routeGroupBuilder.MapPost("approveInstance", ApproveInstance);
-        routeGroupBuilder.MapPost("documentUpload", DocumentUpload);
+        // routeGroupBuilder.MapPost("documentUpload", DocumentUpload);
 
     }
 
@@ -77,15 +77,15 @@ public class DocumentModule
 
         return response;
     }
-    async ValueTask<GenericResult<DocumentUploadInputDto>> DocumentUpload([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
-    CancellationToken token, [FromBody] DocumentUploadInputDto input)
-    {
-        var headerModel = HeaderHelper.GetHeaderWithDto(httpContext, input.ContractWithoutHeader);
-        input.SetHeaderModel(headerModel);
-        var response = await documentAppService.DocumentUpload(input);
+    // async ValueTask<GenericResult<DocumentUploadInputDto>> DocumentUpload([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
+    // CancellationToken token, [FromBody] DocumentUploadInputDto input)
+    // {
+    //     var headerModel = HeaderHelper.GetHeaderWithDto(httpContext, input.ContractWithoutHeader);
+    //     input.SetHeaderModel(headerModel);
+    //     var response = await documentAppService.DocumentUpload(input);
 
-        return response;
-    }
+    //     return response;
+    // }
     async ValueTask<IResult> ApproveInstance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
 CancellationToken token, [FromBody] ApproveDocumentInstanceInputDto input)
     {
