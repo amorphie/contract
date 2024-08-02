@@ -13,6 +13,6 @@ namespace amorphie.contract.core.Enum
 
         //Before document validation flow
         TemporarilyApproved = 8,
-        Orjinal = 9
+        Original = 9
     }
 }

@@ -47,7 +47,7 @@ namespace amorphie.contract.application
             services.AddScoped<IFileContentProvider, TiffToPdfConverter>();
             services.AddScoped<IFileContentProvider, OtherImageToPdfConverter>();
             services.AddScoped<IFileContentProvider, BmpToPdfConverter>();
-            services.AddScoped<IFileContentProvider, PngToPdfConverter>();
+            // services.AddScoped<IFileContentProvider, PngToPdfConverter>();
  
             services.AddScoped<FileConverterFactory>();
 
