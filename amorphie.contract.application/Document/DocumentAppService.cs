@@ -619,7 +619,7 @@ namespace amorphie.contract.application
                     DocumentDefinitionCode = docdef.Code,
                     DocumentDefinitionVersion = docdef.Semver,
                     Reference = input.HeaderModel.UserReference,
-                    ApprovalStatus = ApprovalStatus.Orjinal,
+                    ApprovalStatus = ApprovalStatus.Original,
                     ContractDefinitionCode = input.ContractCode
                 };
                 minioObjectNameForPdf = uploadFileModelForPdf.ObjectName;
