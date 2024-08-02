@@ -28,6 +28,10 @@ public static class FileExtension
 
         {Pdf, ".pdf"},
         {Html, ".html"},
+        {Tiff, ".tiff"},
+        {Jpeg, ".jpeg"},
+        {Png, ".png"},
+        {Jpg, ".jpg"},
     };
 
     public static string GetFileExtensionFromMimeType(string mimeType)
