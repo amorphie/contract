@@ -145,7 +145,7 @@ namespace amorphie.contract.zeebe.Modules
                             }
                             else
                             {
-                                Log.Error("failed to send render pdf. Template.Name = {TemplateCode}  TemplateErrorMessage = {ErrorMessage}", _document.DocumentDetail.OnlineSign.TemplateCode, res.ErrorMessage);
+                                Log.Error($"failed to send render pdf. Template.Name = {_document.DocumentDetail.OnlineSign.TemplateCode}  TemplateErrorMessage = {res.ErrorMessage}");
                             }
                         }).ToList();
 
