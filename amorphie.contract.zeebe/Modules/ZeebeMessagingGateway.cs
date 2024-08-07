@@ -47,17 +47,15 @@ namespace amorphie.contract.zeebe.Modules
 
             var response = await messagingGatewayService.FindMailAttachmentCodes(inputDto);
 
-            messageVariables.Variables.Add(ZeebeConsts.FindMailAttachmentOutputDto, response);
+            messageVariables.Variables.Add(ZeebeConsts.FindMailAttachmentOutputDto, response.Data);
 
             messageVariables.Success = true;
             return Results.Ok(ZeebeMessageHelper.CreateMessageVariables(messageVariables));
         }
 
-        static IResult SendContractDocumentsMail([FromBody] dynamic body, [FromServices] IMessagingGatewayService messagingGatewayService, [FromServices] JsonSerializerOptions options)
+        static async ValueTask<IResult> SendContractDocumentsMail([FromBody] dynamic body, [FromServices] IMessagingGatewayService messagingGatewayService, [FromServices] JsonSerializerOptions options)
         {
-            var messageVariables = ZeebeMessageHelper.VariablesControl(body);
-            var serializeEntity = JsonSerializer.Serialize(messageVariables.Data.GetProperty("entityData"));
-            
+            var messageVariables = ZeebeMessageHelper.VariablesControl(body);            
             
             var headerModel = HeaderHelperZeebe.GetHeader(body) as HeaderFilterModel;
             
@@ -72,7 +70,7 @@ namespace amorphie.contract.zeebe.Modules
                 DocumentCodes = inputDto.DocumentCodes
             };
 
-            var isSuccess = messagingGatewayService.SendDocumentsToCustomer(sendDocumentsDto);
+            var isSuccess = await messagingGatewayService.SendDocumentsToCustomer(sendDocumentsDto);
 
             messageVariables.Variables.Add(ZeebeConsts.SendContractDocumentsMailOutputDto, isSuccess);
             messageVariables.Success = true;

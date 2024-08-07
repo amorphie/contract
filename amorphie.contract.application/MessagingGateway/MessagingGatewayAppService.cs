@@ -10,6 +10,7 @@ using amorphie.contract.application.CustomerApi;
 using amorphie.contract.application.MessagingGateway.Dto;
 using amorphie.contract.core.Entity;
 using amorphie.contract.core.Enum;
+using amorphie.contract.core.Model.Minio;
 using amorphie.contract.core.Model.Proxy;
 using amorphie.contract.core.Response;
 using amorphie.contract.core.Services;
@@ -105,12 +106,12 @@ namespace amorphie.contract.application.MessagingGateway
             {
                 List<SendTemplatedMailAttachmentModel> attachments = new List<SendTemplatedMailAttachmentModel>();
 
-                var documents = _dbContext.Document.Where(x => inputDto.DocumentCodes.Contains(x.DocumentDefinition.Code) && x.Customer.Reference == inputDto.TCKN);
+                var documents = _dbContext.Document.Where(x => inputDto.DocumentCodes.Contains(x.DocumentDefinition.Code) && x.Customer.Reference == inputDto.TCKN).ToList();
 
                 foreach (var doc in documents)
                 {
                     var documentContent = await _minioService.DownloadFile(doc.DocumentContent.MinioObjectName, new CancellationToken());
-
+                    
                     attachments.Add(new SendTemplatedMailAttachmentModel()
                     {
                         Name = documentContent.FileName,
