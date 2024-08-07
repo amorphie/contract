@@ -34,9 +34,18 @@ public class DocumentModule
         routeGroupBuilder.MapPost("addDocumentToDys", AddDocumentToDys);
         routeGroupBuilder.MapPost("sendToTSIZL", SendToTSIZL);
         routeGroupBuilder.MapPost("approveInstance", ApproveInstance);
+        routeGroupBuilder.MapPost("uploadInstance", UploadInstance);
+
 
     }
-
+    async ValueTask<GenericResult<DocumentUploadInstanceOutputDto>> UploadInstance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
+    CancellationToken token, [FromBody] DocumentUploadInstanceInputDto input)
+    {
+        var headerModel = HeaderHelper.GetHeaderWithDto(httpContext, input.ContractWithoutHeader);
+        input.SetHeaderModel(headerModel);
+        var response = await documentAppService.DocumentUploadInstance(input);
+        return response;
+    }
     async ValueTask<IResult> getAllDocumentFullTextSearch([FromServices] IDocumentAppService documentAppService, [AsParameters] PageComponentSearch dataSearch, CancellationToken cancellationToken)
     {
         var inputDto = new GetAllDocumentInputDto
@@ -73,6 +82,7 @@ public class DocumentModule
 
         return response;
     }
+
 
     async ValueTask<IResult> ApproveInstance([FromServices] IDocumentAppService documentAppService, HttpContext httpContext,
 CancellationToken token, [FromBody] ApproveDocumentInstanceInputDto input)
