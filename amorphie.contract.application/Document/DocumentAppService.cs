@@ -52,7 +52,6 @@ namespace amorphie.contract.application
             IPdfManager pdfManager,
             ILogger logger,
             ITagAppService tagAppService,
-            ITagAppService tagAppService,
             FileConverterFactory fileConverterFactory)
         {
             _dbContext = projectDbContext;
@@ -84,7 +83,7 @@ namespace amorphie.contract.application
             var validFormat = docdef.DocumentUpload?.DocumentFormatDetails
                 .FirstOrDefault(x => x.DocumentFormat.DocumentFormatType.ContentType == input.DocumentContent.ContentType);
 
-            if (validFormat == null || validFormat.DocumentFormat.DocumentSize.KiloBytes * 1024  <= (ulong)input.DocumentContent.FileContext.Length)
+            if (validFormat == null || validFormat.DocumentFormat.DocumentSize.KiloBytes * 1024 <= (ulong)input.DocumentContent.FileContext.Length)
             {
                 return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"İzin verilmeyen doküman tipi veya kilobytes gönderildi. {input.DocumentCode}, {input.DocumentVersion} , {input.DocumentContent.FileContext.Length} , {input.DocumentContent.ContentType}");
             }
@@ -98,10 +97,10 @@ namespace amorphie.contract.application
                 }
             }
 
-            var customerId = await _customerAppService.UpsertAsync(new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo, ""));
+            var customerId = await _customerAppService.GetOrAddAsync(new CustomerInputDto(input.HeaderModel.UserReference, input.HeaderModel.UserReference, input.HeaderModel.CustomerNo, ""));
             if (!customerId.IsSuccess)
             {
-                 return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"CustomerAppService servisinde hata alındı. {customerId.ErrorMessage}, {input.HeaderModel.UserReference}, {input.HeaderModel.CustomerNo}");
+                return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"CustomerAppService servisinde hata alındı. {customerId.ErrorMessage}, {input.HeaderModel.UserReference}, {input.HeaderModel.CustomerNo}");
             }
 
             var metadataDtoList = await TagMetadataAsync(docdef.DefinitionMetadata, input.InstanceMetadata, input.HeaderModel);
@@ -129,7 +128,7 @@ namespace amorphie.contract.application
                 return GenericResult<DocumentUploadInstanceOutputDto>.Fail(documentInsertResponse.ErrorMessage);
             }
 
-            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.InProgress, input.HeaderModel.UserReference);
+            await SaveUserSignedContract(input.ContractCode, input.ContractInstanceId, documentInsertResponse.Data, ApprovalStatus.InProgress, customerId.Data);
 
             return GenericResult<DocumentUploadInstanceOutputDto>.Success(new DocumentUploadInstanceOutputDto
             {
@@ -227,36 +226,6 @@ namespace amorphie.contract.application
                 throw new InvalidOperationException("An error occurred while converting the document to PDF.", ex);
             }
         }
-        // private async Task<DocumentContentDto> DocumentContentConvertPDF(DocumentContentDto documentContent)
-        // {
-        //     string fileBase64 = documentContent.FileContext;
-        //     string fileMimeType = documentContent.ContentType;
-        //     DocumentContentDto documentContentN = null;
-
-        //     if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))//TODO: bak
-        //     {
-        //         // Starting convert
-        //         IFileContentProvider? converter = null;
-        //         try
-        //         {
-        //             converter = _fileConverterFactory.GetConverter(documentContent.ContentType);
-        //             var fl = await converter.GetFileContentAsync(fileBase64);
-
-        //             documentContentN = new DocumentContentDto
-        //             {
-        //                 FileContext = Convert.ToBase64String(fl),
-        //                 FileName = documentContent.FileName,
-        //                 ContentType = FileExtension.Pdf
-        //             };
-        //         }
-        //         catch
-        //         {
-        //             throw;
-        //         }
-        //     }
-
-        //     return documentContentN;
-        // }
         public async Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken)
         {
 
