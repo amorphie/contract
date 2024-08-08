@@ -105,9 +105,10 @@ namespace amorphie.contract.application.Customer
                 othersOnly = true;
             }
             var userReference = inputDto.GetUserReference();
+            EBankEntity contractBankEntity = inputDto.GetBankEntityCode();
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
 
-            var contractQuery = _dbContext!.ContractDefinition.AsQueryable();
+            var contractQuery = _dbContext!.ContractDefinition.Where(c => c.BankEntity == contractBankEntity).AsQueryable();
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
 
             if (inputDto.StartDate.HasValue)
