@@ -80,10 +80,10 @@ namespace amorphie.contract.application
             }
 
             // Kontrol işlemi için döküman format detaylarını al
-            var validFormat = docdef.DocumentUpload.DocumentFormatDetails
-                .FirstOrDefault(x => x.DocumentFormat.DocumentFormatType.Code == input.DocumentContent.ContentType);
+            var validFormat = docdef.DocumentUpload?.DocumentFormatDetails
+                .FirstOrDefault(x => x.DocumentFormat.DocumentFormatType.ContentType == input.DocumentContent.ContentType);
 
-            if (validFormat == null || validFormat.DocumentFormat.DocumentSize.KiloBytes <= (ulong)input.DocumentContent.FileContext.Length)
+            if (validFormat == null || validFormat.DocumentFormat.DocumentSize.KiloBytes * 1024  <= (ulong)input.DocumentContent.FileContext.Length)
             {
                 return GenericResult<DocumentUploadInstanceOutputDto>.Fail($"İzin verilmeyen doküman tipi veya kilobytes gönderildi. {input.DocumentCode}, {input.DocumentVersion} , {input.DocumentContent.FileContext.Length} , {input.DocumentContent.ContentType}");
             }
@@ -147,7 +147,7 @@ namespace amorphie.contract.application
                 DocumentDefinitionCode = docdef.Code,
                 DocumentDefinitionVersion = docdef.Semver,
                 Reference = input.HeaderModel.UserReference,
-                ApprovalStatus = ApprovalStatus.InProgress,
+                ApprovalStatus = ApprovalStatus.Original,
                 ContractDefinitionCode = input.ContractCode
             };
 
@@ -167,7 +167,7 @@ namespace amorphie.contract.application
                     DocumentDefinitionCode = docdef.Code,
                     DocumentDefinitionVersion = docdef.Semver,
                     Reference = input.HeaderModel.UserReference,
-                    ApprovalStatus = ApprovalStatus.Original,
+                    ApprovalStatus = ApprovalStatus.InProgress,
                     ContractDefinitionCode = input.ContractCode
                 };
 
@@ -192,11 +192,11 @@ namespace amorphie.contract.application
                 throw new ArgumentException("File context and content type cannot be empty.");
             }
 
-            // Check if the MIME type is allowed for conversion
-            if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))
-            {
-                throw new InvalidOperationException($"Content type {fileMimeType} is not allowed for conversion.");
-            }
+            // // Check if the MIME type is allowed for conversion
+            // if (!AppConsts.AllowedContentTypes.Contains(fileMimeType))
+            // {
+            //     throw new InvalidOperationException($"Content type {fileMimeType} is not allowed for conversion.");
+            // }
 
             try
             {
