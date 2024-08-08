@@ -9,6 +9,8 @@ using amorphie.contract.core.Entity.Contract;
 using Serilog;
 using amorphie.contract.application.DMN.Dto;
 using amorphie.contract.application.Contract.Dto.Input;
+using amorphie.contract.application.Customer.Dto;
+using amorphie.contract.application.Customer;
 
 namespace amorphie.contract.application.Contract
 {
@@ -27,11 +29,14 @@ namespace amorphie.contract.application.Contract
         private readonly IUserSignedContractAppService _userSignedContractAppService;
         private readonly ILogger _logger;
 
-        public ContractAppService(ProjectDbContext dbContext, IUserSignedContractAppService userSignedContractAppService, ILogger logger)
+        private readonly ICustomerAppService _customerAppService;
+
+        public ContractAppService(ProjectDbContext dbContext, IUserSignedContractAppService userSignedContractAppService, ILogger logger, ICustomerAppService customerAppService)
         {
             _dbContext = dbContext;
             _userSignedContractAppService = userSignedContractAppService;
             _logger = logger;
+            _customerAppService = customerAppService;
         }
 
         public async Task<GenericResult<bool>> CancelContract(CancelContractInputDto req, CancellationToken cts)
@@ -377,14 +382,18 @@ namespace amorphie.contract.application.Contract
                     .Where(x => x.DocumentInstanceId.HasValue)
                 .Select(x => x.DocumentInstanceId.Value)).ToList();
 
+            var customerId = await _customerAppService.GetOrAddAsync(
+                            new CustomerInputDto(req.HeaderModel.UserReference, req.HeaderModel.UserReference, req.HeaderModel.CustomerNo, ""));
+
+            
             var userSignedInput = new UserSignedContractInputDto
             {
                 ContractCode = req.ContractCode,
                 ContractInstanceId = contractInstanceId,
                 DocumentInstanceIds = allDocumentInstanceIds,
-                ApprovalStatus = contractStatus
+                ApprovalStatus = contractStatus,
+                CustomerId = customerId.Data
             };
-            userSignedInput.SetHeaderParameters(req.HeaderModel.UserReference);
 
             var result = await _userSignedContractAppService.UpsertAsync(userSignedInput);
             if (!result.IsSuccess)
