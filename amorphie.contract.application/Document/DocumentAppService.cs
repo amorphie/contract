@@ -289,6 +289,19 @@ namespace amorphie.contract.application
             return GenericResult<Guid>.Success(document.Id);
         }
 
+        public async Task<GenericResult<Guid>> GetDocumentContentId(Guid documentId)
+        {
+            var documentContentId = await _dbContext.Document
+                                                .AsNoTracking()
+                                                .Where(k => k.Id == documentId)
+                                                .Select(k => k.DocumentContentId).FirstOrDefaultAsync();
+
+            if (documentContentId == Guid.Empty)
+                return GenericResult<Guid>.Fail("Document or Content not found");
+
+            return GenericResult<Guid>.Success(documentContentId);
+        }
+
         public async Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input)
         {
 
@@ -780,6 +793,7 @@ namespace amorphie.contract.application
     public interface IDocumentAppService
     {
         Task<GenericResult<Guid>> AddAsync(DocumentDto documentDto, string minioObjectName);
+        Task<GenericResult<Guid>> GetDocumentContentId(Guid documentId);
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentFullTextSearch(GetAllDocumentInputDto input, CancellationToken cancellationToken);
         public Task<GenericResult<List<RootDocumentDto>>> GetAllDocumentAll(CancellationToken cancellationToken);
         Task<GenericResult<bool>> ApproveInstance(ApproveDocumentInstanceInputDto input);

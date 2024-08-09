@@ -22,5 +22,10 @@ namespace amorphie.contract.application
         public DocumentContentDto DocumentContent { get; set; }
         public ContractWithoutHeaderDto? ContractWithoutHeader { get; set; }
 
+        public void SetDocumentInstanceId(Guid documentInstanceId)
+        {
+            DocumentInstanceId = documentInstanceId;
+        }
+
     }
 }
