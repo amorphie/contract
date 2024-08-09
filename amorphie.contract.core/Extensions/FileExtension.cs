@@ -39,5 +39,11 @@ public static class FileExtension
         return _mappings[mimeType] ?? throw new InvalidDataException($"{mimeType} not found");
     }
 
+    public static bool CheckPdfFile(byte[] fileBytes)
+    {
+        var pdfHeader = new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D }; // %PDF-
+        return fileBytes.Take(pdfHeader.Length).SequenceEqual(pdfHeader);
+    }
+
 
 }
