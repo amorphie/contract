@@ -6,11 +6,10 @@ using amorphie.contract.core.Extensions;
 using amorphie.contract.core.Response;
 using amorphie.contract.Extensions;
 using amorphie.contract.infrastructure.Contexts;
-using amorphie.contract.Module.Base;
 using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 
-namespace amorphie.contract.Module.Admin.Contract
+namespace amorphie.contract.Module.Contract
 {
 	public class ContractCategoryModule : BaseBBTRoute<ContractCategory, ContractCategory, ProjectDbContext>
     {
