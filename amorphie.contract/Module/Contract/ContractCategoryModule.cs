@@ -7,11 +7,12 @@ using amorphie.contract.core.Response;
 using amorphie.contract.Extensions;
 using amorphie.contract.infrastructure.Contexts;
 using amorphie.contract.Module.Base;
+using amorphie.core.Module.minimal_api;
 using Microsoft.AspNetCore.Mvc;
 
 namespace amorphie.contract.Module.Admin.Contract
 {
-	public class ContractCategoryModule : BaseAdminModule<ContractCategory, ContractCategory, ProjectDbContext>
+	public class ContractCategoryModule : BaseBBTRoute<ContractCategory, ContractCategory, ProjectDbContext>
     {
         public ContractCategoryModule(WebApplication app) : base(app)
         {
@@ -21,7 +22,7 @@ namespace amorphie.contract.Module.Admin.Contract
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
             base.AddRoutes(routeGroupBuilder);
-            routeGroupBuilder.MapGet("getCategories", GetCategories);
+            routeGroupBuilder.MapGet("get-categories", GetCategories);
         }
 
         async ValueTask<IResult> GetCategories([FromServices] ProjectDbContext dbContext, [FromQuery] string? code, HttpContext httpContext)
@@ -44,7 +45,7 @@ namespace amorphie.contract.Module.Admin.Contract
         }
 
         public override string[]? PropertyCheckList => new string[] { "Code" };
-        public override string? UrlFragment => base.UrlFragment + "contract-category";
+        public override string? UrlFragment => "contract-category";
     }
 }
 
