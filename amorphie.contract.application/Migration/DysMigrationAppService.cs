@@ -103,7 +103,7 @@ public class DysMigrationAppService : IDysMigrationAppService
             var userReference = customerDMSInfo.Data.GetReference();
 
             var customerInputDto = new CustomerInputDto(userReference, userReference, customerNo, customerDMSInfo.Data.TaxNo);
-            var customerId = await _customerAppService.UpsertAsync(customerInputDto);
+            var customerId = await _customerAppService.GetOrAddAsync(customerInputDto);
 
             var instanceMetadata = PrepareInstanceMetadata(inputDto);
 

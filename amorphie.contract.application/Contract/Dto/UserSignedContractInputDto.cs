@@ -15,6 +15,9 @@ namespace amorphie.contract.application.Contract.Dto
 
         public ApprovalStatus ApprovalStatus { get; set; }
 
+        [Required]
+        public required Guid CustomerId { get; set; }
+
         public void SetHeaderParameters(string userReference)
         {
             _userReference = userReference;

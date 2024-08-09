@@ -6,6 +6,7 @@ using amorphie.contract.core.Response;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 using amorphie.contract.core.Enum;
+using amorphie.contract.application.Customer.Dto;
 
 namespace amorphie.contract.application.Contract
 {
@@ -30,17 +31,7 @@ namespace amorphie.contract.application.Contract
 
         public async Task<GenericResult<Guid>> UpsertAsync(UserSignedContractInputDto inputDto)
         {
-            var userReference = inputDto.GetUserReference();
-            var customerResult = await _customerAppService.GetIdByReference(userReference);
-
-            if (!customerResult.IsSuccess)
-            {
-                _logger.Error("Failed to get customer. {Message} - {UserReference}", customerResult.ErrorMessage, userReference);
-
-                return GenericResult<Guid>.Fail($"Failed to get customer {userReference}");
-            }
-
-            var userSignedContract = await _dbContext.UserSignedContract.FirstOrDefaultAsync(k => k.ContractCode == inputDto.ContractCode && k.CustomerId == customerResult.Data); //TODO ANYVALID kontrol edilecek.
+            var userSignedContract = await _dbContext.UserSignedContract.FirstOrDefaultAsync(k => k.ContractCode == inputDto.ContractCode && k.CustomerId == inputDto.CustomerId); //TODO ANYVALID kontrol edilecek.
 
             if (userSignedContract is null)
             {
@@ -48,7 +39,7 @@ namespace amorphie.contract.application.Contract
                 {
                     ContractCode = inputDto.ContractCode,
                     ContractInstanceId = inputDto.ContractInstanceId,
-                    CustomerId = customerResult.Data,
+                    CustomerId = inputDto.CustomerId,
                     ApprovalStatus = inputDto.ApprovalStatus,
                     UserSignedContractDetails = inputDto.DocumentInstanceIds.Select(docInstanceId => new UserSignedContractDetail
                     {

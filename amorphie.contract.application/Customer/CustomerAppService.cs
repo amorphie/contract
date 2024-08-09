@@ -23,7 +23,7 @@ namespace amorphie.contract.application.Customer
     {
         Task<GenericResult<Guid>> GetIdByReference(string userReference);
         Task<GenericResult<Guid>> AddAsync(CustomerInputDto inputDto);
-        Task<GenericResult<Guid>> UpsertAsync(CustomerInputDto inputDto);
+        Task<GenericResult<Guid>> GetOrAddAsync(CustomerInputDto inputDto);
         Task<GenericResult<List<CustomerContractDto>>> GetDocumentsByContracts(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<List<DocumentCustomerDto>>> GetAllDocuments(GetCustomerDocumentsByContractInputDto inputDto, CancellationToken token);
         Task<GenericResult<bool>> DeleteAllDocuments(string reference, CancellationToken cts);
@@ -83,7 +83,7 @@ namespace amorphie.contract.application.Customer
             return GenericResult<Guid>.Success(customer.Id);
         }
 
-        public async Task<GenericResult<Guid>> UpsertAsync(CustomerInputDto inputDto)
+        public async Task<GenericResult<Guid>> GetOrAddAsync(CustomerInputDto inputDto)
         {
             ArgumentException.ThrowIfNullOrEmpty(nameof(inputDto.Reference));
 
@@ -105,9 +105,10 @@ namespace amorphie.contract.application.Customer
                 othersOnly = true;
             }
             var userReference = inputDto.GetUserReference();
+            EBankEntity contractBankEntity = inputDto.GetBankEntityCode();
             var documentQuery = _dbContext.Document.Where(x => x.Customer.Reference == userReference).AsQueryable();
 
-            var contractQuery = _dbContext!.ContractDefinition.AsQueryable();
+            var contractQuery = _dbContext!.ContractDefinition.Where(c => c.BankEntity == contractBankEntity).AsQueryable();
             contractQuery = ContractHelperExtensions.LikeWhere(contractQuery, inputDto.Code);
 
             if (inputDto.StartDate.HasValue)

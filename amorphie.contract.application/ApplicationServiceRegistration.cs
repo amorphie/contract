@@ -47,7 +47,7 @@ namespace amorphie.contract.application
             services.AddScoped<IFileContentProvider, OtherImageToPdfConverter>();
             services.AddScoped<IFileContentProvider, BmpToPdfConverter>();
             // services.AddScoped<IFileContentProvider, PngToPdfConverter>();
- 
+
             services.AddScoped<FileConverterFactory>();
 
             services.AddScoped<IPdfManager, ITextPdfManager>();
@@ -62,6 +62,8 @@ namespace amorphie.contract.application
             services.AddTransient<ICustomerIntegrationService, CustomerIntegrationService>();
             services.AddScoped<IDysProducer, DysProducer>();
             services.AddScoped<ITSIZLProducer, TSIZLProducer>();
+            services.AddScoped<IDocumentProducer, DocumentProducer>();
+
             return services;
         }
     }

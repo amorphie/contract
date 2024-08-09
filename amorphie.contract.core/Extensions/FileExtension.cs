@@ -28,11 +28,21 @@ public static class FileExtension
 
         {Pdf, ".pdf"},
         {Html, ".html"},
+        {Tiff, ".tiff"},
+        {Jpeg, ".jpeg"},
+        {Png, ".png"},
+        {Jpg, ".jpg"},
     };
 
     public static string GetFileExtensionFromMimeType(string mimeType)
     {
         return _mappings[mimeType] ?? throw new InvalidDataException($"{mimeType} not found");
+    }
+
+    public static bool CheckPdfFile(byte[] fileBytes)
+    {
+        var pdfHeader = new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D }; // %PDF-
+        return fileBytes.Take(pdfHeader.Length).SequenceEqual(pdfHeader);
     }
 
 
